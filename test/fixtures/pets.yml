@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  name: MyString
+  species: MyString
+  breed: MyString
+  sex: 1
+  birth_date: 2026-04-01
+  weight: 9.99
+  color: MyString
+  chip_number: MyString
+  passport_number: MyString
+  neutered: false
+  notes: MyText
+
+two:
+  user: two
+  name: MyString
+  species: MyString
+  breed: MyString
+  sex: 1
+  birth_date: 2026-04-01
+  weight: 9.99
+  color: MyString
+  chip_number: MyString
+  passport_number: MyString
+  neutered: false
+  notes: MyText
