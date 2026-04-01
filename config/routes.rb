@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  get "pet_events/index"
+  get "pet_events/show"
+  get "pet_events/new"
+  get "pet_events/create"
+  get "pet_events/edit"
+  get "pet_events/update"
+  get "pet_events/destroy"
   root "pages#index"
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -14,5 +21,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
-  resources :pets, only: %i[index show new create edit update]
+  resources :pets, only: %i[index show new create edit update] do
+    resources :pet_events
+  end
 end
