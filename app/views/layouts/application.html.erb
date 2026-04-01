@@ -18,8 +18,28 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container py-4">
+  <body class="bg-light">
+    <header class="bg-white border-bottom mb-4">
+      <div class="container py-3 d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <%= link_to "PetJournal", root_path, class: "text-decoration-none fs-4 fw-semibold text-dark" %>
+
+        <nav class="d-flex flex-wrap align-items-center gap-2">
+          <% if user_signed_in? %>
+            <%= link_to "Мои питомцы", pets_path, class: "btn btn-outline-secondary btn-sm" %>
+            <%= button_to "Выйти",
+                          destroy_user_session_path,
+                          method: :delete,
+                          class: "btn btn-outline-danger btn-sm",
+                          form_class: "d-inline-block ms-2" %>
+          <% else %>
+            <%= link_to "Войти", new_user_session_path, class: "btn btn-outline-secondary btn-sm" %>
+            <%= link_to "Регистрация", new_user_registration_path, class: "btn btn-primary btn-sm" %>
+          <% end %>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container pb-4">
       <% if notice.present? %>
         <div class="alert alert-success" role="alert">
           <%= notice %>
