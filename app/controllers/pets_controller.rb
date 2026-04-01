@@ -16,7 +16,7 @@ class PetsController < ApplicationController
     @pet = current_user.pets.new(pet_params)
 
     if @pet.save
-      redirect_to @pet, notice: "Питомец успешно добавлен."
+      redirect_to @pet, notice: "Питомец добавлен."
     else
       render :new, status: :unprocessable_entity
     end
