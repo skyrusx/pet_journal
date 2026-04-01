@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_03_31_173918) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_01_080739) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,17 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_31_173918) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "pet_events", force: :cascade do |t|
+    t.bigint "pet_id", null: false
+    t.integer "event_type", null: false
+    t.string "title"
+    t.date "event_date", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pet_id"], name: "index_pet_events_on_pet_id"
   end
 
   create_table "pets", force: :cascade do |t|
@@ -74,5 +85,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_03_31_173918) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "pet_events", "pets"
   add_foreign_key "pets", "users"
 end

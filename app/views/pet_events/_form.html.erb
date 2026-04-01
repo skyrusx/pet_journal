@@ -1,0 +1,45 @@
+<%= form_with model: [@pet, @pet_event], local: true do |f| %>
+  <% if @pet_event.errors.any? %>
+    <div class="alert alert-danger">
+      <div class="fw-semibold mb-2">Проверь форму:</div>
+      <ul class="mb-0">
+        <% @pet_event.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :event_type, "Тип события", class: "form-label" %>
+    <%= f.select :event_type,
+                 PetEvent::EVENT_TYPE_LABELS.map { |key, value| [value, key] },
+                 {},
+                 class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :title, "Заголовок", class: "form-label" %>
+    <%= f.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :event_date, "Дата события", class: "form-label" %>
+    <%= f.date_field :event_date, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :description, "Описание", class: "form-label" %>
+    <%= f.text_area :description, rows: 5, class: "form-control" %>
+  </div>
+
+  <div class="mb-4">
+    <%= f.label :files, "Файлы", class: "form-label" %>
+    <%= f.file_field :files, multiple: true, class: "form-control" %>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= f.submit "Сохранить", class: "btn btn-primary" %>
+    <%= link_to "Назад", pet_pet_events_path(@pet), class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>

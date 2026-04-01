@@ -22,6 +22,6 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   resources :pets, only: %i[index show new create edit update] do
-    resources :pet_events
+    resources :pet_events, path: :events
   end
 end

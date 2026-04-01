@@ -17,8 +17,9 @@
               <p class="text-muted mb-0">Вес: <%= pet.weight.presence || "—" %></p>
             </div>
 
-            <div class="card-footer bg-white border-0 pt-0 d-flex gap-2">
+            <div class="card-footer bg-white border-0 pt-0 d-flex gap-2 flex-wrap">
               <%= link_to "Открыть", pet_path(pet), class: "btn btn-outline-primary btn-sm" %>
+              <%= link_to "Журнал", pet_pet_events_path(pet), class: "btn btn-outline-secondary btn-sm" %>
               <%= link_to "Редактировать", edit_pet_path(pet), class: "btn btn-outline-secondary btn-sm" %>
             </div>
           </div>

@@ -1,0 +1,52 @@
+<div class="py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Журнал событий</h1>
+      <p class="text-muted mb-0"><%= @pet.name %></p>
+    </div>
+
+    <div class="d-flex gap-2">
+      <%= link_to "Карточка питомца", pet_path(@pet), class: "btn btn-outline-secondary" %>
+      <%= link_to "Добавить событие", new_pet_pet_event_path(@pet), class: "btn btn-primary" %>
+    </div>
+  </div>
+
+  <% if @pet_events.any? %>
+    <div class="row g-3">
+      <% @pet_events.each do |pet_event| %>
+        <div class="col-12">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <div class="text-muted small mb-1">
+                    <%= pet_event.event_date %> · <%= pet_event.event_type_label %>
+                  </div>
+
+                  <h2 class="h5 mb-0">
+                    <%= pet_event.title.presence || pet_event.event_type_label %>
+                  </h2>
+                </div>
+              </div>
+
+              <% if pet_event.description.present? %>
+                <p class="text-muted mb-3">
+                  <%= truncate(pet_event.description, length: 180) %>
+                </p>
+              <% end %>
+
+              <div class="d-flex gap-2">
+                <%= link_to "Открыть", pet_pet_event_path(@pet, pet_event), class: "btn btn-outline-primary btn-sm" %>
+                <%= link_to "Редактировать", edit_pet_pet_event_path(@pet, pet_event), class: "btn btn-outline-secondary btn-sm" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="alert alert-light border">
+      У питомца пока нет событий.
+    </div>
+  <% end %>
+</div>

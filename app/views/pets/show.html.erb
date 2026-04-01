@@ -4,6 +4,7 @@
 
     <div class="d-flex gap-2">
       <%= link_to "Редактировать", edit_pet_path(@pet), class: "btn btn-primary" %>
+      <%= link_to "Журнал событий", pet_pet_events_path(@pet), class: "btn btn-outline-primary" %>
       <%= link_to "К списку питомцев", pets_path, class: "btn btn-outline-secondary" %>
     </div>
   </div>
