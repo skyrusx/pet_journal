@@ -1,0 +1,35 @@
+<div class="py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0"><%= @pet.name %></h1>
+    <%= link_to "К списку питомцев", pets_path, class: "btn btn-outline-secondary" %>
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <% if @pet.photo.attached? %>
+            <%= image_tag @pet.photo, class: "img-fluid rounded" %>
+          <% else %>
+            <div class="border rounded p-5 text-center text-muted">
+              Фото отсутствует
+            </div>
+          <% end %>
+        </div>
+
+        <div class="col-md-8">
+          <p><strong>Вид:</strong> <%= @pet.species.presence || "—" %></p>
+          <p><strong>Порода:</strong> <%= @pet.breed.presence || "—" %></p>
+          <p><strong>Пол:</strong> <%= @pet.sex == 0 ? "Мальчик" : @pet.sex == 1 ? "Девочка" : "—" %></p>
+          <p><strong>Дата рождения:</strong> <%= @pet.birth_date.presence || "—" %></p>
+          <p><strong>Вес:</strong> <%= @pet.weight.presence || "—" %></p>
+          <p><strong>Окрас:</strong> <%= @pet.color.presence || "—" %></p>
+          <p><strong>Номер чипа:</strong> <%= @pet.chip_number.presence || "—" %></p>
+          <p><strong>Номер ветпаспорта:</strong> <%= @pet.passport_number.presence || "—" %></p>
+          <p><strong>Стерилизован / кастрирован:</strong> <%= @pet.neutered.nil? ? "—" : (@pet.neutered ? "Да" : "Нет") %></p>
+          <p class="mb-0"><strong>Заметки:</strong> <%= @pet.notes.presence || "—" %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
