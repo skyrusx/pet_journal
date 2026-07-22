@@ -15,7 +15,7 @@ class PetEventsController < ApplicationController
   def show; end
 
   def new
-    @pet_event = @pet.pet_events.new
+    @pet_event = @pet.pet_events.new(event_date: Date.current)
   end
 
   def create

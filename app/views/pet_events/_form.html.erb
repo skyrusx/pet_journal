@@ -1,4 +1,4 @@
-<%= form_with model: [@pet, @pet_event], local: true do |f| %>
+<%= form_with model: [@pet, @pet_event], local: true, class: "structured-form" do |f| %>
   <% if @pet_event.errors.any? %>
     <div class="alert alert-danger">
       <div class="fw-semibold mb-2">Проверь форму:</div>
@@ -10,36 +10,79 @@
     </div>
   <% end %>
 
-  <div class="mb-3">
-    <%= f.label :event_type, "Тип события", class: "form-label" %>
-    <%= f.select :event_type,
-                 PetEvent::EVENT_TYPE_LABELS.map { |key, value| [value, key] },
-                 {},
-                 class: "form-select" %>
-  </div>
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Тип и дата</h2>
+        <p class="text-muted mb-0">Тип события определяет, как запись будет отображаться в журнале.</p>
+      </div>
+      <span class="required-pill">Обязательно</span>
+    </div>
 
-  <div class="mb-3">
-    <%= f.label :title, "Заголовок", class: "form-label" %>
-    <%= f.text_field :title, class: "form-control" %>
-  </div>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <%= f.label :event_type, "Тип события", class: "form-label" %>
+        <%= f.select :event_type,
+                     PetEvent::EVENT_TYPE_LABELS.map { |key, value| [value, key] },
+                     {},
+                     class: "form-select" %>
+      </div>
 
-  <div class="mb-3">
-    <%= f.label :event_date, "Дата события", class: "form-label" %>
-    <%= f.date_field :event_date, class: "form-control" %>
-  </div>
+      <div class="col-md-6">
+        <%= f.label :event_date, "Дата события", class: "form-label" %>
+        <%= f.date_field :event_date, class: "form-control" %>
+      </div>
+    </div>
+  </section>
 
-  <div class="mb-3">
-    <%= f.label :description, "Описание", class: "form-label" %>
-    <%= f.text_area :description, rows: 5, class: "form-control" %>
-  </div>
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Содержание</h2>
+        <p class="text-muted mb-0">Заголовок можно не заполнять: тогда в журнале будет показан тип события.</p>
+      </div>
+    </div>
 
-  <div class="mb-4">
-    <%= f.label :files, "Файлы", class: "form-label" %>
+    <div class="mb-3">
+      <%= f.label :title, "Заголовок", class: "form-label" %>
+      <%= f.text_field :title, class: "form-control", placeholder: "Например: плановый осмотр" %>
+    </div>
+
+    <div>
+      <%= f.label :description, "Описание", class: "form-label" %>
+      <%= f.text_area :description,
+                      rows: 6,
+                      class: "form-control",
+                      placeholder: "Что произошло, какие рекомендации дали, что нужно проверить позже" %>
+    </div>
+  </section>
+
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Файлы</h2>
+        <p class="text-muted mb-0">Прикрепите анализы, назначения, чеки или фотографии.</p>
+      </div>
+    </div>
+
+    <%= f.label :files, "Вложения", class: "form-label" %>
     <%= f.file_field :files, multiple: true, class: "form-control" %>
-  </div>
 
-  <div class="d-flex gap-2">
+    <% if @pet_event.persisted? && @pet_event.files.attached? %>
+      <div class="attached-files">
+        <div class="fw-semibold mb-2">Уже прикреплено</div>
+        <div class="d-flex flex-column gap-2">
+          <% @pet_event.files.each do |file| %>
+            <%= link_to file.filename.to_s, url_for(file), target: "_blank", rel: "noopener" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </section>
+
+  <div class="form-actions">
     <%= f.submit "Сохранить", class: "btn btn-primary" %>
-    <%= link_to "Назад", pet_pet_events_path(@pet), class: "btn btn-outline-secondary" %>
+    <%= link_to "К журналу", pet_pet_events_path(@pet), class: "btn btn-outline-secondary" %>
+    <%= link_to "К обзору", pet_path(@pet), class: "btn btn-outline-secondary" %>
   </div>
 <% end %>

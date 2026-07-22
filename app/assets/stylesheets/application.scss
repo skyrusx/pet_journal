@@ -346,6 +346,65 @@ body {
   padding: 0.35rem 0.55rem;
 }
 
+.form-page {
+  max-width: 960px;
+}
+
+.form-page-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.structured-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.form-section {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.form-section-heading {
+  align-items: flex-start;
+  border-bottom: 1px solid var(--pj-border);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+}
+
+.required-pill {
+  background: #fef2f2;
+  border-radius: 999px;
+  color: #b91c1c;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 0.78rem;
+  line-height: 1;
+  padding: 0.4rem 0.6rem;
+}
+
+.form-actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.attached-files {
+  background: var(--pj-soft);
+  border-radius: 10px;
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
 @media (max-width: 575.98px) {
   .pet-card-main,
   .timeline-item,
@@ -360,5 +419,10 @@ body {
   .details-list div {
     grid-template-columns: 1fr;
     gap: 0.25rem;
+  }
+
+  .form-page-header,
+  .form-section-heading {
+    flex-direction: column;
   }
 }

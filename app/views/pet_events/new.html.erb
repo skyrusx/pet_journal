@@ -1,5 +1,12 @@
-<div class="py-4">
-  <h1 class="h3 mb-4">Новое событие</h1>
+<div class="form-page py-4">
+  <div class="form-page-header">
+    <div>
+      <div class="text-muted small mb-1"><%= @pet.name %></div>
+      <h1 class="h3 mb-1">Новое событие</h1>
+      <p class="text-muted mb-0">Добавьте запись в историю здоровья и ухода.</p>
+    </div>
+    <%= link_to "К журналу", pet_pet_events_path(@pet), class: "btn btn-outline-secondary" %>
+  </div>
 
   <%= render "form" %>
 </div>

@@ -1,4 +1,4 @@
-<%= form_with model: @pet, local: true do |f| %>
+<%= form_with model: @pet, local: true, class: "structured-form" do |f| %>
   <% if @pet.errors.any? %>
     <div class="alert alert-danger">
       <div class="fw-semibold mb-2">Проверь форму:</div>
@@ -10,71 +10,124 @@
     </div>
   <% end %>
 
-  <div class="mb-3">
-    <%= f.label :name, "Имя питомца", class: "form-label" %>
-    <%= f.text_field :name, class: "form-control" %>
-  </div>
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Базовое</h2>
+        <p class="text-muted mb-0">Минимум, чтобы создать понятную карточку питомца.</p>
+      </div>
+      <span class="required-pill">Имя обязательно</span>
+    </div>
 
-  <div class="mb-3">
-    <%= f.label :species, "Вид", class: "form-label" %>
-    <%= f.text_field :species, class: "form-control" %>
-  </div>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <%= f.label :name, "Имя питомца", class: "form-label" %>
+        <%= f.text_field :name, class: "form-control", autocomplete: "off" %>
+      </div>
 
-  <div class="mb-3">
-    <%= f.label :breed, "Порода", class: "form-label" %>
-    <%= f.text_field :breed, class: "form-control" %>
-  </div>
+      <div class="col-md-6">
+        <%= f.label :photo, "Фото питомца", class: "form-label" %>
+        <%= f.file_field :photo, class: "form-control" %>
+      </div>
 
-  <div class="mb-3">
-    <%= f.label :sex, "Пол", class: "form-label" %>
-    <%= f.select :sex,
-                 [["Не указан", nil], ["Мальчик", 0], ["Девочка", 1]],
-                 {},
-                 class: "form-select" %>
-  </div>
+      <div class="col-md-6">
+        <%= f.label :species, "Вид", class: "form-label" %>
+        <%= f.text_field :species, class: "form-control", placeholder: "Например: кот, собака" %>
+      </div>
 
-  <div class="mb-3">
-    <%= f.label :birth_date, "Дата рождения", class: "form-label" %>
-    <%= f.date_field :birth_date, class: "form-control" %>
-  </div>
+      <div class="col-md-6">
+        <%= f.label :breed, "Порода", class: "form-label" %>
+        <%= f.text_field :breed, class: "form-control", placeholder: "Если известна" %>
+      </div>
+    </div>
+  </section>
 
-  <div class="mb-3">
-    <%= f.label :weight, "Вес", class: "form-label" %>
-    <%= f.number_field :weight, step: 0.01, class: "form-control" %>
-  </div>
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Дополнительные данные</h2>
+        <p class="text-muted mb-0">Помогают точнее понимать возраст, внешний вид и текущий вес.</p>
+      </div>
+    </div>
 
-  <div class="mb-3">
-    <%= f.label :color, "Окрас", class: "form-label" %>
-    <%= f.text_field :color, class: "form-control" %>
-  </div>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <%= f.label :sex, "Пол", class: "form-label" %>
+        <%= f.select :sex,
+                     [["Не указан", nil], ["Мальчик", 0], ["Девочка", 1]],
+                     {},
+                     class: "form-select" %>
+      </div>
 
-  <div class="mb-3">
-    <%= f.label :chip_number, "Номер чипа", class: "form-label" %>
-    <%= f.text_field :chip_number, class: "form-control" %>
-  </div>
+      <div class="col-md-4">
+        <%= f.label :birth_date, "Дата рождения", class: "form-label" %>
+        <%= f.date_field :birth_date, class: "form-control" %>
+      </div>
 
-  <div class="mb-3">
-    <%= f.label :passport_number, "Номер ветпаспорта", class: "form-label" %>
-    <%= f.text_field :passport_number, class: "form-control" %>
-  </div>
+      <div class="col-md-4">
+        <%= f.label :weight, "Вес", class: "form-label" %>
+        <div class="input-group">
+          <%= f.number_field :weight, step: 0.01, class: "form-control" %>
+          <span class="input-group-text">кг</span>
+        </div>
+      </div>
 
-  <div class="form-check mb-3">
-    <%= f.check_box :neutered, class: "form-check-input" %>
-    <%= f.label :neutered, "Стерилизован / кастрирован", class: "form-check-label" %>
-  </div>
+      <div class="col-md-6">
+        <%= f.label :color, "Окрас", class: "form-label" %>
+        <%= f.text_field :color, class: "form-control" %>
+      </div>
+    </div>
+  </section>
 
-  <div class="mb-3">
-    <%= f.label :notes, "Заметки", class: "form-label" %>
-    <%= f.text_area :notes, rows: 4, class: "form-control" %>
-  </div>
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Документы</h2>
+        <p class="text-muted mb-0">Номера, которые удобно держать под рукой.</p>
+      </div>
+    </div>
 
-  <div class="mb-4">
-    <%= f.label :photo, "Фото питомца", class: "form-label" %>
-    <%= f.file_field :photo, class: "form-control" %>
-  </div>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <%= f.label :chip_number, "Номер чипа", class: "form-label" %>
+        <%= f.text_field :chip_number, class: "form-control" %>
+      </div>
 
-  <div class="d-flex gap-2">
+      <div class="col-md-6">
+        <%= f.label :passport_number, "Номер ветпаспорта", class: "form-label" %>
+        <%= f.text_field :passport_number, class: "form-control" %>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Медицинское</h2>
+        <p class="text-muted mb-0">Короткие заметки, которые важны для ухода и будущего PetTag.</p>
+      </div>
+    </div>
+
+    <div class="form-check form-switch mb-3">
+      <%= f.check_box :neutered, class: "form-check-input", role: "switch" %>
+      <%= f.label :neutered, "Стерилизован / кастрирован", class: "form-check-label" %>
+    </div>
+
+    <div>
+      <%= f.label :notes, "Заметки", class: "form-label" %>
+      <%= f.text_area :notes,
+                      rows: 4,
+                      class: "form-control",
+                      placeholder: "Особенности поведения, аллергии, важные привычки" %>
+    </div>
+  </section>
+
+  <div class="form-actions">
     <%= f.submit "Сохранить", class: "btn btn-primary" %>
-    <%= link_to "Назад", pets_path, class: "btn btn-outline-secondary" %>
+    <% if @pet.persisted? %>
+      <%= link_to "К обзору", pet_path(@pet), class: "btn btn-outline-secondary" %>
+    <% else %>
+      <%= link_to "К списку", pets_path, class: "btn btn-outline-secondary" %>
+    <% end %>
   </div>
 <% end %>
