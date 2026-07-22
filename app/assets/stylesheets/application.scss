@@ -405,6 +405,111 @@ body {
   padding: 1rem;
 }
 
+.public-url-box {
+  background: var(--pj-soft);
+  border: 1px solid var(--pj-border);
+  border-radius: 10px;
+  color: var(--pj-ink);
+  font-family: monospace;
+  overflow-wrap: anywhere;
+  padding: 0.85rem;
+}
+
+.preview-stack {
+  display: grid;
+  gap: 1rem;
+}
+
+.preview-stack > div {
+  border-bottom: 1px solid var(--pj-border);
+  padding-bottom: 1rem;
+}
+
+.preview-stack > div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.public-pet-page {
+  align-items: center;
+  background: #eef7f5;
+  display: flex;
+  justify-content: center;
+  min-height: calc(100vh - 104px);
+  padding: 1rem;
+}
+
+.public-pet-card {
+  background: #fff;
+  border: 1px solid var(--pj-border);
+  border-radius: 18px;
+  box-shadow: 0 18px 48px rgba(23, 32, 42, 0.12);
+  display: grid;
+  grid-template-columns: minmax(220px, 0.75fr) 1fr;
+  max-width: 920px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.public-pet-photo-wrap {
+  background: var(--pj-soft);
+  min-height: 360px;
+}
+
+.public-pet-photo {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.public-pet-photo-placeholder {
+  align-items: center;
+  color: var(--pj-teal);
+  display: flex;
+  font-size: 5rem;
+  font-weight: 800;
+  justify-content: center;
+}
+
+.public-pet-content {
+  padding: 2rem;
+}
+
+.public-info-list {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.public-info-list section {
+  background: var(--pj-soft);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.public-info-list h2 {
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.public-info-list p {
+  color: var(--pj-muted);
+  margin-bottom: 0;
+}
+
+.public-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.public-safe-note {
+  background: #fff7ed;
+  border-radius: 12px;
+  color: var(--pj-amber);
+  padding: 1rem;
+}
+
 @media (max-width: 575.98px) {
   .pet-card-main,
   .timeline-item,
@@ -424,5 +529,17 @@ body {
   .form-page-header,
   .form-section-heading {
     flex-direction: column;
+  }
+
+  .public-pet-card {
+    grid-template-columns: 1fr;
+  }
+
+  .public-pet-photo-wrap {
+    min-height: 260px;
+  }
+
+  .public-pet-content {
+    padding: 1.25rem;
   }
 }

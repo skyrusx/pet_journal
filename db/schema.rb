@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_01_080739) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_22_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -53,6 +53,21 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_01_080739) do
     t.index ["pet_id"], name: "index_pet_events_on_pet_id"
   end
 
+  create_table "pet_tags", force: :cascade do |t|
+    t.bigint "pet_id", null: false
+    t.string "public_token", null: false
+    t.boolean "enabled", default: true, null: false
+    t.text "public_message"
+    t.text "behavior_notes"
+    t.text "medical_notes"
+    t.string "contact_phone"
+    t.boolean "show_phone", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pet_id"], name: "index_pet_tags_on_pet_id", unique: true
+    t.index ["public_token"], name: "index_pet_tags_on_public_token", unique: true
+  end
+
   create_table "pets", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "name"
@@ -86,5 +101,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_01_080739) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "pet_events", "pets"
+  add_foreign_key "pet_tags", "pets"
   add_foreign_key "pets", "users"
 end

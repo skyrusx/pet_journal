@@ -1,0 +1,97 @@
+<div class="pet-tag-page py-4">
+  <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
+    <div>
+      <div class="text-muted small mb-1"><%= @pet.name %></div>
+      <h1 class="h3 mb-1">Жетон</h1>
+      <p class="text-muted mb-0">Публичный QR-профиль для связи, если питомец потеряется.</p>
+    </div>
+
+    <div class="d-flex flex-wrap align-items-start gap-2">
+      <%= link_to "Обзор питомца", pet_path(@pet), class: "btn btn-outline-secondary" %>
+      <% if @pet_tag.persisted? %>
+        <%= link_to "Редактировать", edit_pet_pet_tag_path(@pet), class: "btn btn-primary" %>
+      <% end %>
+    </div>
+  </div>
+
+  <nav class="pet-tabs mb-4" aria-label="Навигация питомца">
+    <%= link_to "Обзор", pet_path(@pet), class: "pet-tab" %>
+    <%= link_to "Журнал", pet_pet_events_path(@pet), class: "pet-tab" %>
+    <%= link_to "Жетон", pet_pet_tag_path(@pet), class: "pet-tab active" %>
+    <%= link_to "Данные", edit_pet_path(@pet), class: "pet-tab" %>
+  </nav>
+
+  <% if @pet_tag.persisted? %>
+    <div class="row g-4">
+      <section class="col-lg-7">
+        <div class="action-panel">
+          <div class="d-flex justify-content-between gap-3 align-items-start mb-3">
+            <div>
+              <div class="text-muted small mb-1">Публичная ссылка</div>
+              <h2 class="h4 mb-0"><%= @pet_tag.enabled? ? "QR-профиль активен" : "QR-профиль отключен" %></h2>
+            </div>
+            <span class="status-pill"><%= @pet_tag.enabled? ? "Активен" : "Отключен" %></span>
+          </div>
+
+          <div class="public-url-box mb-3">
+            <%= public_pet_tag_url(@pet_tag.public_token) %>
+          </div>
+
+          <div class="d-flex flex-wrap gap-2">
+            <%= link_to "Открыть публичную страницу",
+                        public_pet_tag_path(@pet_tag.public_token),
+                        class: "btn btn-primary",
+                        target: "_blank",
+                        rel: "noopener" %>
+            <%= link_to "Изменить настройки", edit_pet_pet_tag_path(@pet), class: "btn btn-outline-secondary" %>
+          </div>
+        </div>
+      </section>
+
+      <aside class="col-lg-5">
+        <div class="action-panel">
+          <div class="text-muted small mb-1">Предпросмотр</div>
+          <h2 class="h4 mb-3"><%= @pet.name %></h2>
+
+          <div class="preview-stack">
+            <div>
+              <div class="fw-semibold">Сообщение</div>
+              <p class="text-muted mb-0"><%= @pet_tag.public_message.presence || "Сообщение не заполнено" %></p>
+            </div>
+
+            <div>
+              <div class="fw-semibold">Поведение</div>
+              <p class="text-muted mb-0"><%= @pet_tag.behavior_notes.presence || "Особенности не указаны" %></p>
+            </div>
+
+            <div>
+              <div class="fw-semibold">Медицинское</div>
+              <p class="text-muted mb-0"><%= @pet_tag.medical_notes.presence || "Медицинские заметки не указаны" %></p>
+            </div>
+
+            <div>
+              <div class="fw-semibold">Телефон</div>
+              <p class="text-muted mb-0">
+                <% if @pet_tag.show_phone? && @pet_tag.contact_phone.present? %>
+                  Показывается на публичной странице
+                <% else %>
+                  Скрыт
+                <% end %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  <% else %>
+    <div class="empty-panel mb-4">
+      <h2 class="h4 mb-2">QR-профиль еще не создан</h2>
+      <p class="text-muted mb-0">
+        Создайте публичную страницу с безопасным минимумом данных: фото и имя питомца, особенности поведения,
+        медицинские заметки и контакт для связи.
+      </p>
+    </div>
+
+    <%= render "form" %>
+  <% end %>
+</div>

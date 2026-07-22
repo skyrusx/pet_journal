@@ -1,0 +1,85 @@
+<%= form_with model: @pet_tag,
+              url: pet_pet_tag_path(@pet),
+              method: @pet_tag.persisted? ? :patch : :post,
+              local: true,
+              class: "structured-form" do |f| %>
+  <% if @pet_tag.errors.any? %>
+    <div class="alert alert-danger">
+      <div class="fw-semibold mb-2">Проверь форму:</div>
+      <ul class="mb-0">
+        <% @pet_tag.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Публичный профиль</h2>
+        <p class="text-muted mb-0">Эта информация будет доступна по ссылке на жетоне.</p>
+      </div>
+      <% if @pet_tag.persisted? %>
+        <span class="status-pill"><%= @pet_tag.enabled? ? "Активен" : "Отключен" %></span>
+      <% end %>
+    </div>
+
+    <div class="form-check form-switch mb-3">
+      <%= f.check_box :enabled, class: "form-check-input", role: "switch" %>
+      <%= f.label :enabled, "Публичная страница включена", class: "form-check-label" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :public_message, "Сообщение", class: "form-label" %>
+      <%= f.text_area :public_message,
+                      rows: 3,
+                      class: "form-control",
+                      placeholder: "Например: если вы нашли меня, пожалуйста, свяжитесь с владельцем" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :behavior_notes, "Особенности поведения", class: "form-label" %>
+      <%= f.text_area :behavior_notes,
+                      rows: 3,
+                      class: "form-control",
+                      placeholder: "Пугливый, не любит руки, откликается на имя" %>
+    </div>
+
+    <div>
+      <%= f.label :medical_notes, "Важные медицинские заметки", class: "form-label" %>
+      <%= f.text_area :medical_notes,
+                      rows: 3,
+                      class: "form-control",
+                      placeholder: "Аллергии, лекарства, хронические состояния" %>
+    </div>
+  </section>
+
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Связь</h2>
+        <p class="text-muted mb-0">Показывайте только тот контакт, который готовы сделать публичным.</p>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-7">
+        <%= f.label :contact_phone, "Телефон", class: "form-label" %>
+        <%= f.telephone_field :contact_phone, class: "form-control", placeholder: "+7..." %>
+      </div>
+
+      <div class="col-md-5 d-flex align-items-end">
+        <div class="form-check form-switch mb-2">
+          <%= f.check_box :show_phone, class: "form-check-input", role: "switch" %>
+          <%= f.label :show_phone, "Показывать телефон", class: "form-check-label" %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="form-actions">
+    <%= f.submit @pet_tag.persisted? ? "Сохранить настройки" : "Создать QR-профиль", class: "btn btn-primary" %>
+    <%= link_to "К обзору", pet_path(@pet), class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>

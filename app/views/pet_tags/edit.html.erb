@@ -1,0 +1,12 @@
+<div class="form-page py-4">
+  <div class="form-page-header">
+    <div>
+      <div class="text-muted small mb-1"><%= @pet.name %></div>
+      <h1 class="h3 mb-1">Настроить жетон</h1>
+      <p class="text-muted mb-0">Выберите, какие данные будут видны на публичной странице.</p>
+    </div>
+    <%= link_to "К жетону", pet_pet_tag_path(@pet), class: "btn btn-outline-secondary" %>
+  </div>
+
+  <%= render "form" %>
+</div>

@@ -29,7 +29,7 @@
     <% if @attached_files_count.positive? %>
       <a href="#documents" class="pet-tab">Документы</a>
     <% end %>
-    <a href="#pet-tag" class="pet-tab">Жетон</a>
+    <%= link_to "Жетон", pet_pet_tag_path(@pet), class: "pet-tab" %>
     <a href="#details" class="pet-tab">Данные</a>
   </nav>
 
@@ -105,15 +105,17 @@
             <div class="text-muted small mb-1">PetTag</div>
             <h2 class="h4 mb-0">QR-профиль безопасности</h2>
           </div>
-          <span class="status-pill">Не создан</span>
+          <span class="status-pill"><%= @pet.pet_tag.present? ? "Создан" : "Не создан" %></span>
         </div>
 
         <p class="text-muted">
-          Создайте публичный QR-профиль для жетона: фото, имя, особенности поведения и безопасные способы связи, если питомец потеряется.
+          Публичная страница для жетона: фото, имя, особенности поведения и безопасные способы связи, если питомец потеряется.
         </p>
 
         <div class="d-flex flex-wrap gap-2">
-          <%= link_to "Заполнить данные питомца", edit_pet_path(@pet), class: "btn btn-primary btn-sm" %>
+          <%= link_to @pet.pet_tag.present? ? "Открыть жетон" : "Создать QR-профиль",
+                      pet_pet_tag_path(@pet),
+                      class: "btn btn-primary btn-sm" %>
         </div>
       </section>
 

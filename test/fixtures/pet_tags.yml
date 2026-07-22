@@ -1,0 +1,19 @@
+one:
+  pet: one
+  public_token: publictokenone1234567890
+  enabled: true
+  public_message: Если нашли питомца, пожалуйста, позвоните владельцу.
+  behavior_notes: Спокойная, откликается на имя.
+  medical_notes: Нужна обычная вода, лекарств нет.
+  contact_phone: "+79990000001"
+  show_phone: true
+
+two:
+  pet: two
+  public_token: publictokentwo1234567890
+  enabled: false
+  public_message: Профиль отключен.
+  behavior_notes:
+  medical_notes:
+  contact_phone:
+  show_phone: false

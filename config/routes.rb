@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get "pet_events/destroy"
   root "pages#index"
   devise_for :users
+  get "p/:token" => "public_pet_tags#show", as: :public_pet_tag
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -22,6 +23,7 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   resources :pets, only: %i[index show new create edit update] do
+    resource :pet_tag, path: :tag, only: %i[show create edit update]
     resources :pet_events, path: :events
   end
 end
