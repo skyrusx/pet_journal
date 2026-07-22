@@ -38,4 +38,56 @@ module PetsHelper
     event.event_type_label
   end
 
+  def pet_overview_signal(pet, pet_tag, latest_scan, latest_event)
+    if pet_tag&.lost_mode_enabled?
+      return {
+        tone: "danger",
+        label: "Lost Mode",
+        title: "Питомец отмечен как потерявшийся",
+        body: pet_tag.lost_message.presence || "Проверьте публичную страницу и контакт для связи."
+      }
+    end
+
+    if latest_scan.present?
+      return {
+        tone: "success",
+        label: "PetTag",
+        title: "QR-профиль недавно открывали",
+        body: "Последнее сканирование #{latest_scan.created_at.strftime("%d.%m.%Y %H:%M")}."
+      }
+    end
+
+    if latest_event.present?
+      return {
+        tone: "neutral",
+        label: latest_event.event_type_label,
+        title: latest_event.title.presence || latest_event.event_type_label,
+        body: "Последняя запись от #{latest_event.event_date.strftime("%d.%m.%Y")}."
+      }
+    end
+
+    {
+      tone: "warning",
+      label: "Старт",
+      title: "Добавьте первую запись в журнал",
+      body: "Так обзор начнет показывать историю здоровья и ухода."
+    }
+  end
+
+  def pet_profile_completion_items(pet, pet_tag)
+    [
+      ["Фото", pet.photo.attached?],
+      ["Дата рождения", pet.birth_date.present?],
+      ["Вес", pet.weight.present?],
+      ["Чип", pet.chip_number.present?],
+      ["PetTag", pet_tag&.persisted?]
+    ]
+  end
+
+  def pet_profile_completion_percent(pet, pet_tag)
+    items = pet_profile_completion_items(pet, pet_tag)
+    completed = items.count { |_label, done| done }
+
+    ((completed.to_f / items.size) * 100).round
+  end
 end

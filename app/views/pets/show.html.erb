@@ -1,27 +1,43 @@
-<div class="pet-overview py-4">
-  <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
-    <div class="d-flex gap-3 align-items-center">
-      <% if @pet.photo.attached? %>
-        <%= image_tag @pet.photo, class: "pet-avatar" %>
-      <% else %>
-        <div class="pet-avatar pet-avatar-placeholder">
-          <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
-        </div>
-      <% end %>
+<% overview_signal = pet_overview_signal(@pet, @pet_tag, @latest_pet_tag_scan, @recent_events.first) %>
+<% completion_percent = pet_profile_completion_percent(@pet, @pet_tag) %>
 
-      <div>
-        <div class="text-muted small mb-1"><%= pet_short_description(@pet) %></div>
-        <h1 class="h2 mb-1"><%= @pet.name %></h1>
-        <div class="text-muted"><%= pet_age(@pet) %></div>
+<div class="pet-overview py-4">
+  <section class="pet-workspace-hero mb-4">
+    <div class="pet-workspace-main">
+      <div class="pet-identity">
+        <% if @pet.photo.attached? %>
+          <%= image_tag @pet.photo, class: "pet-hero-avatar" %>
+        <% else %>
+          <div class="pet-hero-avatar pet-avatar-placeholder">
+            <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
+          </div>
+        <% end %>
+
+        <div class="pet-identity-body">
+          <div class="text-muted small mb-1"><%= pet_short_description(@pet) %></div>
+          <h1 class="h2 mb-2"><%= @pet.name %></h1>
+          <div class="pet-meta-row">
+            <span><%= pet_age(@pet) %></span>
+            <span><%= pet_weight_label(@pet.weight) %></span>
+            <span><%= pet_sex_label(@pet) %></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="current-signal <%= overview_signal[:tone] %>">
+        <span><%= overview_signal[:label] %></span>
+        <h2><%= overview_signal[:title] %></h2>
+        <p><%= overview_signal[:body] %></p>
       </div>
     </div>
 
-    <div class="d-flex flex-wrap align-items-start gap-2">
+    <div class="pet-workspace-actions">
       <%= link_to "Добавить событие", new_pet_pet_event_path(@pet), class: "btn btn-primary" %>
+      <%= link_to "Открыть журнал", pet_pet_events_path(@pet), class: "btn btn-outline-primary" %>
+      <%= link_to "Жетон", pet_pet_tag_path(@pet), class: "btn btn-outline-secondary" %>
       <%= link_to "Редактировать", edit_pet_path(@pet), class: "btn btn-outline-secondary" %>
-      <%= link_to "Все питомцы", pets_path, class: "btn btn-outline-secondary" %>
     </div>
-  </div>
+  </section>
 
   <nav class="pet-tabs mb-4" aria-label="Навигация питомца">
     <%= link_to "Обзор", pet_path(@pet), class: "pet-tab active" %>
@@ -33,68 +49,94 @@
     <a href="#details" class="pet-tab">Данные</a>
   </nav>
 
-  <div class="row g-3 mb-4">
-    <div class="col-md-6 col-xl-3">
-      <div class="overview-card h-100">
-        <div class="overview-card-label">Вес</div>
-        <div class="overview-card-value"><%= pet_weight_label(@pet.weight) %></div>
-        <div class="overview-card-note">Текущее значение из карточки</div>
-      </div>
+  <div class="overview-metrics mb-4">
+    <div class="overview-card">
+      <div class="overview-card-label">Вес</div>
+      <div class="overview-card-value"><%= pet_weight_label(@pet.weight) %></div>
+      <div class="overview-card-note">Текущее значение из карточки</div>
     </div>
 
     <% [["vaccination", "Прививка"], ["treatment", "Обработка"], ["visit", "Визит"]].each do |event_type, label| %>
       <% event = @latest_events_by_type[event_type] %>
-      <div class="col-md-6 col-xl-3">
-        <div class="overview-card h-100">
-          <div class="overview-card-label"><%= label %></div>
-          <% if event.present? %>
-            <div class="overview-card-value"><%= event.event_date.strftime("%d.%m.%Y") %></div>
-            <div class="overview-card-note"><%= event.title.presence || event.event_type_label %></div>
-          <% else %>
-            <div class="overview-card-value">—</div>
-            <div class="overview-card-note">Записей пока нет</div>
-          <% end %>
-        </div>
+      <div class="overview-card">
+        <div class="overview-card-label"><%= label %></div>
+        <% if event.present? %>
+          <div class="overview-card-value"><%= event.event_date.strftime("%d.%m.%Y") %></div>
+          <div class="overview-card-note"><%= event.title.presence || event.event_type_label %></div>
+        <% else %>
+          <div class="overview-card-value">—</div>
+          <div class="overview-card-note">Записей пока нет</div>
+        <% end %>
       </div>
     <% end %>
   </div>
 
   <div class="row g-4">
     <section class="col-lg-7">
-      <div class="section-heading">
-        <div>
-          <h2 class="h4 mb-1">Последние события</h2>
-          <p class="text-muted mb-0">Недавняя история ухода и здоровья</p>
+      <div class="workspace-section mb-4">
+        <div class="section-heading">
+          <div>
+            <div class="text-muted small mb-1">Журнал</div>
+            <h2 class="h4 mb-1">Последние события</h2>
+            <p class="text-muted mb-0">Недавняя история ухода и здоровья</p>
+          </div>
+          <%= link_to "Все события", pet_pet_events_path(@pet), class: "btn btn-outline-primary btn-sm" %>
         </div>
-        <%= link_to "Открыть журнал", pet_pet_events_path(@pet), class: "btn btn-outline-primary btn-sm" %>
-      </div>
 
-      <% if @recent_events.any? %>
-        <div class="timeline-list">
-          <% @recent_events.each do |event| %>
-            <div class="timeline-item">
-              <div class="timeline-date"><%= event.event_date.strftime("%d.%m.%Y") %></div>
-              <div class="timeline-content">
-                <div class="d-flex flex-wrap gap-2 align-items-center mb-1">
-                  <span class="event-badge"><%= event.event_type_label %></span>
-                  <% if event.files.attached? %>
-                    <span class="text-muted small">Есть файлы</span>
+        <% if @recent_events.any? %>
+          <div class="timeline-list">
+            <% @recent_events.each do |event| %>
+              <article class="timeline-item compact">
+                <div class="timeline-date"><%= event.event_date.strftime("%d.%m.%Y") %></div>
+                <div class="timeline-content">
+                  <div class="d-flex flex-wrap gap-2 align-items-center mb-1">
+                    <span class="event-badge"><%= event.event_type_label %></span>
+                    <% if event.files.attached? %>
+                      <span class="attachment-pill">Есть файлы</span>
+                    <% end %>
+                  </div>
+                  <h3 class="h6 mb-1">
+                    <%= link_to event.title.presence || event.event_type_label,
+                                pet_pet_event_path(@pet, event),
+                                class: "text-decoration-none" %>
+                  </h3>
+                  <% if event.description.present? %>
+                    <p class="text-muted mb-0"><%= truncate(event.description, length: 130) %></p>
                   <% end %>
                 </div>
-                <h3 class="h6 mb-1"><%= link_to event.title.presence || event.event_type_label, pet_pet_event_path(@pet, event), class: "text-decoration-none" %></h3>
-                <% if event.description.present? %>
-                  <p class="text-muted mb-0"><%= truncate(event.description, length: 130) %></p>
-                <% end %>
-              </div>
+              </article>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="empty-state-inline">
+            <h3 class="h5 mb-2">Журнал пока пуст</h3>
+            <p class="text-muted mb-3">Добавьте первую запись: вес, прививку, визит к врачу или заметку.</p>
+            <%= link_to "Добавить событие", new_pet_pet_event_path(@pet), class: "btn btn-primary btn-sm" %>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @attached_files_count.positive? %>
+        <section id="documents" class="workspace-section">
+          <div class="section-heading compact">
+            <div>
+              <div class="text-muted small mb-1">Документы</div>
+              <h2 class="h4 mb-0"><%= @attached_files_count %> <%= russian_plural(@attached_files_count, "файл", "файла", "файлов") %></h2>
             </div>
-          <% end %>
-        </div>
-      <% else %>
-        <div class="empty-panel">
-          <h3 class="h5 mb-2">Журнал пока пуст</h3>
-          <p class="text-muted mb-3">Добавьте первую запись: вес, прививку, визит к врачу или заметку.</p>
-          <%= link_to "Добавить событие", new_pet_pet_event_path(@pet), class: "btn btn-primary" %>
-        </div>
+          </div>
+
+          <div class="document-list">
+            <% @document_events.each do |event| %>
+              <div class="document-row">
+                <div>
+                  <div class="fw-semibold"><%= event.title.presence || event.event_type_label %></div>
+                  <div class="text-muted small"><%= event.event_date.strftime("%d.%m.%Y") %> · <%= event.files.count %> <%= russian_plural(event.files.count, "файл", "файла", "файлов") %></div>
+                </div>
+                <%= link_to "Открыть", pet_pet_event_path(@pet, event), class: "btn btn-outline-secondary btn-sm" %>
+              </div>
+            <% end %>
+          </div>
+        </section>
       <% end %>
     </section>
 
@@ -133,13 +175,28 @@
         </div>
       </section>
 
-      <% if @attached_files_count.positive? %>
-        <section id="documents" class="action-panel mb-4">
-          <div class="text-muted small mb-1">Документы</div>
-          <h2 class="h4 mb-2"><%= @attached_files_count %> <%= russian_plural(@attached_files_count, "файл", "файла", "файлов") %></h2>
-          <p class="text-muted mb-0">Вложения уже есть в событиях журнала. Отдельный раздел документов можно собрать поверх них.</p>
-        </section>
-      <% end %>
+      <section class="action-panel mb-4">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">Профиль</div>
+            <h2 class="h4 mb-0">Заполненность <%= completion_percent %>%</h2>
+          </div>
+          <%= link_to "Данные", edit_pet_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
+        </div>
+
+        <div class="completion-bar mb-3">
+          <div style="width: <%= completion_percent %>%"></div>
+        </div>
+
+        <div class="completion-list">
+          <% pet_profile_completion_items(@pet, @pet_tag).each do |label, done| %>
+            <div class="<%= done ? "done" : "" %>">
+              <span><%= label %></span>
+              <strong><%= done ? "Готово" : "Добавить" %></strong>
+            </div>
+          <% end %>
+        </div>
+      </section>
 
       <section id="details" class="details-panel">
         <div class="section-heading compact">

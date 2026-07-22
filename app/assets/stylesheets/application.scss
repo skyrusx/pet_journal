@@ -328,6 +328,142 @@ a {
   padding: 1rem;
 }
 
+.pet-workspace-hero {
+  background: linear-gradient(135deg, var(--pj-surface) 0%, var(--pj-surface-strong) 100%);
+  border: 1px solid var(--pj-border);
+  border-radius: 14px;
+  box-shadow: var(--pj-shadow);
+  padding: 1.25rem;
+}
+
+.pet-workspace-main {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+}
+
+.pet-identity {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.pet-identity-body {
+  min-width: 0;
+}
+
+.pet-hero-avatar {
+  border-radius: 22px;
+  flex: 0 0 128px;
+  height: 128px;
+  object-fit: cover;
+  width: 128px;
+}
+
+.pet-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pet-meta-row span {
+  background: var(--pj-soft);
+  border: 1px solid var(--pj-border);
+  border-radius: 999px;
+  color: var(--pj-muted);
+  font-size: 0.85rem;
+  padding: 0.42rem 0.65rem;
+}
+
+.current-signal {
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.current-signal span {
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+  padding: 0.42rem 0.62rem;
+}
+
+.current-signal h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.4rem;
+}
+
+.current-signal p {
+  color: var(--pj-muted);
+  margin-bottom: 0;
+}
+
+.current-signal.neutral {
+  background: var(--pj-soft);
+  border: 1px solid var(--pj-border);
+}
+
+.current-signal.neutral span {
+  background: var(--pj-lavender-soft);
+  color: var(--pj-lavender);
+}
+
+.current-signal.success {
+  background: var(--pj-success-soft);
+  border: 1px solid color-mix(in srgb, var(--pj-success) 28%, var(--pj-border));
+}
+
+.current-signal.success span {
+  background: var(--pj-surface);
+  color: var(--pj-success);
+}
+
+.current-signal.warning {
+  background: var(--pj-amber-soft);
+  border: 1px solid color-mix(in srgb, var(--pj-amber) 28%, var(--pj-border));
+}
+
+.current-signal.warning span {
+  background: var(--pj-surface);
+  color: var(--pj-amber);
+}
+
+.current-signal.danger {
+  background: var(--pj-danger-soft);
+  border: 1px solid color-mix(in srgb, var(--pj-danger) 32%, var(--pj-border));
+}
+
+.current-signal.danger span {
+  background: var(--pj-surface);
+  color: var(--pj-danger);
+}
+
+.pet-workspace-actions {
+  border-top: 1px solid var(--pj-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+}
+
+.overview-metrics {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.workspace-section {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  box-shadow: var(--pj-shadow);
+  padding: 1.25rem;
+}
+
 .overview-card-label {
   color: var(--pj-muted);
   font-size: 0.85rem;
@@ -370,6 +506,10 @@ a {
   border: 1px solid var(--pj-border);
   border-radius: 12px;
   padding: 1rem;
+}
+
+.timeline-item.compact {
+  grid-template-columns: 88px 1fr;
 }
 
 .timeline-date {
@@ -469,6 +609,54 @@ a {
   border-radius: 10px;
   margin-top: 1rem;
   padding: 1rem;
+}
+
+.document-list,
+.completion-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.document-row,
+.completion-list > div {
+  align-items: center;
+  border-bottom: 1px solid var(--pj-border);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding-bottom: 0.75rem;
+}
+
+.document-row:last-child,
+.completion-list > div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.completion-list span {
+  color: var(--pj-muted);
+}
+
+.completion-list strong {
+  color: var(--pj-amber);
+  font-size: 0.9rem;
+}
+
+.completion-list .done strong {
+  color: var(--pj-success);
+}
+
+.completion-bar {
+  background: var(--pj-soft);
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.completion-bar div {
+  background: var(--pj-teal-strong);
+  border-radius: inherit;
+  height: 100%;
 }
 
 .pet-card {
@@ -1076,6 +1264,31 @@ a {
   .timeline-item,
   .journal-event {
     grid-template-columns: 1fr;
+  }
+
+  .pet-workspace-main,
+  .overview-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .pet-identity {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pet-hero-avatar {
+    flex-basis: 104px;
+    height: 104px;
+    width: 104px;
+  }
+
+  .pet-workspace-actions .btn {
+    width: 100%;
+  }
+
+  .document-row {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .pet-card-main {
