@@ -11,7 +11,7 @@
     </div>
 
     <div class="public-pet-content">
-      <div class="text-muted small mb-1">PetJournal PetTag</div>
+      <div class="public-kicker">PetJournal PetTag</div>
       <% if @pet_tag.lost_mode_enabled? %>
         <div class="lost-mode-banner">Я потерялся</div>
       <% end %>
@@ -47,21 +47,25 @@
         <% end %>
       </div>
 
-      <% if @pet_tag.show_phone? && @pet_tag.contact_phone.present? %>
-        <div class="public-actions">
+      <div class="public-action-panel">
+        <% if @pet_tag.show_phone? && @pet_tag.contact_phone.present? %>
           <%= link_to "Позвонить владельцу",
                       "tel:#{@pet_tag.contact_phone.gsub(/[^\d+]/, "")}",
                       class: "btn #{@pet_tag.lost_mode_enabled? ? "btn-danger" : "btn-primary"} btn-lg" %>
-        </div>
-      <% else %>
-        <div class="public-safe-note">
-          Контакт владельца скрыт. Проверьте жетон или обратитесь в ближайшую ветклинику для помощи.
-        </div>
-      <% end %>
+        <% else %>
+          <div class="public-safe-note">
+            Контакт владельца скрыт. Проверьте жетон или обратитесь в ближайшую ветклинику для помощи.
+          </div>
+        <% end %>
+      </div>
 
       <section class="found-pet-panel">
-        <h2>Я нашел питомца</h2>
-        <p>Можно добровольно отправить владельцу примерное место. Браузер спросит разрешение отдельно.</p>
+        <div class="found-pet-heading">
+          <div>
+            <h2>Я нашел питомца</h2>
+            <p>Можно отправить владельцу примерное место. Браузер спросит разрешение отдельно.</p>
+          </div>
+        </div>
 
         <%= form_with url: public_pet_tag_location_path(@pet_tag.public_token), method: :post, local: true, class: "found-pet-form" do |f| %>
           <%= hidden_field_tag :scan_token, @pet_tag_scan.public_token %>

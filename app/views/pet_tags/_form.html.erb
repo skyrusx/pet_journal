@@ -30,6 +30,10 @@
       <%= f.label :enabled, "Публичная страница включена", class: "form-check-label" %>
     </div>
 
+    <div class="form-hint mb-3">
+      На public page не показывается email владельца. Телефон появится только если вы включите его ниже.
+    </div>
+
     <div class="mb-3">
       <%= f.label :public_message, "Сообщение", class: "form-label" %>
       <%= f.text_area :public_message,
@@ -110,6 +114,10 @@
         <%= f.label :notification_preference, "Email-уведомления", class: "form-label" %>
         <%= f.select :notification_preference, notification_options, {}, class: "form-select" %>
       </div>
+    </div>
+
+    <div class="form-hint mt-3">
+      Уведомления о геолокации отправляются всегда, когда человек добровольно передает место через public page.
     </div>
   </section>
 

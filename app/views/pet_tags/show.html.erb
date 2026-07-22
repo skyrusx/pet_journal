@@ -22,65 +22,120 @@
   </nav>
 
   <% if @pet_tag.persisted? %>
+    <section class="pet-tag-hero mb-4">
+      <div class="pet-tag-hero-main">
+        <div>
+          <span class="<%= pet_tag_status_class(@pet_tag) %>"><%= pet_tag_status_label(@pet_tag) %></span>
+          <h2 class="h3 mt-3 mb-2"><%= pet_tag_primary_signal(@pet_tag, @recent_scans.first) %></h2>
+          <p class="text-muted mb-0">
+            QR-профиль показывает только выбранные данные и помогает быстро связаться с владельцем.
+          </p>
+        </div>
+
+        <div class="pet-tag-stats">
+          <div>
+            <span><%= @scan_count %></span>
+            <small><%= russian_plural(@scan_count, "сканирование", "сканирования", "сканирований") %></small>
+          </div>
+          <div>
+            <span><%= @pet_tag.show_phone? && @pet_tag.contact_phone.present? ? "Да" : "Нет" %></span>
+            <small>телефон виден</small>
+          </div>
+          <div>
+            <span><%= notification_label(@pet_tag.notification_preference) %></span>
+            <small>уведомления</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="pet-tag-hero-actions">
+        <%= link_to "Открыть public page",
+                    public_pet_tag_path(@pet_tag.public_token),
+                    class: "btn btn-primary",
+                    target: "_blank",
+                    rel: "noopener" %>
+        <%= link_to "Редактировать", edit_pet_pet_tag_path(@pet), class: "btn btn-outline-secondary" %>
+      </div>
+    </section>
+
     <div class="row g-4">
       <section class="col-lg-7">
-        <div class="action-panel mb-4">
-          <div class="d-flex justify-content-between gap-3 align-items-start mb-3">
-            <div>
-              <div class="text-muted small mb-1">Публичная ссылка</div>
-              <h2 class="h4 mb-0">
-                <% if @pet_tag.lost_mode_enabled? %>
-                  Lost Mode включен
-                <% else %>
-                  <%= @pet_tag.enabled? ? "QR-профиль активен" : "QR-профиль отключен" %>
-                <% end %>
-              </h2>
+        <div class="tag-section-grid mb-4">
+          <div class="action-panel">
+            <div class="section-heading compact">
+              <div>
+                <div class="text-muted small mb-1">Публичная ссылка</div>
+                <h2 class="h5 mb-0">Адрес QR-профиля</h2>
+              </div>
             </div>
-            <span class="<%= @pet_tag.lost_mode_enabled? ? "lost-pill" : "status-pill" %>">
-              <%= @pet_tag.lost_mode_enabled? ? "Потерялся" : (@pet_tag.enabled? ? "Активен" : "Отключен") %>
+
+            <div class="public-url-box mb-3">
+              <%= public_pet_tag_url(@pet_tag.public_token) %>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+              <%= button_to "Обновить ссылку",
+                            rotate_token_pet_pet_tag_path(@pet),
+                            method: :patch,
+                            class: "btn btn-outline-danger btn-sm",
+                            form: { onsubmit: "return confirm('Обновить публичную ссылку? Старый QR-код перестанет работать.')" } %>
+              <% if @pet_tag.token_rotated_at.present? %>
+                <span class="text-muted small align-self-center">Обновлена <%= @pet_tag.token_rotated_at.strftime("%d.%m.%Y %H:%M") %></span>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="action-panel qr-panel">
+            <div class="section-heading compact">
+              <div>
+                <div class="text-muted small mb-1">QR-код</div>
+                <h2 class="h5 mb-0">Для печати</h2>
+              </div>
+            </div>
+
+            <div class="qr-preview">
+              <%= image_tag qr_pet_pet_tag_path(@pet, format: :svg), alt: "QR-код PetTag для #{@pet.name}" %>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mt-3">
+              <%= link_to "SVG", qr_pet_pet_tag_path(@pet, format: :svg), class: "btn btn-outline-primary btn-sm" %>
+              <%= link_to "PNG", qr_pet_pet_tag_path(@pet, format: :png), class: "btn btn-outline-primary btn-sm" %>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-panel mb-4">
+          <div class="section-heading compact">
+            <div>
+              <div class="text-muted small mb-1">Lost Mode</div>
+              <h2 class="h5 mb-0"><%= @pet_tag.lost_mode_enabled? ? "Питомец отмечен как потерявшийся" : "Режим потери выключен" %></h2>
+            </div>
+            <span class="<%= @pet_tag.lost_mode_enabled? ? "lost-pill" : "status-pill muted" %>">
+              <%= @pet_tag.lost_mode_enabled? ? "Включен" : "Выключен" %>
             </span>
           </div>
 
-          <div class="public-url-box mb-3">
-            <%= public_pet_tag_url(@pet_tag.public_token) %>
-          </div>
+          <% if @pet_tag.lost_mode_enabled? %>
+            <div class="lost-mode-summary">
+              <p><%= @pet_tag.lost_message.presence || "Сообщение при потере не заполнено." %></p>
+              <div class="text-muted small">Последнее место: <%= @pet_tag.last_seen_location.presence || "не указано" %></div>
+            </div>
+          <% else %>
+            <p class="text-muted mb-3">Включайте Lost Mode только когда питомец действительно потерялся. Public page станет заметнее, а уведомления можно получать при каждом открытии.</p>
+          <% end %>
 
           <div class="d-flex flex-wrap gap-2">
-            <%= link_to "Открыть публичную страницу",
-                        public_pet_tag_path(@pet_tag.public_token),
-                        class: "btn btn-primary",
-                        target: "_blank",
-                        rel: "noopener" %>
-            <%= link_to "Изменить настройки", edit_pet_pet_tag_path(@pet), class: "btn btn-outline-secondary" %>
-            <%= button_to "Обновить ссылку",
-                          rotate_token_pet_pet_tag_path(@pet),
-                          method: :patch,
-                          class: "btn btn-outline-danger",
-                          form: { onsubmit: "return confirm('Обновить публичную ссылку? Старый QR-код перестанет работать.')" } %>
+            <%= link_to @pet_tag.lost_mode_enabled? ? "Изменить сообщение" : "Настроить Lost Mode",
+                        edit_pet_pet_tag_path(@pet),
+                        class: @pet_tag.lost_mode_enabled? ? "btn btn-outline-danger btn-sm" : "btn btn-outline-secondary btn-sm" %>
           </div>
         </div>
 
         <div class="action-panel mb-4">
           <div class="section-heading compact">
             <div>
-              <div class="text-muted small mb-1">QR-код</div>
-              <h2 class="h4 mb-0">Скачать для жетона</h2>
-            </div>
-          </div>
-
-          <p class="text-muted">SVG подходит для печати и макетов, PNG удобно отправить или быстро распечатать.</p>
-
-          <div class="d-flex flex-wrap gap-2">
-            <%= link_to "Скачать SVG", qr_pet_pet_tag_path(@pet, format: :svg), class: "btn btn-outline-primary" %>
-            <%= link_to "Скачать PNG", qr_pet_pet_tag_path(@pet, format: :png), class: "btn btn-outline-primary" %>
-          </div>
-        </div>
-
-        <div class="action-panel">
-          <div class="section-heading compact">
-            <div>
               <div class="text-muted small mb-1">Сканирования</div>
-              <h2 class="h4 mb-0"><%= @scan_count %> <%= russian_plural(@scan_count, "открытие", "открытия", "открытий") %></h2>
+              <h2 class="h5 mb-0">Последняя активность</h2>
             </div>
           </div>
 
@@ -106,15 +161,18 @@
               <% end %>
             </div>
           <% else %>
-            <p class="text-muted mb-0">Публичную страницу пока не открывали.</p>
+            <div class="empty-state-inline">
+              <div class="fw-semibold mb-1">Сканов пока нет</div>
+              <div class="text-muted">После открытия QR-профиля здесь появятся дата, браузер и добровольно переданная геолокация.</div>
+            </div>
           <% end %>
         </div>
       </section>
 
       <aside class="col-lg-5">
-        <div class="action-panel">
-          <div class="text-muted small mb-1">Предпросмотр</div>
-          <h2 class="h4 mb-3"><%= @pet.name %></h2>
+        <div class="action-panel mb-4">
+          <div class="text-muted small mb-1">Публичный предпросмотр</div>
+          <h2 class="h4 mb-3">Что увидит человек с QR</h2>
 
           <div class="preview-stack">
             <div>
@@ -159,6 +217,20 @@
               <div class="fw-semibold">Уведомления</div>
               <p class="text-muted mb-0"><%= notification_label(@pet_tag.notification_preference) %></p>
             </div>
+          </div>
+        </div>
+
+        <div class="action-panel">
+          <div class="text-muted small mb-1">Приватность</div>
+          <h2 class="h4 mb-3">Публичные данные</h2>
+
+          <div class="privacy-list">
+            <% pet_tag_visibility_rows(@pet_tag).each do |label, value| %>
+              <div>
+                <span><%= label %></span>
+                <strong><%= value %></strong>
+              </div>
+            <% end %>
           </div>
         </div>
       </aside>

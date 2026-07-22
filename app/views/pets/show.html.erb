@@ -99,23 +99,37 @@
     </section>
 
     <aside class="col-lg-5">
-      <section id="pet-tag" class="action-panel mb-4">
+      <section id="pet-tag" class="safety-panel mb-4">
         <div class="d-flex justify-content-between gap-3 align-items-start mb-3">
           <div>
-            <div class="text-muted small mb-1">PetTag</div>
-            <h2 class="h4 mb-0">QR-профиль безопасности</h2>
+            <div class="text-muted small mb-1">Безопасность</div>
+            <h2 class="h4 mb-0">PetTag</h2>
           </div>
-          <span class="status-pill"><%= @pet.pet_tag.present? ? "Создан" : "Не создан" %></span>
+          <span class="<%= pet_tag_status_class(@pet_tag) %>"><%= pet_tag_status_label(@pet_tag) %></span>
         </div>
 
-        <p class="text-muted">
-          Публичная страница для жетона: фото, имя, особенности поведения и безопасные способы связи, если питомец потеряется.
-        </p>
+        <div class="safety-signal mb-3">
+          <div class="fw-semibold"><%= pet_tag_primary_signal(@pet_tag, @latest_pet_tag_scan) %></div>
+          <div class="text-muted small">
+            <% if @pet_tag.present? %>
+              <%= @pet_tag_scan_count %> <%= russian_plural(@pet_tag_scan_count, "сканирование", "сканирования", "сканирований") %>
+            <% else %>
+              Публичный профиль поможет быстрее связаться с владельцем.
+            <% end %>
+          </div>
+        </div>
 
         <div class="d-flex flex-wrap gap-2">
-          <%= link_to @pet.pet_tag.present? ? "Открыть жетон" : "Создать QR-профиль",
+          <%= link_to @pet_tag.present? ? "Открыть жетон" : "Создать QR-профиль",
                       pet_pet_tag_path(@pet),
                       class: "btn btn-primary btn-sm" %>
+          <% if @pet_tag&.persisted? && @pet_tag.enabled? %>
+            <%= link_to "Публичная страница",
+                        public_pet_tag_path(@pet_tag.public_token),
+                        class: "btn btn-outline-secondary btn-sm",
+                        target: "_blank",
+                        rel: "noopener" %>
+          <% end %>
         </div>
       </section>
 
