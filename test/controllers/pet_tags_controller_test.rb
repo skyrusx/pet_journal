@@ -43,6 +43,7 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
     patch pet_pet_tag_url(@pet), params: {
       pet_tag: {
         public_message: "Новое публичное сообщение",
+        lost_mode_enabled: "0",
         show_phone: "0"
       }
     }
@@ -50,5 +51,20 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to pet_pet_tag_url(@pet)
     assert_equal "Новое публичное сообщение", @pet_tag.reload.public_message
     assert_not @pet_tag.show_phone?
+  end
+
+  test "should update lost mode fields" do
+    patch pet_pet_tag_url(@pet), params: {
+      pet_tag: {
+        lost_mode_enabled: "1",
+        lost_message: "Питомец потерялся, позвоните сразу.",
+        last_seen_location: "Сквер у школы"
+      }
+    }
+
+    assert_redirected_to pet_pet_tag_url(@pet)
+    assert @pet_tag.reload.lost_mode_enabled?
+    assert_equal "Питомец потерялся, позвоните сразу.", @pet_tag.lost_message
+    assert_equal "Сквер у школы", @pet_tag.last_seen_location
   end
 end

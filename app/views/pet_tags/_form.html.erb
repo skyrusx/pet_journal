@@ -55,6 +55,36 @@
     </div>
   </section>
 
+  <section class="form-section lost-mode-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Lost Mode</h2>
+        <p class="text-muted mb-0">Включайте только если питомец потерялся. Публичная страница станет более заметной.</p>
+      </div>
+      <span class="lost-pill">Режим потери</span>
+    </div>
+
+    <div class="form-check form-switch mb-3">
+      <%= f.check_box :lost_mode_enabled, class: "form-check-input", role: "switch" %>
+      <%= f.label :lost_mode_enabled, "Питомец потерялся", class: "form-check-label" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :lost_message, "Сообщение при потере", class: "form-label" %>
+      <%= f.text_area :lost_message,
+                      rows: 3,
+                      class: "form-control",
+                      placeholder: "Например: пожалуйста, позвоните сразу, питомец может испугаться" %>
+    </div>
+
+    <div>
+      <%= f.label :last_seen_location, "Где видели в последний раз", class: "form-label" %>
+      <%= f.text_field :last_seen_location,
+                       class: "form-control",
+                       placeholder: "Район, улица или ориентир" %>
+    </div>
+  </section>
+
   <section class="form-section">
     <div class="form-section-heading">
       <div>

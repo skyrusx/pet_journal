@@ -12,7 +12,21 @@
 
     <div class="public-pet-content">
       <div class="text-muted small mb-1">PetJournal PetTag</div>
+      <% if @pet_tag.lost_mode_enabled? %>
+        <div class="lost-mode-banner">Я потерялся</div>
+      <% end %>
       <h1 class="display-6 fw-semibold mb-2"><%= @pet.name %></h1>
+
+      <% if @pet_tag.lost_mode_enabled? %>
+        <div class="lost-mode-message">
+          <h2>Нужна помощь</h2>
+          <p><%= @pet_tag.lost_message.presence || "Пожалуйста, свяжитесь с владельцем как можно скорее." %></p>
+          <% if @pet_tag.last_seen_location.present? %>
+            <div class="last-seen">Последнее место: <%= @pet_tag.last_seen_location %></div>
+          <% end %>
+        </div>
+      <% end %>
+
       <p class="lead text-muted mb-4">
         <%= @pet_tag.public_message.presence || "Если вы нашли этого питомца, пожалуйста, свяжитесь с владельцем." %>
       </p>
@@ -37,7 +51,7 @@
         <div class="public-actions">
           <%= link_to "Позвонить владельцу",
                       "tel:#{@pet_tag.contact_phone.gsub(/[^\d+]/, "")}",
-                      class: "btn btn-primary btn-lg" %>
+                      class: "btn #{@pet_tag.lost_mode_enabled? ? "btn-danger" : "btn-primary"} btn-lg" %>
         </div>
       <% else %>
         <div class="public-safe-note">

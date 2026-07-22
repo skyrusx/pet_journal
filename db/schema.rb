@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_22_090000) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_22_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,6 +64,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_22_090000) do
     t.boolean "show_phone", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "lost_mode_enabled", default: false, null: false
+    t.text "lost_message"
+    t.string "last_seen_location"
     t.index ["pet_id"], name: "index_pet_tags_on_pet_id", unique: true
     t.index ["public_token"], name: "index_pet_tags_on_public_token", unique: true
   end

@@ -28,9 +28,17 @@
           <div class="d-flex justify-content-between gap-3 align-items-start mb-3">
             <div>
               <div class="text-muted small mb-1">Публичная ссылка</div>
-              <h2 class="h4 mb-0"><%= @pet_tag.enabled? ? "QR-профиль активен" : "QR-профиль отключен" %></h2>
+              <h2 class="h4 mb-0">
+                <% if @pet_tag.lost_mode_enabled? %>
+                  Lost Mode включен
+                <% else %>
+                  <%= @pet_tag.enabled? ? "QR-профиль активен" : "QR-профиль отключен" %>
+                <% end %>
+              </h2>
             </div>
-            <span class="status-pill"><%= @pet_tag.enabled? ? "Активен" : "Отключен" %></span>
+            <span class="<%= @pet_tag.lost_mode_enabled? ? "lost-pill" : "status-pill" %>">
+              <%= @pet_tag.lost_mode_enabled? ? "Потерялся" : (@pet_tag.enabled? ? "Активен" : "Отключен") %>
+            </span>
           </div>
 
           <div class="public-url-box mb-3">
@@ -58,6 +66,18 @@
               <div class="fw-semibold">Сообщение</div>
               <p class="text-muted mb-0"><%= @pet_tag.public_message.presence || "Сообщение не заполнено" %></p>
             </div>
+
+            <% if @pet_tag.lost_mode_enabled? %>
+              <div>
+                <div class="fw-semibold">Lost Mode</div>
+                <p class="text-muted mb-0"><%= @pet_tag.lost_message.presence || "Питомец потерялся. Сообщение не заполнено." %></p>
+              </div>
+
+              <div>
+                <div class="fw-semibold">Последнее место</div>
+                <p class="text-muted mb-0"><%= @pet_tag.last_seen_location.presence || "Не указано" %></p>
+              </div>
+            <% end %>
 
             <div>
               <div class="fw-semibold">Поведение</div>

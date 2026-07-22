@@ -391,6 +391,21 @@ body {
   padding: 0.4rem 0.6rem;
 }
 
+.lost-pill {
+  background: #fee2e2;
+  border-radius: 999px;
+  color: #b91c1c;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  line-height: 1;
+  padding: 0.45rem 0.65rem;
+}
+
+.lost-mode-section {
+  border-color: #fecaca;
+}
+
 .form-actions {
   align-items: center;
   display: flex;
@@ -473,6 +488,44 @@ body {
 
 .public-pet-content {
   padding: 2rem;
+}
+
+.lost-mode-banner {
+  background: #dc2626;
+  border-radius: 999px;
+  color: #fff;
+  display: inline-flex;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin-bottom: 0.75rem;
+  padding: 0.45rem 0.75rem;
+  text-transform: uppercase;
+}
+
+.lost-mode-message {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  color: #7f1d1d;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.lost-mode-message h2 {
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.lost-mode-message p {
+  margin-bottom: 0;
+}
+
+.last-seen {
+  border-top: 1px solid #fecaca;
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
 }
 
 .public-info-list {

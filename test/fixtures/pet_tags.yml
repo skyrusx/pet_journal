@@ -7,6 +7,9 @@ one:
   medical_notes: Нужна обычная вода, лекарств нет.
   contact_phone: "+79990000001"
   show_phone: true
+  lost_mode_enabled: true
+  lost_message: Пожалуйста, позвоните сразу. Питомец может испугаться.
+  last_seen_location: Парк у дома
 
 two:
   pet: two
@@ -17,3 +20,6 @@ two:
   medical_notes:
   contact_phone:
   show_phone: false
+  lost_mode_enabled: false
+  lost_message:
+  last_seen_location:

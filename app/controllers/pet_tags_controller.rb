@@ -37,6 +37,6 @@ class PetTagsController < ApplicationController
 
   def pet_tag_params
     params.fetch(:pet_tag, {}).permit(:enabled, :public_message, :behavior_notes, :medical_notes, :contact_phone,
-                                      :show_phone)
+                                      :show_phone, :lost_mode_enabled, :lost_message, :last_seen_location)
   end
 end
