@@ -1,40 +1,154 @@
-<div class="py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0"><%= @pet.name %></h1>
+<div class="pet-overview py-4">
+  <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
+    <div class="d-flex gap-3 align-items-center">
+      <% if @pet.photo.attached? %>
+        <%= image_tag @pet.photo, class: "pet-avatar" %>
+      <% else %>
+        <div class="pet-avatar pet-avatar-placeholder">
+          <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
+        </div>
+      <% end %>
 
-    <div class="d-flex gap-2">
-      <%= link_to "Редактировать", edit_pet_path(@pet), class: "btn btn-primary" %>
-      <%= link_to "Журнал событий", pet_pet_events_path(@pet), class: "btn btn-outline-primary" %>
-      <%= link_to "К списку питомцев", pets_path, class: "btn btn-outline-secondary" %>
+      <div>
+        <div class="text-muted small mb-1"><%= pet_short_description(@pet) %></div>
+        <h1 class="h2 mb-1"><%= @pet.name %></h1>
+        <div class="text-muted"><%= pet_age(@pet) %></div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-wrap align-items-start gap-2">
+      <%= link_to "Добавить событие", new_pet_pet_event_path(@pet), class: "btn btn-primary" %>
+      <%= link_to "Редактировать", edit_pet_path(@pet), class: "btn btn-outline-secondary" %>
+      <%= link_to "Все питомцы", pets_path, class: "btn btn-outline-secondary" %>
     </div>
   </div>
 
-  <div class="card border-0 shadow-sm">
-    <div class="card-body">
-      <div class="row g-4">
-        <div class="col-md-4">
-          <% if @pet.photo.attached? %>
-            <%= image_tag @pet.photo, class: "img-fluid rounded" %>
+  <nav class="pet-tabs mb-4" aria-label="Навигация питомца">
+    <%= link_to "Обзор", pet_path(@pet), class: "pet-tab active" %>
+    <%= link_to "Журнал", pet_pet_events_path(@pet), class: "pet-tab" %>
+    <% if @attached_files_count.positive? %>
+      <a href="#documents" class="pet-tab">Документы</a>
+    <% end %>
+    <a href="#pet-tag" class="pet-tab">Жетон</a>
+    <a href="#details" class="pet-tab">Данные</a>
+  </nav>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-6 col-xl-3">
+      <div class="overview-card h-100">
+        <div class="overview-card-label">Вес</div>
+        <div class="overview-card-value"><%= pet_weight_label(@pet.weight) %></div>
+        <div class="overview-card-note">Текущее значение из карточки</div>
+      </div>
+    </div>
+
+    <% [["vaccination", "Прививка"], ["treatment", "Обработка"], ["visit", "Визит"]].each do |event_type, label| %>
+      <% event = @latest_events_by_type[event_type] %>
+      <div class="col-md-6 col-xl-3">
+        <div class="overview-card h-100">
+          <div class="overview-card-label"><%= label %></div>
+          <% if event.present? %>
+            <div class="overview-card-value"><%= event.event_date.strftime("%d.%m.%Y") %></div>
+            <div class="overview-card-note"><%= event.title.presence || event.event_type_label %></div>
           <% else %>
-            <div class="border rounded p-5 text-center text-muted">
-              Фото отсутствует
+            <div class="overview-card-value">—</div>
+            <div class="overview-card-note">Записей пока нет</div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="row g-4">
+    <section class="col-lg-7">
+      <div class="section-heading">
+        <div>
+          <h2 class="h4 mb-1">Последние события</h2>
+          <p class="text-muted mb-0">Недавняя история ухода и здоровья</p>
+        </div>
+        <%= link_to "Открыть журнал", pet_pet_events_path(@pet), class: "btn btn-outline-primary btn-sm" %>
+      </div>
+
+      <% if @recent_events.any? %>
+        <div class="timeline-list">
+          <% @recent_events.each do |event| %>
+            <div class="timeline-item">
+              <div class="timeline-date"><%= event.event_date.strftime("%d.%m.%Y") %></div>
+              <div class="timeline-content">
+                <div class="d-flex flex-wrap gap-2 align-items-center mb-1">
+                  <span class="event-badge"><%= event.event_type_label %></span>
+                  <% if event.files.attached? %>
+                    <span class="text-muted small">Есть файлы</span>
+                  <% end %>
+                </div>
+                <h3 class="h6 mb-1"><%= link_to event.title.presence || event.event_type_label, pet_pet_event_path(@pet, event), class: "text-decoration-none" %></h3>
+                <% if event.description.present? %>
+                  <p class="text-muted mb-0"><%= truncate(event.description, length: 130) %></p>
+                <% end %>
+              </div>
             </div>
           <% end %>
         </div>
-
-        <div class="col-md-8">
-          <p><strong>Вид:</strong> <%= @pet.species.presence || "—" %></p>
-          <p><strong>Порода:</strong> <%= @pet.breed.presence || "—" %></p>
-          <p><strong>Пол:</strong> <%= @pet.sex == 0 ? "Мальчик" : @pet.sex == 1 ? "Девочка" : "—" %></p>
-          <p><strong>Дата рождения:</strong> <%= @pet.birth_date.presence || "—" %></p>
-          <p><strong>Вес:</strong> <%= @pet.weight.presence || "—" %></p>
-          <p><strong>Окрас:</strong> <%= @pet.color.presence || "—" %></p>
-          <p><strong>Номер чипа:</strong> <%= @pet.chip_number.presence || "—" %></p>
-          <p><strong>Номер ветпаспорта:</strong> <%= @pet.passport_number.presence || "—" %></p>
-          <p><strong>Стерилизован / кастрирован:</strong> <%= @pet.neutered.nil? ? "—" : (@pet.neutered ? "Да" : "Нет") %></p>
-          <p class="mb-0"><strong>Заметки:</strong> <%= @pet.notes.presence || "—" %></p>
+      <% else %>
+        <div class="empty-panel">
+          <h3 class="h5 mb-2">Журнал пока пуст</h3>
+          <p class="text-muted mb-3">Добавьте первую запись: вес, прививку, визит к врачу или заметку.</p>
+          <%= link_to "Добавить событие", new_pet_pet_event_path(@pet), class: "btn btn-primary" %>
         </div>
-      </div>
-    </div>
+      <% end %>
+    </section>
+
+    <aside class="col-lg-5">
+      <section id="pet-tag" class="action-panel mb-4">
+        <div class="d-flex justify-content-between gap-3 align-items-start mb-3">
+          <div>
+            <div class="text-muted small mb-1">PetTag</div>
+            <h2 class="h4 mb-0">QR-профиль безопасности</h2>
+          </div>
+          <span class="status-pill">Не создан</span>
+        </div>
+
+        <p class="text-muted">
+          Создайте публичный QR-профиль для жетона: фото, имя, особенности поведения и безопасные способы связи, если питомец потеряется.
+        </p>
+
+        <div class="d-flex flex-wrap gap-2">
+          <%= link_to "Заполнить данные питомца", edit_pet_path(@pet), class: "btn btn-primary btn-sm" %>
+        </div>
+      </section>
+
+      <% if @attached_files_count.positive? %>
+        <section id="documents" class="action-panel mb-4">
+          <div class="text-muted small mb-1">Документы</div>
+          <h2 class="h4 mb-2"><%= @attached_files_count %> <%= russian_plural(@attached_files_count, "файл", "файла", "файлов") %></h2>
+          <p class="text-muted mb-0">Вложения уже есть в событиях журнала. Отдельный раздел документов можно собрать поверх них.</p>
+        </section>
+      <% end %>
+
+      <section id="details" class="details-panel">
+        <div class="section-heading compact">
+          <h2 class="h4 mb-0">Данные</h2>
+          <%= link_to "Изменить", edit_pet_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
+        </div>
+
+        <dl class="details-list">
+          <div><dt>Вид</dt><dd><%= @pet.species.presence || "—" %></dd></div>
+          <div><dt>Порода</dt><dd><%= @pet.breed.presence || "—" %></dd></div>
+          <div><dt>Пол</dt><dd><%= pet_sex_label(@pet) %></dd></div>
+          <div><dt>Дата рождения</dt><dd><%= @pet.birth_date.present? ? @pet.birth_date.strftime("%d.%m.%Y") : "—" %></dd></div>
+          <div><dt>Окрас</dt><dd><%= @pet.color.presence || "—" %></dd></div>
+          <div><dt>Чип</dt><dd><%= @pet.chip_number.presence || "—" %></dd></div>
+          <div><dt>Ветпаспорт</dt><dd><%= @pet.passport_number.presence || "—" %></dd></div>
+          <div><dt>Стерилизация</dt><dd><%= @pet.neutered.nil? ? "—" : (@pet.neutered ? "Да" : "Нет") %></dd></div>
+        </dl>
+
+        <% if @pet.notes.present? %>
+          <div class="notes-box">
+            <div class="fw-semibold mb-1">Заметки</div>
+            <div class="text-muted"><%= @pet.notes %></div>
+          </div>
+        <% end %>
+      </section>
+    </aside>
   </div>
 </div>

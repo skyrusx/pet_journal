@@ -1,34 +1,57 @@
-<div class="py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0">Мои питомцы</h1>
+<div class="pets-index py-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+      <h1 class="h3 mb-1">Мои питомцы</h1>
+      <p class="text-muted mb-0">Карточки питомцев, последние события и быстрые действия.</p>
+    </div>
     <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
   </div>
 
   <% if @pets.any? %>
     <div class="row g-3">
       <% @pets.each do |pet| %>
-        <div class="col-md-6 col-lg-4">
-          <div class="card h-100 border-0 shadow-sm">
-            <div class="card-body">
-              <h2 class="h5 card-title mb-3"><%= pet.name %></h2>
+        <% latest_event = @latest_events_by_pet_id[pet.id] %>
 
-              <p class="text-muted mb-1">Вид: <%= pet.species.presence || "—" %></p>
-              <p class="text-muted mb-1">Порода: <%= pet.breed.presence || "—" %></p>
-              <p class="text-muted mb-0">Вес: <%= pet.weight.presence || "—" %></p>
+        <div class="col-md-6 col-xl-4">
+          <article class="pet-card h-100">
+            <div class="pet-card-main">
+              <% if pet.photo.attached? %>
+                <%= image_tag pet.photo, class: "pet-card-photo" %>
+              <% else %>
+                <div class="pet-card-photo pet-card-photo-placeholder">
+                  <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
+                </div>
+              <% end %>
+
+              <div class="pet-card-body">
+                <div class="d-flex justify-content-between gap-2 align-items-start mb-2">
+                  <div>
+                    <h2 class="h5 mb-1"><%= link_to pet.name, pet_path(pet), class: "text-dark text-decoration-none" %></h2>
+                    <div class="text-muted small"><%= pet_age(pet) %> · <%= pet_short_description(pet) %></div>
+                  </div>
+                  <span class="signal-pill"><%= pet_signal_label(latest_event) %></span>
+                </div>
+
+                <div class="activity-line">
+                  <div class="text-muted small mb-1">Последняя активность</div>
+                  <div class="text-dark"><%= pet_event_summary(latest_event) %></div>
+                </div>
+              </div>
             </div>
 
-            <div class="card-footer bg-white border-0 pt-0 d-flex gap-2 flex-wrap">
+            <div class="pet-card-actions">
               <%= link_to "Открыть", pet_path(pet), class: "btn btn-outline-primary btn-sm" %>
-              <%= link_to "Журнал", pet_pet_events_path(pet), class: "btn btn-outline-secondary btn-sm" %>
-              <%= link_to "Редактировать", edit_pet_path(pet), class: "btn btn-outline-secondary btn-sm" %>
+              <%= link_to "Добавить событие", new_pet_pet_event_path(pet), class: "btn btn-primary btn-sm" %>
             </div>
-          </div>
+          </article>
         </div>
       <% end %>
     </div>
   <% else %>
-    <div class="alert alert-light border">
-      У вас пока нет питомцев.
+    <div class="empty-panel">
+      <h2 class="h4 mb-2">Добавьте первого питомца</h2>
+      <p class="text-muted mb-3">Начните с имени, вида и фото. Остальные данные можно заполнить позже.</p>
+      <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
     </div>
   <% end %>
 </div>

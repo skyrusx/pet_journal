@@ -1,23 +1,55 @@
 require "test_helper"
 
 class PetsControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    @user = users(:one)
+    @pet = pets(:one)
+    sign_in @user
+  end
+
   test "should get index" do
-    get pets_index_url
+    get pets_url
+
     assert_response :success
   end
 
-  test "should get show" do
-    get pets_show_url
+  test "should show pet" do
+    get pet_url(@pet)
+
     assert_response :success
   end
 
   test "should get new" do
-    get pets_new_url
+    get new_pet_url
+
     assert_response :success
   end
 
-  test "should get create" do
-    get pets_create_url
+  test "should create pet" do
+    assert_difference("Pet.count") do
+      post pets_url, params: {
+        pet: {
+          name: "Марс",
+          species: "Кот",
+          breed: "Метис",
+          weight: 4.8
+        }
+      }
+    end
+
+    assert_redirected_to pet_url(Pet.order(:created_at).last)
+  end
+
+  test "should get edit" do
+    get edit_pet_url(@pet)
+
     assert_response :success
+  end
+
+  test "should update pet" do
+    patch pet_url(@pet), params: { pet: { name: "Обновленное имя" } }
+
+    assert_redirected_to pet_url(@pet)
+    assert_equal "Обновленное имя", @pet.reload.name
   end
 end

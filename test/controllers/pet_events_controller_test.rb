@@ -1,38 +1,71 @@
 require "test_helper"
 
 class PetEventsControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    @user = users(:one)
+    @pet = pets(:one)
+    @pet_event = pet_events(:one)
+    sign_in @user
+  end
+
   test "should get index" do
-    get pet_events_index_url
+    get pet_pet_events_url(@pet)
+
     assert_response :success
   end
 
-  test "should get show" do
-    get pet_events_show_url
+  test "should show event" do
+    get pet_pet_event_url(@pet, @pet_event)
+
     assert_response :success
   end
 
   test "should get new" do
-    get pet_events_new_url
+    get new_pet_pet_event_url(@pet)
+
     assert_response :success
   end
 
-  test "should get create" do
-    get pet_events_create_url
-    assert_response :success
+  test "should create event" do
+    assert_difference("PetEvent.count") do
+      post pet_pet_events_url(@pet), params: {
+        pet_event: {
+          event_type: "note",
+          title: "Новая заметка",
+          event_date: Date.current,
+          description: "Тестовая запись"
+        }
+      }
+    end
+
+    assert_redirected_to pet_pet_event_url(@pet, PetEvent.order(:created_at).last)
   end
 
   test "should get edit" do
-    get pet_events_edit_url
+    get edit_pet_pet_event_url(@pet, @pet_event)
+
     assert_response :success
   end
 
-  test "should get update" do
-    get pet_events_update_url
-    assert_response :success
+  test "should update event" do
+    patch pet_pet_event_url(@pet, @pet_event), params: {
+      pet_event: {
+        title: "Обновленное событие",
+        event_type: @pet_event.event_type,
+        event_date: @pet_event.event_date,
+        description: @pet_event.description
+      }
+    }
+
+    assert_redirected_to pet_pet_event_url(@pet, @pet_event)
+    assert_equal "Обновленное событие", @pet_event.reload.title
   end
 
-  test "should get destroy" do
-    get pet_events_destroy_url
-    assert_response :success
+  test "should destroy event" do
+    assert_difference("PetEvent.count", -1) do
+      delete pet_pet_event_url(@pet, @pet_event)
+    end
+
+    assert_redirected_to pet_pet_events_url(@pet)
   end
 end
