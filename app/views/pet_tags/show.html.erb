@@ -24,7 +24,7 @@
   <% if @pet_tag.persisted? %>
     <div class="row g-4">
       <section class="col-lg-7">
-        <div class="action-panel">
+        <div class="action-panel mb-4">
           <div class="d-flex justify-content-between gap-3 align-items-start mb-3">
             <div>
               <div class="text-muted small mb-1">Публичная ссылка</div>
@@ -52,7 +52,62 @@
                         target: "_blank",
                         rel: "noopener" %>
             <%= link_to "Изменить настройки", edit_pet_pet_tag_path(@pet), class: "btn btn-outline-secondary" %>
+            <%= button_to "Обновить ссылку",
+                          rotate_token_pet_pet_tag_path(@pet),
+                          method: :patch,
+                          class: "btn btn-outline-danger",
+                          form: { onsubmit: "return confirm('Обновить публичную ссылку? Старый QR-код перестанет работать.')" } %>
           </div>
+        </div>
+
+        <div class="action-panel mb-4">
+          <div class="section-heading compact">
+            <div>
+              <div class="text-muted small mb-1">QR-код</div>
+              <h2 class="h4 mb-0">Скачать для жетона</h2>
+            </div>
+          </div>
+
+          <p class="text-muted">SVG подходит для печати и макетов, PNG удобно отправить или быстро распечатать.</p>
+
+          <div class="d-flex flex-wrap gap-2">
+            <%= link_to "Скачать SVG", qr_pet_pet_tag_path(@pet, format: :svg), class: "btn btn-outline-primary" %>
+            <%= link_to "Скачать PNG", qr_pet_pet_tag_path(@pet, format: :png), class: "btn btn-outline-primary" %>
+          </div>
+        </div>
+
+        <div class="action-panel">
+          <div class="section-heading compact">
+            <div>
+              <div class="text-muted small mb-1">Сканирования</div>
+              <h2 class="h4 mb-0"><%= @scan_count %> <%= russian_plural(@scan_count, "открытие", "открытия", "открытий") %></h2>
+            </div>
+          </div>
+
+          <% if @recent_scans.any? %>
+            <div class="scan-list">
+              <% @recent_scans.each do |scan| %>
+                <div class="scan-item">
+                  <div>
+                    <div class="fw-semibold"><%= scan_time_label(scan) %></div>
+                    <div class="text-muted small"><%= scan.user_agent.presence || "Браузер не определен" %></div>
+                  </div>
+
+                  <% if scan.location_shared? %>
+                    <span class="location-pill">Геолокация</span>
+                  <% end %>
+                </div>
+
+                <% if scan.location_shared? %>
+                  <div class="scan-location">
+                    <%= scan.location_label %>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">Публичную страницу пока не открывали.</p>
+          <% end %>
         </div>
       </section>
 
@@ -98,6 +153,11 @@
                   Скрыт
                 <% end %>
               </p>
+            </div>
+
+            <div>
+              <div class="fw-semibold">Уведомления</div>
+              <p class="text-muted mb-0"><%= notification_label(@pet_tag.notification_preference) %></p>
             </div>
           </div>
         </div>

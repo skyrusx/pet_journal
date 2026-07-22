@@ -10,6 +10,7 @@ one:
   lost_mode_enabled: true
   lost_message: Пожалуйста, позвоните сразу. Питомец может испугаться.
   last_seen_location: Парк у дома
+  notification_preference: 1
 
 two:
   pet: two
@@ -23,3 +24,4 @@ two:
   lost_mode_enabled: false
   lost_message:
   last_seen_location:
+  notification_preference: 0

@@ -1,0 +1,7 @@
+QR-профиль открыли
+
+Публичную страницу питомца <%= @pet.name %> открыли <%= @pet_tag_scan.created_at.strftime("%d.%m.%Y %H:%M") %>.
+
+<% if @pet_tag.lost_mode_enabled? %>
+Lost Mode включен. Проверьте раздел жетона.
+<% end %>

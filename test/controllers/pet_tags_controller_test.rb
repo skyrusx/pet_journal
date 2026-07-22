@@ -44,13 +44,15 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
       pet_tag: {
         public_message: "Новое публичное сообщение",
         lost_mode_enabled: "0",
-        show_phone: "0"
+        show_phone: "0",
+        notification_preference: "always"
       }
     }
 
     assert_redirected_to pet_pet_tag_url(@pet)
     assert_equal "Новое публичное сообщение", @pet_tag.reload.public_message
     assert_not @pet_tag.show_phone?
+    assert @pet_tag.notify_always?
   end
 
   test "should update lost mode fields" do
@@ -66,5 +68,29 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
     assert @pet_tag.reload.lost_mode_enabled?
     assert_equal "Питомец потерялся, позвоните сразу.", @pet_tag.lost_message
     assert_equal "Сквер у школы", @pet_tag.last_seen_location
+  end
+
+  test "should rotate public token" do
+    old_token = @pet_tag.public_token
+
+    patch rotate_token_pet_pet_tag_url(@pet)
+
+    assert_redirected_to pet_pet_tag_url(@pet)
+    assert_not_equal old_token, @pet_tag.reload.public_token
+    assert @pet_tag.token_rotated_at.present?
+  end
+
+  test "should download qr svg" do
+    get qr_pet_pet_tag_url(@pet, format: :svg)
+
+    assert_response :success
+    assert_equal "image/svg+xml", response.media_type
+  end
+
+  test "should download qr png" do
+    get qr_pet_pet_tag_url(@pet, format: :png)
+
+    assert_response :success
+    assert_equal "image/png", response.media_type
   end
 end

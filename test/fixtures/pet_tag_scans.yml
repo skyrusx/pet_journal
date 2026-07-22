@@ -1,0 +1,19 @@
+one:
+  pet_tag: one
+  public_token: scantokenone1234567890
+  user_agent: Test Browser
+  referrer: http://example.com
+  latitude:
+  longitude:
+  location_note:
+  location_shared_at:
+
+with_location:
+  pet_tag: one
+  public_token: scantokenlocation1234567890
+  user_agent: Mobile Browser
+  referrer:
+  latitude: 53.755833
+  longitude: 87.109167
+  location_note: У входа в парк
+  location_shared_at: 2026-07-22 10:00:00

@@ -15,6 +15,8 @@ gem "bootstrap", "~> 5.3.8"
 gem "dartsass-sprockets"
 gem "sass-embedded", "1.97.2"
 gem "devise"
+gem "rqrcode"
+gem "chunky_png"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"

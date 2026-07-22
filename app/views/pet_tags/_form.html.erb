@@ -105,6 +105,11 @@
           <%= f.label :show_phone, "Показывать телефон", class: "form-check-label" %>
         </div>
       </div>
+
+      <div class="col-md-7">
+        <%= f.label :notification_preference, "Email-уведомления", class: "form-label" %>
+        <%= f.select :notification_preference, notification_options, {}, class: "form-select" %>
+      </div>
     </div>
   </section>
 

@@ -1,0 +1,10 @@
+<h1>Геолокация отправлена</h1>
+
+<p>
+  По PetTag питомца <strong><%= @pet.name %></strong> отправили геолокацию или ориентир.
+</p>
+
+<p>
+  <strong>Место:</strong>
+  <%= @pet_tag_scan.location_label.presence || "Не указано" %>
+</p>

@@ -58,6 +58,57 @@
           Контакт владельца скрыт. Проверьте жетон или обратитесь в ближайшую ветклинику для помощи.
         </div>
       <% end %>
+
+      <section class="found-pet-panel">
+        <h2>Я нашел питомца</h2>
+        <p>Можно добровольно отправить владельцу примерное место. Браузер спросит разрешение отдельно.</p>
+
+        <%= form_with url: public_pet_tag_location_path(@pet_tag.public_token), method: :post, local: true, class: "found-pet-form" do |f| %>
+          <%= hidden_field_tag :scan_token, @pet_tag_scan.public_token %>
+          <%= hidden_field_tag :latitude, nil, id: "location-latitude" %>
+          <%= hidden_field_tag :longitude, nil, id: "location-longitude" %>
+
+          <div class="mb-3">
+            <%= label_tag :location_note, "Ориентир или комментарий", class: "form-label" %>
+            <%= text_field_tag :location_note, nil, class: "form-control", placeholder: "Например: у входа в парк" %>
+          </div>
+
+          <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-outline-primary" type="button" data-location-button>Определить геолокацию</button>
+            <%= submit_tag "Отправить владельцу", class: "btn btn-primary" %>
+          </div>
+
+          <div class="location-status text-muted small mt-2" data-location-status></div>
+        <% end %>
+      </section>
     </div>
   </main>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var button = document.querySelector("[data-location-button]");
+    var status = document.querySelector("[data-location-status]");
+    var latitude = document.getElementById("location-latitude");
+    var longitude = document.getElementById("location-longitude");
+
+    if (!button || !status || !latitude || !longitude) return;
+
+    button.addEventListener("click", function () {
+      if (!navigator.geolocation) {
+        status.textContent = "Геолокация недоступна в этом браузере.";
+        return;
+      }
+
+      status.textContent = "Запрашиваем разрешение на геолокацию...";
+
+      navigator.geolocation.getCurrentPosition(function (position) {
+        latitude.value = position.coords.latitude;
+        longitude.value = position.coords.longitude;
+        status.textContent = "Геолокация добавлена. Теперь можно отправить ее владельцу.";
+      }, function () {
+        status.textContent = "Геолокация не получена. Можно отправить только ориентир.";
+      }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+    });
+  });
+</script>

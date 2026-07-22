@@ -13,6 +13,14 @@
   </head>
 
   <body>
+    <% if notice.present? %>
+      <div class="public-flash notice"><%= notice %></div>
+    <% end %>
+
+    <% if alert.present? %>
+      <div class="public-flash alert"><%= alert %></div>
+    <% end %>
+
     <%= yield %>
   </body>
 </html>

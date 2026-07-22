@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   root "pages#index"
   devise_for :users
   get "p/:token" => "public_pet_tags#show", as: :public_pet_tag
+  post "p/:token/location" => "public_pet_tags#location", as: :public_pet_tag_location
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -23,7 +24,10 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   resources :pets, only: %i[index show new create edit update] do
-    resource :pet_tag, path: :tag, only: %i[show create edit update]
+    resource :pet_tag, path: :tag, only: %i[show create edit update] do
+      patch :rotate_token
+      get "qr.:format" => "pet_tags#qr", as: :qr, constraints: { format: /svg|png/ }
+    end
     resources :pet_events, path: :events
   end
 end

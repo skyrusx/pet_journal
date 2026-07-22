@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_22_100000) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_22_111000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -53,6 +53,21 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_22_100000) do
     t.index ["pet_id"], name: "index_pet_events_on_pet_id"
   end
 
+  create_table "pet_tag_scans", force: :cascade do |t|
+    t.bigint "pet_tag_id", null: false
+    t.string "public_token", null: false
+    t.text "user_agent"
+    t.string "referrer"
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
+    t.string "location_note"
+    t.datetime "location_shared_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pet_tag_id"], name: "index_pet_tag_scans_on_pet_tag_id"
+    t.index ["public_token"], name: "index_pet_tag_scans_on_public_token", unique: true
+  end
+
   create_table "pet_tags", force: :cascade do |t|
     t.bigint "pet_id", null: false
     t.string "public_token", null: false
@@ -67,6 +82,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_22_100000) do
     t.boolean "lost_mode_enabled", default: false, null: false
     t.text "lost_message"
     t.string "last_seen_location"
+    t.integer "notification_preference", default: 1, null: false
+    t.datetime "token_rotated_at"
     t.index ["pet_id"], name: "index_pet_tags_on_pet_id", unique: true
     t.index ["public_token"], name: "index_pet_tags_on_public_token", unique: true
   end
@@ -104,6 +121,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_22_100000) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "pet_events", "pets"
+  add_foreign_key "pet_tag_scans", "pet_tags"
   add_foreign_key "pet_tags", "pets"
   add_foreign_key "pets", "users"
 end
