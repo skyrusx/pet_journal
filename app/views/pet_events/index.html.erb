@@ -1,52 +1,96 @@
-<div class="py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="events-index py-4">
+  <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
     <div>
+      <div class="text-muted small mb-1"><%= @pet.name %></div>
       <h1 class="h3 mb-1">Журнал событий</h1>
-      <p class="text-muted mb-0"><%= @pet.name %></p>
+      <p class="text-muted mb-0">История ухода, здоровья, визитов и заметок.</p>
     </div>
 
-    <div class="d-flex gap-2">
-      <%= link_to "Карточка питомца", pet_path(@pet), class: "btn btn-outline-secondary" %>
+    <div class="d-flex flex-wrap align-items-start gap-2">
       <%= link_to "Добавить событие", new_pet_pet_event_path(@pet), class: "btn btn-primary" %>
+      <%= link_to "Обзор питомца", pet_path(@pet), class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+  <nav class="pet-tabs mb-4" aria-label="Навигация питомца">
+    <%= link_to "Обзор", pet_path(@pet), class: "pet-tab" %>
+    <%= link_to "Журнал", pet_pet_events_path(@pet), class: "pet-tab active" %>
+    <a href="#pet-tag" class="pet-tab disabled" aria-disabled="true">Жетон</a>
+    <%= link_to "Данные", edit_pet_path(@pet), class: "pet-tab" %>
+  </nav>
+
+  <div class="filter-panel mb-4">
+    <div class="filter-panel-title">Тип события</div>
+    <div class="filter-chips">
+      <%= link_to "Все #{content_tag(:span, @event_type_counts.values.sum)}".html_safe,
+                  event_filter_path(@pet, nil),
+                  class: event_filter_class(@selected_event_type, nil) %>
+
+      <% @event_type_filters.each do |event_type, label| %>
+        <%= link_to "#{label} #{content_tag(:span, @event_type_counts.fetch(event_type, 0))}".html_safe,
+                    event_filter_path(@pet, event_type),
+                    class: event_filter_class(@selected_event_type, event_type) %>
+      <% end %>
     </div>
   </div>
 
   <% if @pet_events.any? %>
-    <div class="row g-3">
-      <% @pet_events.each do |pet_event| %>
-        <div class="col-12">
-          <div class="card border-0 shadow-sm">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start mb-2">
-                <div>
-                  <div class="text-muted small mb-1">
-                    <%= pet_event.event_date %> · <%= pet_event.event_type_label %>
+    <div class="journal-timeline">
+      <% @pet_events.group_by { |event| event.event_date.beginning_of_month }.each do |month, events| %>
+        <section class="journal-month">
+          <h2 class="journal-month-title"><%= event_month_label(month) %></h2>
+
+          <div class="journal-month-events">
+            <% events.each do |event| %>
+              <article class="journal-event">
+                <div class="journal-event-date">
+                  <span><%= event.event_date.day %></span>
+                  <small><%= event.event_date.strftime("%m.%Y") %></small>
+                </div>
+
+                <div class="journal-event-body">
+                  <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                    <span class="event-badge"><%= event.event_type_label %></span>
+                    <% if event_attachment_label(event).present? %>
+                      <span class="attachment-pill"><%= event_attachment_label(event) %></span>
+                    <% end %>
                   </div>
 
-                  <h2 class="h5 mb-0">
-                    <%= pet_event.title.presence || pet_event.event_type_label %>
-                  </h2>
+                  <h3 class="h5 mb-2">
+                    <%= link_to event.title.presence || event.event_type_label,
+                                pet_pet_event_path(@pet, event),
+                                class: "text-dark text-decoration-none" %>
+                  </h3>
+
+                  <% if event.description.present? %>
+                    <p class="text-muted mb-3"><%= truncate(event.description, length: 190) %></p>
+                  <% end %>
+
+                  <div class="d-flex flex-wrap gap-2">
+                    <%= link_to "Открыть", pet_pet_event_path(@pet, event), class: "btn btn-outline-primary btn-sm" %>
+                    <%= link_to "Редактировать", edit_pet_pet_event_path(@pet, event), class: "btn btn-outline-secondary btn-sm" %>
+                  </div>
                 </div>
-              </div>
-
-              <% if pet_event.description.present? %>
-                <p class="text-muted mb-3">
-                  <%= truncate(pet_event.description, length: 180) %>
-                </p>
-              <% end %>
-
-              <div class="d-flex gap-2">
-                <%= link_to "Открыть", pet_pet_event_path(@pet, pet_event), class: "btn btn-outline-primary btn-sm" %>
-                <%= link_to "Редактировать", edit_pet_pet_event_path(@pet, pet_event), class: "btn btn-outline-secondary btn-sm" %>
-              </div>
-            </div>
+              </article>
+            <% end %>
           </div>
-        </div>
+        </section>
       <% end %>
     </div>
+  <% elsif @selected_event_type.present? %>
+    <div class="empty-panel">
+      <h2 class="h4 mb-2">По фильтру ничего нет</h2>
+      <p class="text-muted mb-3">В журнале пока нет событий типа "<%= PetEvent::EVENT_TYPE_LABELS[@selected_event_type] %>".</p>
+      <div class="d-flex flex-wrap gap-2">
+        <%= link_to "Показать все", pet_pet_events_path(@pet), class: "btn btn-outline-secondary" %>
+        <%= link_to "Добавить событие", new_pet_pet_event_path(@pet), class: "btn btn-primary" %>
+      </div>
+    </div>
   <% else %>
-    <div class="alert alert-light border">
-      У питомца пока нет событий.
+    <div class="empty-panel">
+      <h2 class="h4 mb-2">Журнал пока пуст</h2>
+      <p class="text-muted mb-3">Добавьте первую запись: заметку, вес, прививку, обработку или визит к врачу.</p>
+      <%= link_to "Добавить событие", new_pet_pet_event_path(@pet), class: "btn btn-primary" %>
     </div>
   <% end %>
 </div>

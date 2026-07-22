@@ -4,7 +4,12 @@ class PetEventsController < ApplicationController
   before_action :set_pet_event, only: %i[show edit update destroy]
 
   def index
-    @pet_events = @pet.pet_events.order(event_date: :desc, created_at: :desc)
+    @event_type_filters = PetEvent::EVENT_TYPE_LABELS
+    @selected_event_type = selected_event_type
+    @event_type_counts = @pet.pet_events.group(:event_type).count
+
+    @pet_events = @pet.pet_events.with_attached_files.order(event_date: :desc, created_at: :desc)
+    @pet_events = @pet_events.where(event_type: @selected_event_type) if @selected_event_type.present?
   end
 
   def show; end
@@ -51,5 +56,11 @@ class PetEventsController < ApplicationController
 
   def pet_event_params
     params.require(:pet_event).permit(:event_type, :title, :event_date, :description, files: [])
+  end
+
+  def selected_event_type
+    return if params[:type].blank?
+
+    params[:type] if PetEvent.event_types.key?(params[:type])
   end
 end

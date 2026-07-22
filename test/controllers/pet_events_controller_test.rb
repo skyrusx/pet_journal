@@ -14,6 +14,20 @@ class PetEventsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should filter index by event type" do
+    get pet_pet_events_url(@pet, type: "vaccination")
+
+    assert_response :success
+    assert_select ".filter-chip.active", text: /Прививка/
+  end
+
+  test "should ignore unknown event type filter" do
+    get pet_pet_events_url(@pet, type: "unknown")
+
+    assert_response :success
+    assert_select ".filter-chip.active", text: /Все/
+  end
+
   test "should show event" do
     get pet_pet_event_url(@pet, @pet_event)
 
