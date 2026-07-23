@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_23_100000) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_23_103000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -136,6 +136,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_23_100000) do
     t.index ["user_id"], name: "index_pets_on_user_id"
   end
 
+  create_table "reminder_completions", force: :cascade do |t|
+    t.bigint "reminder_id", null: false
+    t.bigint "pet_event_id"
+    t.datetime "completed_at", null: false
+    t.boolean "event_created", default: false, null: false
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pet_event_id"], name: "index_reminder_completions_on_pet_event_id"
+    t.index ["reminder_id", "completed_at"], name: "index_reminder_completions_on_reminder_id_and_completed_at"
+    t.index ["reminder_id"], name: "index_reminder_completions_on_reminder_id"
+  end
+
   create_table "reminder_notification_channels", force: :cascade do |t|
     t.bigint "reminder_id", null: false
     t.bigint "notification_channel_id", null: false
@@ -159,9 +172,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_23_100000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "last_notified_at"
+    t.integer "repeat_interval", default: 1, null: false
+    t.integer "repeat_unit", default: 1, null: false
     t.index ["last_notified_at"], name: "index_reminders_on_last_notified_at"
     t.index ["pet_id"], name: "index_reminders_on_pet_id"
     t.index ["status", "next_run_at"], name: "index_reminders_on_status_and_next_run_at"
+    t.index ["status", "reminder_type", "next_run_at"], name: "index_reminders_on_status_and_reminder_type_and_next_run_at"
   end
 
   create_table "users", force: :cascade do |t|
@@ -189,6 +205,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_23_100000) do
   add_foreign_key "pet_tag_scans", "pet_tags"
   add_foreign_key "pet_tags", "pets"
   add_foreign_key "pets", "users"
+  add_foreign_key "reminder_completions", "pet_events"
+  add_foreign_key "reminder_completions", "reminders"
   add_foreign_key "reminder_notification_channels", "notification_channels"
   add_foreign_key "reminder_notification_channels", "reminders"
   add_foreign_key "reminders", "pets"

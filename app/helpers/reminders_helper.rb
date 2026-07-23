@@ -7,6 +7,43 @@ module RemindersHelper
     Reminder.repeat_rules.keys.map { |key| [I18n.t("reminders.repeat_rules.#{key}"), key] }
   end
 
+  def repeat_unit_options
+    Reminder.repeat_units.keys.map { |key| [I18n.t("reminders.repeat_units.#{key}", count: 2), key] }
+  end
+
+  def reminder_status_filters(pet, selected_status)
+    [
+      ["Активные", "active"],
+      ["Сегодня", "today"],
+      ["Просроченные", "overdue"],
+      ["Пауза", "paused"],
+      ["Выполненные", "completed"],
+      ["Все", "all"]
+    ].map do |label, status|
+      [label, pet_reminders_path(pet, status:, type: params[:type].presence), selected_status == status]
+    end
+  end
+
+  def reminder_type_filters(pet, selected_type, selected_status)
+    [["Все типы", nil, selected_type.blank?]] +
+      Reminder.reminder_types.keys.map do |type|
+        [I18n.t("reminders.types.#{type}"), pet_reminders_path(pet, status: selected_status, type:), selected_type == type]
+      end
+  end
+
+  def reminder_filter_class(active)
+    class_names("filter-chip", active:)
+  end
+
+  def reminder_datetime_presets
+    [
+      ["Через 1 час", 1.hour.from_now],
+      ["Завтра утром", 1.day.from_now.change(hour: 9, min: 0, sec: 0)],
+      ["Через месяц", 1.month.from_now.change(sec: 0)],
+      ["Через год", 1.year.from_now.change(sec: 0)]
+    ]
+  end
+
   def reminder_status_class(reminder)
     return "lost-pill" if reminder.overdue?
     return "status-pill success" if reminder.due_today?
@@ -21,5 +58,15 @@ module RemindersHelper
     return "Сегодня" if reminder.due_today?
 
     I18n.t("reminders.statuses.#{reminder.status}")
+  end
+
+  def reminder_completion_label(completion)
+    if completion.pet_event.present?
+      link_to "Запись в журнале", pet_pet_event_path(completion.reminder.pet, completion.pet_event), class: "text-decoration-none"
+    elsif completion.event_created?
+      "Запись удалена"
+    else
+      "Без записи"
+    end
   end
 end

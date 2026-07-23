@@ -1,16 +1,23 @@
 class RemindersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pet
-  before_action :set_reminder, only: %i[show edit update destroy complete pause resume]
+  before_action :set_reminder, only: %i[show edit update destroy complete pause resume snooze]
   before_action :set_notification_channels, only: %i[new create edit update show]
 
   def index
-    @active_reminders = @pet.reminders.status_active.order(:next_run_at)
+    @selected_status = params[:status].presence_in(%w[all active today overdue paused completed]) || "active"
+    @selected_type = params[:type].presence_in(Reminder.reminder_types.keys)
+    @reminders = filtered_reminders
+    @active_count = @pet.reminders.status_active.count
+    @today_count = @pet.reminders.status_active.where(next_run_at: Time.current.beginning_of_day..Time.current.end_of_day).count
+    @overdue_count = @pet.reminders.overdue.count
+    @paused_count = @pet.reminders.status_paused.count
     @completed_reminders = @pet.reminders.status_completed.order(last_completed_at: :desc).limit(10)
   end
 
   def show
     @deliveries = @reminder.notification_deliveries.includes(:notification_channel).order(created_at: :desc).limit(20)
+    @completions = @reminder.reminder_completions.includes(:pet_event).order(completed_at: :desc).limit(20)
   end
 
   def new
@@ -50,10 +57,18 @@ class RemindersController < ApplicationController
   end
 
   def complete
-    create_event_from_reminder if params[:create_event] == "1"
-    @reminder.complete!
+    event = create_event_from_reminder if params[:create_event] == "1"
+    @reminder.complete!(pet_event: event, note: params[:completion_note])
 
     redirect_to pet_reminders_path(@pet), notice: "Напоминание выполнено."
+  end
+
+  def snooze
+    @reminder.snooze_until!(snooze_time)
+
+    redirect_to pet_reminders_path(@pet), notice: "Напоминание отложено."
+  rescue ArgumentError
+    redirect_to pet_reminders_path(@pet), alert: "Не удалось определить время отложенного напоминания."
   end
 
   def pause
@@ -83,7 +98,7 @@ class RemindersController < ApplicationController
   end
 
   def reminder_params
-    params.require(:reminder).permit(:title, :reminder_type, :remind_at, :repeat_rule, :note)
+    params.require(:reminder).permit(:title, :reminder_type, :remind_at, :repeat_rule, :repeat_interval, :repeat_unit, :note)
   end
 
   def sync_notification_channels
@@ -100,6 +115,30 @@ class RemindersController < ApplicationController
       event_date: Date.current,
       description: ["Выполнено по напоминанию.", @reminder.note.presence].compact.join("\n\n")
     )
+  end
+
+  def filtered_reminders
+    scope = @pet.reminders.order(:next_run_at)
+    scope = scope.where(reminder_type: @selected_type) if @selected_type.present?
+
+    case @selected_status
+    when "all" then scope
+    when "today" then scope.status_active.where(next_run_at: Time.current.beginning_of_day..Time.current.end_of_day)
+    when "overdue" then scope.overdue
+    when "paused" then scope.status_paused
+    when "completed" then scope.status_completed.order(last_completed_at: :desc)
+    else scope.status_active
+    end
+  end
+
+  def snooze_time
+    case params[:preset]
+    when "hour" then 1.hour.from_now
+    when "tomorrow" then 1.day.from_now.change(hour: 9, min: 0, sec: 0)
+    when "week" then 1.week.from_now
+    when "custom" then Time.zone.parse(params.require(:snooze_until))
+    else raise ArgumentError
+    end
   end
 
   def event_type_for(reminder)

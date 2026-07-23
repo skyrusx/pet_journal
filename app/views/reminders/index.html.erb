@@ -8,11 +8,11 @@
 
     <div class="journal-hero-stats">
       <div>
-        <span><%= @active_reminders.count %></span>
+        <span><%= @active_count %></span>
         <small>активно</small>
       </div>
       <div>
-        <span><%= @active_reminders.count(&:overdue?) %></span>
+        <span><%= @overdue_count %></span>
         <small>просрочено</small>
       </div>
     </div>
@@ -31,6 +31,27 @@
     <%= link_to "Данные", edit_pet_path(@pet), class: "pet-tab" %>
   </nav>
 
+  <div class="filter-panel mb-4">
+    <div class="section-heading compact">
+      <div>
+        <div class="filter-panel-title mb-1">Фильтры</div>
+        <div class="text-muted small">Статус и тип напоминания</div>
+      </div>
+    </div>
+
+    <div class="filter-chips mb-3">
+      <% reminder_status_filters(@pet, @selected_status).each do |label, path, active| %>
+        <%= link_to label, path, class: reminder_filter_class(active) %>
+      <% end %>
+    </div>
+
+    <div class="filter-chips">
+      <% reminder_type_filters(@pet, @selected_type, @selected_status).each do |label, path, active| %>
+        <%= link_to label, path || pet_reminders_path(@pet, status: @selected_status), class: reminder_filter_class(active) %>
+      <% end %>
+    </div>
+  </div>
+
   <div class="row g-4">
     <section class="col-lg-8">
       <div class="workspace-section">
@@ -41,9 +62,9 @@
           </div>
         </div>
 
-        <% if @active_reminders.any? %>
+        <% if @reminders.any? %>
           <div class="reminder-list">
-            <% @active_reminders.each do |reminder| %>
+            <% @reminders.each do |reminder| %>
               <article class="reminder-card <%= "overdue" if reminder.overdue? %>">
                 <div class="reminder-date">
                   <strong><%= reminder.next_run_at.strftime("%d.%m") %></strong>
@@ -64,14 +85,24 @@
                 </div>
 
                 <div class="reminder-actions">
-                  <%= button_to "Выполнено",
+                  <% unless reminder.status_completed? %>
+                    <%= button_to "Выполнено",
+                                  complete_pet_reminder_path(@pet, reminder),
+                                  method: :patch,
+                                  class: "btn btn-outline-primary btn-sm" %>
+                    <%= button_to "Выполнено + запись",
                                 complete_pet_reminder_path(@pet, reminder, create_event: "1"),
                                 method: :patch,
                                 class: "btn btn-primary btn-sm" %>
-                  <% if reminder.status_paused? %>
-                    <%= button_to "Включить", resume_pet_reminder_path(@pet, reminder), method: :patch, class: "btn btn-outline-primary btn-sm" %>
-                  <% else %>
-                    <%= button_to "Пауза", pause_pet_reminder_path(@pet, reminder), method: :patch, class: "btn btn-outline-secondary btn-sm" %>
+                    <%= button_to "Отложить на час",
+                                  snooze_pet_reminder_path(@pet, reminder, preset: "hour"),
+                                  method: :patch,
+                                  class: "btn btn-outline-secondary btn-sm" %>
+                    <% if reminder.status_paused? %>
+                      <%= button_to "Включить", resume_pet_reminder_path(@pet, reminder), method: :patch, class: "btn btn-outline-primary btn-sm" %>
+                    <% else %>
+                      <%= button_to "Пауза", pause_pet_reminder_path(@pet, reminder), method: :patch, class: "btn btn-outline-secondary btn-sm" %>
+                    <% end %>
                   <% end %>
                 </div>
               </article>
@@ -79,8 +110,8 @@
           </div>
         <% else %>
           <div class="empty-state-inline">
-            <h3 class="h5 mb-2">Напоминаний пока нет</h3>
-            <p class="text-muted mb-3">Создайте первое напоминание и подключите удобные каналы доставки.</p>
+            <h3 class="h5 mb-2">По фильтрам ничего нет</h3>
+            <p class="text-muted mb-3">Измените фильтр или создайте новое напоминание.</p>
             <%= link_to "Создать напоминание", new_pet_reminder_path(@pet), class: "btn btn-primary btn-sm" %>
           </div>
         <% end %>

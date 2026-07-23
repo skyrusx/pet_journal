@@ -102,8 +102,14 @@ ru:
         remind_at: "Когда напомнить"
         next_run_at: "Следующая отправка"
         repeat_rule: "Повтор"
+        repeat_interval: "Интервал"
+        repeat_unit: "Единица"
         status: "Статус"
         note: "Заметка"
+      reminder_completion:
+        completed_at: "Выполнено"
+        note: "Заметка"
+        event_created: "Создана запись"
       notification_channel:
         channel_type: "Тип канала"
         name: "Название"
@@ -127,6 +133,29 @@ ru:
       daily: "Каждый день"
       weekly: "Каждую неделю"
       monthly: "Каждый месяц"
+      yearly: "Каждый год"
+      custom: "Каждые %{count} %{unit}"
+    repeat_units:
+      days:
+        one: "день"
+        few: "дня"
+        many: "дней"
+        other: "дней"
+      weeks:
+        one: "неделю"
+        few: "недели"
+        many: "недель"
+        other: "недель"
+      months:
+        one: "месяц"
+        few: "месяца"
+        many: "месяцев"
+        other: "месяцев"
+      years:
+        one: "год"
+        few: "года"
+        many: "лет"
+        other: "лет"
     statuses:
       active: "Активно"
       completed: "Выполнено"

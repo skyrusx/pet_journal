@@ -46,10 +46,18 @@
         <% end %>
 
         <div class="d-flex flex-wrap gap-2 mt-4">
+          <%= button_to "Выполнить без записи",
+                        complete_pet_reminder_path(@pet, @reminder),
+                        method: :patch,
+                        class: "btn btn-outline-primary" %>
           <%= button_to "Выполнить и создать запись",
                         complete_pet_reminder_path(@pet, @reminder, create_event: "1"),
                         method: :patch,
                         class: "btn btn-primary" %>
+          <%= button_to "Отложить на завтра",
+                        snooze_pet_reminder_path(@pet, @reminder, preset: "tomorrow"),
+                        method: :patch,
+                        class: "btn btn-outline-secondary" %>
           <%= button_to "Удалить",
                         pet_reminder_path(@pet, @reminder),
                         method: :delete,
@@ -60,6 +68,33 @@
     </section>
 
     <aside class="col-lg-5">
+      <div class="action-panel mb-4">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">Выполнения</div>
+            <h2 class="h4 mb-0">История</h2>
+          </div>
+        </div>
+
+        <% if @completions.any? %>
+          <div class="delivery-list">
+            <% @completions.each do |completion| %>
+              <div class="delivery-row">
+                <div>
+                  <div class="fw-semibold"><%= l(completion.completed_at) %></div>
+                  <div class="text-muted small"><%= reminder_completion_label(completion) %></div>
+                  <% if completion.note.present? %>
+                    <div class="text-muted small"><%= completion.note %></div>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">Выполнений пока не было.</p>
+        <% end %>
+      </div>
+
       <div class="action-panel">
         <div class="section-heading compact">
           <div>

@@ -49,6 +49,26 @@ document.addEventListener("DOMContentLoaded", () => {
     window.setTimeout(dismiss, 5200);
   });
 
+  document.querySelectorAll("[data-reminder-preset]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const input = document.querySelector("[data-reminder-datetime]");
+      if (input) input.value = button.dataset.reminderPreset;
+    });
+  });
+
+  document.querySelectorAll("[data-repeat-rule]").forEach((select) => {
+    const form = select.closest("form");
+    const customFields = form ? form.querySelectorAll("[data-custom-repeat]") : [];
+    const updateCustomFields = () => {
+      customFields.forEach((field) => {
+        field.hidden = select.value !== "custom";
+      });
+    };
+
+    select.addEventListener("change", updateCustomFields);
+    updateCustomFields();
+  });
+
   document.querySelectorAll("[data-web-push-panel]").forEach((panel) => {
     const enableButton = panel.querySelector("[data-web-push-enable]");
     const disableButton = panel.querySelector("[data-web-push-disable]");

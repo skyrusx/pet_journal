@@ -1,5 +1,6 @@
 class PetEvent < ApplicationRecord
   belongs_to :pet
+  has_many :reminder_completions, dependent: :nullify
   has_many_attached :files
 
   enum :event_type, { note: 0, vaccination: 1, treatment: 2, visit: 3, illness: 4, weight: 5 }

@@ -1,0 +1,6 @@
+one:
+  reminder: one
+  pet_event:
+  completed_at: <%= 1.day.ago %>
+  event_created: false
+  note: Выполнено вручную

@@ -48,11 +48,36 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should complete reminder and create journal event" do
-    assert_difference("PetEvent.count") do
+    assert_difference(["PetEvent.count", "ReminderCompletion.count"]) do
       patch complete_pet_reminder_url(@pet, @reminder, create_event: "1")
     end
 
     assert_redirected_to pet_reminders_url(@pet)
     assert @reminder.reload.status_completed?
+    assert @reminder.reminder_completions.last.pet_event.present?
+  end
+
+  test "should complete reminder without journal event" do
+    assert_no_difference("PetEvent.count") do
+      assert_difference("ReminderCompletion.count") do
+        patch complete_pet_reminder_url(@pet, @reminder)
+      end
+    end
+
+    assert_redirected_to pet_reminders_url(@pet)
+  end
+
+  test "should snooze reminder" do
+    patch snooze_pet_reminder_url(@pet, @reminder, preset: "hour")
+
+    assert_redirected_to pet_reminders_url(@pet)
+    assert @reminder.reload.next_run_at.future?
+  end
+
+  test "should filter reminders by status" do
+    get pet_reminders_url(@pet, status: "overdue")
+
+    assert_response :success
+    assert_select ".filter-chip.active", text: /Просроченные/
   end
 end

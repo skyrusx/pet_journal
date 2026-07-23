@@ -827,6 +827,18 @@ a {
   gap: 0.5rem;
 }
 
+.preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.filter-chip.small {
+  background: var(--pj-surface);
+  font-size: 0.78rem;
+  padding: 0.3rem 0.5rem;
+}
+
 .filter-chip {
   align-items: center;
   border: 1px solid var(--pj-border);

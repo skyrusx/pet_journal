@@ -38,6 +38,7 @@ Rails.application.routes.draw do
       patch :complete, on: :member
       patch :pause, on: :member
       patch :resume, on: :member
+      patch :snooze, on: :member
     end
   end
 end

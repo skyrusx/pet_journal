@@ -32,12 +32,31 @@
 
       <div class="col-md-6">
         <%= form.label :remind_at, class: "form-label" %>
-        <%= form.datetime_local_field :remind_at, class: "form-control" %>
+        <%= form.datetime_local_field :remind_at, class: "form-control", data: { reminder_datetime: true } %>
+        <div class="preset-row mt-2">
+          <% reminder_datetime_presets.each do |label, value| %>
+            <button type="button"
+                    class="filter-chip small"
+                    data-reminder-preset="<%= value.strftime("%Y-%m-%dT%H:%M") %>">
+              <%= label %>
+            </button>
+          <% end %>
+        </div>
       </div>
 
       <div class="col-md-6">
         <%= form.label :repeat_rule, class: "form-label" %>
-        <%= form.select :repeat_rule, repeat_rule_options, {}, class: "form-select" %>
+        <%= form.select :repeat_rule, repeat_rule_options, {}, class: "form-select", data: { repeat_rule: true } %>
+      </div>
+
+      <div class="col-md-3" data-custom-repeat>
+        <%= form.label :repeat_interval, class: "form-label" %>
+        <%= form.number_field :repeat_interval, min: 1, max: 99, class: "form-control" %>
+      </div>
+
+      <div class="col-md-3" data-custom-repeat>
+        <%= form.label :repeat_unit, class: "form-label" %>
+        <%= form.select :repeat_unit, repeat_unit_options, {}, class: "form-select" %>
       </div>
 
       <div class="col-12">
