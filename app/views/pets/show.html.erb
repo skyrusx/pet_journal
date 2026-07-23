@@ -1,4 +1,4 @@
-<% overview_signal = pet_overview_signal(@pet, @pet_tag, @latest_pet_tag_scan, @recent_events.first) %>
+<% overview_signal = pet_overview_signal(@pet, @pet_tag, @latest_pet_tag_scan, @recent_events.first, @next_reminder) %>
 <% completion_percent = pet_profile_completion_percent(@pet, @pet_tag) %>
 
 <div class="pet-overview py-4">
@@ -33,6 +33,7 @@
 
     <div class="pet-workspace-actions">
       <%= link_to "Добавить событие", new_pet_pet_event_path(@pet), class: "btn btn-primary" %>
+      <%= link_to "Напоминание", new_pet_reminder_path(@pet), class: "btn btn-outline-primary" %>
       <%= link_to "Открыть журнал", pet_pet_events_path(@pet), class: "btn btn-outline-primary" %>
       <%= link_to "Жетон", pet_pet_tag_path(@pet), class: "btn btn-outline-secondary" %>
       <%= link_to "Редактировать", edit_pet_path(@pet), class: "btn btn-outline-secondary" %>
@@ -42,6 +43,7 @@
   <nav class="pet-tabs mb-4" aria-label="Навигация питомца">
     <%= link_to "Обзор", pet_path(@pet), class: "pet-tab active" %>
     <%= link_to "Журнал", pet_pet_events_path(@pet), class: "pet-tab" %>
+    <%= link_to "Напоминания", pet_reminders_path(@pet), class: "pet-tab" %>
     <% if @attached_files_count.positive? %>
       <a href="#documents" class="pet-tab">Документы</a>
     <% end %>
@@ -141,6 +143,36 @@
     </section>
 
     <aside class="col-lg-5">
+      <section class="action-panel mb-4">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">Напоминания</div>
+            <h2 class="h4 mb-0">
+              <% if @next_reminder.present? %>
+                <%= @next_reminder.next_run_at.strftime("%d.%m %H:%M") %>
+              <% else %>
+                Нет активных
+              <% end %>
+            </h2>
+          </div>
+          <%= link_to "Открыть", pet_reminders_path(@pet), class: "btn btn-outline-primary btn-sm" %>
+        </div>
+
+        <% if @next_reminder.present? %>
+          <div class="safety-signal mb-3">
+            <div class="fw-semibold"><%= @next_reminder.title %></div>
+            <div class="text-muted small"><%= @next_reminder.reminder_type_label %> · <%= @next_reminder.repeat_rule_label %></div>
+          </div>
+          <div class="compact-list">
+            <div><span>Просрочено</span><strong><%= @overdue_reminders_count %></strong></div>
+            <div><span>Сегодня</span><strong><%= @today_reminders_count %></strong></div>
+          </div>
+        <% else %>
+          <p class="text-muted mb-3">Добавьте лекарства, прививки, обработки или визиты, чтобы не держать это в голове.</p>
+          <%= link_to "Создать напоминание", new_pet_reminder_path(@pet), class: "btn btn-primary btn-sm" %>
+        <% end %>
+      </section>
+
       <section id="pet-tag" class="safety-panel mb-4">
         <div class="d-flex justify-content-between gap-3 align-items-start mb-3">
           <div>

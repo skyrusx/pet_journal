@@ -1,0 +1,99 @@
+<div class="notifications-page py-4">
+  <section class="journal-hero mb-4">
+    <div>
+      <div class="text-muted small mb-1">Настройки</div>
+      <h1 class="h3 mb-2">Уведомления</h1>
+      <p class="text-muted mb-0">Каналы доставки для напоминаний: эл. почта, Telegram, VK и браузерные push-уведомления.</p>
+    </div>
+
+    <div class="journal-hero-stats">
+      <div>
+        <span><%= @channels.count %></span>
+        <small>каналов</small>
+      </div>
+      <div>
+        <span><%= @channels.count(&:enabled?) %></span>
+        <small>включено</small>
+      </div>
+    </div>
+
+    <div class="journal-hero-actions">
+      <%= link_to "Добавить канал", new_notification_channel_path, class: "btn btn-primary" %>
+      <%= link_to "Мои питомцы", pets_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </section>
+
+  <div class="row g-4">
+    <section class="col-lg-8">
+      <div class="workspace-section">
+        <div class="section-heading">
+          <div>
+            <div class="text-muted small mb-1">Доставка</div>
+            <h2 class="h4 mb-0">Подключенные каналы</h2>
+          </div>
+        </div>
+
+        <% if @channels.any? %>
+          <div class="channel-grid">
+            <% @channels.each do |channel| %>
+              <article class="channel-card">
+                <div class="d-flex justify-content-between gap-3 align-items-start mb-3">
+                  <div>
+                    <div class="text-muted small mb-1"><%= channel.channel_type_label %></div>
+                    <h3 class="h5 mb-1"><%= channel.name %></h3>
+                    <p class="text-muted mb-0"><%= channel.channel_web_push? ? "Браузерная подписка" : channel.address %></p>
+                  </div>
+                  <span class="<%= notification_channel_status_class(channel) %>"><%= notification_channel_status_label(channel) %></span>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                  <%= link_to "Изменить", edit_notification_channel_path(channel), class: "btn btn-outline-secondary btn-sm" %>
+                  <%= button_to "Тест",
+                                test_notification_channel_path(channel),
+                                method: :post,
+                                class: "btn btn-outline-primary btn-sm" %>
+                  <%= button_to "Удалить",
+                                notification_channel_path(channel),
+                                method: :delete,
+                                class: "btn btn-outline-danger btn-sm",
+                                form: { onsubmit: "return confirm('Удалить канал уведомлений?')" } %>
+                </div>
+              </article>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="empty-state-inline">
+            <h3 class="h5 mb-2">Каналы не настроены</h3>
+            <p class="text-muted mb-3">Без настройки PetJournal отправит напоминания на эл. почту аккаунта. Добавьте Telegram, VK или push, если нужен другой канал.</p>
+            <%= link_to "Добавить канал", new_notification_channel_path, class: "btn btn-primary btn-sm" %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <aside class="col-lg-4">
+      <div class="action-panel mb-4" data-web-push-panel data-vapid-public-key="<%= @vapid_public_key %>">
+        <div class="text-muted small mb-1">Push</div>
+        <h2 class="h4 mb-3">Этот браузер</h2>
+        <% if @vapid_public_key.present? %>
+          <p class="text-muted mb-3">Включите уведомления в этом браузере. Подписка сохранится как отдельный канал.</p>
+          <button type="button" class="btn btn-primary btn-sm" data-web-push-enable>Включить push</button>
+          <p class="form-text mt-2 mb-0" data-web-push-status></p>
+        <% else %>
+          <p class="text-muted mb-0">Push недоступен, потому что в окружении не заданы VAPID_PUBLIC_KEY и VAPID_PRIVATE_KEY.</p>
+        <% end %>
+      </div>
+
+      <div class="action-panel">
+        <div class="text-muted small mb-1">Ключи интеграций</div>
+        <h2 class="h4 mb-3">Что нужно настроить</h2>
+        <div class="compact-list">
+          <div><span>Email</span><strong>SMTP</strong></div>
+          <div><span>Telegram</span><strong>TELEGRAM_BOT_TOKEN</strong></div>
+          <div><span>VK</span><strong>VK_GROUP_TOKEN</strong></div>
+          <div><span>Web Push</span><strong>VAPID keys</strong></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

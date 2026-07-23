@@ -1,0 +1,82 @@
+<div class="py-4">
+  <div class="page-heading mb-4">
+    <div>
+      <div class="text-muted small mb-1"><%= @pet.name %></div>
+      <h1 class="h3 mb-1"><%= @reminder.title %></h1>
+      <p class="text-muted mb-0"><%= @reminder.reminder_type_label %> · <%= @reminder.repeat_rule_label %></p>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2">
+      <%= link_to "Редактировать", edit_pet_reminder_path(@pet, @reminder), class: "btn btn-primary" %>
+      <%= link_to "К списку", pet_reminders_path(@pet), class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <section class="col-lg-7">
+      <div class="workspace-section">
+        <div class="section-heading compact">
+          <h2 class="h4 mb-0">Детали</h2>
+          <span class="<%= reminder_status_class(@reminder) %>"><%= reminder_status_label(@reminder) %></span>
+        </div>
+
+        <dl class="details-list">
+          <div><dt>Следующая отправка</dt><dd><%= l(@reminder.next_run_at) %></dd></div>
+          <div><dt>Первый срок</dt><dd><%= l(@reminder.remind_at) %></dd></div>
+          <div><dt>Повтор</dt><dd><%= @reminder.repeat_rule_label %></dd></div>
+          <div><dt>Последнее выполнение</dt><dd><%= @reminder.last_completed_at.present? ? l(@reminder.last_completed_at) : "—" %></dd></div>
+          <div><dt>Последняя отправка</dt><dd><%= @reminder.last_notified_at.present? ? l(@reminder.last_notified_at) : "—" %></dd></div>
+        </dl>
+
+        <% if @reminder.note.present? %>
+          <div class="notes-box">
+            <div class="fw-semibold mb-1">Заметка</div>
+            <div class="text-muted"><%= simple_format(@reminder.note) %></div>
+          </div>
+        <% end %>
+
+        <div class="d-flex flex-wrap gap-2 mt-4">
+          <%= button_to "Выполнить и создать запись",
+                        complete_pet_reminder_path(@pet, @reminder, create_event: "1"),
+                        method: :patch,
+                        class: "btn btn-primary" %>
+          <%= button_to "Удалить",
+                        pet_reminder_path(@pet, @reminder),
+                        method: :delete,
+                        class: "btn btn-outline-danger",
+                        form: { onsubmit: "return confirm('Удалить напоминание?')" } %>
+        </div>
+      </div>
+    </section>
+
+    <aside class="col-lg-5">
+      <div class="action-panel">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">Доставки</div>
+            <h2 class="h4 mb-0">История</h2>
+          </div>
+        </div>
+
+        <% if @deliveries.any? %>
+          <div class="delivery-list">
+            <% @deliveries.each do |delivery| %>
+              <div class="delivery-row">
+                <div>
+                  <div class="fw-semibold"><%= delivery.notification_channel.channel_type_label %></div>
+                  <div class="text-muted small"><%= l(delivery.created_at) %></div>
+                  <% if delivery.error_message.present? %>
+                    <div class="text-danger small"><%= delivery.error_message %></div>
+                  <% end %>
+                </div>
+                <span class="<%= notification_delivery_status_class(delivery) %>"><%= notification_delivery_status_label(delivery) %></span>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">Отправок пока не было.</p>
+        <% end %>
+      </div>
+    </aside>
+  </div>
+</div>

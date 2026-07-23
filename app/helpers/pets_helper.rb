@@ -38,13 +38,31 @@ module PetsHelper
     event.event_type_label
   end
 
-  def pet_overview_signal(pet, pet_tag, latest_scan, latest_event)
+  def pet_overview_signal(pet, pet_tag, latest_scan, latest_event, next_reminder = nil)
     if pet_tag&.lost_mode_enabled?
       return {
         tone: "danger",
         label: "Режим потери",
         title: "Питомец отмечен как потерявшийся",
         body: pet_tag.lost_message.presence || "Проверьте публичную страницу и контакт для связи."
+      }
+    end
+
+    if next_reminder&.overdue?
+      return {
+        tone: "danger",
+        label: "Напоминание просрочено",
+        title: next_reminder.title,
+        body: "Срок был #{next_reminder.next_run_at.strftime("%d.%m.%Y %H:%M")}."
+      }
+    end
+
+    if next_reminder&.due_today?
+      return {
+        tone: "warning",
+        label: "Сегодня",
+        title: next_reminder.title,
+        body: "Напоминание на #{next_reminder.next_run_at.strftime("%H:%M")}."
       }
     end
 

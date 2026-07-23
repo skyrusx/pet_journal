@@ -16,5 +16,6 @@ end
 
 class ActionDispatch::IntegrationTest
   include ActionMailer::TestHelper
+  include ActiveJob::TestHelper
   include Devise::Test::IntegrationHelpers
 end

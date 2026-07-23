@@ -1,0 +1,17 @@
+email:
+  user: one
+  channel_type: 0
+  name: Основная почта
+  address: owner_one@example.com
+  enabled: true
+  verified_at: <%= Time.current %>
+  settings: {}
+
+telegram:
+  user: one
+  channel_type: 1
+  name: Telegram
+  address: "123456"
+  enabled: false
+  verified_at:
+  settings: {}

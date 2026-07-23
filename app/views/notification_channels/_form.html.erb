@@ -1,0 +1,60 @@
+<% if channel.errors.any? %>
+  <div class="flash-stack inline" aria-live="polite" aria-atomic="true">
+    <div class="flash-toast alert" role="alert" data-flash-toast>
+      <div>
+        <strong>Проверьте форму</strong>
+        <p><%= channel.errors.full_messages.to_sentence %></p>
+      </div>
+      <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
+    </div>
+  </div>
+<% end %>
+
+<%= form_with(model: channel, class: "structured-form") do |form| %>
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2>Канал</h2>
+        <p>Куда PetJournal будет отправлять напоминания.</p>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-5">
+        <%= form.label :channel_type, class: "form-label" %>
+        <%= form.select :channel_type, notification_channel_type_options, {}, class: "form-select", data: { channel_type_select: true } %>
+      </div>
+
+      <div class="col-md-7">
+        <%= form.label :name, class: "form-label" %>
+        <%= form.text_field :name, class: "form-control", placeholder: "Например: Telegram владельца" %>
+      </div>
+
+      <div class="col-12" data-address-field>
+        <%= form.label :address, class: "form-label" %>
+        <%= form.text_field :address, class: "form-control", placeholder: "Эл. почта, chat_id или peer_id" %>
+        <div class="form-text" data-channel-hint>
+          <%= notification_channel_hint(channel.channel_type.presence || "email") %>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="form-check">
+          <%= form.check_box :enabled, class: "form-check-input" %>
+          <%= form.label :enabled, class: "form-check-label" %>
+        </div>
+      </div>
+
+      <% if channel.channel_web_push? %>
+        <%= hidden_field_tag "notification_channel[endpoint]", channel.settings["endpoint"] %>
+        <%= hidden_field_tag "notification_channel[p256dh]", channel.settings["p256dh"] %>
+        <%= hidden_field_tag "notification_channel[auth]", channel.settings["auth"] %>
+      <% end %>
+    </div>
+  </section>
+
+  <div class="form-actions">
+    <%= form.submit channel.persisted? ? "Сохранить" : "Добавить канал", class: "btn btn-primary" %>
+    <%= link_to "Отмена", notification_channels_path, class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>

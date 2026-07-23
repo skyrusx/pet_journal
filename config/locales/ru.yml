@@ -92,3 +92,50 @@ ru:
         latitude: "Широта"
         longitude: "Долгота"
         location_note: "Ориентир"
+      reminder:
+        title: "Название"
+        reminder_type: "Тип"
+        remind_at: "Когда напомнить"
+        next_run_at: "Следующая отправка"
+        repeat_rule: "Повтор"
+        status: "Статус"
+        note: "Заметка"
+      notification_channel:
+        channel_type: "Тип канала"
+        name: "Название"
+        address: "Адрес получателя"
+        enabled: "Включен"
+        settings: "Настройки"
+  reminders:
+    types:
+      other: "Другое"
+      medication: "Лекарство"
+      vaccination: "Прививка"
+      treatment: "Обработка"
+      visit: "Визит к врачу"
+      weight: "Вес"
+    repeat_rules:
+      once: "Не повторять"
+      daily: "Каждый день"
+      weekly: "Каждую неделю"
+      monthly: "Каждый месяц"
+    statuses:
+      active: "Активно"
+      completed: "Выполнено"
+      paused: "Пауза"
+  notification_channels:
+    types:
+      email: "Эл. почта"
+      telegram: "Telegram"
+      vk: "VK"
+      web_push: "Web Push"
+    hints:
+      email: "Укажите эл. почту для получения напоминаний."
+      telegram: "Укажите chat_id. Пользователь должен сначала написать боту."
+      vk: "Укажите peer_id или ID диалога VK. Нужен токен сообщества."
+      web_push: "Укажите endpoint, p256dh и auth из подписки браузера."
+    delivery_statuses:
+      pending: "В очереди"
+      sent: "Отправлено"
+      failed: "Ошибка"
+      skipped: "Пропущено"

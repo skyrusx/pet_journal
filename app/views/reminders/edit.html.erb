@@ -1,0 +1,11 @@
+<div class="py-4">
+  <div class="page-heading mb-4">
+    <div>
+      <div class="text-muted small mb-1"><%= @pet.name %></div>
+      <h1 class="h3 mb-1">Редактировать напоминание</h1>
+      <p class="text-muted mb-0">Измените срок, повтор или описание задачи.</p>
+    </div>
+  </div>
+
+  <%= render "form", pet: @pet, reminder: @reminder %>
+</div>

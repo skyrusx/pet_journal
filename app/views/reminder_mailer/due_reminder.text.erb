@@ -1,0 +1,10 @@
+Напоминание
+
+Питомец: <%= @pet.name %>
+Напоминание: <%= @reminder.title %>
+Тип: <%= @reminder.reminder_type_label %>
+Время: <%= l(@reminder.next_run_at) %>
+
+<% if @reminder.note.present? %>
+<%= @reminder.note %>
+<% end %>

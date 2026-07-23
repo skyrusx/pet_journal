@@ -1,0 +1,23 @@
+one:
+  pet: one
+  title: Дать таблетку
+  reminder_type: 1
+  remind_at: <%= 1.hour.ago %>
+  next_run_at: <%= 1.hour.ago %>
+  repeat_rule: 0
+  status: 0
+  note: После еды
+  last_completed_at:
+  last_notified_at:
+
+weekly:
+  pet: one
+  title: Обработка
+  reminder_type: 3
+  remind_at: <%= 1.day.ago %>
+  next_run_at: <%= 1.day.ago %>
+  repeat_rule: 2
+  status: 0
+  note:
+  last_completed_at:
+  last_notified_at:

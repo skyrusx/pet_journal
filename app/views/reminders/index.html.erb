@@ -1,0 +1,121 @@
+<div class="reminders-page py-4">
+  <section class="journal-hero mb-4">
+    <div>
+      <div class="text-muted small mb-1"><%= @pet.name %></div>
+      <h1 class="h3 mb-2">Напоминания</h1>
+      <p class="text-muted mb-0">Лекарства, прививки, обработки, визиты и регулярный уход с доставкой в выбранные каналы.</p>
+    </div>
+
+    <div class="journal-hero-stats">
+      <div>
+        <span><%= @active_reminders.count %></span>
+        <small>активно</small>
+      </div>
+      <div>
+        <span><%= @active_reminders.count(&:overdue?) %></span>
+        <small>просрочено</small>
+      </div>
+    </div>
+
+    <div class="journal-hero-actions">
+      <%= link_to "Новое напоминание", new_pet_reminder_path(@pet), class: "btn btn-primary" %>
+      <%= link_to "Каналы уведомлений", notification_channels_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </section>
+
+  <nav class="pet-tabs mb-4" aria-label="Навигация питомца">
+    <%= link_to "Обзор", pet_path(@pet), class: "pet-tab" %>
+    <%= link_to "Журнал", pet_pet_events_path(@pet), class: "pet-tab" %>
+    <%= link_to "Напоминания", pet_reminders_path(@pet), class: "pet-tab active" %>
+    <%= link_to "Жетон", pet_pet_tag_path(@pet), class: "pet-tab" %>
+    <%= link_to "Данные", edit_pet_path(@pet), class: "pet-tab" %>
+  </nav>
+
+  <div class="row g-4">
+    <section class="col-lg-8">
+      <div class="workspace-section">
+        <div class="section-heading">
+          <div>
+            <div class="text-muted small mb-1">Ближайшие</div>
+            <h2 class="h4 mb-0">Активные напоминания</h2>
+          </div>
+        </div>
+
+        <% if @active_reminders.any? %>
+          <div class="reminder-list">
+            <% @active_reminders.each do |reminder| %>
+              <article class="reminder-card <%= "overdue" if reminder.overdue? %>">
+                <div class="reminder-date">
+                  <strong><%= reminder.next_run_at.strftime("%d.%m") %></strong>
+                  <span><%= reminder.next_run_at.strftime("%H:%M") %></span>
+                </div>
+
+                <div class="reminder-body">
+                  <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                    <span class="event-badge"><%= reminder.reminder_type_label %></span>
+                    <span class="<%= reminder_status_class(reminder) %>"><%= reminder_status_label(reminder) %></span>
+                    <span class="status-pill muted"><%= reminder.repeat_rule_label %></span>
+                  </div>
+
+                  <h3 class="h5 mb-1"><%= link_to reminder.title, pet_reminder_path(@pet, reminder), class: "text-dark text-decoration-none" %></h3>
+                  <% if reminder.note.present? %>
+                    <p class="text-muted mb-0"><%= truncate(reminder.note, length: 150) %></p>
+                  <% end %>
+                </div>
+
+                <div class="reminder-actions">
+                  <%= button_to "Выполнено",
+                                complete_pet_reminder_path(@pet, reminder, create_event: "1"),
+                                method: :patch,
+                                class: "btn btn-primary btn-sm" %>
+                  <% if reminder.status_paused? %>
+                    <%= button_to "Включить", resume_pet_reminder_path(@pet, reminder), method: :patch, class: "btn btn-outline-primary btn-sm" %>
+                  <% else %>
+                    <%= button_to "Пауза", pause_pet_reminder_path(@pet, reminder), method: :patch, class: "btn btn-outline-secondary btn-sm" %>
+                  <% end %>
+                </div>
+              </article>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="empty-state-inline">
+            <h3 class="h5 mb-2">Напоминаний пока нет</h3>
+            <p class="text-muted mb-3">Создайте первое напоминание и подключите удобные каналы доставки.</p>
+            <%= link_to "Создать напоминание", new_pet_reminder_path(@pet), class: "btn btn-primary btn-sm" %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <aside class="col-lg-4">
+      <div class="action-panel mb-4">
+        <div class="text-muted small mb-1">Доставка</div>
+        <h2 class="h4 mb-3">Каналы уведомлений</h2>
+        <p class="text-muted mb-3">Если каналы не настроены, PetJournal автоматически использует эл. почту аккаунта.</p>
+        <%= link_to "Настроить каналы", notification_channels_path, class: "btn btn-outline-primary btn-sm" %>
+      </div>
+
+      <div class="action-panel">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">Архив</div>
+            <h2 class="h4 mb-0">Выполненные</h2>
+          </div>
+        </div>
+
+        <% if @completed_reminders.any? %>
+          <div class="compact-list">
+            <% @completed_reminders.each do |reminder| %>
+              <div>
+                <span><%= reminder.title %></span>
+                <strong><%= reminder.last_completed_at&.strftime("%d.%m.%Y") || "—" %></strong>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">Выполненные напоминания появятся здесь.</p>
+        <% end %>
+      </div>
+    </aside>
+  </div>
+</div>

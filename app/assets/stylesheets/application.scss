@@ -263,6 +263,14 @@ a {
   z-index: 40;
 }
 
+.flash-stack.inline {
+  bottom: auto;
+  margin-bottom: 1rem;
+  max-width: none;
+  position: static;
+  right: auto;
+}
+
 .flash-toast {
   align-items: flex-start;
   animation: toast-in 0.22s ease both;
@@ -585,6 +593,14 @@ a {
   align-items: center;
 }
 
+.page-heading {
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
 .timeline-list {
   display: grid;
   gap: 0.75rem;
@@ -704,13 +720,15 @@ a {
 }
 
 .document-list,
-.completion-list {
+.completion-list,
+.compact-list {
   display: grid;
   gap: 0.75rem;
 }
 
 .document-row,
-.completion-list > div {
+.completion-list > div,
+.compact-list > div {
   align-items: center;
   border-bottom: 1px solid var(--pj-border);
   display: flex;
@@ -720,22 +738,29 @@ a {
 }
 
 .document-row:last-child,
-.completion-list > div:last-child {
+.completion-list > div:last-child,
+.compact-list > div:last-child {
   border-bottom: 0;
   padding-bottom: 0;
 }
 
-.completion-list span {
+.completion-list span,
+.compact-list span {
   color: var(--pj-muted);
 }
 
-.completion-list strong {
+.completion-list strong,
+.compact-list strong {
   color: var(--pj-amber);
   font-size: 0.9rem;
 }
 
 .completion-list .done strong {
   color: var(--pj-success);
+}
+
+.compact-list strong {
+  color: var(--pj-ink);
 }
 
 .completion-bar {
@@ -933,6 +958,83 @@ a {
   flex-direction: column;
   height: 70px;
   justify-content: center;
+}
+
+.reminder-list,
+.channel-grid,
+.delivery-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.reminder-card {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 76px minmax(0, 1fr) auto;
+  padding: 1rem;
+}
+
+.reminder-card.overdue {
+  border-left: 4px solid var(--pj-danger);
+}
+
+.reminder-date {
+  align-items: center;
+  background: var(--pj-soft);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 70px;
+  justify-content: center;
+}
+
+.reminder-date strong {
+  line-height: 1.1;
+}
+
+.reminder-date span {
+  color: var(--pj-muted);
+  font-size: 0.85rem;
+}
+
+.reminder-body {
+  min-width: 0;
+}
+
+.reminder-actions {
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.channel-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.channel-card {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.delivery-row {
+  align-items: flex-start;
+  border-bottom: 1px solid var(--pj-border);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding-bottom: 0.85rem;
+}
+
+.delivery-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 
 .event-detail-hero {
@@ -1586,6 +1688,10 @@ a {
   .form-aside {
     position: static;
   }
+
+  .channel-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 575.98px) {
@@ -1606,6 +1712,7 @@ a {
   .pet-card-main,
   .timeline-item,
   .journal-event,
+  .reminder-card,
   .journal-hero,
   .event-type-grid {
     grid-template-columns: 1fr;
@@ -1617,8 +1724,15 @@ a {
 
   .event-detail-actions .btn,
   .event-detail-actions form,
+  .reminder-actions,
+  .reminder-actions form,
+  .reminder-actions .btn,
   .journal-hero-actions .btn {
     width: 100%;
+  }
+
+  .reminder-actions {
+    justify-content: stretch;
   }
 
   .pet-workspace-main,

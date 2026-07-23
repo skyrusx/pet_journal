@@ -1,0 +1,54 @@
+<% if reminder.errors.any? %>
+  <div class="flash-stack inline" aria-live="polite" aria-atomic="true">
+    <div class="flash-toast alert" role="alert" data-flash-toast>
+      <div>
+        <strong>Проверьте форму</strong>
+        <p><%= reminder.errors.full_messages.to_sentence %></p>
+      </div>
+      <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
+    </div>
+  </div>
+<% end %>
+
+<%= form_with(model: [pet, reminder], class: "structured-form") do |form| %>
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2>Основное</h2>
+        <p>Что нужно не забыть и когда отправить первое уведомление.</p>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-7">
+        <%= form.label :title, class: "form-label" %>
+        <%= form.text_field :title, class: "form-control", placeholder: "Например: дать таблетку" %>
+      </div>
+
+      <div class="col-md-5">
+        <%= form.label :reminder_type, class: "form-label" %>
+        <%= form.select :reminder_type, reminder_type_options, {}, class: "form-select" %>
+      </div>
+
+      <div class="col-md-6">
+        <%= form.label :remind_at, class: "form-label" %>
+        <%= form.datetime_local_field :remind_at, class: "form-control" %>
+      </div>
+
+      <div class="col-md-6">
+        <%= form.label :repeat_rule, class: "form-label" %>
+        <%= form.select :repeat_rule, repeat_rule_options, {}, class: "form-select" %>
+      </div>
+
+      <div class="col-12">
+        <%= form.label :note, class: "form-label" %>
+        <%= form.text_area :note, rows: 4, class: "form-control", placeholder: "Дозировка, условия, комментарий для себя" %>
+      </div>
+    </div>
+  </section>
+
+  <div class="form-actions">
+    <%= form.submit reminder.persisted? ? "Сохранить" : "Создать напоминание", class: "btn btn-primary" %>
+    <%= link_to "Отмена", pet_reminders_path(pet), class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>

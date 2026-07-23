@@ -19,6 +19,9 @@ class PetsController < ApplicationController
     @pet_tag = @pet.pet_tag
     @latest_pet_tag_scan = @pet_tag&.pet_tag_scans&.order(created_at: :desc)&.first
     @pet_tag_scan_count = @pet_tag&.pet_tag_scans&.count.to_i
+    @next_reminder = @pet.reminders.status_active.order(:next_run_at).first
+    @overdue_reminders_count = @pet.reminders.overdue.count
+    @today_reminders_count = @pet.reminders.status_active.where(next_run_at: Time.current.beginning_of_day..Time.current.end_of_day).count
   end
 
   def new

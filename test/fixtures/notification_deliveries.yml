@@ -1,0 +1,6 @@
+pending:
+  reminder: one
+  notification_channel: email
+  status: 0
+  delivered_at:
+  error_message:

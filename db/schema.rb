@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_22_111000) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_23_093000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,33 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_22_111000) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "notification_channels", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "channel_type", null: false
+    t.string "name", null: false
+    t.string "address"
+    t.boolean "enabled", default: true, null: false
+    t.datetime "verified_at"
+    t.jsonb "settings", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "channel_type"], name: "index_notification_channels_on_user_id_and_channel_type"
+    t.index ["user_id"], name: "index_notification_channels_on_user_id"
+  end
+
+  create_table "notification_deliveries", force: :cascade do |t|
+    t.bigint "reminder_id", null: false
+    t.bigint "notification_channel_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "delivered_at"
+    t.text "error_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notification_channel_id"], name: "index_notification_deliveries_on_notification_channel_id"
+    t.index ["reminder_id", "notification_channel_id", "created_at"], name: "index_deliveries_on_reminder_channel_created_at"
+    t.index ["reminder_id"], name: "index_notification_deliveries_on_reminder_id"
   end
 
   create_table "pet_events", force: :cascade do |t|
@@ -106,6 +133,24 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_22_111000) do
     t.index ["user_id"], name: "index_pets_on_user_id"
   end
 
+  create_table "reminders", force: :cascade do |t|
+    t.bigint "pet_id", null: false
+    t.string "title", null: false
+    t.integer "reminder_type", default: 0, null: false
+    t.datetime "remind_at", null: false
+    t.datetime "next_run_at", null: false
+    t.integer "repeat_rule", default: 0, null: false
+    t.integer "status", default: 0, null: false
+    t.text "note"
+    t.datetime "last_completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "last_notified_at"
+    t.index ["last_notified_at"], name: "index_reminders_on_last_notified_at"
+    t.index ["pet_id"], name: "index_reminders_on_pet_id"
+    t.index ["status", "next_run_at"], name: "index_reminders_on_status_and_next_run_at"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -120,8 +165,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_22_111000) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "notification_channels", "users"
+  add_foreign_key "notification_deliveries", "notification_channels"
+  add_foreign_key "notification_deliveries", "reminders"
   add_foreign_key "pet_events", "pets"
   add_foreign_key "pet_tag_scans", "pet_tags"
   add_foreign_key "pet_tags", "pets"
   add_foreign_key "pets", "users"
+  add_foreign_key "reminders", "pets"
 end

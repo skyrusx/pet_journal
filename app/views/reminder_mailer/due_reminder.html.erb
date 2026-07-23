@@ -1,0 +1,15 @@
+<h1>Напоминание</h1>
+
+<p>
+  Для питомца <strong><%= @pet.name %></strong> наступило напоминание:
+  <strong><%= @reminder.title %></strong>.
+</p>
+
+<p>
+  Тип: <%= @reminder.reminder_type_label %><br>
+  Время: <%= l(@reminder.next_run_at) %>
+</p>
+
+<% if @reminder.note.present? %>
+  <p><%= @reminder.note %></p>
+<% end %>

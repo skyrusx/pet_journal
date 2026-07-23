@@ -8,6 +8,10 @@ Rails.application.routes.draw do
   get "pet_events/destroy"
   root "pages#index"
   devise_for :users
+  resources :notification_channels, except: %i[show] do
+    post :test, on: :member
+  end
+  resource :web_push_subscription, only: :create
   get "p/:token" => "public_pet_tags#show", as: :public_pet_tag
   post "p/:token/location" => "public_pet_tags#location", as: :public_pet_tag_location
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -29,5 +33,10 @@ Rails.application.routes.draw do
       get "qr.:format" => "pet_tags#qr", as: :qr, constraints: { format: /svg|png/ }
     end
     resources :pet_events, path: :events
+    resources :reminders do
+      patch :complete, on: :member
+      patch :pause, on: :member
+      patch :resume, on: :member
+    end
   end
 end

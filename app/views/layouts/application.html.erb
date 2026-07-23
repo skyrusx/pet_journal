@@ -34,6 +34,7 @@
         <nav class="d-flex flex-wrap align-items-center gap-2">
           <% if user_signed_in? %>
             <%= link_to "Мои питомцы", pets_path, class: "btn btn-outline-secondary btn-sm" %>
+            <%= link_to "Уведомления", notification_channels_path, class: "btn btn-outline-secondary btn-sm" %>
             <%= button_to "Выйти",
                           destroy_user_session_path,
                           method: :delete,
