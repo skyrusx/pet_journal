@@ -4,6 +4,12 @@ class NotificationChannelsController < ApplicationController
 
   def index
     @channels = current_user.notification_channels.order(:channel_type, :created_at)
+    @deliveries = NotificationDelivery
+                  .joins(reminder: :pet)
+                  .where(pets: { user_id: current_user.id })
+                  .includes(:notification_channel, reminder: :pet)
+                  .recent
+                  .limit(30)
     @vapid_public_key = ENV["VAPID_PUBLIC_KEY"]
   end
 
@@ -57,6 +63,14 @@ class NotificationChannelsController < ApplicationController
     redirect_to notification_channels_path, notice: "Тестовая отправка поставлена в очередь."
   end
 
+  def update_settings
+    if current_user.update(notification_settings_params)
+      redirect_to notification_channels_path, notice: "Настройки уведомлений обновлены."
+    else
+      redirect_to notification_channels_path, alert: current_user.errors.full_messages.to_sentence
+    end
+  end
+
   private
 
   def set_channel
@@ -65,6 +79,15 @@ class NotificationChannelsController < ApplicationController
 
   def channel_params
     params.require(:notification_channel).permit(:channel_type, :name, :address, :enabled)
+  end
+
+  def notification_settings_params
+    params.require(:user).permit(
+      :notifications_quiet_hours_enabled,
+      :notifications_quiet_hours_start,
+      :notifications_quiet_hours_end,
+      :notifications_time_zone
+    )
   end
 
   def apply_web_push_settings

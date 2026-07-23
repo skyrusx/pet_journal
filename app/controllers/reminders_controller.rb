@@ -2,6 +2,7 @@ class RemindersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pet
   before_action :set_reminder, only: %i[show edit update destroy complete pause resume]
+  before_action :set_notification_channels, only: %i[new create edit update show]
 
   def index
     @active_reminders = @pet.reminders.status_active.order(:next_run_at)
@@ -20,6 +21,7 @@ class RemindersController < ApplicationController
     @reminder = @pet.reminders.new(reminder_params)
 
     if @reminder.save
+      sync_notification_channels
       redirect_to pet_reminders_path(@pet), notice: "Напоминание создано."
     else
       render :new, status: :unprocessable_entity
@@ -34,6 +36,7 @@ class RemindersController < ApplicationController
     @reminder.last_notified_at = nil
 
     if @reminder.save
+      sync_notification_channels
       redirect_to pet_reminder_path(@pet, @reminder), notice: "Напоминание обновлено."
     else
       render :edit, status: :unprocessable_entity
@@ -75,8 +78,19 @@ class RemindersController < ApplicationController
     @reminder = @pet.reminders.find(params[:id])
   end
 
+  def set_notification_channels
+    @notification_channels = current_user.notification_channels.enabled.order(:channel_type, :created_at)
+  end
+
   def reminder_params
     params.require(:reminder).permit(:title, :reminder_type, :remind_at, :repeat_rule, :note)
+  end
+
+  def sync_notification_channels
+    channel_ids = Array(params.dig(:reminder, :notification_channel_ids)).reject(&:blank?)
+    channels = current_user.notification_channels.enabled.where(id: channel_ids)
+
+    @reminder.notification_channels = channels
   end
 
   def create_event_from_reminder

@@ -50,20 +50,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelectorAll("[data-web-push-panel]").forEach((panel) => {
-    const button = panel.querySelector("[data-web-push-enable]");
+    const enableButton = panel.querySelector("[data-web-push-enable]");
+    const disableButton = panel.querySelector("[data-web-push-disable]");
     const status = panel.querySelector("[data-web-push-status]");
     const vapidPublicKey = panel.dataset.vapidPublicKey;
 
-    if (!button || !status || !vapidPublicKey) return;
+    if (!enableButton || !status || !vapidPublicKey) return;
 
     if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-      button.disabled = true;
+      enableButton.disabled = true;
+      if (disableButton) disableButton.disabled = true;
       status.textContent = "Этот браузер не поддерживает push-уведомления.";
       return;
     }
 
-    button.addEventListener("click", async () => {
-      button.disabled = true;
+    enableButton.addEventListener("click", async () => {
+      enableButton.disabled = true;
       status.textContent = "Запрашиваем разрешение...";
 
       try {
@@ -71,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (permission !== "granted") {
           status.textContent = "Разрешение на уведомления не выдано.";
-          button.disabled = false;
+          enableButton.disabled = false;
           return;
         }
 
@@ -96,7 +98,45 @@ document.addEventListener("DOMContentLoaded", () => {
         status.textContent = body.message;
       } catch (error) {
         status.textContent = error.message;
-        button.disabled = false;
+        enableButton.disabled = false;
+      }
+    });
+
+    disableButton?.addEventListener("click", async () => {
+      disableButton.disabled = true;
+      status.textContent = "Отключаем push...";
+
+      try {
+        const registration = await navigator.serviceWorker.getRegistration("/service-worker");
+        const subscription = await registration?.pushManager.getSubscription();
+
+        if (!subscription) {
+          status.textContent = "В этом браузере нет активной push-подписки.";
+          disableButton.disabled = false;
+          return;
+        }
+
+        const endpoint = subscription.endpoint;
+        await subscription.unsubscribe();
+
+        const response = await fetch("/web_push_subscription", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": csrfToken()
+          },
+          body: JSON.stringify({ endpoint })
+        });
+        const body = await response.json();
+
+        if (!response.ok) throw new Error(body.message || "Не удалось отключить подписку.");
+
+        status.textContent = body.message;
+      } catch (error) {
+        status.textContent = error.message;
+      } finally {
+        disableButton.disabled = false;
+        enableButton.disabled = false;
       }
     });
   });

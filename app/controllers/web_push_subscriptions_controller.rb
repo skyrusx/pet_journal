@@ -26,4 +26,12 @@ class WebPushSubscriptionsController < ApplicationController
       render json: { ok: false, message: channel.errors.full_messages.to_sentence }, status: :unprocessable_entity
     end
   end
+
+  def destroy
+    endpoint = params.require(:endpoint)
+    channel = current_user.notification_channels.channel_web_push.find_by(address: endpoint)
+    channel&.destroy
+
+    render json: { ok: true, message: "Push-уведомления для этого браузера отключены." }
+  end
 end

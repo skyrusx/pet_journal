@@ -22,7 +22,11 @@
     <div class="row g-3">
       <div class="col-md-5">
         <%= form.label :channel_type, class: "form-label" %>
-        <%= form.select :channel_type, notification_channel_type_options, {}, class: "form-select", data: { channel_type_select: true } %>
+        <%= form.select :channel_type,
+                        notification_channel_type_options(include_web_push: channel.persisted?),
+                        {},
+                        class: "form-select",
+                        data: { channel_type_select: true } %>
       </div>
 
       <div class="col-md-7">

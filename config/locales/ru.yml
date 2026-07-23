@@ -58,6 +58,10 @@ ru:
         password_confirmation: "Подтверждение пароля"
         current_password: "Текущий пароль"
         remember_me: "Запомнить меня"
+        notifications_quiet_hours_enabled: "Тихие часы"
+        notifications_quiet_hours_start: "Начало тихих часов"
+        notifications_quiet_hours_end: "Конец тихих часов"
+        notifications_time_zone: "Часовой пояс уведомлений"
       pet:
         name: "Имя"
         species: "Вид"
@@ -106,6 +110,10 @@ ru:
         address: "Адрес получателя"
         enabled: "Включен"
         settings: "Настройки"
+      notification_delivery:
+        status: "Статус"
+        attempts_count: "Попытки"
+        next_attempt_at: "Следующая попытка"
   reminders:
     types:
       other: "Другое"

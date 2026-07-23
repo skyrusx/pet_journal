@@ -10,8 +10,9 @@ Rails.application.routes.draw do
   devise_for :users
   resources :notification_channels, except: %i[show] do
     post :test, on: :member
+    patch :settings, on: :collection, action: :update_settings
   end
-  resource :web_push_subscription, only: :create
+  resource :web_push_subscription, only: %i[create destroy]
   get "p/:token" => "public_pet_tags#show", as: :public_pet_tag
   post "p/:token/location" => "public_pet_tags#location", as: :public_pet_tag_location
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

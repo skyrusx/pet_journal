@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_23_093000) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_23_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,9 +64,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_23_093000) do
     t.text "error_message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "attempts_count", default: 0, null: false
+    t.datetime "next_attempt_at"
     t.index ["notification_channel_id"], name: "index_notification_deliveries_on_notification_channel_id"
     t.index ["reminder_id", "notification_channel_id", "created_at"], name: "index_deliveries_on_reminder_channel_created_at"
     t.index ["reminder_id"], name: "index_notification_deliveries_on_reminder_id"
+    t.index ["status", "next_attempt_at"], name: "index_notification_deliveries_on_status_and_next_attempt_at"
   end
 
   create_table "pet_events", force: :cascade do |t|
@@ -133,6 +136,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_23_093000) do
     t.index ["user_id"], name: "index_pets_on_user_id"
   end
 
+  create_table "reminder_notification_channels", force: :cascade do |t|
+    t.bigint "reminder_id", null: false
+    t.bigint "notification_channel_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notification_channel_id"], name: "idx_on_notification_channel_id_94ca7ca966"
+    t.index ["reminder_id", "notification_channel_id"], name: "index_reminder_channels_on_reminder_and_channel", unique: true
+    t.index ["reminder_id"], name: "index_reminder_notification_channels_on_reminder_id"
+  end
+
   create_table "reminders", force: :cascade do |t|
     t.bigint "pet_id", null: false
     t.string "title", null: false
@@ -159,6 +172,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_23_093000) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "notifications_quiet_hours_enabled", default: false, null: false
+    t.time "notifications_quiet_hours_start", default: "2000-01-01 22:00:00", null: false
+    t.time "notifications_quiet_hours_end", default: "2000-01-01 08:00:00", null: false
+    t.string "notifications_time_zone", default: "UTC", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -172,5 +189,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_23_093000) do
   add_foreign_key "pet_tag_scans", "pet_tags"
   add_foreign_key "pet_tags", "pets"
   add_foreign_key "pets", "users"
+  add_foreign_key "reminder_notification_channels", "notification_channels"
+  add_foreign_key "reminder_notification_channels", "reminders"
   add_foreign_key "reminders", "pets"
 end

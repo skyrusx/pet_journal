@@ -47,6 +47,38 @@
     </div>
   </section>
 
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2>Каналы доставки</h2>
+        <p>Можно выбрать конкретные каналы для этого напоминания. Если ничего не выбрать, будут использованы все включенные каналы.</p>
+      </div>
+    </div>
+
+    <% if @notification_channels.any? %>
+      <div class="channel-choice-grid">
+        <% @notification_channels.each do |channel| %>
+          <label class="channel-choice">
+            <%= check_box_tag "reminder[notification_channel_ids][]",
+                              channel.id,
+                              reminder.notification_channel_ids.include?(channel.id),
+                              class: "form-check-input" %>
+            <span>
+              <strong><%= channel.name %></strong>
+              <small><%= channel.channel_type_label %> · <%= channel.channel_web_push? ? "Браузерная подписка" : channel.address %></small>
+            </span>
+          </label>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state-inline">
+        <div class="fw-semibold mb-1">Каналы еще не настроены</div>
+        <p class="text-muted mb-3">PetJournal отправит уведомление на эл. почту аккаунта, но лучше подключить нужные каналы заранее.</p>
+        <%= link_to "Настроить каналы", notification_channels_path, class: "btn btn-outline-primary btn-sm" %>
+      </div>
+    <% end %>
+  </section>
+
   <div class="form-actions">
     <%= form.submit reminder.persisted? ? "Сохранить" : "Создать напоминание", class: "btn btn-primary" %>
     <%= link_to "Отмена", pet_reminders_path(pet), class: "btn btn-outline-secondary" %>

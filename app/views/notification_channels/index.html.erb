@@ -69,15 +69,81 @@
           </div>
         <% end %>
       </div>
+
+      <div class="workspace-section mt-4">
+        <div class="section-heading">
+          <div>
+            <div class="text-muted small mb-1">Журнал</div>
+            <h2 class="h4 mb-0">Последние отправки</h2>
+          </div>
+        </div>
+
+        <% if @deliveries.any? %>
+          <div class="delivery-list">
+            <% @deliveries.each do |delivery| %>
+              <div class="delivery-row">
+                <div>
+                  <div class="fw-semibold"><%= delivery.reminder.pet.name %> · <%= delivery.reminder.title %></div>
+                  <div class="text-muted small"><%= delivery.notification_channel.channel_type_label %> · <%= l(delivery.created_at) %></div>
+                  <div class="text-muted small">Попытки: <%= delivery.attempts_label %></div>
+                  <% if delivery.next_attempt_at.present? %>
+                    <div class="text-muted small">Повтор: <%= l(delivery.next_attempt_at) %></div>
+                  <% end %>
+                  <% if delivery.error_message.present? %>
+                    <div class="text-danger small"><%= delivery.error_message %></div>
+                  <% end %>
+                </div>
+                <span class="<%= notification_delivery_status_class(delivery) %>"><%= notification_delivery_status_label(delivery) %></span>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">История появится после первой отправки или теста канала.</p>
+        <% end %>
+      </div>
     </section>
 
     <aside class="col-lg-4">
+      <div class="action-panel mb-4">
+        <div class="text-muted small mb-1">Тихие часы</div>
+        <h2 class="h4 mb-3">Пауза на ночь</h2>
+        <%= form_with model: current_user,
+                      url: settings_notification_channels_path,
+                      method: :patch,
+                      class: "quiet-hours-form" do |form| %>
+          <div class="form-check form-switch mb-3">
+            <%= form.check_box :notifications_quiet_hours_enabled, class: "form-check-input", role: "switch" %>
+            <%= form.label :notifications_quiet_hours_enabled, "Не отправлять в тихие часы", class: "form-check-label" %>
+          </div>
+
+          <div class="row g-2">
+            <div class="col-6">
+              <%= form.label :notifications_quiet_hours_start, "С", class: "form-label" %>
+              <%= form.time_field :notifications_quiet_hours_start, class: "form-control" %>
+            </div>
+            <div class="col-6">
+              <%= form.label :notifications_quiet_hours_end, "До", class: "form-label" %>
+              <%= form.time_field :notifications_quiet_hours_end, class: "form-control" %>
+            </div>
+            <div class="col-12">
+              <%= form.label :notifications_time_zone, "Часовой пояс", class: "form-label" %>
+              <%= form.time_zone_select :notifications_time_zone, nil, {}, class: "form-select" %>
+            </div>
+          </div>
+
+          <%= form.submit "Сохранить", class: "btn btn-outline-primary btn-sm mt-3" %>
+        <% end %>
+      </div>
+
       <div class="action-panel mb-4" data-web-push-panel data-vapid-public-key="<%= @vapid_public_key %>">
         <div class="text-muted small mb-1">Push</div>
         <h2 class="h4 mb-3">Этот браузер</h2>
         <% if @vapid_public_key.present? %>
           <p class="text-muted mb-3">Включите уведомления в этом браузере. Подписка сохранится как отдельный канал.</p>
-          <button type="button" class="btn btn-primary btn-sm" data-web-push-enable>Включить push</button>
+          <div class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn btn-primary btn-sm" data-web-push-enable>Включить push</button>
+            <button type="button" class="btn btn-outline-danger btn-sm" data-web-push-disable>Отключить push</button>
+          </div>
           <p class="form-text mt-2 mb-0" data-web-push-status></p>
         <% else %>
           <p class="text-muted mb-0">Push недоступен, потому что в окружении не заданы VAPID_PUBLIC_KEY и VAPID_PRIVATE_KEY.</p>
@@ -85,13 +151,15 @@
       </div>
 
       <div class="action-panel">
-        <div class="text-muted small mb-1">Ключи интеграций</div>
-        <h2 class="h4 mb-3">Что нужно настроить</h2>
+        <div class="text-muted small mb-1">Подключение</div>
+        <h2 class="h4 mb-3">Как включить каналы</h2>
         <div class="compact-list">
-          <div><span>Email</span><strong>SMTP</strong></div>
-          <div><span>Telegram</span><strong>TELEGRAM_BOT_TOKEN</strong></div>
-          <div><span>VK</span><strong>VK_GROUP_TOKEN</strong></div>
-          <div><span>Web Push</span><strong>VAPID keys</strong></div>
+          <% notification_channel_onboarding_steps.each do |title, body| %>
+            <div class="onboarding-row">
+              <span><%= title %></span>
+              <strong><%= body %></strong>
+            </div>
+          <% end %>
         </div>
       </div>
     </aside>

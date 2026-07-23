@@ -30,6 +30,23 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to pet_reminders_url(@pet)
   end
 
+  test "should create reminder with selected channels" do
+    assert_difference("ReminderNotificationChannel.count") do
+      post pet_reminders_url(@pet), params: {
+        reminder: {
+          title: "Визит",
+          reminder_type: "visit",
+          remind_at: 2.days.from_now,
+          repeat_rule: "once",
+          notification_channel_ids: [notification_channels(:email).id]
+        }
+      }
+    end
+
+    reminder = Reminder.order(:created_at).last
+    assert_equal [notification_channels(:email)], reminder.notification_channels.to_a
+  end
+
   test "should complete reminder and create journal event" do
     assert_difference("PetEvent.count") do
       patch complete_pet_reminder_url(@pet, @reminder, create_event: "1")

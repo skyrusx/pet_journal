@@ -1,6 +1,9 @@
 module NotificationChannelsHelper
-  def notification_channel_type_options
-    NotificationChannel.channel_types.keys.map { |key| [I18n.t("notification_channels.types.#{key}"), key] }
+  def notification_channel_type_options(include_web_push: true)
+    keys = NotificationChannel.channel_types.keys
+    keys -= ["web_push"] unless include_web_push
+
+    keys.map { |key| [I18n.t("notification_channels.types.#{key}"), key] }
   end
 
   def notification_channel_hint(channel_type)
@@ -8,6 +11,8 @@ module NotificationChannelsHelper
   end
 
   def notification_delivery_status_label(delivery)
+    return "Ожидает повтора" if delivery.status_pending? && delivery.attempts_count.positive?
+
     I18n.t("notification_channels.delivery_statuses.#{delivery.status}")
   end
 
@@ -31,5 +36,14 @@ module NotificationChannelsHelper
     return "Готов" if channel.verified?
 
     "Нужна проверка"
+  end
+
+  def notification_channel_onboarding_steps
+    [
+      ["Email", "Проверьте SMTP в окружении Rails. Канал email аккаунта создается автоматически, если других каналов нет."],
+      ["Telegram", "Создайте бота, задайте TELEGRAM_BOT_TOKEN и укажите chat_id пользователя или группы."],
+      ["VK", "Задайте VK_GROUP_TOKEN от сообщества и укажите peer_id нужного диалога."],
+      ["Push", "Задайте VAPID_PUBLIC_KEY и VAPID_PRIVATE_KEY, затем включите push в нужном браузере."]
+    ]
   end
 end

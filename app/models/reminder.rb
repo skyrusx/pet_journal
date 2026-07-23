@@ -2,6 +2,8 @@ class Reminder < ApplicationRecord
   belongs_to :pet
   has_one :user, through: :pet
   has_many :notification_deliveries, dependent: :destroy
+  has_many :reminder_notification_channels, dependent: :destroy
+  has_many :notification_channels, through: :reminder_notification_channels
 
   enum :reminder_type, { other: 0, medication: 1, vaccination: 2, treatment: 3, visit: 4, weight: 5 }
   enum :repeat_rule, { once: 0, daily: 1, weekly: 2, monthly: 3 }

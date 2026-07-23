@@ -26,6 +26,16 @@
           <div><dt>Повтор</dt><dd><%= @reminder.repeat_rule_label %></dd></div>
           <div><dt>Последнее выполнение</dt><dd><%= @reminder.last_completed_at.present? ? l(@reminder.last_completed_at) : "—" %></dd></div>
           <div><dt>Последняя отправка</dt><dd><%= @reminder.last_notified_at.present? ? l(@reminder.last_notified_at) : "—" %></dd></div>
+          <div>
+            <dt>Каналы</dt>
+            <dd>
+              <% if @reminder.notification_channels.any? %>
+                <%= @reminder.notification_channels.map(&:name).to_sentence %>
+              <% else %>
+                Все включенные каналы
+              <% end %>
+            </dd>
+          </div>
         </dl>
 
         <% if @reminder.note.present? %>
@@ -65,6 +75,10 @@
                 <div>
                   <div class="fw-semibold"><%= delivery.notification_channel.channel_type_label %></div>
                   <div class="text-muted small"><%= l(delivery.created_at) %></div>
+                  <div class="text-muted small">Попытки: <%= delivery.attempts_label %></div>
+                  <% if delivery.next_attempt_at.present? %>
+                    <div class="text-muted small">Следующая попытка: <%= l(delivery.next_attempt_at) %></div>
+                  <% end %>
                   <% if delivery.error_message.present? %>
                     <div class="text-danger small"><%= delivery.error_message %></div>
                   <% end %>

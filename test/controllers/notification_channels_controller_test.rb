@@ -35,4 +35,20 @@ class NotificationChannelsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to notification_channels_url
   end
+
+  test "should update notification quiet hours settings" do
+    patch settings_notification_channels_url, params: {
+      user: {
+        notifications_quiet_hours_enabled: "1",
+        notifications_quiet_hours_start: "21:30",
+        notifications_quiet_hours_end: "07:15",
+        notifications_time_zone: "Asia/Novokuznetsk"
+      }
+    }
+
+    assert_redirected_to notification_channels_url
+    @user.reload
+    assert @user.notifications_quiet_hours_enabled?
+    assert_equal "Asia/Novokuznetsk", @user.notifications_time_zone
+  end
 end
