@@ -1,16 +1,27 @@
 <div class="events-index py-4">
-  <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
+  <section class="journal-hero mb-4">
     <div>
       <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1">Журнал событий</h1>
-      <p class="text-muted mb-0">История ухода, здоровья, визитов и заметок.</p>
+      <h1 class="h3 mb-2">Журнал событий</h1>
+      <p class="text-muted mb-0">История ухода, здоровья, визитов и заметок в хронологическом порядке.</p>
     </div>
 
-    <div class="d-flex flex-wrap align-items-start gap-2">
+    <div class="journal-hero-stats">
+      <div>
+        <span><%= @event_type_counts.values.sum %></span>
+        <small><%= russian_plural(@event_type_counts.values.sum, "запись", "записи", "записей") %></small>
+      </div>
+      <div>
+        <span><%= @event_type_counts.keys.size %></span>
+        <small><%= russian_plural(@event_type_counts.keys.size, "тип", "типа", "типов") %></small>
+      </div>
+    </div>
+
+    <div class="journal-hero-actions">
       <%= link_to "Добавить событие", new_pet_pet_event_path(@pet), class: "btn btn-primary" %>
       <%= link_to "Обзор питомца", pet_path(@pet), class: "btn btn-outline-secondary" %>
     </div>
-  </div>
+  </section>
 
   <nav class="pet-tabs mb-4" aria-label="Навигация питомца">
     <%= link_to "Обзор", pet_path(@pet), class: "pet-tab" %>
@@ -20,7 +31,18 @@
   </nav>
 
   <div class="filter-panel mb-4">
-    <div class="filter-panel-title">Тип события</div>
+    <div class="section-heading compact">
+      <div>
+        <div class="filter-panel-title mb-1">Тип события</div>
+        <div class="text-muted small">
+          <%= @selected_event_type.present? ? PetEvent::EVENT_TYPE_LABELS[@selected_event_type] : "Показаны все записи" %>
+        </div>
+      </div>
+      <% if @selected_event_type.present? %>
+        <%= link_to "Сбросить", pet_pet_events_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
+      <% end %>
+    </div>
+
     <div class="filter-chips">
       <%= link_to "Все #{content_tag(:span, @event_type_counts.values.sum)}".html_safe,
                   event_filter_path(@pet, nil),
@@ -42,7 +64,7 @@
 
           <div class="journal-month-events">
             <% events.each do |event| %>
-              <article class="journal-event">
+              <article class="journal-event <%= event_tone(event.event_type) %>">
                 <div class="journal-event-date">
                   <span><%= event.event_date.day %></span>
                   <small><%= event.event_date.strftime("%m.%Y") %></small>
@@ -62,9 +84,9 @@
                                 class: "text-dark text-decoration-none" %>
                   </h3>
 
-                  <% if event.description.present? %>
-                    <p class="text-muted mb-3"><%= truncate(event.description, length: 190) %></p>
-                  <% end %>
+                  <p class="text-muted mb-3">
+                    <%= event.description.present? ? truncate(event.description, length: 190) : event_type_hint(event.event_type) %>
+                  </p>
 
                   <div class="d-flex flex-wrap gap-2">
                     <%= link_to "Открыть", pet_pet_event_path(@pet, event), class: "btn btn-outline-primary btn-sm" %>

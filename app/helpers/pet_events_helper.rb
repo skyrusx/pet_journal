@@ -38,4 +38,30 @@ module PetEventsHelper
 
     "#{count} #{russian_plural(count, "файл", "файла", "файлов")}"
   end
+
+  def event_tone(event_type)
+    {
+      "note" => "neutral",
+      "vaccination" => "success",
+      "treatment" => "warning",
+      "visit" => "info",
+      "illness" => "danger",
+      "weight" => "neutral"
+    }.fetch(event_type.to_s, "neutral")
+  end
+
+  def event_type_hint(event_type)
+    {
+      "note" => "Общее наблюдение или важная заметка.",
+      "vaccination" => "Прививки, ревакцинация и отметки в паспорте.",
+      "treatment" => "Обработка, лекарства, процедуры и уход.",
+      "visit" => "Приемы у врача, рекомендации и назначения.",
+      "illness" => "Симптомы, ухудшение самочувствия и лечение.",
+      "weight" => "Контроль веса и динамика изменений."
+    }.fetch(event_type.to_s, "Запись в журнале питомца.")
+  end
+
+  def event_file_label(file)
+    "#{file.filename} · #{number_to_human_size(file.byte_size)}"
+  end
 end

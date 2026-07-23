@@ -19,19 +19,21 @@
       <span class="required-pill">Обязательно</span>
     </div>
 
-    <div class="row g-3">
-      <div class="col-md-6">
-        <%= f.label :event_type, "Тип события", class: "form-label" %>
-        <%= f.select :event_type,
-                     PetEvent::EVENT_TYPE_LABELS.map { |key, value| [value, key] },
-                     {},
-                     class: "form-select" %>
-      </div>
+    <div class="event-type-grid mb-3">
+      <% PetEvent::EVENT_TYPE_LABELS.each do |key, label| %>
+        <label class="event-type-option <%= event_tone(key) %>">
+          <%= f.radio_button :event_type, key %>
+          <span>
+            <strong><%= label %></strong>
+            <small><%= event_type_hint(key) %></small>
+          </span>
+        </label>
+      <% end %>
+    </div>
 
-      <div class="col-md-6">
-        <%= f.label :event_date, "Дата события", class: "form-label" %>
-        <%= f.date_field :event_date, class: "form-control" %>
-      </div>
+    <div>
+      <%= f.label :event_date, "Дата события", class: "form-label" %>
+      <%= f.date_field :event_date, class: "form-control" %>
     </div>
   </section>
 

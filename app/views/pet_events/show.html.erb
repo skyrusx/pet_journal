@@ -1,54 +1,82 @@
-<div class="py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="event-show py-4">
+  <section class="event-detail-hero <%= event_tone(@pet_event.event_type) %> mb-4">
     <div>
-      <div class="text-muted small mb-1">
-        <%= @pet_event.event_date %> · <%= @pet_event.event_type_label %>
-      </div>
-      <h1 class="h3 mb-0"><%= @pet_event.title.presence || @pet_event.event_type_label %></h1>
+      <div class="text-muted small mb-1"><%= @pet.name %> · <%= event_date_label(@pet_event.event_date) %></div>
+      <span class="event-badge mb-3"><%= @pet_event.event_type_label %></span>
+      <h1 class="h3 mb-2"><%= @pet_event.title.presence || @pet_event.event_type_label %></h1>
+      <p class="text-muted mb-0"><%= event_type_hint(@pet_event.event_type) %></p>
     </div>
 
-    <div class="d-flex gap-2">
+    <div class="event-detail-actions">
       <%= link_to "К журналу", pet_pet_events_path(@pet), class: "btn btn-outline-secondary" %>
+      <%= link_to "К обзору", pet_path(@pet), class: "btn btn-outline-secondary" %>
       <%= link_to "Редактировать", edit_pet_pet_event_path(@pet, @pet_event), class: "btn btn-primary" %>
-      <%= button_to "Удалить",
-                    pet_pet_event_path(@pet, @pet_event),
-                    method: :delete,
-                    class: "btn btn-outline-danger",
-                    form: { onsubmit: "return confirm('Удалить событие?')" } %>
     </div>
-  </div>
+  </section>
 
-  <div class="card border-0 shadow-sm">
-    <div class="card-body">
-      <p class="mb-3">
-        <strong>Питомец:</strong> <%= @pet.name %>
-      </p>
+  <div class="row g-4">
+    <section class="col-lg-7">
+      <div class="workspace-section mb-4">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">Запись</div>
+            <h2 class="h4 mb-0">Описание</h2>
+          </div>
+        </div>
 
-      <p class="mb-3">
-        <strong>Тип события:</strong> <%= @pet_event.event_type_label %>
-      </p>
-
-      <p class="mb-3">
-        <strong>Дата события:</strong> <%= @pet_event.event_date %>
-      </p>
-
-      <div class="mb-3">
-        <strong>Описание:</strong>
-        <div class="mt-2 text-muted">
-          <%= @pet_event.description.presence || "—" %>
+        <div class="event-description">
+          <%= simple_format(@pet_event.description.presence || "Описание не заполнено.") %>
         </div>
       </div>
 
       <% if @pet_event.files.attached? %>
-        <div class="mt-4">
-          <strong>Файлы:</strong>
-          <div class="mt-2 d-flex flex-column gap-2">
+        <section class="workspace-section">
+          <div class="section-heading compact">
+            <div>
+              <div class="text-muted small mb-1">Документы</div>
+              <h2 class="h4 mb-0"><%= @pet_event.files.count %> <%= russian_plural(@pet_event.files.count, "файл", "файла", "файлов") %></h2>
+            </div>
+          </div>
+
+          <div class="document-list">
             <% @pet_event.files.each do |file| %>
-              <%= link_to file.filename.to_s, url_for(file), target: "_blank", rel: "noopener" %>
+              <div class="document-row">
+                <div>
+                  <div class="fw-semibold"><%= file.filename %></div>
+                  <div class="text-muted small"><%= event_file_label(file) %></div>
+                </div>
+                <%= link_to "Открыть", url_for(file), class: "btn btn-outline-primary btn-sm", target: "_blank", rel: "noopener" %>
+              </div>
             <% end %>
           </div>
-        </div>
+        </section>
       <% end %>
-    </div>
+    </section>
+
+    <aside class="col-lg-5">
+      <section class="details-panel mb-4">
+        <div class="section-heading compact">
+          <h2 class="h4 mb-0">Детали</h2>
+        </div>
+
+        <dl class="details-list">
+          <div><dt>Питомец</dt><dd><%= @pet.name %></dd></div>
+          <div><dt>Тип</dt><dd><%= @pet_event.event_type_label %></dd></div>
+          <div><dt>Дата</dt><dd><%= event_date_label(@pet_event.event_date) %></dd></div>
+          <div><dt>Файлы</dt><dd><%= @pet_event.files.count %> <%= russian_plural(@pet_event.files.count, "файл", "файла", "файлов") %></dd></div>
+        </dl>
+      </section>
+
+      <section class="action-panel danger-zone">
+        <div class="text-muted small mb-1">Опасное действие</div>
+        <h2 class="h5 mb-2">Удалить запись</h2>
+        <p class="text-muted mb-3">Запись исчезнет из журнала питомца вместе с привязанными файлами.</p>
+        <%= button_to "Удалить событие",
+                      pet_pet_event_path(@pet, @pet_event),
+                      method: :delete,
+                      class: "btn btn-outline-danger btn-sm",
+                      form: { onsubmit: "return confirm('Удалить событие?')" } %>
+      </section>
+    </aside>
   </div>
 </div>
