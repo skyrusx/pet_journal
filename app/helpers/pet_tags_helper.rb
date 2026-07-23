@@ -1,6 +1,6 @@
 module PetTagsHelper
   NOTIFICATION_LABELS = {
-    "lost_mode" => "Только в Lost Mode",
+    "lost_mode" => "Только в режиме потери",
     "always" => "При каждом сканировании",
     "never" => "Не уведомлять"
   }.freeze
@@ -19,7 +19,7 @@ module PetTagsHelper
 
   def pet_tag_status_label(pet_tag)
     return "Не создан" if pet_tag.blank? || !pet_tag.persisted?
-    return "Lost Mode" if pet_tag.lost_mode_enabled?
+    return "Режим потери" if pet_tag.lost_mode_enabled?
 
     pet_tag.enabled? ? "Активен" : "Отключен"
   end
@@ -47,7 +47,7 @@ module PetTagsHelper
       ["Поведение", pet_tag.behavior_notes.present? ? "Показывается" : "Не заполнено"],
       ["Медицинские заметки", pet_tag.medical_notes.present? ? "Показываются" : "Не заполнено"],
       ["Телефон", pet_tag.show_phone? && pet_tag.contact_phone.present? ? "Показывается" : "Скрыт"],
-      ["Email владельца", "Скрыт"]
+      ["Эл. почта владельца", "Скрыта"]
     ]
   end
 end

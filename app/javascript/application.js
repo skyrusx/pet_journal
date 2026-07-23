@@ -20,4 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
       applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
     });
   });
+
+  document.querySelectorAll("[data-flash-toast]").forEach((toast) => {
+    const close = toast.querySelector("[data-flash-close]");
+    const dismiss = () => {
+      toast.classList.add("closing");
+      window.setTimeout(() => toast.remove(), 180);
+    };
+
+    close?.addEventListener("click", dismiss);
+    window.setTimeout(dismiss, 5200);
+  });
 });

@@ -107,7 +107,7 @@
         <div class="action-panel mb-4">
           <div class="section-heading compact">
             <div>
-              <div class="text-muted small mb-1">Lost Mode</div>
+              <div class="text-muted small mb-1">Режим потери</div>
               <h2 class="h5 mb-0"><%= @pet_tag.lost_mode_enabled? ? "Питомец отмечен как потерявшийся" : "Режим потери выключен" %></h2>
             </div>
             <span class="<%= @pet_tag.lost_mode_enabled? ? "lost-pill" : "status-pill muted" %>">
@@ -121,11 +121,11 @@
               <div class="text-muted small">Последнее место: <%= @pet_tag.last_seen_location.presence || "не указано" %></div>
             </div>
           <% else %>
-            <p class="text-muted mb-3">Включайте Lost Mode только когда питомец действительно потерялся. Public page станет заметнее, а уведомления можно получать при каждом открытии.</p>
+            <p class="text-muted mb-3">Включайте режим потери только когда питомец действительно потерялся. Публичная страница станет заметнее, а уведомления можно получать при каждом открытии.</p>
           <% end %>
 
           <div class="d-flex flex-wrap gap-2">
-            <%= link_to @pet_tag.lost_mode_enabled? ? "Изменить сообщение" : "Настроить Lost Mode",
+            <%= link_to @pet_tag.lost_mode_enabled? ? "Изменить сообщение" : "Настроить режим потери",
                         edit_pet_pet_tag_path(@pet),
                         class: @pet_tag.lost_mode_enabled? ? "btn btn-outline-danger btn-sm" : "btn btn-outline-secondary btn-sm" %>
           </div>
@@ -182,7 +182,7 @@
 
             <% if @pet_tag.lost_mode_enabled? %>
               <div>
-                <div class="fw-semibold">Lost Mode</div>
+                <div class="fw-semibold">Режим потери</div>
                 <p class="text-muted mb-0"><%= @pet_tag.lost_message.presence || "Питомец потерялся. Сообщение не заполнено." %></p>
               </div>
 

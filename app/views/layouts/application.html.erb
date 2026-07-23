@@ -48,20 +48,32 @@
     </header>
 
     <main class="container pb-4">
-      <% if notice.present? %>
-        <div class="alert alert-success" role="alert">
-          <%= notice %>
-        </div>
-      <% end %>
-
-      <% if alert.present? %>
-        <div class="alert alert-danger" role="alert">
-          <%= alert %>
-        </div>
-      <% end %>
-
       <%= yield %>
     </main>
+
+    <% if notice.present? || alert.present? %>
+      <div class="flash-stack" aria-live="polite" aria-atomic="true">
+        <% if notice.present? %>
+          <div class="flash-toast notice" role="status" data-flash-toast>
+            <div>
+              <strong>Готово</strong>
+              <p><%= notice %></p>
+            </div>
+            <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
+          </div>
+        <% end %>
+
+        <% if alert.present? %>
+          <div class="flash-toast alert" role="alert" data-flash-toast>
+            <div>
+              <strong>Внимание</strong>
+              <p><%= alert %></p>
+            </div>
+            <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
 
     <button type="button" class="theme-fab" data-theme-toggle aria-label="Переключить тему">
       <span class="theme-fab-icon" aria-hidden="true"></span>

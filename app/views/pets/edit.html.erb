@@ -1,4 +1,4 @@
-<div class="form-page py-4">
+<div class="form-page pet-form-page py-4">
   <div class="form-page-header">
     <div>
       <div class="text-muted small mb-1"><%= @pet.name %></div>
@@ -8,5 +8,19 @@
     <%= link_to "К обзору", pet_path(@pet), class: "btn btn-outline-secondary" %>
   </div>
 
-  <%= render "form" %>
+  <div class="form-layout">
+    <%= render "form" %>
+
+    <aside class="form-aside">
+      <div class="form-aside-panel">
+        <div class="text-muted small mb-1">Профиль питомца</div>
+        <h2 class="h5 mb-3">Эти данные усиливают обзор и PetTag</h2>
+        <div class="form-aside-list">
+          <div><span>1</span><p>Возраст, вес и пол делают обзор полезнее.</p></div>
+          <div><span>2</span><p>Чип и паспорт помогают держать документы под рукой.</p></div>
+          <div><span>3</span><p>Заметки можно использовать для публичного QR-профиля.</p></div>
+        </div>
+      </div>
+    </aside>
+  </div>
 </div>

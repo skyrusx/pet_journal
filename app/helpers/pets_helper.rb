@@ -42,7 +42,7 @@ module PetsHelper
     if pet_tag&.lost_mode_enabled?
       return {
         tone: "danger",
-        label: "Lost Mode",
+        label: "Режим потери",
         title: "Питомец отмечен как потерявшийся",
         body: pet_tag.lost_message.presence || "Проверьте публичную страницу и контакт для связи."
       }

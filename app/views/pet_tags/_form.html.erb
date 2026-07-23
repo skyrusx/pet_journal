@@ -4,13 +4,14 @@
               local: true,
               class: "structured-form" do |f| %>
   <% if @pet_tag.errors.any? %>
-    <div class="alert alert-danger">
-      <div class="fw-semibold mb-2">Проверь форму:</div>
-      <ul class="mb-0">
-        <% @pet_tag.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+    <div class="flash-stack" aria-live="polite" aria-atomic="true">
+      <div class="flash-toast alert" role="alert" data-flash-toast>
+        <div>
+          <strong>Проверь форму</strong>
+          <p><%= @pet_tag.errors.full_messages.join(". ") %></p>
+        </div>
+        <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
+      </div>
     </div>
   <% end %>
 
@@ -62,7 +63,7 @@
   <section class="form-section lost-mode-section">
     <div class="form-section-heading">
       <div>
-        <h2 class="h5 mb-1">Lost Mode</h2>
+        <h2 class="h5 mb-1">Режим потери</h2>
         <p class="text-muted mb-0">Включайте только если питомец потерялся. Публичная страница станет более заметной.</p>
       </div>
       <span class="lost-pill">Режим потери</span>
@@ -111,7 +112,7 @@
       </div>
 
       <div class="col-md-7">
-        <%= f.label :notification_preference, "Email-уведомления", class: "form-label" %>
+        <%= f.label :notification_preference, "Уведомления по эл. почте", class: "form-label" %>
         <%= f.select :notification_preference, notification_options, {}, class: "form-select" %>
       </div>
     </div>

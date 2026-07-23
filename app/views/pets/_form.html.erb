@@ -1,12 +1,13 @@
 <%= form_with model: @pet, local: true, class: "structured-form" do |f| %>
   <% if @pet.errors.any? %>
-    <div class="alert alert-danger">
-      <div class="fw-semibold mb-2">Проверь форму:</div>
-      <ul class="mb-0">
-        <% @pet.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+    <div class="flash-stack" aria-live="polite" aria-atomic="true">
+      <div class="flash-toast alert" role="alert" data-flash-toast>
+        <div>
+          <strong>Проверь форму</strong>
+          <p><%= @pet.errors.full_messages.join(". ") %></p>
+        </div>
+        <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
+      </div>
     </div>
   <% end %>
 

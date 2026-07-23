@@ -1,4 +1,4 @@
-<div class="form-page py-4">
+<div class="form-page pet-form-page py-4">
   <div class="form-page-header">
     <div>
       <h1 class="h3 mb-1">Новый питомец</h1>
@@ -7,5 +7,19 @@
     <%= link_to "Мои питомцы", pets_path, class: "btn btn-outline-secondary" %>
   </div>
 
-  <%= render "form" %>
+  <div class="form-layout">
+    <%= render "form" %>
+
+    <aside class="form-aside">
+      <div class="form-aside-panel">
+        <div class="text-muted small mb-1">Что заполнить сначала</div>
+        <h2 class="h5 mb-3">Достаточно имени и фото</h2>
+        <div class="form-aside-list">
+          <div><span>1</span><p>Добавьте имя, чтобы создать карточку.</p></div>
+          <div><span>2</span><p>Фото поможет быстро узнавать питомца в списке.</p></div>
+          <div><span>3</span><p>Остальные данные можно заполнить постепенно.</p></div>
+        </div>
+      </div>
+    </aside>
+  </div>
 </div>

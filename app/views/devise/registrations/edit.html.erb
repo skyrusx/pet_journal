@@ -1,42 +1,86 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
-
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-
-  <div class="field">
-    <p><%= f.label :email %></p>
-    <p><%= f.email_field :email, autofocus: true, autocomplete: "email" %></p>
+<div class="form-page py-4">
+  <div class="form-page-header">
+    <div>
+      <div class="text-muted small mb-1">Аккаунт</div>
+      <h1 class="h3 mb-1">Настройки входа</h1>
+      <p class="text-muted mb-0">Обновите email или пароль для доступа к PetJournal.</p>
+    </div>
+    <%= link_to "Назад", :back, class: "btn btn-outline-secondary" %>
   </div>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
+  <div class="form-layout">
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "structured-form" }) do |f| %>
+      <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <p><%= f.label :password %> <i>(leave blank if you don't want to change it)</i></p>
-    <p><%= f.password_field :password, autocomplete: "new-password" %></p>
-    <% if @minimum_password_length %>
-      <p><em><%= @minimum_password_length %> characters minimum</em></p>
+      <section class="form-section">
+        <div class="form-section-heading">
+          <div>
+            <h2 class="h5 mb-1">Эл. почта</h2>
+            <p class="text-muted mb-0">Используется для входа и системных уведомлений.</p>
+          </div>
+        </div>
+
+        <%= f.label :email, "Эл. почта", class: "form-label" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
+
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <div class="form-hint mt-3">Ожидается подтверждение: <%= resource.unconfirmed_email %></div>
+        <% end %>
+      </section>
+
+      <section class="form-section">
+        <div class="form-section-heading">
+          <div>
+            <h2 class="h5 mb-1">Пароль</h2>
+            <p class="text-muted mb-0">Оставьте поля пустыми, если не хотите менять пароль.</p>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <%= f.label :password, "Новый пароль", class: "form-label" %>
+            <% if @minimum_password_length %>
+              <div class="form-text">Минимум <%= @minimum_password_length %> символов.</div>
+            <% end %>
+            <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
+          </div>
+
+          <div class="col-md-6">
+            <%= f.label :password_confirmation, "Повторите пароль", class: "form-label" %>
+            <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control" %>
+          </div>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <div class="form-section-heading">
+          <div>
+            <h2 class="h5 mb-1">Подтверждение</h2>
+            <p class="text-muted mb-0">Введите текущий пароль, чтобы сохранить изменения.</p>
+          </div>
+          <span class="required-pill">Обязательно</span>
+        </div>
+
+        <%= f.label :current_password, "Текущий пароль", class: "form-label" %>
+        <%= f.password_field :current_password, autocomplete: "current-password", class: "form-control" %>
+      </section>
+
+      <div class="form-actions">
+        <%= f.submit "Сохранить аккаунт", class: "btn btn-primary" %>
+      </div>
     <% end %>
+
+    <aside class="form-aside">
+      <div class="form-aside-panel danger-zone">
+        <div class="text-muted small mb-1">Опасное действие</div>
+        <h2 class="h5 mb-2">Удалить аккаунт</h2>
+        <p class="text-muted mb-3">Это удалит доступ к аккаунту. Используйте только если действительно хотите закрыть профиль.</p>
+        <%= button_to "Удалить аккаунт",
+                      registration_path(resource_name),
+                      data: { confirm: "Удалить аккаунт?", turbo_confirm: "Удалить аккаунт?" },
+                      method: :delete,
+                      class: "btn btn-outline-danger btn-sm" %>
+      </div>
+    </aside>
   </div>
-
-  <div class="field">
-    <p><%= f.label :password_confirmation %></p>
-    <p><%= f.password_field :password_confirmation, autocomplete: "new-password" %></p>
-  </div>
-
-  <div class="field">
-    <p><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i></p>
-    <p><%= f.password_field :current_password, autocomplete: "current-password" %></p>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Update" %>
-  </div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>
+</div>
