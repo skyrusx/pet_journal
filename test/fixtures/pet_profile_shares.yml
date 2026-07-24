@@ -1,0 +1,44 @@
+one:
+  pet: one
+  public_token: profile-share-one
+  title: Профиль для показа
+  enabled: true
+  expires_at: <%= 7.days.from_now %>
+  detail_level: 1
+  show_profile: true
+  show_journal: true
+  show_documents: true
+  show_reminders: true
+  show_pet_tag: true
+  show_owner_contact: false
+  allow_file_downloads: false
+
+expired:
+  pet: one
+  public_token: expired-profile-share
+  title: Истекший доступ
+  enabled: true
+  expires_at: <%= 1.day.ago %>
+  detail_level: 0
+  show_profile: true
+  show_journal: false
+  show_documents: false
+  show_reminders: false
+  show_pet_tag: false
+  show_owner_contact: false
+  allow_file_downloads: false
+
+disabled:
+  pet: one
+  public_token: disabled-profile-share
+  title: Отключенный доступ
+  enabled: false
+  expires_at:
+  detail_level: 0
+  show_profile: true
+  show_journal: true
+  show_documents: false
+  show_reminders: false
+  show_pet_tag: false
+  show_owner_contact: false
+  allow_file_downloads: false

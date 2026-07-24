@@ -1,0 +1,249 @@
+<% content_for :title, "#{@pet.name} · PetJournal" %>
+
+<main class="public-share-page">
+  <section class="public-share-hero">
+    <div class="public-share-photo-wrap">
+      <% if @pet.photo.attached? %>
+        <%= image_tag @pet.photo, class: "public-share-photo", alt: @pet.name %>
+      <% else %>
+        <div class="public-share-photo public-share-photo-placeholder">
+          <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="public-share-identity">
+      <div class="text-muted small mb-1">PetJournal</div>
+      <h1><%= @pet.name %></h1>
+      <p><%= pet_short_description(@pet) %></p>
+
+      <div class="pet-meta-row">
+        <span><%= pet_age(@pet) %></span>
+        <% if @share.show_profile? %>
+          <span><%= pet_weight_label(@pet.weight) %></span>
+          <span><%= pet_sex_label(@pet) %></span>
+        <% end %>
+      </div>
+
+      <% if @share.show_owner_contact? %>
+        <div class="public-contact-panel">
+          <div class="fw-semibold">Связаться с владельцем</div>
+          <%= mail_to @pet.user.email, @pet.user.email, class: "btn btn-primary btn-sm mt-2" %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <div class="public-share-shell">
+    <% if @share.show_profile? %>
+      <section class="public-share-section">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">Профиль</div>
+            <h2 class="h4 mb-0">Основные данные</h2>
+          </div>
+        </div>
+
+        <dl class="details-list">
+          <div><dt>Вид</dt><dd><%= @pet.species.presence || "—" %></dd></div>
+          <div><dt>Порода</dt><dd><%= @pet.breed.presence || "—" %></dd></div>
+          <div><dt>Пол</dt><dd><%= pet_sex_label(@pet) %></dd></div>
+          <div><dt>Дата рождения</dt><dd><%= @pet.birth_date.present? ? @pet.birth_date.strftime("%d.%m.%Y") : "—" %></dd></div>
+          <div><dt>Окрас</dt><dd><%= @pet.color.presence || "—" %></dd></div>
+          <div><dt>Чип</dt><dd><%= @pet.chip_number.presence || "—" %></dd></div>
+          <% if @share.detail_full? %>
+            <div><dt>Ветпаспорт</dt><dd><%= @pet.passport_number.presence || "—" %></dd></div>
+            <div><dt>Стерилизация</dt><dd><%= @pet.neutered.nil? ? "—" : (@pet.neutered ? "Да" : "Нет") %></dd></div>
+          <% end %>
+        </dl>
+
+        <% if @share.detail_full? && @pet.notes.present? %>
+          <div class="notes-box mt-3">
+            <div class="fw-semibold mb-1">Заметки</div>
+            <div class="text-muted"><%= simple_format(@pet.notes) %></div>
+          </div>
+        <% end %>
+      </section>
+    <% end %>
+
+    <% if @share.show_pet_tag? && @pet_tag.present? %>
+      <section class="public-share-section">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">Безопасность</div>
+            <h2 class="h4 mb-0">PetTag</h2>
+          </div>
+          <span class="<%= pet_tag_status_class(@pet_tag) %>"><%= pet_tag_status_label(@pet_tag) %></span>
+        </div>
+
+        <div class="preview-stack">
+          <% if @pet_tag.lost_mode_enabled? %>
+            <div class="lost-mode-summary">
+              <div class="fw-semibold mb-1">Питомец отмечен как потерявшийся</div>
+              <p class="mb-0"><%= @pet_tag.lost_message.presence || "Если вы видели питомца, свяжитесь с владельцем." %></p>
+            </div>
+          <% end %>
+
+          <div>
+            <div class="fw-semibold">Сообщение</div>
+            <p class="text-muted mb-0"><%= @pet_tag.public_message.presence || "Публичное сообщение не заполнено." %></p>
+          </div>
+
+          <div>
+            <div class="fw-semibold">Особенности поведения</div>
+            <p class="text-muted mb-0"><%= @pet_tag.behavior_notes.presence || "Не указаны." %></p>
+          </div>
+
+          <% if @pet_tag.show_medical_notes? %>
+            <div>
+              <div class="fw-semibold">Медицинские заметки</div>
+              <p class="text-muted mb-0"><%= @pet_tag.medical_notes.presence || "Не указаны." %></p>
+            </div>
+          <% end %>
+
+          <% if @pet_tag.show_phone? && @pet_tag.contact_phone.present? %>
+            <div>
+              <div class="fw-semibold">Телефон из PetTag</div>
+              <%= link_to @pet_tag.contact_phone, "tel:#{@pet_tag.contact_phone}", class: "btn btn-primary btn-sm mt-2" %>
+            </div>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+
+    <% if @share.show_journal? %>
+      <section class="public-share-section">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">Журнал</div>
+            <h2 class="h4 mb-0">История событий</h2>
+          </div>
+          <span class="status-pill muted"><%= @share.detail_full? ? "До 50 записей" : "Последние 5" %></span>
+        </div>
+
+        <% if @events.any? %>
+          <div class="timeline-list">
+            <% @events.each do |event| %>
+              <article class="timeline-item compact">
+                <div class="timeline-date"><%= event.event_date.strftime("%d.%m.%Y") %></div>
+                <div class="timeline-content">
+                  <div class="d-flex flex-wrap gap-2 align-items-center mb-1">
+                    <span class="event-badge"><%= event.event_type_label %></span>
+                    <% if event.files.attached? %>
+                      <span class="attachment-pill"><%= event_attachment_label(event) %></span>
+                    <% end %>
+                  </div>
+                  <h3 class="h6 mb-1"><%= event.title.presence || event.event_type_label %></h3>
+                  <p class="text-muted mb-0"><%= event_structured_summary(event) %></p>
+
+                  <% if @share.detail_full? && event.structured? %>
+                    <div class="event-structured-preview mt-3">
+                      <% event.structured_rows.each do |label, value| %>
+                        <span><%= label %>: <strong><%= value %></strong></span>
+                      <% end %>
+                    </div>
+                  <% end %>
+
+                  <% if event.files.attached? %>
+                    <div class="shared-file-list mt-3">
+                      <% event.files.each do |file| %>
+                        <% if @share.allow_file_downloads? %>
+                          <%= link_to event_file_label(file), url_for(file), class: "shared-file-link" %>
+                        <% else %>
+                          <span><%= event_file_label(file) %></span>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+              </article>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="empty-state-inline">В журнале пока нет записей.</div>
+        <% end %>
+      </section>
+    <% end %>
+
+    <% if @share.show_documents? %>
+      <section class="public-share-section">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">Документы</div>
+            <h2 class="h4 mb-0">Файлы и сроки</h2>
+          </div>
+          <span class="status-pill muted"><%= @share.allow_file_downloads? ? "Скачивание включено" : "Скачивание отключено" %></span>
+        </div>
+
+        <% if @documents.any? %>
+          <div class="document-list">
+            <% @documents.each do |document| %>
+              <article class="document-row align-items-start">
+                <div>
+                  <div class="fw-semibold"><%= document.title %></div>
+                  <div class="text-muted small">
+                    <%= document.document_type_label %>
+                    <% if document.expires_on.present? %>
+                      · до <%= document.expires_on.strftime("%d.%m.%Y") %>
+                    <% end %>
+                  </div>
+                  <% if @share.detail_full? && document.notes.present? %>
+                    <div class="text-muted small mt-1"><%= document.notes %></div>
+                  <% end %>
+                  <% if document.files.attached? %>
+                    <div class="shared-file-list mt-2">
+                      <% document.files.each do |file| %>
+                        <% if @share.allow_file_downloads? %>
+                          <%= link_to event_file_label(file), url_for(file), class: "shared-file-link" %>
+                        <% else %>
+                          <span><%= event_file_label(file) %></span>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+                <span class="<%= document_status_class(document) %>"><%= document.status_label %></span>
+              </article>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="empty-state-inline">Документы пока не добавлены.</div>
+        <% end %>
+      </section>
+    <% end %>
+
+    <% if @share.show_reminders? %>
+      <section class="public-share-section">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">Напоминания</div>
+            <h2 class="h4 mb-0">Предстоящие задачи</h2>
+          </div>
+        </div>
+
+        <% if @reminders.any? %>
+          <div class="document-list">
+            <% @reminders.each do |reminder| %>
+              <article class="document-row">
+                <div>
+                  <div class="fw-semibold"><%= reminder.title %></div>
+                  <div class="text-muted small"><%= reminder.reminder_type_label %> · <%= reminder.repeat_rule_label %></div>
+                  <% if @share.detail_full? && reminder.note.present? %>
+                    <div class="text-muted small mt-1"><%= reminder.note %></div>
+                  <% end %>
+                </div>
+                <span class="<%= reminder.overdue? ? "lost-pill" : "status-pill success" %>"><%= reminder.next_run_at.strftime("%d.%m.%Y %H:%M") %></span>
+              </article>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="empty-state-inline">Активных напоминаний нет.</div>
+        <% end %>
+      </section>
+    <% end %>
+
+    <footer class="public-share-footer">
+      Доступ выдан владельцем питомца через PetJournal. Ссылка показывает только выбранные владельцем данные.
+    </footer>
+  </div>
+</main>

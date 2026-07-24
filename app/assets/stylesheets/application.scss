@@ -342,6 +342,178 @@ a {
   color: var(--pj-ink);
 }
 
+.share-card-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.share-card,
+.profile-share-hero,
+.public-share-section {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  box-shadow: var(--pj-shadow);
+  padding: 1.25rem;
+}
+
+.profile-share-hero {
+  align-items: center;
+  display: flex;
+  gap: 1.25rem;
+  justify-content: space-between;
+}
+
+.share-url-box {
+  background: var(--pj-soft);
+  border: 1px solid var(--pj-border);
+  border-radius: 10px;
+  color: var(--pj-ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.84rem;
+  overflow-wrap: anywhere;
+  padding: 0.8rem 0.9rem;
+}
+
+.share-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.share-chip-row span {
+  background: var(--pj-teal-soft);
+  border: 1px solid color-mix(in srgb, var(--pj-teal) 22%, var(--pj-border));
+  border-radius: 999px;
+  color: var(--pj-teal);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.35rem 0.55rem;
+}
+
+.share-checkbox-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.share-checkbox-grid.compact {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.share-check {
+  background: var(--pj-surface-strong);
+  border: 1px solid var(--pj-border);
+  border-radius: 10px;
+  cursor: pointer;
+  display: grid;
+  gap: 0.25rem;
+  grid-template-columns: auto 1fr;
+  padding: 0.85rem;
+}
+
+.share-check input {
+  grid-row: span 2;
+  margin-top: 0.25rem;
+}
+
+.share-check span {
+  font-weight: 700;
+}
+
+.share-check small {
+  color: var(--pj-muted);
+  line-height: 1.35;
+}
+
+.public-share-page {
+  padding: 2rem 1rem 5rem;
+}
+
+.public-share-hero {
+  align-items: center;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: 180px minmax(0, 1fr);
+  margin: 0 auto 1rem;
+  max-width: 980px;
+}
+
+.public-share-photo {
+  aspect-ratio: 1;
+  border-radius: 18px;
+  box-shadow: var(--pj-shadow);
+  object-fit: cover;
+  width: 100%;
+}
+
+.public-share-photo-placeholder {
+  background: var(--pj-teal-soft);
+  color: var(--pj-teal);
+  display: grid;
+  font-size: 4rem;
+  font-weight: 800;
+  place-items: center;
+}
+
+.public-share-identity h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.public-share-identity p {
+  color: var(--pj-muted);
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+}
+
+.public-contact-panel {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  margin-top: 1rem;
+  padding: 1rem;
+}
+
+.public-share-shell {
+  display: grid;
+  gap: 1rem;
+  margin: 0 auto;
+  max-width: 980px;
+}
+
+.public-share-footer {
+  color: var(--pj-muted);
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+}
+
+.shared-file-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.shared-file-list span,
+.shared-file-link {
+  background: var(--pj-soft);
+  border: 1px solid var(--pj-border);
+  border-radius: 999px;
+  color: var(--pj-muted);
+  font-size: 0.8rem;
+  padding: 0.35rem 0.55rem;
+  text-decoration: none;
+}
+
+.shared-file-link:hover {
+  background: var(--pj-teal-soft);
+  color: var(--pj-teal);
+}
+
 .flash-toast.closing {
   animation: toast-out 0.18s ease both;
 }
@@ -1815,6 +1987,16 @@ a {
   .document-card-grid {
     grid-template-columns: 1fr;
   }
+
+  .profile-share-hero,
+  .public-share-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-share-hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 575.98px) {
@@ -1914,7 +2096,8 @@ a {
   }
 
   .pet-tag-hero-actions .btn,
-  .found-pet-form .btn {
+  .found-pet-form .btn,
+  .profile-shares-page .btn {
     width: 100%;
   }
 
@@ -1928,5 +2111,13 @@ a {
 
   .public-pet-content {
     padding: 1.25rem;
+  }
+
+  .public-share-page {
+    padding-inline: 0.75rem;
+  }
+
+  .public-share-photo-wrap {
+    max-width: 220px;
   }
 }

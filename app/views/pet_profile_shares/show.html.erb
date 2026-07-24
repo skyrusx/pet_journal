@@ -1,0 +1,138 @@
+<div class="profile-shares-page py-4">
+  <div class="page-heading mb-4">
+    <div>
+      <div class="text-muted small mb-1"><%= @pet.name %></div>
+      <h1 class="h3 mb-1"><%= @share.title %></h1>
+      <p class="text-muted mb-0">Управление публичной ссылкой, QR и историей просмотров.</p>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2">
+      <%= link_to "Редактировать", edit_pet_profile_share_path(@pet, @share), class: "btn btn-primary" %>
+      <%= link_to "Все доступы", pet_profile_shares_path(@pet), class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+  <%= render "tabs", pet: @pet %>
+
+  <section class="pet-tag-hero mb-4">
+    <div class="pet-tag-hero-main">
+      <div>
+        <span class="<%= profile_share_status_class(@share) %>"><%= profile_share_status_label(@share) %></span>
+        <h2 class="h4 mt-3 mb-2">Ссылка на профиль</h2>
+        <p class="text-muted mb-0"><%= profile_share_expiry_label(@share) %> · <%= @share.detail_full? ? "полная детализация" : "краткая детализация" %></p>
+      </div>
+
+      <div class="pet-tag-stats">
+        <div>
+          <span><%= @share.pet_profile_share_views.count %></span>
+          <small><%= russian_plural(@share.pet_profile_share_views.count, "просмотр", "просмотра", "просмотров") %></small>
+        </div>
+        <div>
+          <span><%= @share.last_viewed_at.present? ? @share.last_viewed_at.strftime("%d.%m") : "—" %></span>
+          <small>последний</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="pet-tag-hero-actions">
+      <%= link_to "Открыть публично", public_pet_profile_share_path(@share.public_token), class: "btn btn-primary", target: "_blank", rel: "noopener" %>
+      <button type="button" class="btn btn-outline-secondary" data-copy-url="<%= profile_share_public_url(@share) %>">Копировать</button>
+    </div>
+  </section>
+
+  <div class="row g-4">
+    <section class="col-lg-7">
+      <div class="action-panel mb-4">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">Публичная ссылка</div>
+            <h2 class="h5 mb-0">Адрес доступа</h2>
+          </div>
+        </div>
+
+        <div class="share-url-box mb-3"><%= profile_share_public_url(@share) %></div>
+
+        <div class="d-flex flex-wrap gap-2">
+          <% if @share.enabled? %>
+            <%= button_to "Отключить", disable_pet_profile_share_path(@pet, @share), method: :patch, class: "btn btn-outline-danger btn-sm" %>
+          <% else %>
+            <%= button_to "Включить", enable_pet_profile_share_path(@pet, @share), method: :patch, class: "btn btn-outline-primary btn-sm" %>
+          <% end %>
+          <%= button_to "Обновить ссылку",
+                        rotate_token_pet_profile_share_path(@pet, @share),
+                        method: :patch,
+                        class: "btn btn-outline-danger btn-sm",
+                        form: { onsubmit: "return confirm('Обновить публичную ссылку? Старый адрес и QR-код перестанут работать.')" } %>
+          <%= button_to "Удалить",
+                        pet_profile_share_path(@pet, @share),
+                        method: :delete,
+                        class: "btn btn-outline-danger btn-sm",
+                        form: { onsubmit: "return confirm('Удалить публичный доступ?')" } %>
+        </div>
+      </div>
+
+      <div class="action-panel">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">История</div>
+            <h2 class="h5 mb-0">Последние просмотры</h2>
+          </div>
+        </div>
+
+        <% if @views.any? %>
+          <div class="scan-list">
+            <% @views.each do |view| %>
+              <div class="scan-item">
+                <div>
+                  <div class="fw-semibold"><%= view.created_at.strftime("%d.%m.%Y %H:%M") %></div>
+                  <div class="text-muted small"><%= view.ip_address.presence || "IP не определен" %></div>
+                  <div class="text-muted small"><%= view.user_agent.presence || "Браузер не определен" %></div>
+                </div>
+                <span class="status-pill muted">Открыт</span>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="empty-state-inline">
+            <div class="fw-semibold mb-1">Просмотров пока нет</div>
+            <div class="text-muted">После открытия публичной страницы здесь появятся дата, браузер и IP.</div>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <aside class="col-lg-5">
+      <div class="action-panel qr-panel mb-4">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">QR-код</div>
+            <h2 class="h5 mb-0">Для быстрой передачи</h2>
+          </div>
+        </div>
+
+        <div class="qr-preview">
+          <%= image_tag qr_pet_profile_share_path(@pet, @share, format: :svg), alt: "QR-код публичного доступа для #{@pet.name}" %>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <%= link_to "SVG", qr_pet_profile_share_path(@pet, @share, format: :svg), class: "btn btn-outline-primary btn-sm" %>
+          <%= link_to "PNG", qr_pet_profile_share_path(@pet, @share, format: :png), class: "btn btn-outline-primary btn-sm" %>
+        </div>
+      </div>
+
+      <div class="action-panel">
+        <div class="text-muted small mb-1">Состав доступа</div>
+        <h2 class="h5 mb-3">Что видно по ссылке</h2>
+
+        <div class="completion-list">
+          <% profile_share_section_rows(@share).each do |label, enabled| %>
+            <div class="<%= enabled ? "done" : "" %>">
+              <span><%= label %></span>
+              <strong><%= enabled ? "Видно" : "Скрыто" %></strong>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

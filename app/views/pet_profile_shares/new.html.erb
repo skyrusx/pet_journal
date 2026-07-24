@@ -1,0 +1,12 @@
+<div class="profile-shares-page py-4">
+  <div class="page-heading mb-4">
+    <div>
+      <div class="text-muted small mb-1"><%= @pet.name %></div>
+      <h1 class="h3 mb-1">Новый публичный доступ</h1>
+      <p class="text-muted mb-0">Настройте, какие данные питомца будут доступны по ссылке.</p>
+    </div>
+  </div>
+
+  <%= render "tabs", pet: @pet %>
+  <%= render "form" %>
+</div>

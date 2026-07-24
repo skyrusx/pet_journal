@@ -52,6 +52,8 @@ ru:
       pet_tag: "Жетон"
       pet_tag_scan: "Сканирование жетона"
       pet_document: "Документ"
+      pet_profile_share: "Публичный доступ"
+      pet_profile_share_view: "Просмотр публичного доступа"
     attributes:
       user:
         email: "Эл. почта"
@@ -131,6 +133,18 @@ ru:
         expiry_reminder_days: "Напомнить за"
         notes: "Заметки"
         files: "Файлы"
+      pet_profile_share:
+        title: "Название"
+        enabled: "Активен"
+        expires_at: "Истекает"
+        detail_level: "Детализация"
+        show_profile: "Показывать профиль"
+        show_journal: "Показывать журнал"
+        show_documents: "Показывать документы"
+        show_reminders: "Показывать напоминания"
+        show_pet_tag: "Показывать PetTag"
+        show_owner_contact: "Показывать контакт владельца"
+        allow_file_downloads: "Разрешить скачивание файлов"
       reminder:
         title: "Название"
         reminder_type: "Тип"

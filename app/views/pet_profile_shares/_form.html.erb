@@ -1,0 +1,117 @@
+<%= form_with model: @share,
+              url: @share.persisted? ? pet_profile_share_path(@pet, @share) : pet_profile_shares_path(@pet),
+              class: "structured-form" do |form| %>
+  <% if @share.errors.any? %>
+    <div class="flash-stack inline">
+      <div class="flash-toast alert" role="alert">
+        <div>
+          <strong>Проверьте форму</strong>
+          <p><%= @share.errors.full_messages.to_sentence %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <section class="form-section">
+    <div>
+      <h2 class="h5 mb-1">Основное</h2>
+      <p class="text-muted mb-0">Название, срок действия и общий статус ссылки.</p>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-8">
+        <%= form.label :title, "Название доступа", class: "form-label" %>
+        <%= form.text_field :title, class: "form-control", placeholder: "Например: Для грумера, передержки или семьи" %>
+      </div>
+
+      <div class="col-md-4">
+        <%= form.label :detail_level, "Детализация", class: "form-label" %>
+        <%= form.select :detail_level, profile_share_detail_options, {}, class: "form-select" %>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label" for="expires_preset">Срок действия</label>
+        <%= select_tag :expires_preset,
+                       options_for_select(profile_share_expiration_options, @share.expires_at.present? ? "custom" : "never"),
+                       class: "form-select" %>
+      </div>
+
+      <div class="col-md-6">
+        <%= form.label :expires_at, "Своя дата окончания", class: "form-label" %>
+        <%= form.datetime_field :expires_at, class: "form-control" %>
+      </div>
+
+      <div class="col-12">
+        <div class="form-check form-switch">
+          <%= form.check_box :enabled, class: "form-check-input" %>
+          <%= form.label :enabled, "Ссылка активна", class: "form-check-label" %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-section">
+    <div>
+      <h2 class="h5 mb-1">Разделы профиля</h2>
+      <p class="text-muted mb-0">Откройте только то, что действительно нужно показать по этой ссылке.</p>
+    </div>
+
+    <div class="share-checkbox-grid">
+      <label class="share-check">
+        <%= form.check_box :show_profile %>
+        <span>Профиль</span>
+        <small>Фото, имя, возраст, порода, чип и базовые данные.</small>
+      </label>
+
+      <label class="share-check">
+        <%= form.check_box :show_journal %>
+        <span>Журнал</span>
+        <small>Последние или все события ухода и здоровья.</small>
+      </label>
+
+      <label class="share-check">
+        <%= form.check_box :show_documents %>
+        <span>Документы</span>
+        <small>Ветпаспорт, справки, анализы и прикрепленные файлы.</small>
+      </label>
+
+      <label class="share-check">
+        <%= form.check_box :show_reminders %>
+        <span>Напоминания</span>
+        <small>Активные предстоящие задачи по уходу.</small>
+      </label>
+
+      <label class="share-check">
+        <%= form.check_box :show_pet_tag %>
+        <span>PetTag</span>
+        <small>Публичные заметки жетона и статус безопасности.</small>
+      </label>
+    </div>
+  </section>
+
+  <section class="form-section">
+    <div>
+      <h2 class="h5 mb-1">Приватность</h2>
+      <p class="text-muted mb-0">Контакты и файлы закрыты по умолчанию.</p>
+    </div>
+
+    <div class="share-checkbox-grid compact">
+      <label class="share-check">
+        <%= form.check_box :show_owner_contact %>
+        <span>Показывать контакт владельца</span>
+        <small>На публичной странице будет видна эл. почта аккаунта.</small>
+      </label>
+
+      <label class="share-check">
+        <%= form.check_box :allow_file_downloads %>
+        <span>Разрешить скачивание файлов</span>
+        <small>Иначе файлы будут показаны только как список названий.</small>
+      </label>
+    </div>
+  </section>
+
+  <div class="d-flex flex-wrap gap-2">
+    <%= form.submit "Сохранить доступ", class: "btn btn-primary" %>
+    <%= link_to "Отмена", @share.persisted? ? pet_profile_share_path(@pet, @share) : pet_profile_shares_path(@pet), class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>

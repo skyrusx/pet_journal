@@ -56,6 +56,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  document.querySelectorAll("[data-copy-url]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const originalText = button.textContent;
+
+      try {
+        await navigator.clipboard.writeText(button.dataset.copyUrl);
+        button.textContent = "Скопировано";
+      } catch (_error) {
+        button.textContent = "Скопируйте вручную";
+      }
+
+      window.setTimeout(() => {
+        button.textContent = originalText;
+      }, 1800);
+    });
+  });
+
   document.querySelectorAll("[data-repeat-rule]").forEach((select) => {
     const form = select.closest("form");
     const customFields = form ? form.querySelectorAll("[data-custom-repeat]") : [];

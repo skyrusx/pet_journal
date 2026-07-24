@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   resource :web_push_subscription, only: %i[create destroy]
   get "p/:token" => "public_pet_tags#show", as: :public_pet_tag
   post "p/:token/location" => "public_pet_tags#location", as: :public_pet_tag_location
+  get "share/:token" => "public_pet_profile_shares#show", as: :public_pet_profile_share
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -39,6 +40,12 @@ Rails.application.routes.draw do
     resources :pet_events, path: :events
     resources :pet_documents, path: :documents do
       delete "files/:attachment_id", action: :destroy_file, on: :member, as: :file
+    end
+    resources :profile_shares, controller: :pet_profile_shares do
+      patch :enable, on: :member
+      patch :disable, on: :member
+      patch :rotate_token, on: :member
+      get "qr.:format" => "pet_profile_shares#qr", as: :qr, on: :member, constraints: { format: /svg|png/ }
     end
     resources :reminders do
       patch :complete, on: :member

@@ -1,0 +1,6 @@
+one:
+  pet_profile_share: one
+  public_token: profile-share-one
+  user_agent: Test browser
+  referrer: https://example.test/source
+  ip_address: 127.0.0.1

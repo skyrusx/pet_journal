@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_24_110000) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_24_120100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -123,6 +123,42 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_24_110000) do
     t.index ["pet_id", "event_type", "event_date"], name: "index_pet_events_on_pet_id_and_event_type_and_event_date"
     t.index ["pet_id"], name: "index_pet_events_on_pet_id"
     t.index ["valid_until"], name: "index_pet_events_on_valid_until"
+  end
+
+  create_table "pet_profile_share_views", force: :cascade do |t|
+    t.bigint "pet_profile_share_id", null: false
+    t.string "public_token", null: false
+    t.text "user_agent"
+    t.string "referrer"
+    t.string "ip_address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pet_profile_share_id", "created_at"], name: "index_profile_share_views_on_share_and_created_at"
+    t.index ["pet_profile_share_id"], name: "index_pet_profile_share_views_on_pet_profile_share_id"
+  end
+
+  create_table "pet_profile_shares", force: :cascade do |t|
+    t.bigint "pet_id", null: false
+    t.string "public_token", null: false
+    t.string "title", null: false
+    t.boolean "enabled", default: true, null: false
+    t.datetime "expires_at"
+    t.integer "detail_level", default: 0, null: false
+    t.boolean "show_profile", default: true, null: false
+    t.boolean "show_journal", default: true, null: false
+    t.boolean "show_documents", default: true, null: false
+    t.boolean "show_reminders", default: false, null: false
+    t.boolean "show_pet_tag", default: false, null: false
+    t.boolean "show_owner_contact", default: false, null: false
+    t.boolean "allow_file_downloads", default: false, null: false
+    t.datetime "token_rotated_at"
+    t.datetime "last_viewed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expires_at"], name: "index_pet_profile_shares_on_expires_at"
+    t.index ["pet_id", "enabled"], name: "index_pet_profile_shares_on_pet_id_and_enabled"
+    t.index ["pet_id"], name: "index_pet_profile_shares_on_pet_id"
+    t.index ["public_token"], name: "index_pet_profile_shares_on_public_token", unique: true
   end
 
   create_table "pet_tag_notification_channels", force: :cascade do |t|
@@ -269,6 +305,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_24_110000) do
   add_foreign_key "pet_documents", "pets"
   add_foreign_key "pet_documents", "reminders"
   add_foreign_key "pet_events", "pets"
+  add_foreign_key "pet_profile_share_views", "pet_profile_shares"
+  add_foreign_key "pet_profile_shares", "pets"
   add_foreign_key "pet_tag_notification_channels", "notification_channels"
   add_foreign_key "pet_tag_notification_channels", "pet_tags"
   add_foreign_key "pet_tag_scans", "pet_tags"

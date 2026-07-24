@@ -1,0 +1,76 @@
+<div class="profile-shares-page py-4">
+  <div class="page-heading mb-4">
+    <div>
+      <div class="text-muted small mb-1"><%= @pet.name %></div>
+      <h1 class="h3 mb-1">Публичный доступ</h1>
+      <p class="text-muted mb-0">Временные ссылки на профиль питомца для людей, которым нужно показать выбранные данные.</p>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2">
+      <%= link_to "Создать доступ", new_pet_profile_share_path(@pet), class: "btn btn-primary" %>
+      <%= link_to "Обзор питомца", pet_path(@pet), class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+  <%= render "tabs", pet: @pet %>
+
+  <section class="profile-share-hero mb-4">
+    <div>
+      <span class="status-pill success">Приватно по умолчанию</span>
+      <h2 class="h4 mt-3 mb-2">Показывайте профиль без доступа к аккаунту</h2>
+      <p class="text-muted mb-0">Каждая ссылка имеет свой токен, срок действия, набор разделов и настройки скачивания файлов.</p>
+    </div>
+
+    <div class="pet-tag-stats">
+      <div>
+        <span><%= @shares.size %></span>
+        <small><%= russian_plural(@shares.size, "ссылка", "ссылки", "ссылок") %></small>
+      </div>
+      <div>
+        <span><%= @shares.count(&:active?) %></span>
+        <small>активно</small>
+      </div>
+    </div>
+  </section>
+
+  <% if @shares.any? %>
+    <div class="share-card-grid">
+      <% @shares.each do |share| %>
+        <article class="share-card">
+          <div class="d-flex justify-content-between gap-3 align-items-start mb-3">
+            <div>
+              <h2 class="h5 mb-1"><%= link_to share.title, pet_profile_share_path(@pet, share), class: "text-dark text-decoration-none" %></h2>
+              <div class="text-muted small"><%= profile_share_expiry_label(share) %></div>
+            </div>
+            <span class="<%= profile_share_status_class(share) %>"><%= profile_share_status_label(share) %></span>
+          </div>
+
+          <div class="share-url-box mb-3"><%= profile_share_public_url(share) %></div>
+
+          <div class="share-chip-row mb-3">
+            <% profile_share_section_rows(share).select { |_label, enabled| enabled }.first(5).each do |label, _enabled| %>
+              <span><%= label %></span>
+            <% end %>
+          </div>
+
+          <div class="compact-list mb-3">
+            <div><span>Просмотры</span><strong><%= share.pet_profile_share_views.size %></strong></div>
+            <div><span>Детализация</span><strong><%= share.detail_full? ? "Полная" : "Краткая" %></strong></div>
+          </div>
+
+          <div class="d-flex flex-wrap gap-2">
+            <%= link_to "Открыть", pet_profile_share_path(@pet, share), class: "btn btn-outline-primary btn-sm" %>
+            <%= link_to "Публичная", public_pet_profile_share_path(share.public_token), class: "btn btn-outline-secondary btn-sm", target: "_blank", rel: "noopener" %>
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-copy-url="<%= profile_share_public_url(share) %>">Копировать</button>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="empty-panel">
+      <h2 class="h4 mb-2">Публичных ссылок пока нет</h2>
+      <p class="text-muted mb-3">Создайте отдельную ссылку для передержки, грумера, родственника или любой ситуации, где нужно показать данные без входа в аккаунт.</p>
+      <%= link_to "Создать доступ", new_pet_profile_share_path(@pet), class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

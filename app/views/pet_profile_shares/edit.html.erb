@@ -1,0 +1,12 @@
+<div class="profile-shares-page py-4">
+  <div class="page-heading mb-4">
+    <div>
+      <div class="text-muted small mb-1"><%= @pet.name %></div>
+      <h1 class="h3 mb-1">Настройки доступа</h1>
+      <p class="text-muted mb-0"><%= @share.title %></p>
+    </div>
+  </div>
+
+  <%= render "tabs", pet: @pet %>
+  <%= render "form" %>
+</div>
