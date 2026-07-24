@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_24_100000) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_24_110000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -125,6 +125,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_24_100000) do
     t.index ["valid_until"], name: "index_pet_events_on_valid_until"
   end
 
+  create_table "pet_tag_notification_channels", force: :cascade do |t|
+    t.bigint "pet_tag_id", null: false
+    t.bigint "notification_channel_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["notification_channel_id"], name: "index_pet_tag_notification_channels_on_notification_channel_id"
+    t.index ["pet_tag_id", "notification_channel_id"], name: "index_pet_tag_channels_on_tag_and_channel", unique: true
+    t.index ["pet_tag_id"], name: "index_pet_tag_notification_channels_on_pet_tag_id"
+  end
+
   create_table "pet_tag_scans", force: :cascade do |t|
     t.bigint "pet_tag_id", null: false
     t.string "public_token", null: false
@@ -136,6 +146,14 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_24_100000) do
     t.datetime "location_shared_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "scan_status", default: 0, null: false
+    t.string "finder_name"
+    t.string "finder_contact"
+    t.text "finder_message"
+    t.datetime "found_reported_at"
+    t.datetime "owner_notified_at"
+    t.text "notification_error"
+    t.index ["pet_tag_id", "scan_status", "created_at"], name: "idx_on_pet_tag_id_scan_status_created_at_16ed5a9d04"
     t.index ["pet_tag_id"], name: "index_pet_tag_scans_on_pet_tag_id"
     t.index ["public_token"], name: "index_pet_tag_scans_on_public_token", unique: true
   end
@@ -156,6 +174,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_24_100000) do
     t.string "last_seen_location"
     t.integer "notification_preference", default: 1, null: false
     t.datetime "token_rotated_at"
+    t.integer "safety_status", default: 0, null: false
+    t.boolean "show_medical_notes", default: true, null: false
+    t.text "found_message"
+    t.datetime "reunited_at"
     t.index ["pet_id"], name: "index_pet_tags_on_pet_id", unique: true
     t.index ["public_token"], name: "index_pet_tags_on_public_token", unique: true
   end
@@ -247,6 +269,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_24_100000) do
   add_foreign_key "pet_documents", "pets"
   add_foreign_key "pet_documents", "reminders"
   add_foreign_key "pet_events", "pets"
+  add_foreign_key "pet_tag_notification_channels", "notification_channels"
+  add_foreign_key "pet_tag_notification_channels", "pet_tags"
   add_foreign_key "pet_tag_scans", "pet_tags"
   add_foreign_key "pet_tags", "pets"
   add_foreign_key "pets", "users"

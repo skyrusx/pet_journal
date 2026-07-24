@@ -51,14 +51,32 @@ class PublicPetTagsControllerTest < ActionDispatch::IntegrationTest
         scan_token: scan_token,
         latitude: "53.755833",
         longitude: "87.109167",
-        location_note: "У входа"
+        location_note: "У входа",
+        finder_name: "Анна",
+        finder_contact: "+79990000002",
+        finder_message: "Питомец со мной"
       }
     end
 
     scan = PetTagScan.find_by!(public_token: scan_token)
     assert_redirected_to public_pet_tag_url(pet_tag.public_token)
     assert scan.location_shared?
+    assert scan.status_found_reported?
     assert_equal "У входа", scan.location_note
+    assert_equal "Анна", scan.finder_name
+    assert_equal "+79990000002", scan.finder_contact
+    assert_equal "Питомец со мной", scan.finder_message
+    assert pet_tag.reload.status_found?
+  end
+
+  test "should hide medical notes when disabled" do
+    pet_tag = pet_tags(:one)
+    pet_tag.update!(show_medical_notes: false)
+
+    get public_pet_tag_url(pet_tag.public_token)
+
+    assert_response :success
+    assert_select "h2", { text: "Важно для здоровья", count: 0 }
   end
 
   test "should not show disabled public pet tag" do

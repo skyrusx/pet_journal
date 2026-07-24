@@ -43,8 +43,9 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
     patch pet_pet_tag_url(@pet), params: {
       pet_tag: {
         public_message: "Новое публичное сообщение",
-        lost_mode_enabled: "0",
+        safety_status: "safe",
         show_phone: "0",
+        show_medical_notes: "0",
         notification_preference: "always"
       }
     }
@@ -52,13 +53,29 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to pet_pet_tag_url(@pet)
     assert_equal "Новое публичное сообщение", @pet_tag.reload.public_message
     assert_not @pet_tag.show_phone?
+    assert_not @pet_tag.show_medical_notes?
     assert @pet_tag.notify_always?
+  end
+
+  test "should update pet tag notification channels" do
+    assert_difference("PetTagNotificationChannel.count") do
+      patch pet_pet_tag_url(@pet), params: {
+        pet_tag: {
+          safety_status: @pet_tag.safety_status,
+          notification_channel_ids: [notification_channels(:email).id]
+        }
+      }
+    end
+
+    assert_redirected_to pet_pet_tag_url(@pet)
+    assert_equal [notification_channels(:email)], @pet_tag.reload.notification_channels.to_a
   end
 
   test "should update lost mode fields" do
     patch pet_pet_tag_url(@pet), params: {
       pet_tag: {
         lost_mode_enabled: "1",
+        safety_status: "lost",
         lost_message: "Питомец потерялся, позвоните сразу.",
         last_seen_location: "Сквер у школы"
       }
@@ -68,6 +85,28 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
     assert @pet_tag.reload.lost_mode_enabled?
     assert_equal "Питомец потерялся, позвоните сразу.", @pet_tag.lost_message
     assert_equal "Сквер у школы", @pet_tag.last_seen_location
+  end
+
+  test "should mark safety statuses" do
+    patch mark_found_pet_pet_tag_url(@pet), params: { found_message: "Питомца нашли" }
+    assert_redirected_to pet_pet_tag_url(@pet)
+    assert @pet_tag.reload.status_found?
+
+    patch mark_reunited_pet_pet_tag_url(@pet)
+    assert_redirected_to pet_pet_tag_url(@pet)
+    assert @pet_tag.reload.status_reunited?
+    assert_not @pet_tag.lost_mode_enabled?
+
+    patch mark_lost_pet_pet_tag_url(@pet)
+    assert_redirected_to pet_pet_tag_url(@pet)
+    assert @pet_tag.reload.status_lost?
+  end
+
+  test "should filter scans" do
+    get pet_pet_tag_url(@pet, scan_status: "found_reported")
+
+    assert_response :success
+    assert_select ".filter-chip.active", text: /Нашедшие/
   end
 
   test "should rotate public token" do

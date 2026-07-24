@@ -1698,6 +1698,14 @@ a {
   text-transform: uppercase;
 }
 
+.lost-mode-banner.found {
+  background: var(--pj-amber);
+}
+
+.lost-mode-banner.safe {
+  background: var(--pj-success);
+}
+
 .lost-mode-message {
   background: var(--pj-danger-soft);
   border: 1px solid color-mix(in srgb, var(--pj-danger) 35%, var(--pj-border));

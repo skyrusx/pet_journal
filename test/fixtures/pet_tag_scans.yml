@@ -7,6 +7,13 @@ one:
   longitude:
   location_note:
   location_shared_at:
+  scan_status: 0
+  finder_name:
+  finder_contact:
+  finder_message:
+  found_reported_at:
+  owner_notified_at:
+  notification_error:
 
 with_location:
   pet_tag: one
@@ -17,3 +24,10 @@ with_location:
   longitude: 87.109167
   location_note: У входа в парк
   location_shared_at: 2026-07-22 10:00:00
+  scan_status: 2
+  finder_name: Анна
+  finder_contact: "+79990000002"
+  finder_message: Питомец рядом с кафе
+  found_reported_at: 2026-07-22 10:00:00
+  owner_notified_at: 2026-07-22 10:01:00
+  notification_error:

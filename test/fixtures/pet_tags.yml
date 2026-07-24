@@ -8,8 +8,11 @@ one:
   contact_phone: "+79990000001"
   show_phone: true
   lost_mode_enabled: true
+  safety_status: 1
+  show_medical_notes: true
   lost_message: Пожалуйста, позвоните сразу. Питомец может испугаться.
   last_seen_location: Парк у дома
+  found_message:
   notification_preference: 1
 
 two:
@@ -22,6 +25,9 @@ two:
   contact_phone:
   show_phone: false
   lost_mode_enabled: false
+  safety_status: 0
+  show_medical_notes: true
   lost_message:
   last_seen_location:
+  found_message:
   notification_preference: 0

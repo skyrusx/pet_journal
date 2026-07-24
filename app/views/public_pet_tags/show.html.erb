@@ -12,18 +12,27 @@
 
     <div class="public-pet-content">
       <div class="public-kicker">PetJournal PetTag</div>
-      <% if @pet_tag.lost_mode_enabled? %>
+      <% if @pet_tag.status_lost? %>
         <div class="lost-mode-banner">Я потерялся</div>
+      <% elsif @pet_tag.status_found? %>
+        <div class="lost-mode-banner found">Меня нашли</div>
+      <% elsif @pet_tag.status_reunited? %>
+        <div class="lost-mode-banner safe">Я уже дома</div>
       <% end %>
       <h1 class="display-6 fw-semibold mb-2"><%= @pet.name %></h1>
 
-      <% if @pet_tag.lost_mode_enabled? %>
+      <% if @pet_tag.status_lost? %>
         <div class="lost-mode-message">
           <h2>Нужна помощь</h2>
           <p><%= @pet_tag.lost_message.presence || "Пожалуйста, свяжитесь с владельцем как можно скорее." %></p>
           <% if @pet_tag.last_seen_location.present? %>
             <div class="last-seen">Последнее место: <%= @pet_tag.last_seen_location %></div>
           <% end %>
+        </div>
+      <% elsif @pet_tag.status_found? %>
+        <div class="lost-mode-message">
+          <h2>Питомца уже нашли</h2>
+          <p><%= @pet_tag.found_message.presence || "Владелец уже получил сообщение. Если питомец рядом с вами, все равно можно отправить контакт ниже." %></p>
         </div>
       <% end %>
 
@@ -39,7 +48,7 @@
           </section>
         <% end %>
 
-        <% if @pet_tag.medical_notes.present? %>
+        <% if @pet_tag.show_medical_notes? && @pet_tag.medical_notes.present? %>
           <section>
             <h2>Важно для здоровья</h2>
             <p><%= @pet_tag.medical_notes %></p>
@@ -72,9 +81,26 @@
           <%= hidden_field_tag :latitude, nil, id: "location-latitude" %>
           <%= hidden_field_tag :longitude, nil, id: "location-longitude" %>
 
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <%= label_tag :finder_name, "Ваше имя", class: "form-label" %>
+              <%= text_field_tag :finder_name, nil, class: "form-control", placeholder: "Как к вам обращаться" %>
+            </div>
+
+            <div class="col-md-6">
+              <%= label_tag :finder_contact, "Контакт для связи", class: "form-label" %>
+              <%= text_field_tag :finder_contact, nil, class: "form-control", placeholder: "Телефон или мессенджер" %>
+            </div>
+          </div>
+
           <div class="mb-3">
             <%= label_tag :location_note, "Ориентир или комментарий", class: "form-label" %>
             <%= text_field_tag :location_note, nil, class: "form-control", placeholder: "Например: у входа в парк" %>
+          </div>
+
+          <div class="mb-3">
+            <%= label_tag :finder_message, "Сообщение владельцу", class: "form-label" %>
+            <%= text_area_tag :finder_message, nil, rows: 3, class: "form-control", placeholder: "Где питомец сейчас, в каком он состоянии, как быстрее связаться" %>
           </div>
 
           <div class="d-flex flex-wrap gap-2">

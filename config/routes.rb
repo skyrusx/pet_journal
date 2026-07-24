@@ -31,6 +31,9 @@ Rails.application.routes.draw do
   resources :pets, only: %i[index show new create edit update] do
     resource :pet_tag, path: :tag, only: %i[show create edit update] do
       patch :rotate_token
+      patch :mark_lost
+      patch :mark_found
+      patch :mark_reunited
       get "qr.:format" => "pet_tags#qr", as: :qr, constraints: { format: /svg|png/ }
     end
     resources :pet_events, path: :events

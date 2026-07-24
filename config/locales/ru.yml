@@ -105,16 +105,22 @@ ru:
         public_message: "Сообщение"
         behavior_notes: "Особенности поведения"
         medical_notes: "Медицинские заметки"
+        show_medical_notes: "Показывать медицинские заметки"
         contact_phone: "Телефон"
         show_phone: "Показывать телефон"
         lost_mode_enabled: "Режим потери"
+        safety_status: "Статус безопасности"
         lost_message: "Сообщение при потере"
         last_seen_location: "Последнее место"
+        found_message: "Сообщение когда найден"
         notification_preference: "Уведомления"
       pet_tag_scan:
         latitude: "Широта"
         longitude: "Долгота"
         location_note: "Ориентир"
+        finder_name: "Имя нашедшего"
+        finder_contact: "Контакт нашедшего"
+        finder_message: "Сообщение нашедшего"
       pet_document:
         document_type: "Тип документа"
         title: "Название"
@@ -221,3 +227,8 @@ ru:
       moderate: "Средняя"
       severe: "Сильная"
       critical: "Критическая"
+  pet_tag_scans:
+    statuses:
+      scanned: "Скан"
+      location_shared: "Геолокация"
+      found_reported: "Нашли"

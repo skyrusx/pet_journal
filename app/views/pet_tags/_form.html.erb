@@ -58,6 +58,11 @@
                       class: "form-control",
                       placeholder: "Аллергии, лекарства, хронические состояния" %>
     </div>
+
+    <div class="form-check form-switch mt-3">
+      <%= f.check_box :show_medical_notes, class: "form-check-input", role: "switch" %>
+      <%= f.label :show_medical_notes, "Показывать медицинские заметки на public page", class: "form-check-label" %>
+    </div>
   </section>
 
   <section class="form-section lost-mode-section">
@@ -69,9 +74,9 @@
       <span class="lost-pill">Режим потери</span>
     </div>
 
-    <div class="form-check form-switch mb-3">
-      <%= f.check_box :lost_mode_enabled, class: "form-check-input", role: "switch" %>
-      <%= f.label :lost_mode_enabled, "Питомец потерялся", class: "form-check-label" %>
+    <div class="mb-3">
+      <%= f.label :safety_status, "Статус безопасности", class: "form-label" %>
+      <%= f.select :safety_status, pet_tag_status_options, {}, class: "form-select" %>
     </div>
 
     <div class="mb-3">
@@ -87,6 +92,14 @@
       <%= f.text_field :last_seen_location,
                        class: "form-control",
                        placeholder: "Район, улица или ориентир" %>
+    </div>
+
+    <div class="mt-3">
+      <%= f.label :found_message, "Сообщение когда питомца нашли", class: "form-label" %>
+      <%= f.text_area :found_message,
+                      rows: 3,
+                      class: "form-control",
+                      placeholder: "Например: спасибо, я уже связываюсь с человеком, который нашел питомца" %>
     </div>
   </section>
 
@@ -112,7 +125,7 @@
       </div>
 
       <div class="col-md-7">
-        <%= f.label :notification_preference, "Уведомления по эл. почте", class: "form-label" %>
+        <%= f.label :notification_preference, "Уведомления о сканах", class: "form-label" %>
         <%= f.select :notification_preference, notification_options, {}, class: "form-select" %>
       </div>
     </div>
@@ -120,6 +133,30 @@
     <div class="form-hint mt-3">
       Уведомления о геолокации отправляются всегда, когда человек добровольно передает место через public page.
     </div>
+
+    <% if @notification_channels&.any? %>
+      <div class="mt-3">
+        <div class="form-label">Каналы для PetTag</div>
+        <div class="channel-choice-grid">
+          <% @notification_channels.each do |channel| %>
+            <label class="channel-choice">
+              <%= check_box_tag "pet_tag[notification_channel_ids][]",
+                                channel.id,
+                                @pet_tag.notification_channel_ids.include?(channel.id),
+                                class: "form-check-input" %>
+              <span>
+                <strong><%= channel.name %></strong>
+                <small><%= channel.channel_type_label %> · <%= channel.channel_web_push? ? "Браузерная подписка" : channel.address %></small>
+              </span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <div class="form-hint mt-3">
+        Каналы уведомлений не настроены. PetTag будет использовать эл. почту аккаунта.
+      </div>
+    <% end %>
   </section>
 
   <div class="form-actions">

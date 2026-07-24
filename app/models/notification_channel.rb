@@ -3,6 +3,8 @@ class NotificationChannel < ApplicationRecord
   has_many :notification_deliveries, dependent: :destroy
   has_many :reminder_notification_channels, dependent: :destroy
   has_many :reminders, through: :reminder_notification_channels
+  has_many :pet_tag_notification_channels, dependent: :destroy
+  has_many :pet_tags, through: :pet_tag_notification_channels
 
   enum :channel_type, { email: 0, telegram: 1, vk: 2, web_push: 3 }, prefix: :channel
 

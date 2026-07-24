@@ -11,8 +11,9 @@ class PublicPetTagsController < ApplicationController
     @pet_tag = PetTag.find_by!(public_token: params[:token], enabled: true)
     @pet_tag_scan = @pet_tag.pet_tag_scans.find_by!(public_token: params[:scan_token])
 
-    if @pet_tag_scan.update(location_params.merge(location_shared_at: Time.current))
-      PetTagMailer.location_shared(@pet_tag_scan).deliver_now
+    if @pet_tag_scan.update(location_params.merge(scan_status: :found_reported, location_shared_at: Time.current, found_reported_at: Time.current))
+      @pet_tag.mark_found!(message: @pet_tag_scan.finder_message) if @pet_tag.lost_mode_enabled?
+      PetTagScanNotifier.notify(@pet_tag_scan, event: :found)
       redirect_to public_pet_tag_path(@pet_tag.public_token), notice: "Геолокация отправлена владельцу."
     else
       redirect_to public_pet_tag_path(@pet_tag.public_token), alert: "Не удалось отправить геолокацию."
@@ -41,7 +42,7 @@ class PublicPetTagsController < ApplicationController
       referrer: request.referrer
     )
 
-    PetTagMailer.scan_notification(scan).deliver_now if pet_tag.notify_on_scan?
+    PetTagScanNotifier.notify(scan, event: :scan) if pet_tag.notify_on_scan?
 
     session[:pet_tag_scans] = session[:pet_tag_scans].to_h.merge(
       pet_tag.public_token => {
@@ -54,6 +55,6 @@ class PublicPetTagsController < ApplicationController
   end
 
   def location_params
-    params.permit(:latitude, :longitude, :location_note)
+    params.permit(:latitude, :longitude, :location_note, :finder_name, :finder_contact, :finder_message)
   end
 end
