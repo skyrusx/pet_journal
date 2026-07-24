@@ -11,6 +11,7 @@ class PublicPetTagsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1", pet_tag.pet.name
     assert_select "a[href^='tel:']"
+    assert_equal "noindex, nofollow", response.headers["X-Robots-Tag"]
   end
 
   test "should throttle repeated scans in same session" do
@@ -67,6 +68,40 @@ class PublicPetTagsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "+79990000002", scan.finder_contact
     assert_equal "Питомец со мной", scan.finder_message
     assert pet_tag.reload.status_found?
+  end
+
+  test "should not accept location for scan from another session" do
+    pet_tag = pet_tags(:one)
+    scan = pet_tag.pet_tag_scans.create!
+
+    assert_no_changes -> { scan.reload.finder_message } do
+      post public_pet_tag_location_url(pet_tag.public_token), params: {
+        scan_token: scan.public_token,
+        finder_message: "Попытка без сессии"
+      }
+    end
+
+    assert_response :not_found
+  end
+
+  test "should not overwrite already shared location" do
+    pet_tag = pet_tags(:one)
+    get public_pet_tag_url(pet_tag.public_token)
+    scan = PetTagScan.order(:created_at).last
+
+    post public_pet_tag_location_url(pet_tag.public_token), params: {
+      scan_token: scan.public_token,
+      finder_message: "Первое сообщение"
+    }
+
+    assert_no_changes -> { scan.reload.finder_message } do
+      post public_pet_tag_location_url(pet_tag.public_token), params: {
+        scan_token: scan.public_token,
+        finder_message: "Перезапись"
+      }
+    end
+
+    assert_redirected_to public_pet_tag_url(pet_tag.public_token)
   end
 
   test "should hide medical notes when disabled" do

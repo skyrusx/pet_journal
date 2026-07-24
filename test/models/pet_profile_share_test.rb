@@ -20,4 +20,13 @@ class PetProfileShareTest < ActiveSupport::TestCase
     assert_not share.valid?
     assert_includes share.errors[:base], "выберите хотя бы один раздел профиля"
   end
+
+  test "knows when share exposes sensitive sections" do
+    share = pet_profile_shares(:one)
+
+    assert share.sensitive_sections?
+
+    share.assign_attributes(detail_level: :brief, show_owner_contact: false, allow_file_downloads: false, show_reminders: false)
+    assert_not share.sensitive_sections?
+  end
 end

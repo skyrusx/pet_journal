@@ -11,6 +11,10 @@ class PetTag < ApplicationRecord
 
   validates :public_token, presence: true, uniqueness: true
   validates :pet_id, uniqueness: true
+  validates :public_message, length: { maximum: 500 }
+  validates :behavior_notes, :medical_notes, :lost_message, :found_message, length: { maximum: 1_000 }
+  validates :contact_phone, length: { maximum: 40 }
+  validates :last_seen_location, length: { maximum: 255 }
   before_validation :sync_legacy_lost_mode
 
   def public_path

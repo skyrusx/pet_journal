@@ -10,8 +10,13 @@ class PetProfileShare < ApplicationRecord
   }, prefix: :detail
 
   validates :title, presence: true
+  validates :title, length: { maximum: 120 }
   validates :public_token, presence: true, uniqueness: true
   validate :at_least_one_section_enabled
+
+  def sensitive_sections?
+    show_owner_contact? || allow_file_downloads? || show_reminders? || detail_full?
+  end
 
   scope :enabled, -> { where(enabled: true) }
   scope :active, -> { enabled.where("expires_at IS NULL OR expires_at > ?", Time.current) }

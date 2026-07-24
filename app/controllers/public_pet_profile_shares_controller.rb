@@ -1,5 +1,8 @@
 class PublicPetProfileSharesController < ApplicationController
+  require "ipaddr"
+
   layout "public"
+  before_action :prevent_public_indexing
 
   def show
     @share = PetProfileShare.includes(pet: [{ photo_attachment: :blob }, :user, :pet_tag]).find_by!(public_token: params[:token])
@@ -12,14 +15,46 @@ class PublicPetProfileSharesController < ApplicationController
 
   private
 
+  def prevent_public_indexing
+    response.set_header("X-Robots-Tag", "noindex, nofollow")
+    expires_now
+  end
+
   def record_view(share)
+    return if recent_view_from_session?(share)
+
     share.pet_profile_share_views.create!(
       public_token: share.public_token,
-      user_agent: request.user_agent,
-      referrer: request.referrer,
-      ip_address: request.remote_ip
+      user_agent: request.user_agent.to_s.truncate(500),
+      referrer: request.referrer.to_s.truncate(500),
+      ip_address: anonymized_ip(request.remote_ip)
     )
     share.update_column(:last_viewed_at, Time.current)
+    session[:profile_share_views] = session[:profile_share_views].to_h.merge(
+      share.public_token => Time.current.iso8601
+    )
+  end
+
+  def recent_view_from_session?(share)
+    viewed_at = session[:profile_share_views].to_h[share.public_token]
+    return false if viewed_at.blank?
+
+    Time.zone.parse(viewed_at) >= 15.minutes.ago
+  rescue ArgumentError
+    false
+  end
+
+  def anonymized_ip(value)
+    ip = IPAddr.new(value)
+
+    if ip.ipv4?
+      octets = ip.to_s.split(".")
+      "#{octets[0]}.#{octets[1]}.#{octets[2]}.0"
+    else
+      "#{ip.mask(64)}"
+    end
+  rescue IPAddr::InvalidAddressError
+    nil
   end
 
   def load_shared_sections

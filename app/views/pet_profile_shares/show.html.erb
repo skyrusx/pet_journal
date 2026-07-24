@@ -20,6 +20,9 @@
         <span class="<%= profile_share_status_class(@share) %>"><%= profile_share_status_label(@share) %></span>
         <h2 class="h4 mt-3 mb-2">Ссылка на профиль</h2>
         <p class="text-muted mb-0"><%= profile_share_expiry_label(@share) %> · <%= @share.detail_full? ? "полная детализация" : "краткая детализация" %></p>
+        <% if @share.sensitive_sections? %>
+          <p class="text-danger small mt-2 mb-0">В ссылке открыты чувствительные данные. Передавайте ее только адресно.</p>
+        <% end %>
       </div>
 
       <div class="pet-tag-stats">
@@ -85,7 +88,7 @@
               <div class="scan-item">
                 <div>
                   <div class="fw-semibold"><%= view.created_at.strftime("%d.%m.%Y %H:%M") %></div>
-                  <div class="text-muted small"><%= view.ip_address.presence || "IP не определен" %></div>
+                  <div class="text-muted small"><%= view.ip_address.present? ? "IP: #{view.ip_address}" : "IP не определен" %></div>
                   <div class="text-muted small"><%= view.user_agent.presence || "Браузер не определен" %></div>
                 </div>
                 <span class="status-pill muted">Открыт</span>
@@ -95,7 +98,7 @@
         <% else %>
           <div class="empty-state-inline">
             <div class="fw-semibold mb-1">Просмотров пока нет</div>
-            <div class="text-muted">После открытия публичной страницы здесь появятся дата, браузер и IP.</div>
+            <div class="text-muted">После открытия публичной страницы здесь появятся дата, браузер и маскированный IP.</div>
           </div>
         <% end %>
       </div>
@@ -131,6 +134,10 @@
               <strong><%= enabled ? "Видно" : "Скрыто" %></strong>
             </div>
           <% end %>
+        </div>
+
+        <div class="form-hint mt-3">
+          Ссылка работает без входа в аккаунт, не попадает в индекс поиска и перестает открываться после отключения, удаления, истечения срока или обновления токена.
         </div>
       </div>
     </aside>
