@@ -110,7 +110,7 @@
               <% if @document.pet_event.present? %>
                 <%= link_to "Открыть", pet_pet_event_path(@pet, @document.pet_event), class: "text-decoration-none" %>
               <% else %>
-                Нет
+                Не создана
               <% end %>
             </strong>
           </div>
@@ -120,14 +120,41 @@
               <% if @document.reminder.present? %>
                 <%= link_to "Открыть", pet_reminder_path(@pet, @document.reminder), class: "text-decoration-none" %>
               <% else %>
-                Нет
+                Не создано
               <% end %>
             </strong>
           </div>
         </div>
 
-        <p class="text-muted mb-3">При редактировании можно обновить запись в журнале и напоминание о сроке действия.</p>
-        <%= link_to "Изменить связи", edit_pet_pet_document_path(@pet, @document), class: "btn btn-outline-primary btn-sm w-100" %>
+        <div class="d-grid gap-2">
+          <% if @document.pet_event.present? %>
+            <%= button_to "Обновить запись журнала",
+                          sync_journal_event_pet_pet_document_path(@pet, @document),
+                          method: :patch,
+                          class: "btn btn-outline-primary btn-sm w-100" %>
+          <% else %>
+            <%= button_to "Создать запись журнала",
+                          sync_journal_event_pet_pet_document_path(@pet, @document),
+                          method: :patch,
+                          class: "btn btn-primary btn-sm w-100" %>
+          <% end %>
+
+          <% if @document.reminder.present? %>
+            <%= button_to "Обновить напоминание",
+                          sync_expiry_reminder_pet_pet_document_path(@pet, @document),
+                          method: :patch,
+                          class: "btn btn-outline-primary btn-sm w-100" %>
+          <% elsif @document.expires_on.present? %>
+            <%= button_to "Создать напоминание",
+                          sync_expiry_reminder_pet_pet_document_path(@pet, @document),
+                          method: :patch,
+                          class: "btn btn-primary btn-sm w-100" %>
+          <% else %>
+            <%= link_to "Указать срок действия",
+                        edit_pet_pet_document_path(@pet, @document),
+                        class: "btn btn-outline-primary btn-sm w-100" %>
+          <% end %>
+        </div>
       </section>
 
       <section class="dashboard-section">

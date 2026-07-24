@@ -82,6 +82,55 @@ class PetDocumentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should sync journal event from document" do
+    document = @pet.pet_documents.create!(
+      document_type: "certificate",
+      title: "Справка для поездки",
+      issued_on: Date.current,
+      expiry_reminder_days: 14
+    )
+
+    assert_difference("PetEvent.count") do
+      patch sync_journal_event_pet_pet_document_url(@pet, document)
+    end
+
+    assert_redirected_to pet_pet_document_url(@pet, document)
+    assert_equal "Справка для поездки", document.reload.pet_event.title
+  end
+
+  test "should sync expiry reminder from document" do
+    document = @pet.pet_documents.create!(
+      document_type: "vaccination",
+      title: "Вакцинация бешенство",
+      issued_on: Date.current,
+      expires_on: 1.year.from_now.to_date,
+      expiry_reminder_days: 30
+    )
+
+    assert_difference("Reminder.count") do
+      patch sync_expiry_reminder_pet_pet_document_url(@pet, document)
+    end
+
+    assert_redirected_to pet_pet_document_url(@pet, document)
+    assert_equal "Проверить документ: Вакцинация бешенство", document.reload.reminder.title
+    assert_equal "vaccination", document.reminder.reminder_type
+  end
+
+  test "should not sync expiry reminder without expiry date" do
+    document = @pet.pet_documents.create!(
+      document_type: "other",
+      title: "Бессрочный документ",
+      expiry_reminder_days: 14
+    )
+
+    assert_no_difference("Reminder.count") do
+      patch sync_expiry_reminder_pet_pet_document_url(@pet, document)
+    end
+
+    assert_redirected_to pet_pet_document_url(@pet, document)
+    assert_nil document.reload.reminder
+  end
+
   test "should update document" do
     patch pet_pet_document_url(@pet, @document), params: {
       pet_document: {

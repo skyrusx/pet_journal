@@ -39,6 +39,8 @@ Rails.application.routes.draw do
     end
     resources :pet_events, path: :events
     resources :pet_documents, path: :documents do
+      patch :sync_journal_event, on: :member
+      patch :sync_expiry_reminder, on: :member
       delete "files/:attachment_id", action: :destroy_file, on: :member, as: :file
     end
     resources :profile_shares, controller: :pet_profile_shares do

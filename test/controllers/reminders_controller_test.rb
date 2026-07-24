@@ -32,6 +32,23 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
     assert_select "select[name='reminder[reminder_type]'] option[selected='selected']", text: /Прививка/
   end
 
+  test "should get new with event prefill" do
+    get new_pet_reminder_url(
+      @pet,
+      reminder: {
+        title: "Повторный прием",
+        reminder_type: "visit",
+        remind_at: 1.week.from_now.change(sec: 0),
+        note: "Создано из записи журнала."
+      }
+    )
+
+    assert_response :success
+    assert_select "input[name='reminder[title]'][value='Повторный прием']"
+    assert_select "select[name='reminder[reminder_type]'] option[selected='selected']", text: /Визит/
+    assert_select "textarea[name='reminder[note]']", text: /Создано из записи журнала/
+  end
+
   test "should create reminder" do
     assert_difference("Reminder.count") do
       post pet_reminders_url(@pet), params: {

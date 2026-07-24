@@ -24,10 +24,7 @@ class RemindersController < ApplicationController
   end
 
   def new
-    @reminder = @pet.reminders.new(
-      reminder_type: params[:type].presence_in(Reminder.reminder_types.keys) || :other,
-      remind_at: 1.day.from_now.change(sec: 0)
-    )
+    @reminder = @pet.reminders.new(default_reminder_attributes.merge(reminder_prefill_params))
   end
 
   def create
@@ -105,6 +102,33 @@ class RemindersController < ApplicationController
 
   def reminder_params
     params.require(:reminder).permit(:title, :reminder_type, :remind_at, :repeat_rule, :repeat_interval, :repeat_unit, :note)
+  end
+
+  def default_reminder_attributes
+    {
+      reminder_type: params[:type].presence_in(Reminder.reminder_types.keys) || :other,
+      remind_at: 1.day.from_now.change(sec: 0),
+      repeat_rule: :once
+    }
+  end
+
+  def reminder_prefill_params
+    return {} unless params[:reminder].present?
+
+    attributes = params.require(:reminder).permit(
+      :title,
+      :reminder_type,
+      :remind_at,
+      :repeat_rule,
+      :repeat_interval,
+      :repeat_unit,
+      :note
+    ).to_h.compact_blank
+
+    attributes.delete("reminder_type") unless attributes["reminder_type"].in?(Reminder.reminder_types.keys)
+    attributes.delete("repeat_rule") unless attributes["repeat_rule"].blank? || attributes["repeat_rule"].in?(Reminder.repeat_rules.keys)
+    attributes.delete("repeat_unit") unless attributes["repeat_unit"].blank? || attributes["repeat_unit"].in?(Reminder.repeat_units.keys)
+    attributes
   end
 
   def sync_notification_channels

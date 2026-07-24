@@ -87,7 +87,12 @@ class PetEventsControllerTest < ActionDispatch::IntegrationTest
       }
     end
 
-    assert_redirected_to pet_pet_event_url(@pet, PetEvent.order(:created_at).last)
+    event = PetEvent.order(:created_at).last
+    assert_redirected_to pet_pet_event_url(@pet, event)
+    reminder = Reminder.order(:created_at).last
+    assert_equal "Повторить: Повторный прием", reminder.title
+    assert_equal "visit", reminder.reminder_type
+    assert_equal "Создано из события журнала от #{event.event_date.strftime('%d.%m.%Y')}.", reminder.note
   end
 
   test "should search structured fields" do

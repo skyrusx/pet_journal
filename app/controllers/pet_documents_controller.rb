@@ -1,7 +1,7 @@
 class PetDocumentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pet
-  before_action :set_document, only: %i[show edit update destroy destroy_file]
+  before_action :set_document, only: %i[show edit update destroy destroy_file sync_journal_event sync_expiry_reminder]
 
   def index
     @selected_type = params[:type].presence_in(PetDocument.document_types.keys)
@@ -65,6 +65,23 @@ class PetDocumentsController < ApplicationController
     attachment.purge
 
     redirect_to pet_pet_document_path(@pet, @document), notice: "Файл удален."
+  end
+
+  def sync_journal_event
+    @document.sync_journal_event!
+
+    redirect_to pet_pet_document_path(@pet, @document), notice: "Запись журнала синхронизирована."
+  end
+
+  def sync_expiry_reminder
+    if @document.expires_on.blank?
+      redirect_to pet_pet_document_path(@pet, @document), alert: "Укажите срок действия документа, чтобы создать напоминание."
+      return
+    end
+
+    @document.sync_expiry_reminder!
+
+    redirect_to pet_pet_document_path(@pet, @document), notice: "Напоминание о сроке действия синхронизировано."
   end
 
   private

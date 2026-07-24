@@ -93,6 +93,25 @@
         </dl>
       </section>
 
+      <% if @pet_event.next_action_at.present? %>
+        <section class="action-panel mb-4">
+          <div class="text-muted small mb-1">Следующий шаг</div>
+          <h2 class="h5 mb-2">Закрепить в напоминаниях</h2>
+          <p class="text-muted mb-3">Событие содержит дату следующего действия. Создайте напоминание, чтобы оно попало в общий план ухода.</p>
+          <%= link_to "Создать напоминание",
+                      new_pet_reminder_path(
+                        @pet,
+                        reminder: {
+                          title: @pet_event.title.presence || @pet_event.event_type_label,
+                          reminder_type: @pet_event.event_type.in?(Reminder.reminder_types.keys) ? @pet_event.event_type : "other",
+                          remind_at: @pet_event.next_action_at,
+                          note: "Создано из записи журнала от #{event_date_label(@pet_event.event_date)}."
+                        }
+                      ),
+                      class: "btn btn-primary btn-sm w-100" %>
+        </section>
+      <% end %>
+
       <section class="action-panel danger-zone">
         <div class="text-muted small mb-1">Опасное действие</div>
         <h2 class="h5 mb-2">Удалить запись</h2>
