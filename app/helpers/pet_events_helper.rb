@@ -15,13 +15,44 @@ module PetEventsHelper
   }.freeze
 
   def event_filter_path(pet, event_type)
-    event_type.present? ? pet_pet_events_path(pet, type: event_type, q: params[:q].presence) : pet_pet_events_path(pet, q: params[:q].presence)
+    pet_pet_events_path(pet, journal_filter_params.merge(type: event_type).compact_blank)
   end
 
   def event_filter_class(selected_event_type, event_type)
     classes = ["filter-chip"]
     classes << "active" if selected_event_type == event_type
     classes.join(" ")
+  end
+
+  def event_period_filters(pet, selected_period)
+    [
+      ["Все время", "all"],
+      ["Месяц", "month"],
+      ["3 месяца", "quarter"],
+      ["Год", "year"]
+    ].map do |label, period|
+      [label, pet_pet_events_path(pet, journal_filter_params.merge(period:).compact_blank), (selected_period.presence || "all") == period]
+    end
+  end
+
+  def event_status_filters(pet, selected_status)
+    [
+      ["Все записи", "all"],
+      ["С файлами", "with_files"],
+      ["С будущим действием", "follow_up"]
+    ].map do |label, status|
+      [label, pet_pet_events_path(pet, journal_filter_params.merge(status:).compact_blank), (selected_status.presence || "all") == status]
+    end
+  end
+
+  def journal_filter_summary(selected_event_type, selected_period, selected_status, query)
+    filters = []
+    filters << PetEvent::EVENT_TYPE_LABELS[selected_event_type] if selected_event_type.present?
+    filters << { "month" => "за месяц", "quarter" => "за 3 месяца", "year" => "за год" }[selected_period]
+    filters << { "with_files" => "с файлами", "follow_up" => "с будущим действием" }[selected_status]
+    filters << "поиск: #{query}" if query.present?
+
+    filters.compact.presence&.join(" · ") || "Показаны все записи"
   end
 
   def event_month_label(date)
@@ -76,5 +107,26 @@ module PetEventsHelper
     return event_type_hint(event.event_type) if summary.blank?
 
     truncate(summary.to_s, length: 190)
+  end
+
+  def quick_event_actions(pet)
+    [
+      ["Вес", new_pet_pet_event_path(pet, type: :weight)],
+      ["Прививка", new_pet_pet_event_path(pet, type: :vaccination)],
+      ["Визит", new_pet_pet_event_path(pet, type: :visit)],
+      ["Документ", new_pet_pet_document_path(pet)],
+      ["Заметка", new_pet_pet_event_path(pet, type: :note)]
+    ]
+  end
+
+  private
+
+  def journal_filter_params
+    {
+      q: params[:q].presence,
+      type: params[:type].presence,
+      period: params[:period].presence,
+      status: params[:status].presence
+    }
   end
 end

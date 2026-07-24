@@ -12,6 +12,9 @@ class PetEventsControllerTest < ActionDispatch::IntegrationTest
     get pet_pet_events_url(@pet)
 
     assert_response :success
+    assert_select ".journal-workspace-hero"
+    assert_select ".journal-filter-panel"
+    assert_select ".journal-metrics > div", count: 4
   end
 
   test "should filter index by event type" do
@@ -92,6 +95,27 @@ class PetEventsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "h3", text: /MyString/
+  end
+
+  test "should filter index by period" do
+    get pet_pet_events_url(@pet, period: "year")
+
+    assert_response :success
+    assert_select ".filter-chip.active", text: /Год/
+  end
+
+  test "should filter index by files" do
+    get pet_pet_events_url(@pet, status: "with_files")
+
+    assert_response :success
+    assert_select ".filter-chip.active", text: /С файлами/
+  end
+
+  test "should filter index by follow up" do
+    get pet_pet_events_url(@pet, status: "follow_up")
+
+    assert_response :success
+    assert_select ".filter-chip.active", text: /С будущим действием/
   end
 
   test "should get edit" do

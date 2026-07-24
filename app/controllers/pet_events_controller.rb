@@ -6,11 +6,19 @@ class PetEventsController < ApplicationController
   def index
     @event_type_filters = PetEvent::EVENT_TYPE_LABELS
     @selected_event_type = selected_event_type
+    @selected_period = selected_period
+    @selected_status = selected_status
     @query = params[:q].to_s.strip
     @event_type_counts = @pet.pet_events.group(:event_type).count
+    @total_events_count = @pet.pet_events.count
+    @events_with_files_count = @pet.pet_events.joins(:files_attachments).distinct.count
+    @events_with_follow_up_count = @pet.pet_events.where.not(next_action_at: nil).count
+    @latest_event = @pet.pet_events.order(event_date: :desc, created_at: :desc).first
 
     @pet_events = @pet.pet_events.with_attached_files.order(event_date: :desc, created_at: :desc)
     @pet_events = @pet_events.where(event_type: @selected_event_type) if @selected_event_type.present?
+    @pet_events = filter_by_period(@pet_events)
+    @pet_events = filter_by_status(@pet_events)
     @pet_events = search_events(@pet_events) if @query.present?
   end
 
@@ -90,6 +98,38 @@ class PetEventsController < ApplicationController
     return if params[:type].blank?
 
     params[:type] if PetEvent.event_types.key?(params[:type])
+  end
+
+  def selected_period
+    params[:period].presence_in(%w[all month quarter year])
+  end
+
+  def selected_status
+    params[:status].presence_in(%w[all with_files follow_up])
+  end
+
+  def filter_by_period(scope)
+    case @selected_period
+    when "month"
+      scope.where(event_date: 1.month.ago.to_date..Date.current)
+    when "quarter"
+      scope.where(event_date: 3.months.ago.to_date..Date.current)
+    when "year"
+      scope.where(event_date: 1.year.ago.to_date..Date.current)
+    else
+      scope
+    end
+  end
+
+  def filter_by_status(scope)
+    case @selected_status
+    when "with_files"
+      scope.joins(:files_attachments).distinct
+    when "follow_up"
+      scope.where.not(next_action_at: nil)
+    else
+      scope
+    end
   end
 
   def search_events(scope)
