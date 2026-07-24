@@ -15,7 +15,7 @@ module PetEventsHelper
   }.freeze
 
   def event_filter_path(pet, event_type)
-    event_type.present? ? pet_pet_events_path(pet, type: event_type) : pet_pet_events_path(pet)
+    event_type.present? ? pet_pet_events_path(pet, type: event_type, q: params[:q].presence) : pet_pet_events_path(pet, q: params[:q].presence)
   end
 
   def event_filter_class(selected_event_type, event_type)
@@ -65,5 +65,16 @@ module PetEventsHelper
 
   def event_file_label(file)
     "#{file.filename} · #{number_to_human_size(file.byte_size)}"
+  end
+
+  def event_severity_options
+    PetEvent.severities.keys.map { |key| [I18n.t("pet_events.severities.#{key}"), key] }
+  end
+
+  def event_structured_summary(event)
+    summary = event.summary
+    return event_type_hint(event.event_type) if summary.blank?
+
+    truncate(summary.to_s, length: 190)
   end
 end

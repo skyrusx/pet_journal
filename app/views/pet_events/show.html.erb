@@ -16,6 +16,23 @@
 
   <div class="row g-4">
     <section class="col-lg-7">
+      <% if @pet_event.structured? %>
+        <div class="workspace-section mb-4">
+          <div class="section-heading compact">
+            <div>
+              <div class="text-muted small mb-1">Структура</div>
+              <h2 class="h4 mb-0">Данные события</h2>
+            </div>
+          </div>
+
+          <dl class="details-list">
+            <% @pet_event.structured_rows.each do |label, value| %>
+              <div><dt><%= label %></dt><dd><%= simple_format(value.to_s) %></dd></div>
+            <% end %>
+          </dl>
+        </div>
+      <% end %>
+
       <div class="workspace-section mb-4">
         <div class="section-heading compact">
           <div>
@@ -64,6 +81,15 @@
           <div><dt>Тип</dt><dd><%= @pet_event.event_type_label %></dd></div>
           <div><dt>Дата</dt><dd><%= event_date_label(@pet_event.event_date) %></dd></div>
           <div><dt>Файлы</dt><dd><%= @pet_event.files.count %> <%= russian_plural(@pet_event.files.count, "файл", "файла", "файлов") %></dd></div>
+          <% if @pet_event.next_action_at.present? %>
+            <div><dt>Следующее действие</dt><dd><%= l(@pet_event.next_action_at) %></dd></div>
+          <% end %>
+          <% if @pet_event.pet_documents.any? %>
+            <div>
+              <dt>Документы</dt>
+              <dd><%= @pet_event.pet_documents.map { |document| link_to(document.title, pet_pet_document_path(@pet, document)) }.to_sentence.html_safe %></dd>
+            </div>
+          <% end %>
         </dl>
       </section>
 

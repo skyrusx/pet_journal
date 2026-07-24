@@ -1007,6 +1007,26 @@ a {
   justify-content: center;
 }
 
+.event-structured-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.event-structured-preview span {
+  background: var(--pj-soft);
+  border: 1px solid var(--pj-border);
+  border-radius: 999px;
+  color: var(--pj-muted);
+  font-size: 0.8rem;
+  padding: 0.35rem 0.55rem;
+}
+
+.event-structured-preview strong {
+  color: var(--pj-ink);
+  font-weight: 700;
+}
+
 .reminder-list,
 .channel-grid,
 .delivery-list {

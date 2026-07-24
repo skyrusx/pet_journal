@@ -69,6 +69,27 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCustomFields();
   });
 
+  document.querySelectorAll("[data-event-type-radio]").forEach((radio) => {
+    const form = radio.closest("form");
+    if (!form) return;
+
+    const sections = form.querySelectorAll("[data-event-fields]");
+    const updateEventFields = () => {
+      const selected = form.querySelector("[data-event-type-radio]:checked")?.value;
+
+      sections.forEach((section) => {
+        const active = section.dataset.eventFields === selected;
+        section.hidden = !active;
+        section.querySelectorAll("input, select, textarea").forEach((input) => {
+          input.disabled = !active;
+        });
+      });
+    };
+
+    radio.addEventListener("change", updateEventFields);
+    updateEventFields();
+  });
+
   document.querySelectorAll("[data-web-push-panel]").forEach((panel) => {
     const enableButton = panel.querySelector("[data-web-push-enable]");
     const disableButton = panel.querySelector("[data-web-push-disable]");

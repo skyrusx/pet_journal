@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_24_090000) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_24_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -101,7 +101,28 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_24_090000) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "weight_value", precision: 6, scale: 2
+    t.string "weight_unit", default: "kg", null: false
+    t.string "vaccine_name"
+    t.string "vaccine_batch"
+    t.date "valid_until"
+    t.string "clinic_name"
+    t.string "veterinarian_name"
+    t.string "medication_name"
+    t.string "dosage"
+    t.date "course_started_on"
+    t.date "course_ended_on"
+    t.datetime "next_action_at"
+    t.string "diagnosis"
+    t.text "recommendations"
+    t.text "symptoms"
+    t.integer "severity"
+    t.date "symptom_started_on"
+    t.date "symptom_ended_on"
+    t.index ["next_action_at"], name: "index_pet_events_on_next_action_at"
+    t.index ["pet_id", "event_type", "event_date"], name: "index_pet_events_on_pet_id_and_event_type_and_event_date"
     t.index ["pet_id"], name: "index_pet_events_on_pet_id"
+    t.index ["valid_until"], name: "index_pet_events_on_valid_until"
   end
 
   create_table "pet_tag_scans", force: :cascade do |t|

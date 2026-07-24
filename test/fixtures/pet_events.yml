@@ -6,6 +6,11 @@ one:
   title: MyString
   event_date: 2026-04-01
   description: MyText
+  vaccine_name: Nobivac
+  vaccine_batch: B-001
+  valid_until: 2027-04-01
+  clinic_name: Good Vet
+  veterinarian_name: Dr. Vet
 
 two:
   pet: two

@@ -55,6 +55,45 @@ class PetEventsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to pet_pet_event_url(@pet, PetEvent.order(:created_at).last)
   end
 
+  test "should create weight event and update pet weight" do
+    post pet_pet_events_url(@pet), params: {
+      pet_event: {
+        event_type: "weight",
+        title: "Контроль веса",
+        event_date: Date.current,
+        weight_value: 5.7,
+        weight_unit: "kg"
+      }
+    }
+
+    assert_redirected_to pet_pet_event_url(@pet, PetEvent.order(:created_at).last)
+    assert_equal BigDecimal("5.7"), @pet.reload.weight
+  end
+
+  test "should create follow up reminder from structured event" do
+    assert_difference("Reminder.count") do
+      post pet_pet_events_url(@pet), params: {
+        create_follow_up_reminder: "1",
+        pet_event: {
+          event_type: "visit",
+          title: "Повторный прием",
+          event_date: Date.current,
+          clinic_name: "Good Vet",
+          next_action_at: 1.week.from_now
+        }
+      }
+    end
+
+    assert_redirected_to pet_pet_event_url(@pet, PetEvent.order(:created_at).last)
+  end
+
+  test "should search structured fields" do
+    get pet_pet_events_url(@pet, q: "Nobivac")
+
+    assert_response :success
+    assert_select "h3", text: /MyString/
+  end
+
   test "should get edit" do
     get edit_pet_pet_event_url(@pet, @pet_event)
 

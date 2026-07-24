@@ -23,7 +23,7 @@
     <div class="event-type-grid mb-3">
       <% PetEvent::EVENT_TYPE_LABELS.each do |key, label| %>
         <label class="event-type-option <%= event_tone(key) %>">
-          <%= f.radio_button :event_type, key %>
+          <%= f.radio_button :event_type, key, data: { event_type_radio: true } %>
           <span>
             <strong><%= label %></strong>
             <small><%= event_type_hint(key) %></small>
@@ -36,6 +36,168 @@
       <%= f.label :event_date, "Дата события", class: "form-label" %>
       <%= f.date_field :event_date, class: "form-control" %>
     </div>
+  </section>
+
+  <section class="form-section structured-event-section" data-event-fields="weight">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Вес</h2>
+        <p class="text-muted mb-0">Значение сохранится в событии и обновит текущий вес в профиле питомца.</p>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <%= f.label :weight_value, class: "form-label" %>
+        <div class="input-group">
+          <%= f.number_field :weight_value, step: 0.01, min: 0, class: "form-control" %>
+          <%= f.select :weight_unit, [["кг", "kg"], ["г", "g"]], {}, class: "form-select" %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-section structured-event-section" data-event-fields="vaccination">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Прививка</h2>
+        <p class="text-muted mb-0">Название вакцины, партия, клиника и срок действия.</p>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <%= f.label :vaccine_name, class: "form-label" %>
+        <%= f.text_field :vaccine_name, class: "form-control", placeholder: "Например: Nobivac Rabies" %>
+      </div>
+      <div class="col-md-6">
+        <%= f.label :vaccine_batch, class: "form-label" %>
+        <%= f.text_field :vaccine_batch, class: "form-control", placeholder: "Серия / партия" %>
+      </div>
+      <div class="col-md-6">
+        <%= f.label :clinic_name, class: "form-label" %>
+        <%= f.text_field :clinic_name, class: "form-control" %>
+      </div>
+      <div class="col-md-6">
+        <%= f.label :veterinarian_name, class: "form-label" %>
+        <%= f.text_field :veterinarian_name, class: "form-control" %>
+      </div>
+      <div class="col-md-6">
+        <%= f.label :valid_until, class: "form-label" %>
+        <%= f.date_field :valid_until, class: "form-control" %>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-section structured-event-section" data-event-fields="treatment">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Лекарство или обработка</h2>
+        <p class="text-muted mb-0">Препарат, дозировка, курс и следующее действие.</p>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <%= f.label :medication_name, class: "form-label" %>
+        <%= f.text_field :medication_name, class: "form-control", placeholder: "Название препарата" %>
+      </div>
+      <div class="col-md-6">
+        <%= f.label :dosage, class: "form-label" %>
+        <%= f.text_field :dosage, class: "form-control", placeholder: "Например: 1 таблетка после еды" %>
+      </div>
+      <div class="col-md-4">
+        <%= f.label :course_started_on, class: "form-label" %>
+        <%= f.date_field :course_started_on, class: "form-control" %>
+      </div>
+      <div class="col-md-4">
+        <%= f.label :course_ended_on, class: "form-label" %>
+        <%= f.date_field :course_ended_on, class: "form-control" %>
+      </div>
+      <div class="col-md-4">
+        <%= f.label :next_action_at, class: "form-label" %>
+        <%= f.datetime_local_field :next_action_at, class: "form-control" %>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-section structured-event-section" data-event-fields="visit">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Визит</h2>
+        <p class="text-muted mb-0">Клиника, врач, диагноз, рекомендации и повторный прием.</p>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <%= f.label :clinic_name, class: "form-label" %>
+        <%= f.text_field :clinic_name, class: "form-control" %>
+      </div>
+      <div class="col-md-6">
+        <%= f.label :veterinarian_name, class: "form-label" %>
+        <%= f.text_field :veterinarian_name, class: "form-control" %>
+      </div>
+      <div class="col-12">
+        <%= f.label :diagnosis, class: "form-label" %>
+        <%= f.text_field :diagnosis, class: "form-control" %>
+      </div>
+      <div class="col-12">
+        <%= f.label :recommendations, class: "form-label" %>
+        <%= f.text_area :recommendations, rows: 4, class: "form-control" %>
+      </div>
+      <div class="col-md-6">
+        <%= f.label :next_action_at, class: "form-label" %>
+        <%= f.datetime_local_field :next_action_at, class: "form-control" %>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-section structured-event-section" data-event-fields="illness">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Болезнь или симптом</h2>
+        <p class="text-muted mb-0">Симптомы, тяжесть, даты и рекомендации.</p>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-12">
+        <%= f.label :symptoms, class: "form-label" %>
+        <%= f.text_area :symptoms, rows: 4, class: "form-control", placeholder: "Что заметили" %>
+      </div>
+      <div class="col-md-4">
+        <%= f.label :severity, class: "form-label" %>
+        <%= f.select :severity, event_severity_options, { include_blank: "Не указана" }, class: "form-select" %>
+      </div>
+      <div class="col-md-4">
+        <%= f.label :symptom_started_on, class: "form-label" %>
+        <%= f.date_field :symptom_started_on, class: "form-control" %>
+      </div>
+      <div class="col-md-4">
+        <%= f.label :symptom_ended_on, class: "form-label" %>
+        <%= f.date_field :symptom_ended_on, class: "form-control" %>
+      </div>
+      <div class="col-12">
+        <%= f.label :diagnosis, class: "form-label" %>
+        <%= f.text_field :diagnosis, class: "form-control" %>
+      </div>
+      <div class="col-12">
+        <%= f.label :recommendations, class: "form-label" %>
+        <%= f.text_area :recommendations, rows: 4, class: "form-control" %>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-section structured-event-section" data-event-fields="document">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Документ</h2>
+        <p class="text-muted mb-0">Для полноценного хранения документов используйте раздел “Документы”; здесь можно оставить журнальную заметку.</p>
+      </div>
+    </div>
+
+    <%= link_to "Открыть документы", pet_pet_documents_path(@pet), class: "btn btn-outline-primary btn-sm" %>
   </section>
 
   <section class="form-section">
@@ -57,6 +219,20 @@
                       rows: 6,
                       class: "form-control",
                       placeholder: "Что произошло, какие рекомендации дали, что нужно проверить позже" %>
+    </div>
+  </section>
+
+  <section class="form-section" data-follow-up-section>
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Следующее действие</h2>
+        <p class="text-muted mb-0">Если заполнено поле “Следующее действие”, можно сразу создать напоминание.</p>
+      </div>
+    </div>
+
+    <div class="form-check form-switch">
+      <%= check_box_tag :create_follow_up_reminder, "1", false, class: "form-check-input", role: "switch" %>
+      <%= label_tag :create_follow_up_reminder, "Создать напоминание по следующему действию", class: "form-check-label" %>
     </div>
   </section>
 
