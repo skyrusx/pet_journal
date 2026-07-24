@@ -952,6 +952,106 @@ a {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.home-hero,
+.guest-hero {
+  background: linear-gradient(135deg, var(--pj-surface) 0%, var(--pj-surface-strong) 100%);
+  border: 1px solid var(--pj-border);
+  border-radius: 14px;
+  box-shadow: var(--pj-shadow);
+  display: flex;
+  gap: 1.25rem;
+  justify-content: space-between;
+  padding: 1.5rem;
+}
+
+.guest-hero {
+  min-height: 300px;
+  align-items: center;
+}
+
+.home-hero-actions {
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.home-metrics {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.guest-home .home-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home-layout {
+  align-items: start;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+}
+
+.home-main,
+.home-side {
+  display: grid;
+  gap: 1rem;
+}
+
+.home-side {
+  position: sticky;
+  top: 5rem;
+}
+
+.home-pet-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.home-pet-card {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.home-pet-card-main {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.home-shortcuts {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.home-shortcuts a {
+  background: var(--pj-soft);
+  border: 1px solid var(--pj-border);
+  border-radius: 10px;
+  color: var(--pj-ink);
+  font-weight: 700;
+  padding: 0.8rem 0.9rem;
+  text-decoration: none;
+}
+
+.home-shortcuts a:hover {
+  background: var(--pj-teal-soft);
+  color: var(--pj-teal);
+}
+
+.home-empty {
+  min-height: 260px;
+  display: grid;
+  place-items: center start;
+}
+
 .workspace-section {
   background: var(--pj-surface);
   border: 1px solid var(--pj-border);
@@ -2215,11 +2315,15 @@ a {
   .dashboard-hero,
   .dashboard-layout,
   .dashboard-metrics,
-  .dashboard-details {
+  .dashboard-details,
+  .home-layout,
+  .home-metrics,
+  .guest-home .home-metrics {
     grid-template-columns: 1fr;
   }
 
-  .dashboard-side {
+  .dashboard-side,
+  .home-side {
     position: static;
   }
 
@@ -2250,6 +2354,7 @@ a {
   }
 
   .pet-card-main,
+  .home-pet-card-main,
   .timeline-item,
   .journal-event,
   .reminder-card,
@@ -2329,7 +2434,9 @@ a {
   }
 
   .form-page-header,
-  .form-section-heading {
+  .form-section-heading,
+  .home-hero,
+  .guest-hero {
     flex-direction: column;
   }
 
@@ -2340,7 +2447,9 @@ a {
 
   .pet-tag-hero-actions .btn,
   .found-pet-form .btn,
-  .profile-shares-page .btn {
+  .profile-shares-page .btn,
+  .home-hero-actions .btn,
+  .guest-hero .btn {
     width: 100%;
   }
 

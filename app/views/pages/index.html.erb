@@ -1,46 +1,254 @@
-<div class="py-5">
-  <div class="mb-5">
-    <h1 class="display-5 fw-semibold mb-3">PetJournal</h1>
-    <p class="lead text-muted mb-4">
-      Журнал здоровья, документы, напоминания и QR-профиль безопасности для питомца.
-    </p>
+<% if user_signed_in? %>
+  <div class="home-dashboard py-4">
+    <section class="home-hero mb-4">
+      <div>
+        <div class="text-muted small mb-1">PetJournal</div>
+        <h1 class="h2 mb-2">Рабочий стол питомцев</h1>
+        <p class="text-muted mb-0">Сегодняшние задачи, последние события, документы и безопасность в одном месте.</p>
+      </div>
 
-    <div class="d-flex gap-2">
-      <% if user_signed_in? %>
-        <%= link_to "Перейти в приложение", pets_path, class: "btn btn-primary" %>
-      <% else %>
-        <%= link_to "Войти", new_user_session_path, class: "btn btn-primary" %>
-        <%= link_to "Регистрация", new_user_registration_path, class: "btn btn-outline-secondary" %>
-      <% end %>
+      <div class="home-hero-actions">
+        <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
+        <% if @pets.any? %>
+          <%= link_to "Добавить событие", new_pet_pet_event_path(@pets.first), class: "btn btn-outline-primary" %>
+          <%= link_to "Напоминание", new_pet_reminder_path(@pets.first), class: "btn btn-outline-secondary" %>
+        <% end %>
+      </div>
+    </section>
+
+    <div class="home-metrics mb-4">
+      <article class="dashboard-metric">
+        <div class="overview-card-label">Питомцы</div>
+        <div class="overview-card-value"><%= @pets.size %></div>
+        <div class="overview-card-note"><%= @pets.any? ? "активных карточек" : "добавьте первого" %></div>
+      </article>
+
+      <article class="dashboard-metric">
+        <div class="overview-card-label">Сегодня</div>
+        <div class="overview-card-value"><%= @today_reminders_count %></div>
+        <div class="overview-card-note"><%= @overdue_reminders_count %> просрочено</div>
+      </article>
+
+      <article class="dashboard-metric">
+        <div class="overview-card-label">Документы</div>
+        <div class="overview-card-value"><%= @expiring_documents.size %></div>
+        <div class="overview-card-note">скоро истекает</div>
+      </article>
+
+      <article class="dashboard-metric">
+        <div class="overview-card-label">PetTag</div>
+        <div class="overview-card-value"><%= @pet_tag_scans_count %></div>
+        <div class="overview-card-note">сканирований</div>
+      </article>
+
+      <article class="dashboard-metric">
+        <div class="overview-card-label">Доступ</div>
+        <div class="overview-card-value"><%= @active_profile_shares_count %></div>
+        <div class="overview-card-note"><%= @profile_share_views_count %> <%= russian_plural(@profile_share_views_count, "просмотр", "просмотра", "просмотров") %></div>
+      </article>
+    </div>
+
+    <% if @pets.any? %>
+      <div class="home-layout">
+        <section class="home-main">
+          <div class="dashboard-section">
+            <div class="section-heading">
+              <div>
+                <div class="text-muted small mb-1">Питомцы</div>
+                <h2 class="h4 mb-1">Карточки и текущий сигнал</h2>
+                <p class="text-muted mb-0">Один главный статус по каждому питомцу без перегруза карточек.</p>
+              </div>
+              <%= link_to "Все питомцы", pets_path, class: "btn btn-outline-primary btn-sm" %>
+            </div>
+
+            <div class="home-pet-grid">
+              <% @pets.each do |pet| %>
+                <% latest_event = @latest_events_by_pet_id[pet.id] %>
+                <% pet_tag = pet.pet_tag %>
+                <% next_reminder = pet.reminders.status_active.order(:next_run_at).first %>
+                <% signal = pet_overview_signal(pet, pet_tag, pet_tag&.pet_tag_scans&.order(created_at: :desc)&.first, latest_event, next_reminder) %>
+
+                <article class="home-pet-card">
+                  <div class="home-pet-card-main">
+                    <% if pet.photo.attached? %>
+                      <%= image_tag pet.photo, class: "pet-card-photo" %>
+                    <% else %>
+                      <div class="pet-card-photo pet-card-photo-placeholder">
+                        <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
+                      </div>
+                    <% end %>
+
+                    <div class="pet-card-body">
+                      <div class="d-flex justify-content-between gap-2 align-items-start mb-2">
+                        <div>
+                          <h3 class="h5 mb-1"><%= link_to pet.name, pet_path(pet), class: "text-dark text-decoration-none" %></h3>
+                          <div class="text-muted small"><%= pet_age(pet) %> · <%= pet_short_description(pet) %></div>
+                        </div>
+                        <span class="signal-pill"><%= signal[:label] %></span>
+                      </div>
+
+                      <div class="activity-line">
+                        <div class="fw-semibold mb-1"><%= signal[:title] %></div>
+                        <div class="text-muted small"><%= signal[:body] %></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pet-card-actions">
+                    <%= link_to "Открыть", pet_path(pet), class: "btn btn-outline-primary btn-sm" %>
+                    <%= link_to "Событие", new_pet_pet_event_path(pet), class: "btn btn-primary btn-sm" %>
+                    <%= link_to "Доступ", pet_profile_shares_path(pet), class: "btn btn-outline-secondary btn-sm" %>
+                  </div>
+                </article>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="dashboard-section">
+            <div class="section-heading compact">
+              <div>
+                <div class="text-muted small mb-1">Последняя активность</div>
+                <h2 class="h4 mb-0">Журнал</h2>
+              </div>
+            </div>
+
+            <% if @recent_events.any? %>
+              <div class="dashboard-timeline">
+                <% @recent_events.each do |event| %>
+                  <article class="dashboard-timeline-item <%= event_tone(event.event_type) %>">
+                    <div class="dashboard-timeline-date">
+                      <strong><%= event.event_date.strftime("%d") %></strong>
+                      <span><%= event.event_date.strftime("%m.%Y") %></span>
+                    </div>
+                    <div class="dashboard-timeline-body">
+                      <div class="d-flex flex-wrap gap-2 align-items-center mb-1">
+                        <span class="event-badge"><%= event.event_type_label %></span>
+                        <span class="attachment-pill"><%= event.pet.name %></span>
+                      </div>
+                      <h3 class="h6 mb-1"><%= link_to event.title.presence || event.event_type_label, pet_pet_event_path(event.pet, event), class: "text-dark text-decoration-none" %></h3>
+                      <p class="text-muted mb-0"><%= event_structured_summary(event) %></p>
+                    </div>
+                  </article>
+                <% end %>
+              </div>
+            <% else %>
+              <div class="empty-state-inline">
+                <h3 class="h5 mb-2">Журнал пока пуст</h3>
+                <p class="text-muted mb-3">Добавьте первую запись любому питомцу: вес, прививку, визит или заметку.</p>
+                <%= link_to "Добавить событие", new_pet_pet_event_path(@pets.first), class: "btn btn-primary btn-sm" %>
+              </div>
+            <% end %>
+          </div>
+        </section>
+
+        <aside class="home-side">
+          <section class="dashboard-section">
+            <div class="section-heading compact">
+              <div>
+                <div class="text-muted small mb-1">Напоминания</div>
+                <h2 class="h4 mb-0">Ближайшие</h2>
+              </div>
+            </div>
+
+            <% if @next_reminders.any? %>
+              <div class="compact-list">
+                <% @next_reminders.each do |reminder| %>
+                  <div>
+                    <span>
+                      <strong class="d-block text-dark"><%= reminder.title %></strong>
+                      <small><%= reminder.pet.name %> · <%= reminder.reminder_type_label %></small>
+                    </span>
+                    <strong><%= reminder.next_run_at.strftime("%d.%m") %></strong>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <p class="text-muted mb-3">Активных напоминаний нет.</p>
+              <%= link_to "Создать напоминание", new_pet_reminder_path(@pets.first), class: "btn btn-primary btn-sm" %>
+            <% end %>
+          </section>
+
+          <section class="dashboard-section">
+            <div class="section-heading compact">
+              <div>
+                <div class="text-muted small mb-1">Документы</div>
+                <h2 class="h4 mb-0">Сроки</h2>
+              </div>
+            </div>
+
+            <% if @expiring_documents.any? %>
+              <div class="dashboard-alert-list">
+                <% @expiring_documents.each do |document| %>
+                  <div class="dashboard-alert warning">
+                    <div>
+                      <strong><%= document.title %></strong>
+                      <span><%= document.pet.name %> · до <%= document.expires_on.strftime("%d.%m.%Y") %></span>
+                    </div>
+                    <%= link_to "Открыть", pet_pet_document_path(document.pet, document), class: "btn btn-outline-secondary btn-sm" %>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <p class="text-muted mb-0">Документов с ближайшим истечением нет.</p>
+            <% end %>
+          </section>
+
+          <section class="dashboard-section">
+            <div class="section-heading compact">
+              <div>
+                <div class="text-muted small mb-1">Быстрые переходы</div>
+                <h2 class="h4 mb-0">Разделы</h2>
+              </div>
+            </div>
+
+            <div class="home-shortcuts">
+              <%= link_to "Мои питомцы", pets_path %>
+              <%= link_to "Уведомления", notification_channels_path %>
+              <%= link_to "Новый питомец", new_pet_path %>
+            </div>
+          </section>
+        </aside>
+      </div>
+    <% else %>
+      <section class="empty-panel home-empty">
+        <div>
+          <h2 class="h4 mb-2">Добавьте первого питомца</h2>
+          <p class="text-muted mb-3">После этого здесь появятся журнал, напоминания, документы, PetTag и публичный доступ.</p>
+          <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
+        </div>
+      </section>
+    <% end %>
+  </div>
+<% else %>
+  <div class="guest-home py-4">
+    <section class="guest-hero mb-4">
+      <div>
+        <div class="text-muted small mb-1">PetJournal</div>
+        <h1 class="display-5 fw-semibold mb-3">Здоровье, уход и безопасность питомца</h1>
+        <p class="lead text-muted mb-4">Ведите журнал, храните документы, получайте напоминания и создавайте QR-профиль безопасности PetTag.</p>
+        <div class="d-flex flex-wrap gap-2">
+          <%= link_to "Войти", new_user_session_path, class: "btn btn-primary" %>
+          <%= link_to "Регистрация", new_user_registration_path, class: "btn btn-outline-secondary" %>
+        </div>
+      </div>
+    </section>
+
+    <div class="home-metrics">
+      <article class="dashboard-metric">
+        <div class="overview-card-label">Журнал</div>
+        <div class="overview-card-value">01</div>
+        <div class="overview-card-note">события здоровья и ухода</div>
+      </article>
+      <article class="dashboard-metric">
+        <div class="overview-card-label">Документы</div>
+        <div class="overview-card-value">02</div>
+        <div class="overview-card-note">файлы, сроки и напоминания</div>
+      </article>
+      <article class="dashboard-metric">
+        <div class="overview-card-label">PetTag</div>
+        <div class="overview-card-value">03</div>
+        <div class="overview-card-note">QR-профиль на случай потери</div>
+      </article>
     </div>
   </div>
-
-  <div class="row g-4">
-    <div class="col-md-4">
-      <div class="border rounded p-4 h-100 bg-white">
-        <h2 class="h5 mb-3">Карточка питомца</h2>
-        <p class="text-muted mb-0">
-          Основная информация, фото и важные данные в одном месте.
-        </p>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="border rounded p-4 h-100 bg-white">
-        <h2 class="h5 mb-3">Журнал событий</h2>
-        <p class="text-muted mb-0">
-          Прививки, приемы, вес, заметки и история питомца.
-        </p>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="border rounded p-4 h-100 bg-white">
-        <h2 class="h5 mb-3">PetTag</h2>
-        <p class="text-muted mb-0">
-          QR-профиль безопасности поможет связаться с вами, если питомец потеряется.
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
+<% end %>
