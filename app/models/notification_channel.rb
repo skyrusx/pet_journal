@@ -22,11 +22,57 @@ class NotificationChannel < ApplicationRecord
     verified_at.present?
   end
 
+  def ready_for_delivery?
+    enabled? && configuration_issues.empty?
+  end
+
+  def configuration_issues
+    case channel_type
+    when "email" then email_configuration_issues
+    when "telegram" then telegram_configuration_issues
+    when "vk" then vk_configuration_issues
+    when "web_push" then web_push_configuration_issues
+    else ["Неизвестный тип канала"]
+    end
+  end
+
+  def mark_verified!
+    update!(verified_at: Time.current) unless verified?
+  end
+
   private
 
   def web_push_settings_present
     return if settings["endpoint"].present? && settings["p256dh"].present? && settings["auth"].present?
 
     errors.add(:settings, :blank)
+  end
+
+  def email_configuration_issues
+    address.present? ? [] : ["Укажите эл. почту"]
+  end
+
+  def telegram_configuration_issues
+    issues = []
+    issues << "Укажите chat_id Telegram" if address.blank?
+    issues << "Задайте TELEGRAM_BOT_TOKEN в окружении" if ENV["TELEGRAM_BOT_TOKEN"].blank?
+    issues
+  end
+
+  def vk_configuration_issues
+    issues = []
+    issues << "Укажите peer_id VK" if address.blank?
+    issues << "Задайте VK_GROUP_TOKEN в окружении" if ENV["VK_GROUP_TOKEN"].blank?
+    issues
+  end
+
+  def web_push_configuration_issues
+    issues = []
+    issues << "Нет endpoint push-подписки" if settings["endpoint"].blank?
+    issues << "Нет ключа p256dh push-подписки" if settings["p256dh"].blank?
+    issues << "Нет ключа auth push-подписки" if settings["auth"].blank?
+    issues << "Задайте VAPID_PUBLIC_KEY в окружении" if ENV["VAPID_PUBLIC_KEY"].blank?
+    issues << "Задайте VAPID_PRIVATE_KEY в окружении" if ENV["VAPID_PRIVATE_KEY"].blank?
+    issues
   end
 end

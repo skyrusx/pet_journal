@@ -34,7 +34,11 @@ class NotificationDispatcher
 
     channels.each do |channel|
       delivery = reminder.notification_deliveries.create!(notification_channel: channel)
-      NotificationDeliveryJob.perform_later(delivery)
+      if channel.ready_for_delivery?
+        NotificationDeliveryJob.perform_later(delivery)
+      else
+        delivery.mark_skipped!(channel.configuration_issues.to_sentence)
+      end
     end
 
     reminder.update!(last_notified_at: now)

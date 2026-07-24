@@ -21,4 +21,25 @@ class NotificationDeliveryTest < ActiveSupport::TestCase
     assert delivery.status_failed?
     assert_nil delivery.next_attempt_at
   end
+
+  test "delivery can be skipped with diagnostic message" do
+    delivery = notification_deliveries(:pending)
+
+    delivery.mark_skipped!("Канал не настроен")
+
+    assert delivery.status_skipped?
+    assert_equal "Канал не настроен", delivery.error_message
+    assert_nil delivery.next_attempt_at
+  end
+
+  test "delivery can be reset for manual retry" do
+    delivery = notification_deliveries(:pending)
+    delivery.update!(status: :failed, error_message: "Ошибка", next_attempt_at: 1.hour.from_now)
+
+    delivery.reset_for_retry!
+
+    assert delivery.status_pending?
+    assert_nil delivery.error_message
+    assert_nil delivery.next_attempt_at
+  end
 end

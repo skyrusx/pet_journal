@@ -11,6 +11,14 @@ class NotificationChannelsControllerTest < ActionDispatch::IntegrationTest
     get notification_channels_url
 
     assert_response :success
+    assert_select ".filter-chip", text: /Все/
+  end
+
+  test "should filter deliveries by status" do
+    get notification_channels_url(delivery_status: "pending")
+
+    assert_response :success
+    assert_select ".filter-chip.active", text: /В очереди/
   end
 
   test "should create telegram channel" do
@@ -28,12 +36,37 @@ class NotificationChannelsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to notification_channels_url
   end
 
-  test "should enqueue test delivery" do
-    assert_enqueued_jobs 1 do
+  test "should run test delivery immediately" do
+    assert_difference("NotificationDelivery.count") do
       post test_notification_channel_url(@channel)
     end
 
     assert_redirected_to notification_channels_url
+    assert NotificationDelivery.order(:created_at).last.status_sent?
+  end
+
+  test "should show diagnostic when test delivery channel is not configured" do
+    channel = notification_channels(:telegram)
+    channel.update!(enabled: true)
+
+    assert_difference("NotificationDelivery.count") do
+      post test_notification_channel_url(channel)
+    end
+
+    assert_redirected_to notification_channels_url
+    delivery = NotificationDelivery.order(:created_at).last
+    assert delivery.status_skipped?
+    assert_match "TELEGRAM_BOT_TOKEN", delivery.error_message
+  end
+
+  test "should retry failed delivery immediately" do
+    delivery = notification_deliveries(:pending)
+    delivery.update!(status: :failed, attempts_count: 1, error_message: "Ошибка")
+
+    post retry_delivery_notification_channels_url(delivery_id: delivery)
+
+    assert_redirected_to notification_channels_url(delivery_status: :sent)
+    assert delivery.reload.status_sent?
   end
 
   test "should update notification quiet hours settings" do

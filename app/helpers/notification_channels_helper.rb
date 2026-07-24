@@ -26,6 +26,7 @@ module NotificationChannelsHelper
 
   def notification_channel_status_class(channel)
     return "status-pill muted" unless channel.enabled?
+    return "lost-pill" unless channel.ready_for_delivery?
     return "status-pill success" if channel.verified?
 
     "status-pill"
@@ -33,9 +34,26 @@ module NotificationChannelsHelper
 
   def notification_channel_status_label(channel)
     return "Выключен" unless channel.enabled?
+    return "Нужна настройка" unless channel.ready_for_delivery?
     return "Готов" if channel.verified?
 
     "Нужна проверка"
+  end
+
+  def notification_channel_configuration_label(channel)
+    return "Канал готов к отправке." if channel.ready_for_delivery?
+
+    channel.configuration_issues.to_sentence
+  end
+
+  def notification_delivery_filter_options(counts)
+    [
+      ["Все", "all", counts[:all]],
+      ["В очереди", "pending", counts[:pending]],
+      ["Отправлено", "sent", counts[:sent]],
+      ["Ошибки", "failed", counts[:failed]],
+      ["Пропущено", "skipped", counts[:skipped]]
+    ]
   end
 
   def notification_channel_onboarding_steps

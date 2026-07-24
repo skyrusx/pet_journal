@@ -1,15 +1,13 @@
 class NotificationChannelsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_channel, only: %i[edit update destroy test]
+  before_action :set_delivery, only: %i[retry_delivery]
 
   def index
     @channels = current_user.notification_channels.order(:channel_type, :created_at)
-    @deliveries = NotificationDelivery
-                  .joins(reminder: :pet)
-                  .where(pets: { user_id: current_user.id })
-                  .includes(:notification_channel, reminder: :pet)
-                  .recent
-                  .limit(30)
+    @selected_delivery_status = params[:delivery_status].presence_in(%w[all pending sent failed skipped]) || "all"
+    @deliveries = filtered_deliveries.limit(50)
+    @delivery_counts = delivery_counts
     @vapid_public_key = ENV["VAPID_PUBLIC_KEY"]
   end
 
@@ -58,9 +56,24 @@ class NotificationChannelsController < ApplicationController
     end
 
     delivery = reminder.notification_deliveries.create!(notification_channel: @channel)
-    NotificationDeliveryJob.perform_later(delivery)
+    NotificationDeliveryJob.perform_now(delivery)
 
-    redirect_to notification_channels_path, notice: "Тестовая отправка поставлена в очередь."
+    if delivery.reload.status_sent?
+      redirect_to notification_channels_path, notice: "Тестовая отправка выполнена."
+    else
+      redirect_to notification_channels_path, alert: "Тестовая отправка не прошла: #{delivery.error_message}"
+    end
+  end
+
+  def retry_delivery
+    @delivery.reset_for_retry!
+    NotificationDeliveryJob.perform_now(@delivery)
+
+    if @delivery.reload.status_sent?
+      redirect_to notification_channels_path(delivery_status: :sent), notice: "Отправка выполнена повторно."
+    else
+      redirect_to notification_channels_path(delivery_status: @delivery.status), alert: "Повторная отправка не прошла: #{@delivery.error_message}"
+    end
   end
 
   def update_settings
@@ -75,6 +88,10 @@ class NotificationChannelsController < ApplicationController
 
   def set_channel
     @channel = current_user.notification_channels.find(params[:id])
+  end
+
+  def set_delivery
+    @delivery = delivery_scope.find(params[:delivery_id])
   end
 
   def channel_params
@@ -102,5 +119,30 @@ class NotificationChannelsController < ApplicationController
 
   def mark_verification
     @channel.verified_at ||= Time.current if @channel.channel_email?
+  end
+
+  def filtered_deliveries
+    scope = delivery_scope.includes(:notification_channel, reminder: :pet).recent
+    return scope if @selected_delivery_status == "all"
+
+    scope.where(status: NotificationDelivery.statuses.fetch(@selected_delivery_status))
+  end
+
+  def delivery_counts
+    counts = delivery_scope.group(:status).count
+
+    {
+      all: counts.values.sum,
+      pending: counts.fetch("pending", 0),
+      sent: counts.fetch("sent", 0),
+      failed: counts.fetch("failed", 0),
+      skipped: counts.fetch("skipped", 0)
+    }
+  end
+
+  def delivery_scope
+    NotificationDelivery
+      .joins(reminder: :pet)
+      .where(pets: { user_id: current_user.id })
   end
 end

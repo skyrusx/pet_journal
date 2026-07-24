@@ -42,6 +42,9 @@
                     <div class="text-muted small mb-1"><%= channel.channel_type_label %></div>
                     <h3 class="h5 mb-1"><%= channel.name %></h3>
                     <p class="text-muted mb-0"><%= channel.channel_web_push? ? "Браузерная подписка" : channel.address %></p>
+                    <p class="<%= channel.ready_for_delivery? ? "text-muted" : "text-danger" %> small mt-2 mb-0">
+                      <%= notification_channel_configuration_label(channel) %>
+                    </p>
                   </div>
                   <span class="<%= notification_channel_status_class(channel) %>"><%= notification_channel_status_label(channel) %></span>
                 </div>
@@ -78,6 +81,16 @@
           </div>
         </div>
 
+        <div class="filter-chips mb-3">
+          <% notification_delivery_filter_options(@delivery_counts).each do |label, value, count| %>
+            <%= link_to notification_channels_path(delivery_status: value),
+                        class: class_names("filter-chip small", active: @selected_delivery_status == value) do %>
+              <%= label %>
+              <span><%= count %></span>
+            <% end %>
+          <% end %>
+        </div>
+
         <% if @deliveries.any? %>
           <div class="delivery-list">
             <% @deliveries.each do |delivery| %>
@@ -93,7 +106,15 @@
                     <div class="text-danger small"><%= delivery.error_message %></div>
                   <% end %>
                 </div>
-                <span class="<%= notification_delivery_status_class(delivery) %>"><%= notification_delivery_status_label(delivery) %></span>
+                <div class="d-flex flex-column align-items-end gap-2">
+                  <span class="<%= notification_delivery_status_class(delivery) %>"><%= notification_delivery_status_label(delivery) %></span>
+                  <% if delivery.status_failed? || delivery.status_skipped? %>
+                    <%= button_to "Повторить",
+                                  retry_delivery_notification_channels_path(delivery_id: delivery),
+                                  method: :post,
+                                  class: "btn btn-outline-primary btn-sm" %>
+                  <% end %>
+                </div>
               </div>
             <% end %>
           </div>

@@ -46,6 +46,22 @@ class NotificationDispatcherTest < ActiveSupport::TestCase
     end
   end
 
+  test "skips unconfigured channels with diagnostic message" do
+    reminder = reminders(:one)
+    channel = notification_channels(:telegram)
+    channel.update!(enabled: true)
+    reminder.notification_channels << channel
+
+    assert_no_enqueued_jobs do
+      NotificationDispatcher.new.dispatch_reminder(reminder)
+    end
+
+    delivery = reminder.notification_deliveries.order(:created_at).last
+    assert delivery.status_skipped?
+    assert_match "TELEGRAM_BOT_TOKEN", delivery.error_message
+    assert_not_nil reminder.reload.last_notified_at
+  end
+
   test "dispatches due retry deliveries" do
     delivery = notification_deliveries(:pending)
     delivery.update!(attempts_count: 1, next_attempt_at: 1.minute.ago)

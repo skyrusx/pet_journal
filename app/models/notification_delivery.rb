@@ -32,6 +32,14 @@ class NotificationDelivery < ApplicationRecord
     end
   end
 
+  def mark_skipped!(message)
+    update!(status: :skipped, next_attempt_at: nil, error_message: message.to_s)
+  end
+
+  def reset_for_retry!
+    update!(status: :pending, next_attempt_at: nil, error_message: nil)
+  end
+
   def retryable_after_failure?
     attempts_count < MAX_ATTEMPTS
   end

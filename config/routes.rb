@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   devise_for :users
   resources :notification_channels, except: %i[show] do
     post :test, on: :member
+    post "deliveries/:delivery_id/retry", action: :retry_delivery, on: :collection, as: :retry_delivery
     patch :settings, on: :collection, action: :update_settings
   end
   resource :web_push_subscription, only: %i[create destroy]
