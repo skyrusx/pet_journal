@@ -1,0 +1,126 @@
+<% if document.errors.any? %>
+  <div class="flash-stack inline" aria-live="polite" aria-atomic="true">
+    <div class="flash-toast alert" role="alert" data-flash-toast>
+      <div>
+        <strong>Проверьте форму</strong>
+        <p><%= document.errors.full_messages.to_sentence %></p>
+      </div>
+      <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
+    </div>
+  </div>
+<% end %>
+
+<%= form_with(model: [pet, document], class: "structured-form") do |form| %>
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Документ</h2>
+        <p class="text-muted mb-0">Название, тип и основные реквизиты.</p>
+      </div>
+      <span class="required-pill">Название обязательно</span>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-5">
+        <%= form.label :document_type, class: "form-label" %>
+        <%= form.select :document_type, document_type_options, {}, class: "form-select" %>
+      </div>
+
+      <div class="col-md-7">
+        <%= form.label :title, class: "form-label" %>
+        <%= form.text_field :title, class: "form-control", placeholder: "Например: ветпаспорт или анализ крови" %>
+      </div>
+
+      <div class="col-md-6">
+        <%= form.label :issuer, class: "form-label" %>
+        <%= form.text_field :issuer, class: "form-control", placeholder: "Клиника, лаборатория, страховая" %>
+      </div>
+
+      <div class="col-md-6">
+        <%= form.label :number, class: "form-label" %>
+        <%= form.text_field :number, class: "form-control", placeholder: "Номер документа, полиса или справки" %>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Сроки</h2>
+        <p class="text-muted mb-0">Дата выдачи, срок действия и напоминание до окончания.</p>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-md-4">
+        <%= form.label :issued_on, class: "form-label" %>
+        <%= form.date_field :issued_on, class: "form-control" %>
+      </div>
+
+      <div class="col-md-4">
+        <%= form.label :expires_on, class: "form-label" %>
+        <%= form.date_field :expires_on, class: "form-control" %>
+      </div>
+
+      <div class="col-md-4">
+        <%= form.label :expiry_reminder_days, class: "form-label" %>
+        <div class="input-group">
+          <%= form.number_field :expiry_reminder_days, min: 0, max: 365, class: "form-control" %>
+          <span class="input-group-text">дней</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Файлы и заметки</h2>
+        <p class="text-muted mb-0">Можно прикрепить несколько файлов: PDF, фото, сканы или изображения.</p>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :files, class: "form-label" %>
+      <%= form.file_field :files, multiple: true, class: "form-control" %>
+    </div>
+
+    <% if document.persisted? && document.files.attached? %>
+      <div class="attached-files mb-3">
+        <div class="fw-semibold mb-2">Уже прикреплено</div>
+        <div class="d-flex flex-column gap-2">
+          <% document.files.each do |file| %>
+            <%= link_to file.filename.to_s, url_for(file), target: "_blank", rel: "noopener" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <%= form.label :notes, class: "form-label" %>
+    <%= form.text_area :notes, rows: 5, class: "form-control", placeholder: "Что важно помнить по документу" %>
+  </section>
+
+  <section class="form-section">
+    <div class="form-section-heading">
+      <div>
+        <h2 class="h5 mb-1">Связанные действия</h2>
+        <p class="text-muted mb-0">PetJournal может сам создать запись в журнале и напоминание о сроке действия.</p>
+      </div>
+    </div>
+
+    <div class="form-check form-switch mb-3">
+      <%= check_box_tag :create_journal_event, "1", true, class: "form-check-input", role: "switch" %>
+      <%= label_tag :create_journal_event, "Создать или обновить запись в журнале", class: "form-check-label" %>
+    </div>
+
+    <div class="form-check form-switch">
+      <%= check_box_tag :create_expiry_reminder, "1", document.expires_on.present?, class: "form-check-input", role: "switch" %>
+      <%= label_tag :create_expiry_reminder, "Создать или обновить напоминание о сроке действия", class: "form-check-label" %>
+    </div>
+  </section>
+
+  <div class="form-actions">
+    <%= form.submit document.persisted? ? "Сохранить" : "Добавить документ", class: "btn btn-primary" %>
+    <%= link_to "Отмена", pet_pet_documents_path(pet), class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>

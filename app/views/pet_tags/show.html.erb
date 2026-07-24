@@ -18,6 +18,7 @@
     <%= link_to "Обзор", pet_path(@pet), class: "pet-tab" %>
     <%= link_to "Журнал", pet_pet_events_path(@pet), class: "pet-tab" %>
     <%= link_to "Напоминания", pet_reminders_path(@pet), class: "pet-tab" %>
+    <%= link_to "Документы", pet_pet_documents_path(@pet), class: "pet-tab" %>
     <%= link_to "Жетон", pet_pet_tag_path(@pet), class: "pet-tab active" %>
     <%= link_to "Данные", edit_pet_path(@pet), class: "pet-tab" %>
   </nav>

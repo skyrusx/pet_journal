@@ -744,6 +744,41 @@ a {
   padding-bottom: 0;
 }
 
+.document-search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.document-search .form-control {
+  flex: 1 1 280px;
+}
+
+.document-card-grid,
+.document-file-grid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.document-card-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.document-card,
+.document-file-card {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.document-file-card {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
 .completion-list span,
 .compact-list span {
   color: var(--pj-muted);
@@ -1748,6 +1783,10 @@ a {
   .channel-choice-grid {
     grid-template-columns: 1fr;
   }
+
+  .document-card-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 575.98px) {
@@ -1814,6 +1853,17 @@ a {
   .document-row {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .document-file-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .document-file-card .btn,
+  .document-file-card form,
+  .document-search .btn {
+    width: 100%;
   }
 
   .pet-card-main {

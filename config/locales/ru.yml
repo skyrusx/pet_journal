@@ -51,6 +51,7 @@ ru:
       pet_event: "Событие"
       pet_tag: "Жетон"
       pet_tag_scan: "Сканирование жетона"
+      pet_document: "Документ"
     attributes:
       user:
         email: "Эл. почта"
@@ -96,6 +97,16 @@ ru:
         latitude: "Широта"
         longitude: "Долгота"
         location_note: "Ориентир"
+      pet_document:
+        document_type: "Тип документа"
+        title: "Название"
+        issuer: "Кем выдан"
+        number: "Номер"
+        issued_on: "Дата выдачи"
+        expires_on: "Действует до"
+        expiry_reminder_days: "Напомнить за"
+        notes: "Заметки"
+        files: "Файлы"
       reminder:
         title: "Название"
         reminder_type: "Тип"
@@ -176,3 +187,13 @@ ru:
       sent: "Отправлено"
       failed: "Ошибка"
       skipped: "Пропущено"
+  pet_documents:
+    types:
+      other: "Другое"
+      passport: "Ветпаспорт"
+      vaccination: "Прививка"
+      lab_result: "Анализы"
+      prescription: "Назначение"
+      certificate: "Справка"
+      receipt: "Чек"
+      insurance: "Страховка"

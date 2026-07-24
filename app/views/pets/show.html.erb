@@ -44,9 +44,7 @@
     <%= link_to "Обзор", pet_path(@pet), class: "pet-tab active" %>
     <%= link_to "Журнал", pet_pet_events_path(@pet), class: "pet-tab" %>
     <%= link_to "Напоминания", pet_reminders_path(@pet), class: "pet-tab" %>
-    <% if @attached_files_count.positive? %>
-      <a href="#documents" class="pet-tab">Документы</a>
-    <% end %>
+    <%= link_to "Документы", pet_pet_documents_path(@pet), class: "pet-tab" %>
     <%= link_to "Жетон", pet_pet_tag_path(@pet), class: "pet-tab" %>
     <a href="#details" class="pet-tab">Данные</a>
   </nav>
@@ -118,26 +116,33 @@
         <% end %>
       </div>
 
-      <% if @attached_files_count.positive? %>
-        <section id="documents" class="workspace-section">
+      <% if @documents_count.positive? || @attached_files_count.positive? %>
+        <section class="workspace-section">
           <div class="section-heading compact">
             <div>
               <div class="text-muted small mb-1">Документы</div>
-              <h2 class="h4 mb-0"><%= @attached_files_count %> <%= russian_plural(@attached_files_count, "файл", "файла", "файлов") %></h2>
+              <h2 class="h4 mb-0"><%= @documents_count %> <%= russian_plural(@documents_count, "документ", "документа", "документов") %></h2>
             </div>
+            <%= link_to "Все документы", pet_pet_documents_path(@pet), class: "btn btn-outline-primary btn-sm" %>
           </div>
 
           <div class="document-list">
-            <% @document_events.each do |event| %>
+            <% @document_events.each do |document| %>
               <div class="document-row">
                 <div>
-                  <div class="fw-semibold"><%= event.title.presence || event.event_type_label %></div>
-                  <div class="text-muted small"><%= event.event_date.strftime("%d.%m.%Y") %> · <%= event.files.count %> <%= russian_plural(event.files.count, "файл", "файла", "файлов") %></div>
+                  <div class="fw-semibold"><%= document.title %></div>
+                  <div class="text-muted small"><%= document.document_type_label %> · <%= document.files.count %> <%= russian_plural(document.files.count, "файл", "файла", "файлов") %></div>
                 </div>
-                <%= link_to "Открыть", pet_pet_event_path(@pet, event), class: "btn btn-outline-secondary btn-sm" %>
+                <%= link_to "Открыть", pet_pet_document_path(@pet, document), class: "btn btn-outline-secondary btn-sm" %>
               </div>
             <% end %>
           </div>
+
+          <% if @documents_count.zero? && @attached_files_count.positive? %>
+            <p class="text-muted mb-0 mt-3">В журнале есть вложения. Они доступны в разделе документов как файлы событий.</p>
+          <% elsif @expiring_documents_count.positive? %>
+            <p class="text-muted mb-0 mt-3"><%= @expiring_documents_count %> <%= russian_plural(@expiring_documents_count, "документ скоро истекает", "документа скоро истекают", "документов скоро истекают") %>.</p>
+          <% end %>
         </section>
       <% end %>
     </section>

@@ -1,0 +1,88 @@
+<div class="py-4">
+  <div class="page-heading mb-4">
+    <div>
+      <div class="text-muted small mb-1"><%= @pet.name %> · <%= @document.document_type_label %></div>
+      <h1 class="h3 mb-1"><%= @document.title %></h1>
+      <p class="text-muted mb-0"><%= [@document.issuer.presence, @document.number.presence].compact.join(" · ").presence || "Реквизиты не указаны" %></p>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2">
+      <%= link_to "Редактировать", edit_pet_pet_document_path(@pet, @document), class: "btn btn-primary" %>
+      <%= link_to "К документам", pet_pet_documents_path(@pet), class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <section class="col-lg-7">
+      <div class="workspace-section mb-4">
+        <div class="section-heading compact">
+          <h2 class="h4 mb-0">Детали</h2>
+          <span class="<%= document_status_class(@document) %>"><%= @document.status_label %></span>
+        </div>
+
+        <dl class="details-list">
+          <div><dt>Тип</dt><dd><%= @document.document_type_label %></dd></div>
+          <div><dt>Кем выдан</dt><dd><%= @document.issuer.presence || "—" %></dd></div>
+          <div><dt>Номер</dt><dd><%= @document.number.presence || "—" %></dd></div>
+          <div><dt>Дата выдачи</dt><dd><%= @document.issued_on&.strftime("%d.%m.%Y") || "—" %></dd></div>
+          <div><dt>Действует до</dt><dd><%= @document.expires_on&.strftime("%d.%m.%Y") || "—" %></dd></div>
+          <div><dt>Напоминание</dt><dd><%= @document.reminder.present? ? link_to(@document.reminder.title, pet_reminder_path(@pet, @document.reminder)) : "—" %></dd></div>
+          <div><dt>Запись журнала</dt><dd><%= @document.pet_event.present? ? link_to(@document.pet_event.title.presence || @document.pet_event.event_type_label, pet_pet_event_path(@pet, @document.pet_event)) : "—" %></dd></div>
+        </dl>
+
+        <% if @document.notes.present? %>
+          <div class="notes-box">
+            <div class="fw-semibold mb-1">Заметки</div>
+            <div class="text-muted"><%= simple_format(@document.notes) %></div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="workspace-section">
+        <div class="section-heading compact">
+          <h2 class="h4 mb-0">Файлы</h2>
+          <span class="status-pill muted"><%= document_file_label(@document) %></span>
+        </div>
+
+        <% if @document.files.attached? %>
+          <div class="document-file-grid">
+            <% @document.files.each do |file| %>
+              <div class="document-file-card">
+                <div>
+                  <div class="fw-semibold"><%= file.filename.to_s %></div>
+                  <div class="text-muted small"><%= number_to_human_size(file.byte_size) %></div>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                  <%= link_to "Открыть", url_for(file), target: "_blank", rel: "noopener", class: "btn btn-outline-primary btn-sm" %>
+                  <%= button_to "Удалить",
+                                file_pet_pet_document_path(@pet, @document, file),
+                                method: :delete,
+                                class: "btn btn-outline-danger btn-sm",
+                                form: { onsubmit: "return confirm('Удалить файл?')" } %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">Файлы не прикреплены.</p>
+        <% end %>
+      </div>
+    </section>
+
+    <aside class="col-lg-5">
+      <div class="action-panel">
+        <div class="text-muted small mb-1">Автоматизация</div>
+        <h2 class="h4 mb-3">Связанные записи</h2>
+        <p class="text-muted mb-3">При редактировании можно обновить запись в журнале и напоминание о сроке действия.</p>
+        <div class="d-flex flex-wrap gap-2">
+          <%= link_to "Изменить связи", edit_pet_pet_document_path(@pet, @document), class: "btn btn-outline-primary btn-sm" %>
+          <%= button_to "Удалить документ",
+                        pet_pet_document_path(@pet, @document),
+                        method: :delete,
+                        class: "btn btn-outline-danger btn-sm",
+                        form: { onsubmit: "return confirm('Удалить документ?')" } %>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

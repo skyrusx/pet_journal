@@ -1,0 +1,137 @@
+<div class="documents-page py-4">
+  <section class="journal-hero mb-4">
+    <div>
+      <div class="text-muted small mb-1"><%= @pet.name %></div>
+      <h1 class="h3 mb-2">Документы</h1>
+      <p class="text-muted mb-0">Паспорта, прививки, анализы, назначения, чеки и файлы из журнала в одном рабочем разделе.</p>
+    </div>
+
+    <div class="journal-hero-stats">
+      <div>
+        <span><%= @document_counts[:total] %></span>
+        <small>документов</small>
+      </div>
+      <div>
+        <span><%= @document_counts[:expiring] %></span>
+        <small>скоро истекают</small>
+      </div>
+    </div>
+
+    <div class="journal-hero-actions">
+      <%= link_to "Добавить документ", new_pet_pet_document_path(@pet), class: "btn btn-primary" %>
+      <%= link_to "Обзор питомца", pet_path(@pet), class: "btn btn-outline-secondary" %>
+    </div>
+  </section>
+
+  <nav class="pet-tabs mb-4" aria-label="Навигация питомца">
+    <%= link_to "Обзор", pet_path(@pet), class: "pet-tab" %>
+    <%= link_to "Журнал", pet_pet_events_path(@pet), class: "pet-tab" %>
+    <%= link_to "Напоминания", pet_reminders_path(@pet), class: "pet-tab" %>
+    <%= link_to "Документы", pet_pet_documents_path(@pet), class: "pet-tab active" %>
+    <%= link_to "Жетон", pet_pet_tag_path(@pet), class: "pet-tab" %>
+    <%= link_to "Данные", edit_pet_path(@pet), class: "pet-tab" %>
+  </nav>
+
+  <div class="filter-panel mb-4">
+    <%= form_with url: pet_pet_documents_path(@pet), method: :get, class: "document-search" do |form| %>
+      <%= hidden_field_tag :status, @selected_status %>
+      <%= hidden_field_tag :type, @selected_type %>
+      <%= form.search_field :q, value: @query, class: "form-control", placeholder: "Поиск по названию, номеру, клинике или заметкам" %>
+      <%= form.submit "Найти", class: "btn btn-outline-primary" %>
+      <% if @query.present? %>
+        <%= link_to "Сбросить", pet_pet_documents_path(@pet, status: @selected_status, type: @selected_type), class: "btn btn-outline-secondary" %>
+      <% end %>
+    <% end %>
+
+    <div class="filter-chips mt-3">
+      <% document_status_filters(@pet, @selected_status, @selected_type, @query).each do |label, path, active| %>
+        <%= link_to label, path, class: reminder_filter_class(active) %>
+      <% end %>
+    </div>
+
+    <div class="filter-chips mt-3">
+      <% document_type_filters(@pet, @selected_type, @selected_status, @query).each do |label, path, active| %>
+        <%= link_to label, path || pet_pet_documents_path(@pet, status: @selected_status, q: @query.presence), class: reminder_filter_class(active) %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <section class="col-lg-8">
+      <div class="workspace-section">
+        <div class="section-heading">
+          <div>
+            <div class="text-muted small mb-1">Хранилище</div>
+            <h2 class="h4 mb-0">Документы питомца</h2>
+          </div>
+        </div>
+
+        <% if @documents.any? %>
+          <div class="document-card-grid">
+            <% @documents.each do |document| %>
+              <article class="document-card">
+                <div class="d-flex justify-content-between gap-3 align-items-start mb-3">
+                  <div>
+                    <span class="event-badge"><%= document.document_type_label %></span>
+                    <h3 class="h5 mt-2 mb-1"><%= link_to document.title, pet_pet_document_path(@pet, document), class: "text-dark text-decoration-none" %></h3>
+                    <p class="text-muted mb-0"><%= [document.issuer.presence, document.number.presence].compact.join(" · ").presence || "Реквизиты не указаны" %></p>
+                  </div>
+                  <span class="<%= document_status_class(document) %>"><%= document.status_label %></span>
+                </div>
+
+                <div class="compact-list">
+                  <div><span>Файлы</span><strong><%= document_file_label(document) %></strong></div>
+                  <div><span>Выдан</span><strong><%= document.issued_on&.strftime("%d.%m.%Y") || "—" %></strong></div>
+                  <div><span>Действует до</span><strong><%= document.expires_on&.strftime("%d.%m.%Y") || "—" %></strong></div>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                  <%= link_to "Открыть", pet_pet_document_path(@pet, document), class: "btn btn-outline-primary btn-sm" %>
+                  <%= link_to "Изменить", edit_pet_pet_document_path(@pet, document), class: "btn btn-outline-secondary btn-sm" %>
+                </div>
+              </article>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="empty-state-inline">
+            <h3 class="h5 mb-2">Документы не найдены</h3>
+            <p class="text-muted mb-3">Добавьте документ напрямую или сбросьте фильтры поиска.</p>
+            <%= link_to "Добавить документ", new_pet_pet_document_path(@pet), class: "btn btn-primary btn-sm" %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <aside class="col-lg-4">
+      <div class="action-panel mb-4">
+        <div class="text-muted small mb-1">Сроки</div>
+        <h2 class="h4 mb-3">Контроль действия</h2>
+        <div class="compact-list">
+          <div><span>Просрочено</span><strong><%= @document_counts[:expired] %></strong></div>
+          <div><span>Скоро истекает</span><strong><%= @document_counts[:expiring] %></strong></div>
+          <div><span>Файлы из журнала</span><strong><%= @document_counts[:legacy_files] %></strong></div>
+        </div>
+      </div>
+
+      <div class="action-panel">
+        <div class="text-muted small mb-1">Вложения журнала</div>
+        <h2 class="h4 mb-3">Файлы из событий</h2>
+        <% if @event_file_events.any? %>
+          <div class="document-list">
+            <% @event_file_events.each do |event| %>
+              <div class="document-row">
+                <div>
+                  <div class="fw-semibold"><%= event.title.presence || event.event_type_label %></div>
+                  <div class="text-muted small"><%= event.event_date.strftime("%d.%m.%Y") %> · <%= event.files.count %> <%= russian_plural(event.files.count, "файл", "файла", "файлов") %></div>
+                </div>
+                <%= link_to "Открыть", pet_pet_event_path(@pet, event), class: "btn btn-outline-secondary btn-sm" %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">Вложений в событиях пока нет.</p>
+        <% end %>
+      </div>
+    </aside>
+  </div>
+</div>

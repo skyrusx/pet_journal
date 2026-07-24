@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_23_103000) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_24_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -70,6 +70,27 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_23_103000) do
     t.index ["reminder_id", "notification_channel_id", "created_at"], name: "index_deliveries_on_reminder_channel_created_at"
     t.index ["reminder_id"], name: "index_notification_deliveries_on_reminder_id"
     t.index ["status", "next_attempt_at"], name: "index_notification_deliveries_on_status_and_next_attempt_at"
+  end
+
+  create_table "pet_documents", force: :cascade do |t|
+    t.bigint "pet_id", null: false
+    t.bigint "pet_event_id"
+    t.bigint "reminder_id"
+    t.integer "document_type", default: 0, null: false
+    t.string "title", null: false
+    t.string "issuer"
+    t.string "number"
+    t.date "issued_on"
+    t.date "expires_on"
+    t.integer "expiry_reminder_days", default: 14, null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expires_on"], name: "index_pet_documents_on_expires_on"
+    t.index ["pet_event_id"], name: "index_pet_documents_on_pet_event_id"
+    t.index ["pet_id", "document_type"], name: "index_pet_documents_on_pet_id_and_document_type"
+    t.index ["pet_id"], name: "index_pet_documents_on_pet_id"
+    t.index ["reminder_id"], name: "index_pet_documents_on_reminder_id"
   end
 
   create_table "pet_events", force: :cascade do |t|
@@ -201,6 +222,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_23_103000) do
   add_foreign_key "notification_channels", "users"
   add_foreign_key "notification_deliveries", "notification_channels"
   add_foreign_key "notification_deliveries", "reminders"
+  add_foreign_key "pet_documents", "pet_events"
+  add_foreign_key "pet_documents", "pets"
+  add_foreign_key "pet_documents", "reminders"
   add_foreign_key "pet_events", "pets"
   add_foreign_key "pet_tag_scans", "pet_tags"
   add_foreign_key "pet_tags", "pets"

@@ -1,0 +1,25 @@
+passport:
+  pet: one
+  pet_event:
+  reminder:
+  document_type: 1
+  title: Ветпаспорт
+  issuer: Клиника
+  number: VP-001
+  issued_on: 2026-01-10
+  expires_on:
+  expiry_reminder_days: 14
+  notes: Основной документ
+
+expiring:
+  pet: one
+  pet_event:
+  reminder:
+  document_type: 2
+  title: Прививка от бешенства
+  issuer: Ветклиника
+  number: VAC-001
+  issued_on: <%= 6.months.ago.to_date %>
+  expires_on: <%= 10.days.from_now.to_date %>
+  expiry_reminder_days: 14
+  notes: Проверить ревакцинацию

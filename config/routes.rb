@@ -34,6 +34,9 @@ Rails.application.routes.draw do
       get "qr.:format" => "pet_tags#qr", as: :qr, constraints: { format: /svg|png/ }
     end
     resources :pet_events, path: :events
+    resources :pet_documents, path: :documents do
+      delete "files/:attachment_id", action: :destroy_file, on: :member, as: :file
+    end
     resources :reminders do
       patch :complete, on: :member
       patch :pause, on: :member

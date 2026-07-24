@@ -46,7 +46,8 @@ module PetEventsHelper
       "treatment" => "warning",
       "visit" => "info",
       "illness" => "danger",
-      "weight" => "neutral"
+      "weight" => "neutral",
+      "document" => "info"
     }.fetch(event_type.to_s, "neutral")
   end
 
@@ -57,7 +58,8 @@ module PetEventsHelper
       "treatment" => "Обработка, лекарства, процедуры и уход.",
       "visit" => "Приемы у врача, рекомендации и назначения.",
       "illness" => "Симптомы, ухудшение самочувствия и лечение.",
-      "weight" => "Контроль веса и динамика изменений."
+      "weight" => "Контроль веса и динамика изменений.",
+      "document" => "Паспорт, анализ, справка, назначение или чек."
     }.fetch(event_type.to_s, "Запись в журнале питомца.")
   end
 

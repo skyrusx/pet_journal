@@ -11,11 +11,9 @@ class PetsController < ApplicationController
     @recent_events = @pet.pet_events.with_attached_files.order(event_date: :desc, created_at: :desc).limit(5)
     @latest_events_by_type = latest_events_by_type(@pet)
     @attached_files_count = @pet.pet_events.joins(:files_attachments).count
-    @document_events = @pet.pet_events.joins(:files_attachments)
-                           .with_attached_files
-                           .order(event_date: :desc, created_at: :desc)
-                           .distinct
-                           .limit(3)
+    @documents_count = @pet.pet_documents.count
+    @document_events = @pet.pet_documents.with_attached_files.order(created_at: :desc).limit(3)
+    @expiring_documents_count = @pet.pet_documents.expires_soon.count
     @pet_tag = @pet.pet_tag
     @latest_pet_tag_scan = @pet_tag&.pet_tag_scans&.order(created_at: :desc)&.first
     @pet_tag_scan_count = @pet_tag&.pet_tag_scans&.count.to_i
