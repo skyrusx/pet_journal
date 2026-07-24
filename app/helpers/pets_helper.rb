@@ -108,4 +108,28 @@ module PetsHelper
 
     ((completed.to_f / items.size) * 100).round
   end
+
+  def pet_dashboard_metric_value(event)
+    return "—" if event.blank?
+
+    event.event_date.strftime("%d.%m")
+  end
+
+  def pet_dashboard_metric_note(event, fallback = "Записей пока нет")
+    return fallback if event.blank?
+
+    truncate(event.title.presence || event.event_type_label, length: 42)
+  end
+
+  def pet_share_signal(active_count, views_count, latest_view)
+    if active_count.positive? && latest_view.present?
+      "Последний просмотр #{latest_view.created_at.strftime("%d.%m.%Y %H:%M")}"
+    elsif active_count.positive?
+      "#{active_count} #{russian_plural(active_count, "активная ссылка", "активные ссылки", "активных ссылок")}"
+    elsif views_count.positive?
+      "Все ссылки сейчас отключены"
+    else
+      "Создайте ссылку, чтобы показать профиль без входа в аккаунт"
+    end
+  end
 end

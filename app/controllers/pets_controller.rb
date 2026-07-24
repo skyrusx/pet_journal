@@ -13,13 +13,23 @@ class PetsController < ApplicationController
     @attached_files_count = @pet.pet_events.joins(:files_attachments).count
     @documents_count = @pet.pet_documents.count
     @document_events = @pet.pet_documents.with_attached_files.order(created_at: :desc).limit(3)
+    @expiring_documents = @pet.pet_documents.expires_soon.limit(3)
     @expiring_documents_count = @pet.pet_documents.expires_soon.count
     @pet_tag = @pet.pet_tag
     @latest_pet_tag_scan = @pet_tag&.pet_tag_scans&.order(created_at: :desc)&.first
     @pet_tag_scan_count = @pet_tag&.pet_tag_scans&.count.to_i
     @next_reminder = @pet.reminders.status_active.order(:next_run_at).first
+    @upcoming_reminders = @pet.reminders.status_active.order(:next_run_at).limit(3)
     @overdue_reminders_count = @pet.reminders.overdue.count
     @today_reminders_count = @pet.reminders.status_active.where(next_run_at: Time.current.beginning_of_day..Time.current.end_of_day).count
+    @active_profile_shares = @pet.pet_profile_shares.active.order(created_at: :desc).limit(3)
+    @profile_shares_count = @pet.pet_profile_shares.count
+    @active_profile_shares_count = @pet.pet_profile_shares.active.count
+    @profile_share_views_count = PetProfileShareView.joins(:pet_profile_share).where(pet_profile_shares: { pet_id: @pet.id }).count
+    @latest_profile_share_view = PetProfileShareView.joins(:pet_profile_share)
+                                                    .where(pet_profile_shares: { pet_id: @pet.id })
+                                                    .order(created_at: :desc)
+                                                    .first
   end
 
   def new

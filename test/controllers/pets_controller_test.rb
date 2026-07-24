@@ -17,6 +17,10 @@ class PetsControllerTest < ActionDispatch::IntegrationTest
     get pet_url(@pet)
 
     assert_response :success
+    assert_select ".dashboard-hero"
+    assert_select ".dashboard-metric", minimum: 5
+    assert_select ".dashboard-section", text: /Публичный доступ/
+    assert_select ".dashboard-section", text: /PetTag/
   end
 
   test "should get new" do
