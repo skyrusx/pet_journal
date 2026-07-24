@@ -3,8 +3,8 @@
     <div class="flash-stack" aria-live="polite" aria-atomic="true">
       <div class="flash-toast alert" role="alert" data-flash-toast>
         <div>
-          <strong>Проверь форму</strong>
-          <p><%= @pet.errors.full_messages.join(". ") %></p>
+          <strong>Проверьте форму</strong>
+          <p><%= @pet.errors.full_messages.to_sentence %></p>
         </div>
         <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
       </div>

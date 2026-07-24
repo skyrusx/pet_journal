@@ -1,26 +1,48 @@
-<div class="py-4">
-  <div class="page-heading mb-4">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1"><%= @reminder.title %></h1>
-      <p class="text-muted mb-0"><%= @reminder.reminder_type_label %> · <%= @reminder.repeat_rule_label %></p>
+<div class="reminder-detail-page py-4">
+  <section class="reminders-hero mb-4">
+    <div class="reminders-hero-main">
+      <div>
+        <div class="text-muted small mb-1"><%= @pet.name %> · <%= @reminder.reminder_type_label %></div>
+        <h1 class="h3 mb-2"><%= @reminder.title %></h1>
+        <p class="text-muted mb-0"><%= @reminder.repeat_rule_label %></p>
+      </div>
+
+      <div class="reminders-current-signal <%= @reminder.overdue? ? "danger" : (@reminder.due_today? ? "warning" : "success") %>">
+        <span>Статус</span>
+        <h2><%= reminder_status_label(@reminder) %></h2>
+        <p>Следующая отправка <%= l(@reminder.next_run_at) %>.</p>
+      </div>
     </div>
 
-    <div class="d-flex flex-wrap gap-2">
+    <div class="reminders-metrics">
+      <div><span><%= @completions.size %></span><small>выполнений</small></div>
+      <div><span><%= @deliveries.size %></span><small>доставок</small></div>
+      <div><span><%= @reminder.notification_channels.size %></span><small>каналов</small></div>
+      <div><span><%= @reminder.last_completed_at.present? ? @reminder.last_completed_at.strftime("%d.%m") : "—" %></span><small>выполнено</small></div>
+      <div><span><%= @reminder.last_notified_at.present? ? @reminder.last_notified_at.strftime("%d.%m") : "—" %></span><small>отправлено</small></div>
+      <div><span><%= I18n.t("reminders.statuses.#{@reminder.status}") %></span><small>режим</small></div>
+    </div>
+
+    <div class="reminders-quick-actions">
       <%= link_to "Редактировать", edit_pet_reminder_path(@pet, @reminder), class: "btn btn-primary" %>
       <%= link_to "К списку", pet_reminders_path(@pet), class: "btn btn-outline-secondary" %>
+      <% unless @reminder.status_completed? %>
+        <%= button_to "Выполнить", complete_pet_reminder_path(@pet, @reminder), method: :patch, class: "btn btn-outline-primary btn-sm" %>
+        <%= button_to "Выполнить + запись", complete_pet_reminder_path(@pet, @reminder, create_event: "1"), method: :patch, class: "btn btn-primary btn-sm" %>
+        <%= button_to "Отложить на завтра", snooze_pet_reminder_path(@pet, @reminder, preset: "tomorrow"), method: :patch, class: "btn btn-outline-secondary btn-sm" %>
+      <% end %>
     </div>
-  </div>
+  </section>
 
-  <div class="row g-4">
-    <section class="col-lg-7">
-      <div class="workspace-section">
+  <div class="reminders-layout">
+    <section class="reminders-main">
+      <div class="dashboard-section">
         <div class="section-heading compact">
           <h2 class="h4 mb-0">Детали</h2>
           <span class="<%= reminder_status_class(@reminder) %>"><%= reminder_status_label(@reminder) %></span>
         </div>
 
-        <dl class="details-list">
+        <dl class="details-list dashboard-details">
           <div><dt>Следующая отправка</dt><dd><%= l(@reminder.next_run_at) %></dd></div>
           <div><dt>Первый срок</dt><dd><%= l(@reminder.remind_at) %></dd></div>
           <div><dt>Повтор</dt><dd><%= @reminder.repeat_rule_label %></dd></div>
@@ -44,31 +66,9 @@
             <div class="text-muted"><%= simple_format(@reminder.note) %></div>
           </div>
         <% end %>
-
-        <div class="d-flex flex-wrap gap-2 mt-4">
-          <%= button_to "Выполнить без записи",
-                        complete_pet_reminder_path(@pet, @reminder),
-                        method: :patch,
-                        class: "btn btn-outline-primary" %>
-          <%= button_to "Выполнить и создать запись",
-                        complete_pet_reminder_path(@pet, @reminder, create_event: "1"),
-                        method: :patch,
-                        class: "btn btn-primary" %>
-          <%= button_to "Отложить на завтра",
-                        snooze_pet_reminder_path(@pet, @reminder, preset: "tomorrow"),
-                        method: :patch,
-                        class: "btn btn-outline-secondary" %>
-          <%= button_to "Удалить",
-                        pet_reminder_path(@pet, @reminder),
-                        method: :delete,
-                        class: "btn btn-outline-danger",
-                        form: { onsubmit: "return confirm('Удалить напоминание?')" } %>
-        </div>
       </div>
-    </section>
 
-    <aside class="col-lg-5">
-      <div class="action-panel mb-4">
+      <div class="dashboard-section">
         <div class="section-heading compact">
           <div>
             <div class="text-muted small mb-1">Выполнения</div>
@@ -87,15 +87,18 @@
                     <div class="text-muted small"><%= completion.note %></div>
                   <% end %>
                 </div>
+                <span class="status-pill success">Выполнено</span>
               </div>
             <% end %>
           </div>
         <% else %>
-          <p class="text-muted mb-0">Выполнений пока не было.</p>
+          <div class="empty-state-inline">Выполнений пока не было.</div>
         <% end %>
       </div>
+    </section>
 
-      <div class="action-panel">
+    <aside class="reminders-side">
+      <section class="dashboard-section">
         <div class="section-heading compact">
           <div>
             <div class="text-muted small mb-1">Доставки</div>
@@ -125,7 +128,24 @@
         <% else %>
           <p class="text-muted mb-0">Отправок пока не было.</p>
         <% end %>
-      </div>
+      </section>
+
+      <section class="dashboard-section">
+        <div class="text-muted small mb-1">Управление</div>
+        <h2 class="h4 mb-3">Действия</h2>
+        <div class="d-grid gap-2">
+          <% if @reminder.status_paused? %>
+            <%= button_to "Включить", resume_pet_reminder_path(@pet, @reminder), method: :patch, class: "btn btn-outline-primary btn-sm" %>
+          <% elsif !@reminder.status_completed? %>
+            <%= button_to "Пауза", pause_pet_reminder_path(@pet, @reminder), method: :patch, class: "btn btn-outline-secondary btn-sm" %>
+          <% end %>
+          <%= button_to "Удалить",
+                        pet_reminder_path(@pet, @reminder),
+                        method: :delete,
+                        class: "btn btn-outline-danger btn-sm",
+                        form: { onsubmit: "return confirm('Удалить напоминание?')" } %>
+        </div>
+      </section>
     </aside>
   </div>
 </div>

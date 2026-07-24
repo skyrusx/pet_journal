@@ -12,6 +12,24 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
     get pet_reminders_url(@pet)
 
     assert_response :success
+    assert_select ".reminders-hero"
+    assert_select ".reminders-filter-panel"
+    assert_select ".reminders-metrics > div", count: 6
+  end
+
+  test "should show reminder" do
+    get pet_reminder_url(@pet, @reminder)
+
+    assert_response :success
+    assert_select ".reminder-detail-page"
+    assert_select ".reminders-metrics > div", count: 6
+  end
+
+  test "should get new with preset type" do
+    get new_pet_reminder_url(@pet, type: "vaccination")
+
+    assert_response :success
+    assert_select "select[name='reminder[reminder_type]'] option[selected='selected']", text: /Прививка/
   end
 
   test "should create reminder" do

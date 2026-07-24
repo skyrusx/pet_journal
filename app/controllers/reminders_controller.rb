@@ -8,10 +8,13 @@ class RemindersController < ApplicationController
     @selected_status = params[:status].presence_in(%w[all active today overdue paused completed]) || "active"
     @selected_type = params[:type].presence_in(Reminder.reminder_types.keys)
     @reminders = filtered_reminders
+    @total_count = @pet.reminders.count
     @active_count = @pet.reminders.status_active.count
     @today_count = @pet.reminders.status_active.where(next_run_at: Time.current.beginning_of_day..Time.current.end_of_day).count
     @overdue_count = @pet.reminders.overdue.count
     @paused_count = @pet.reminders.status_paused.count
+    @completed_count = @pet.reminders.status_completed.count
+    @next_reminder = @pet.reminders.status_active.order(:next_run_at).first
     @completed_reminders = @pet.reminders.status_completed.order(last_completed_at: :desc).limit(10)
   end
 
@@ -21,7 +24,10 @@ class RemindersController < ApplicationController
   end
 
   def new
-    @reminder = @pet.reminders.new(remind_at: 1.day.from_now.change(sec: 0))
+    @reminder = @pet.reminders.new(
+      reminder_type: params[:type].presence_in(Reminder.reminder_types.keys) || :other,
+      remind_at: 1.day.from_now.change(sec: 0)
+    )
   end
 
   def create

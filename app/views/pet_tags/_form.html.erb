@@ -7,7 +7,7 @@
     <div class="flash-stack" aria-live="polite" aria-atomic="true">
       <div class="flash-toast alert" role="alert" data-flash-toast>
         <div>
-          <strong>Проверь форму</strong>
+          <strong>Проверьте форму</strong>
           <p><%= @pet_tag.errors.full_messages.join(". ") %></p>
         </div>
         <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
@@ -32,7 +32,7 @@
     </div>
 
     <div class="form-hint mb-3">
-      На public page не показывается email владельца. Телефон появится только если вы включите его ниже.
+      На публичной странице не показывается эл. почта владельца. Телефон появится только если вы включите его ниже.
     </div>
 
     <div class="mb-3">
@@ -61,7 +61,7 @@
 
     <div class="form-check form-switch mt-3">
       <%= f.check_box :show_medical_notes, class: "form-check-input", role: "switch" %>
-      <%= f.label :show_medical_notes, "Показывать медицинские заметки на public page", class: "form-check-label" %>
+      <%= f.label :show_medical_notes, "Показывать медицинские заметки на публичной странице", class: "form-check-label" %>
     </div>
   </section>
 
@@ -131,7 +131,7 @@
     </div>
 
     <div class="form-hint mt-3">
-      Уведомления о геолокации отправляются всегда, когда человек добровольно передает место через public page.
+      Уведомления о геолокации отправляются всегда, когда человек добровольно передает место через публичную страницу.
     </div>
 
     <% if @notification_channels&.any? %>

@@ -1838,6 +1838,125 @@ a {
   justify-content: flex-end;
 }
 
+.reminders-hero {
+  background: linear-gradient(135deg, var(--pj-surface) 0%, var(--pj-surface-strong) 100%);
+  border: 1px solid var(--pj-border);
+  border-radius: 14px;
+  box-shadow: var(--pj-shadow);
+  padding: 1.25rem;
+}
+
+.reminders-hero-main {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.72fr);
+}
+
+.reminders-current-signal {
+  background: var(--pj-teal-soft);
+  border: 1px solid color-mix(in srgb, var(--pj-teal) 22%, var(--pj-border));
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.reminders-current-signal.danger {
+  background: var(--pj-danger-soft);
+  border-color: color-mix(in srgb, var(--pj-danger) 28%, var(--pj-border));
+}
+
+.reminders-current-signal.warning {
+  background: var(--pj-amber-soft);
+  border-color: color-mix(in srgb, var(--pj-amber) 28%, var(--pj-border));
+}
+
+.reminders-current-signal span {
+  color: var(--pj-teal);
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-bottom: 0.55rem;
+  text-transform: uppercase;
+}
+
+.reminders-current-signal.danger span {
+  color: var(--pj-danger);
+}
+
+.reminders-current-signal.warning span {
+  color: var(--pj-amber);
+}
+
+.reminders-current-signal h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.4rem;
+}
+
+.reminders-current-signal p {
+  color: var(--pj-muted);
+  margin-bottom: 0;
+}
+
+.reminders-metrics {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+.reminders-metrics > div {
+  background: var(--pj-soft);
+  border: 1px solid var(--pj-border);
+  border-radius: 10px;
+  padding: 0.85rem;
+}
+
+.reminders-metrics span {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.reminders-metrics small {
+  color: var(--pj-muted);
+}
+
+.reminders-quick-actions {
+  border-top: 1px solid var(--pj-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.reminders-filter-panel {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  box-shadow: var(--pj-shadow);
+  padding: 1rem;
+}
+
+.reminders-filter-grid,
+.reminders-main,
+.reminders-side {
+  display: grid;
+  gap: 1rem;
+}
+
+.reminders-layout {
+  align-items: start;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+}
+
+.reminders-side {
+  position: sticky;
+  top: 5rem;
+}
+
 .channel-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -2089,9 +2208,15 @@ a {
 
 .form-actions {
   align-items: center;
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  box-shadow: var(--pj-shadow);
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  justify-content: flex-end;
+  padding: 1rem;
 }
 
 .form-hint {
@@ -2586,13 +2711,17 @@ a {
   .journal-metrics,
   .documents-hero-main,
   .documents-metrics,
-  .documents-layout {
+  .documents-layout,
+  .reminders-hero-main,
+  .reminders-metrics,
+  .reminders-layout {
     grid-template-columns: 1fr;
   }
 
   .dashboard-side,
   .home-side,
-  .documents-side {
+  .documents-side,
+  .reminders-side {
     position: static;
   }
 
@@ -2729,7 +2858,9 @@ a {
   .journal-event-actions .btn,
   .documents-quick-actions .btn,
   .documents-page .document-search .btn,
-  .document-card-actions .btn {
+  .document-card-actions .btn,
+  .reminders-quick-actions .btn,
+  .form-actions .btn {
     width: 100%;
   }
 

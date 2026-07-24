@@ -69,4 +69,28 @@ module RemindersHelper
       "Без записи"
     end
   end
+
+  def reminder_filter_summary(selected_status, selected_type)
+    filters = []
+    filters << {
+      "active" => "активные",
+      "today" => "сегодня",
+      "overdue" => "просроченные",
+      "paused" => "на паузе",
+      "completed" => "выполненные"
+    }[selected_status]
+    filters << I18n.t("reminders.types.#{selected_type}") if selected_type.present?
+
+    filters.compact.presence&.join(" · ") || "все напоминания"
+  end
+
+  def quick_reminder_actions(pet)
+    [
+      ["Лекарство", new_pet_reminder_path(pet, type: :medication)],
+      ["Прививка", new_pet_reminder_path(pet, type: :vaccination)],
+      ["Обработка", new_pet_reminder_path(pet, type: :treatment)],
+      ["Визит", new_pet_reminder_path(pet, type: :visit)],
+      ["Вес", new_pet_reminder_path(pet, type: :weight)]
+    ]
+  end
 end
