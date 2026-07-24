@@ -3,6 +3,7 @@
 ## Required Checks
 
 - `bin/rails test`
+- `bin/rails test test/integration/pre_release_scenarios_test.rb`
 - `bin/rubocop`
 - `bin/brakeman --no-pager`
 - `bin/importmap audit`
@@ -37,3 +38,11 @@
 - Verify profile share links expose only selected sections.
 - Verify file downloads are disabled unless explicitly allowed.
 - Rotate public tokens when a shared link should be invalidated.
+
+## Scenario Sign-Off
+
+- Complete the owner workspace scenario in `docs/pre-release-scenarios.md`.
+- Complete the documents scenario in `docs/pre-release-scenarios.md`.
+- Complete the notifications scenario in `docs/pre-release-scenarios.md`.
+- Complete the PetTag scenario in `docs/pre-release-scenarios.md`.
+- Complete the public profile share scenario in `docs/pre-release-scenarios.md`.
