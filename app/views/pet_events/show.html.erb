@@ -87,7 +87,7 @@
           <% if @pet_event.pet_documents.any? %>
             <div>
               <dt>Документы</dt>
-              <dd><%= @pet_event.pet_documents.map { |document| link_to(document.title, pet_pet_document_path(@pet, document)) }.to_sentence.html_safe %></dd>
+              <dd><%= safe_join(@pet_event.pet_documents.map { |document| link_to(document.title, pet_pet_document_path(@pet, document)) }, ", ") %></dd>
             </div>
           <% end %>
         </dl>

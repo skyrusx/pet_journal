@@ -1,11 +1,4 @@
 Rails.application.routes.draw do
-  get "pet_events/index"
-  get "pet_events/show"
-  get "pet_events/new"
-  get "pet_events/create"
-  get "pet_events/edit"
-  get "pet_events/update"
-  get "pet_events/destroy"
   root "pages#index"
   devise_for :users
   resources :notification_channels, except: %i[show] do
