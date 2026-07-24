@@ -11,6 +11,8 @@ class PetsControllerTest < ActionDispatch::IntegrationTest
     get pets_url
 
     assert_response :success
+    assert_select ".home-hero"
+    assert_select ".home-pet-card", minimum: 1
   end
 
   test "should show pet" do

@@ -5,6 +5,10 @@ class PetsController < ApplicationController
   def index
     @pets = current_user.pets.with_attached_photo.order(created_at: :desc).to_a
     @latest_events_by_pet_id = latest_events_by_pet_id(@pets)
+    @active_reminders_count = current_user.reminders.status_active.count
+    @overdue_reminders_count = current_user.reminders.overdue.count
+    @pet_tag_scans_count = PetTagScan.joins(pet_tag: :pet).where(pets: { user_id: current_user.id }).count
+    @active_profile_shares_count = PetProfileShare.active.joins(:pet).where(pets: { user_id: current_user.id }).count
   end
 
   def show

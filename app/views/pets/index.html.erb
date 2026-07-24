@@ -1,57 +1,89 @@
 <div class="pets-index py-4">
-  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+  <section class="home-hero mb-4">
     <div>
+      <div class="text-muted small mb-1">PetJournal</div>
       <h1 class="h3 mb-1">Мои питомцы</h1>
-      <p class="text-muted mb-0">Карточки питомцев, последние события и быстрые действия.</p>
+      <p class="text-muted mb-0">Карточки питомцев, текущие сигналы и быстрые действия.</p>
     </div>
-    <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
+    <div class="home-hero-actions">
+      <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
+      <%= link_to "Рабочий стол", root_path, class: "btn btn-outline-secondary" %>
+    </div>
+  </section>
+
+  <div class="home-metrics mb-4">
+    <article class="dashboard-metric">
+      <div class="overview-card-label">Питомцы</div>
+      <div class="overview-card-value"><%= @pets.size %></div>
+      <div class="overview-card-note">карточек</div>
+    </article>
+    <article class="dashboard-metric">
+      <div class="overview-card-label">Напоминания</div>
+      <div class="overview-card-value"><%= @active_reminders_count %></div>
+      <div class="overview-card-note"><%= @overdue_reminders_count %> просрочено</div>
+    </article>
+    <article class="dashboard-metric">
+      <div class="overview-card-label">PetTag</div>
+      <div class="overview-card-value"><%= @pet_tag_scans_count %></div>
+      <div class="overview-card-note">сканирований</div>
+    </article>
+    <article class="dashboard-metric">
+      <div class="overview-card-label">Доступ</div>
+      <div class="overview-card-value"><%= @active_profile_shares_count %></div>
+      <div class="overview-card-note">активных ссылок</div>
+    </article>
   </div>
 
   <% if @pets.any? %>
-    <div class="row g-3">
+    <div class="home-pet-grid">
       <% @pets.each do |pet| %>
         <% latest_event = @latest_events_by_pet_id[pet.id] %>
+        <% pet_tag = pet.pet_tag %>
+        <% next_reminder = pet.reminders.status_active.order(:next_run_at).first %>
+        <% signal = pet_overview_signal(pet, pet_tag, pet_tag&.pet_tag_scans&.order(created_at: :desc)&.first, latest_event, next_reminder) %>
 
-        <div class="col-md-6 col-xl-4">
-          <article class="pet-card h-100">
-            <div class="pet-card-main">
-              <% if pet.photo.attached? %>
-                <%= image_tag pet.photo, class: "pet-card-photo" %>
-              <% else %>
-                <div class="pet-card-photo pet-card-photo-placeholder">
-                  <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
-                </div>
-              <% end %>
+        <article class="home-pet-card">
+          <div class="home-pet-card-main">
+            <% if pet.photo.attached? %>
+              <%= image_tag pet.photo, class: "pet-card-photo" %>
+            <% else %>
+              <div class="pet-card-photo pet-card-photo-placeholder">
+                <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
+              </div>
+            <% end %>
 
-              <div class="pet-card-body">
-                <div class="d-flex justify-content-between gap-2 align-items-start mb-2">
-                  <div>
-                    <h2 class="h5 mb-1"><%= link_to pet.name, pet_path(pet), class: "text-dark text-decoration-none" %></h2>
-                    <div class="text-muted small"><%= pet_age(pet) %> · <%= pet_short_description(pet) %></div>
-                  </div>
-                  <span class="signal-pill"><%= pet_signal_label(latest_event) %></span>
+            <div class="pet-card-body">
+              <div class="d-flex justify-content-between gap-2 align-items-start mb-2">
+                <div>
+                  <h2 class="h5 mb-1"><%= link_to pet.name, pet_path(pet), class: "text-dark text-decoration-none" %></h2>
+                  <div class="text-muted small"><%= pet_age(pet) %> · <%= pet_short_description(pet) %></div>
                 </div>
+                <span class="signal-pill"><%= signal[:label] %></span>
+              </div>
 
-                <div class="activity-line">
-                  <div class="text-muted small mb-1">Последняя активность</div>
-                  <div class="text-dark"><%= pet_event_summary(latest_event) %></div>
-                </div>
+              <div class="activity-line">
+                <div class="fw-semibold mb-1"><%= signal[:title] %></div>
+                <div class="text-muted small"><%= signal[:body] %></div>
               </div>
             </div>
+          </div>
 
-            <div class="pet-card-actions">
-              <%= link_to "Открыть", pet_path(pet), class: "btn btn-outline-primary btn-sm" %>
-              <%= link_to "Добавить событие", new_pet_pet_event_path(pet), class: "btn btn-primary btn-sm" %>
-            </div>
-          </article>
-        </div>
+          <div class="pet-card-actions">
+            <%= link_to "Открыть", pet_path(pet), class: "btn btn-outline-primary btn-sm" %>
+            <%= link_to "Событие", new_pet_pet_event_path(pet), class: "btn btn-primary btn-sm" %>
+            <%= link_to "Документ", new_pet_pet_document_path(pet), class: "btn btn-outline-secondary btn-sm" %>
+            <%= link_to "Доступ", pet_profile_shares_path(pet), class: "btn btn-outline-secondary btn-sm" %>
+          </div>
+        </article>
       <% end %>
     </div>
   <% else %>
-    <div class="empty-panel">
-      <h2 class="h4 mb-2">Добавьте первого питомца</h2>
-      <p class="text-muted mb-3">Начните с имени, вида и фото. Остальные данные можно заполнить позже.</p>
-      <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
+    <div class="empty-panel home-empty">
+      <div>
+        <h2 class="h4 mb-2">Добавьте первого питомца</h2>
+        <p class="text-muted mb-3">Начните с имени, вида и фото. Остальные данные можно заполнить позже.</p>
+        <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
+      </div>
     </div>
   <% end %>
 </div>

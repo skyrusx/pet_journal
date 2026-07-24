@@ -1,25 +1,44 @@
-<div class="documents-page py-4">
-  <section class="journal-hero mb-4">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-2">Документы</h1>
-      <p class="text-muted mb-0">Паспорта, прививки, анализы, назначения, чеки и файлы из журнала в одном рабочем разделе.</p>
+<div class="documents-page documents-dashboard py-4">
+  <section class="documents-hero mb-4">
+    <div class="documents-hero-main">
+      <div>
+        <div class="text-muted small mb-1"><%= @pet.name %></div>
+        <h1 class="h3 mb-2">Документы</h1>
+        <p class="text-muted mb-0">Паспорта, прививки, анализы, назначения, чеки и файлы из журнала в одном рабочем разделе.</p>
+      </div>
+
+      <div class="documents-current-signal">
+        <span>Контроль сроков</span>
+        <% if @document_counts[:expired].positive? %>
+          <h2><%= @document_counts[:expired] %> <%= russian_plural(@document_counts[:expired], "документ просрочен", "документа просрочены", "документов просрочены") %></h2>
+          <p>Проверьте документы с истекшим сроком и обновите напоминания.</p>
+        <% elsif @document_counts[:expiring].positive? %>
+          <h2><%= @document_counts[:expiring] %> скоро истекает</h2>
+          <p>Лучше заранее обновить документы или связать их с напоминанием.</p>
+        <% elsif @document_counts[:total].positive? %>
+          <h2>Документы в порядке</h2>
+          <p>Просроченных и ближайших истечений сейчас нет.</p>
+        <% else %>
+          <h2>Библиотека пуста</h2>
+          <p>Добавьте паспорт, прививку, анализ или назначение.</p>
+        <% end %>
+      </div>
     </div>
 
-    <div class="journal-hero-stats">
-      <div>
-        <span><%= @document_counts[:total] %></span>
-        <small>документов</small>
-      </div>
-      <div>
-        <span><%= @document_counts[:expiring] %></span>
-        <small>скоро истекают</small>
-      </div>
+    <div class="documents-metrics">
+      <div><span><%= @document_counts[:total] %></span><small>документов</small></div>
+      <div><span><%= @document_counts[:expiring] %></span><small>скоро истекают</small></div>
+      <div><span><%= @document_counts[:expired] %></span><small>просрочены</small></div>
+      <div><span><%= @document_counts[:with_files] %></span><small>с файлами</small></div>
+      <div><span><%= @document_counts[:with_reminder] %></span><small>с напоминанием</small></div>
     </div>
 
-    <div class="journal-hero-actions">
+    <div class="documents-quick-actions">
       <%= link_to "Добавить документ", new_pet_pet_document_path(@pet), class: "btn btn-primary" %>
       <%= link_to "Обзор питомца", pet_path(@pet), class: "btn btn-outline-secondary" %>
+      <% quick_document_actions(@pet).each do |label, path| %>
+        <%= link_to label, path, class: "btn btn-outline-primary btn-sm" %>
+      <% end %>
     </div>
   </section>
 
@@ -33,45 +52,99 @@
     <%= link_to "Данные", edit_pet_path(@pet), class: "pet-tab" %>
   </nav>
 
-  <div class="filter-panel mb-4">
-    <%= form_with url: pet_pet_documents_path(@pet), method: :get, class: "document-search" do |form| %>
+  <section class="documents-filter-panel mb-4">
+    <div class="section-heading compact">
+      <div>
+        <div class="text-muted small mb-1">Фильтры</div>
+        <h2 class="h5 mb-0"><%= document_filter_summary(@selected_type, @selected_status, @selected_scope, @query) %></h2>
+      </div>
+      <% if @selected_type.present? || @selected_status != "all" || @selected_scope != "all" || @query.present? %>
+        <%= link_to "Сбросить все", pet_pet_documents_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
+      <% end %>
+    </div>
+
+    <%= form_with url: pet_pet_documents_path(@pet), method: :get, class: "document-search mb-3" do |form| %>
       <%= hidden_field_tag :status, @selected_status %>
       <%= hidden_field_tag :type, @selected_type %>
-      <%= form.search_field :q, value: @query, class: "form-control", placeholder: "Поиск по названию, номеру, клинике или заметкам" %>
+      <%= hidden_field_tag :scope, @selected_scope %>
+      <%= form.search_field :q, value: @query, class: "form-control", placeholder: "Поиск: название, номер, клиника, лаборатория, заметки" %>
       <%= form.submit "Найти", class: "btn btn-outline-primary" %>
       <% if @query.present? %>
-        <%= link_to "Сбросить", pet_pet_documents_path(@pet, status: @selected_status, type: @selected_type), class: "btn btn-outline-secondary" %>
+        <%= link_to "Очистить поиск",
+                    pet_pet_documents_path(@pet, status: @selected_status, type: @selected_type, scope: @selected_scope),
+                    class: "btn btn-outline-secondary" %>
       <% end %>
     <% end %>
 
-    <div class="filter-chips mt-3">
-      <% document_status_filters(@pet, @selected_status, @selected_type, @query).each do |label, path, active| %>
-        <%= link_to label, path, class: reminder_filter_class(active) %>
-      <% end %>
-    </div>
+    <div class="documents-filter-grid">
+      <div>
+        <div class="filter-panel-title">Статус</div>
+        <div class="filter-chips">
+          <% document_status_filters(@pet, @selected_status, @selected_type, @query).each do |label, path, active| %>
+            <%= link_to label, path, class: reminder_filter_class(active) %>
+          <% end %>
+        </div>
+      </div>
 
-    <div class="filter-chips mt-3">
-      <% document_type_filters(@pet, @selected_type, @selected_status, @query).each do |label, path, active| %>
-        <%= link_to label, path || pet_pet_documents_path(@pet, status: @selected_status, q: @query.presence), class: reminder_filter_class(active) %>
-      <% end %>
-    </div>
-  </div>
+      <div>
+        <div class="filter-panel-title">Тип</div>
+        <div class="filter-chips">
+          <% document_type_filters(@pet, @selected_type, @selected_status, @query).each do |label, path, active| %>
+            <%= link_to label, path || pet_pet_documents_path(@pet, status: @selected_status, scope: @selected_scope, q: @query.presence), class: reminder_filter_class(active) %>
+          <% end %>
+        </div>
+      </div>
 
-  <div class="row g-4">
-    <section class="col-lg-8">
-      <div class="workspace-section">
+      <div>
+        <div class="filter-panel-title">Состав</div>
+        <div class="filter-chips">
+          <% document_scope_filters(@pet, @selected_scope).each do |label, path, active| %>
+            <%= link_to label, path, class: reminder_filter_class(active) %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="documents-layout">
+    <section class="documents-main">
+      <% if @highlight_documents.any? %>
+        <section class="dashboard-section">
+          <div class="section-heading compact">
+            <div>
+              <div class="text-muted small mb-1">Важно сейчас</div>
+              <h2 class="h4 mb-0">Сроки документов</h2>
+            </div>
+          </div>
+
+          <div class="dashboard-alert-list">
+            <% @highlight_documents.uniq.each do |document| %>
+              <div class="dashboard-alert <%= document.expired? ? "danger" : "warning" %>">
+                <div>
+                  <strong><%= document.title %></strong>
+                  <span><%= document.document_type_label %> · <%= document.expires_on&.strftime("%d.%m.%Y") || "без срока" %></span>
+                </div>
+                <%= link_to "Открыть", pet_pet_document_path(@pet, document), class: "btn btn-outline-secondary btn-sm" %>
+              </div>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+
+      <section class="dashboard-section">
         <div class="section-heading">
           <div>
             <div class="text-muted small mb-1">Хранилище</div>
-            <h2 class="h4 mb-0">Документы питомца</h2>
+            <h2 class="h4 mb-1">Документы питомца</h2>
+            <p class="text-muted mb-0">Карточки показывают тип, срок, файлы и связанные записи.</p>
           </div>
         </div>
 
         <% if @documents.any? %>
-          <div class="document-card-grid">
+          <div class="document-card-grid enhanced">
             <% @documents.each do |document| %>
-              <article class="document-card">
-                <div class="d-flex justify-content-between gap-3 align-items-start mb-3">
+              <article class="document-card enhanced">
+                <div class="document-card-top">
                   <div>
                     <span class="event-badge"><%= document.document_type_label %></span>
                     <h3 class="h5 mt-2 mb-1"><%= link_to document.title, pet_pet_document_path(@pet, document), class: "text-dark text-decoration-none" %></h3>
@@ -84,9 +157,22 @@
                   <div><span>Файлы</span><strong><%= document_file_label(document) %></strong></div>
                   <div><span>Выдан</span><strong><%= document.issued_on&.strftime("%d.%m.%Y") || "—" %></strong></div>
                   <div><span>Действует до</span><strong><%= document.expires_on&.strftime("%d.%m.%Y") || "—" %></strong></div>
+                  <div><span>Журнал</span><strong><%= document.pet_event.present? ? "Связан" : "Нет" %></strong></div>
+                  <div><span>Напоминание</span><strong><%= document.reminder.present? ? "Есть" : "Нет" %></strong></div>
                 </div>
 
-                <div class="d-flex flex-wrap gap-2 mt-3">
+                <% if document.files.attached? %>
+                  <div class="shared-file-list mt-3">
+                    <% document.files.first(3).each do |file| %>
+                      <%= link_to event_file_label(file), url_for(file), class: "shared-file-link", target: "_blank", rel: "noopener" %>
+                    <% end %>
+                    <% if document.files.count > 3 %>
+                      <span>Еще <%= document.files.count - 3 %></span>
+                    <% end %>
+                  </div>
+                <% end %>
+
+                <div class="document-card-actions">
                   <%= link_to "Открыть", pet_pet_document_path(@pet, document), class: "btn btn-outline-primary btn-sm" %>
                   <%= link_to "Изменить", edit_pet_pet_document_path(@pet, document), class: "btn btn-outline-secondary btn-sm" %>
                 </div>
@@ -97,24 +183,28 @@
           <div class="empty-state-inline">
             <h3 class="h5 mb-2">Документы не найдены</h3>
             <p class="text-muted mb-3">Добавьте документ напрямую или сбросьте фильтры поиска.</p>
-            <%= link_to "Добавить документ", new_pet_pet_document_path(@pet), class: "btn btn-primary btn-sm" %>
+            <div class="d-flex flex-wrap gap-2">
+              <%= link_to "Сбросить фильтры", pet_pet_documents_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
+              <%= link_to "Добавить документ", new_pet_pet_document_path(@pet, type: @selected_type.presence), class: "btn btn-primary btn-sm" %>
+            </div>
           </div>
         <% end %>
-      </div>
+      </section>
     </section>
 
-    <aside class="col-lg-4">
-      <div class="action-panel mb-4">
-        <div class="text-muted small mb-1">Сроки</div>
-        <h2 class="h4 mb-3">Контроль действия</h2>
+    <aside class="documents-side">
+      <section class="dashboard-section">
+        <div class="text-muted small mb-1">Сводка</div>
+        <h2 class="h4 mb-3">Контроль библиотеки</h2>
         <div class="compact-list">
-          <div><span>Просрочено</span><strong><%= @document_counts[:expired] %></strong></div>
-          <div><span>Скоро истекает</span><strong><%= @document_counts[:expiring] %></strong></div>
+          <div><span>Без срока</span><strong><%= @document_counts[:no_expiry] %></strong></div>
+          <div><span>С файлами</span><strong><%= @document_counts[:with_files] %></strong></div>
+          <div><span>С напоминанием</span><strong><%= @document_counts[:with_reminder] %></strong></div>
           <div><span>Файлы из журнала</span><strong><%= @document_counts[:legacy_files] %></strong></div>
         </div>
-      </div>
+      </section>
 
-      <div class="action-panel">
+      <section class="dashboard-section">
         <div class="text-muted small mb-1">Вложения журнала</div>
         <h2 class="h4 mb-3">Файлы из событий</h2>
         <% if @event_file_events.any? %>
@@ -132,7 +222,7 @@
         <% else %>
           <p class="text-muted mb-0">Вложений в событиях пока нет.</p>
         <% end %>
-      </div>
+      </section>
     </aside>
   </div>
 </div>

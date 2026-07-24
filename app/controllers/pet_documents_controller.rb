@@ -6,6 +6,7 @@ class PetDocumentsController < ApplicationController
   def index
     @selected_type = params[:type].presence_in(PetDocument.document_types.keys)
     @selected_status = params[:status].presence_in(%w[all active expiring expired no_expiry]) || "all"
+    @selected_scope = params[:scope].presence_in(%w[all with_files with_reminder]) || "all"
     @query = params[:q].to_s.strip
     @documents = filtered_documents.with_attached_files
     @event_file_events = legacy_event_file_events
@@ -13,8 +14,12 @@ class PetDocumentsController < ApplicationController
       total: @pet.pet_documents.count,
       expiring: @pet.pet_documents.expires_soon.count,
       expired: @pet.pet_documents.expired.count,
+      no_expiry: @pet.pet_documents.where(expires_on: nil).count,
+      with_files: @pet.pet_documents.joins(:files_attachments).distinct.count,
+      with_reminder: @pet.pet_documents.where.not(reminder_id: nil).count,
       legacy_files: @event_file_events.sum { |event| event.files.count }
     }
+    @highlight_documents = @pet.pet_documents.expired.limit(3).to_a + @pet.pet_documents.expires_soon.limit(3).to_a
   end
 
   def show; end
@@ -95,6 +100,7 @@ class PetDocumentsController < ApplicationController
     scope = @pet.pet_documents.order(created_at: :desc)
     scope = scope.where(document_type: @selected_type) if @selected_type.present?
     scope = apply_status(scope)
+    scope = apply_scope(scope)
     scope = apply_search(scope)
     scope
   end
@@ -117,6 +123,14 @@ class PetDocumentsController < ApplicationController
       "title ILIKE :query OR issuer ILIKE :query OR number ILIKE :query OR notes ILIKE :query",
       query: pattern
     )
+  end
+
+  def apply_scope(scope)
+    case @selected_scope
+    when "with_files" then scope.joins(:files_attachments).distinct
+    when "with_reminder" then scope.where.not(reminder_id: nil)
+    else scope
+    end
   end
 
   def legacy_event_file_events

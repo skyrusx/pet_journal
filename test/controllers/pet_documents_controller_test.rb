@@ -12,6 +12,9 @@ class PetDocumentsControllerTest < ActionDispatch::IntegrationTest
     get pet_pet_documents_url(@pet)
 
     assert_response :success
+    assert_select ".documents-hero"
+    assert_select ".documents-filter-panel"
+    assert_select ".documents-metrics > div", count: 5
   end
 
   test "should filter by status and type" do
@@ -20,6 +23,20 @@ class PetDocumentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select ".filter-chip.active", text: /Скоро истекают/
     assert_select ".filter-chip.active", text: /Прививка/
+  end
+
+  test "should filter by files scope" do
+    get pet_pet_documents_url(@pet, scope: "with_files")
+
+    assert_response :success
+    assert_select ".filter-chip.active", text: /С файлами/
+  end
+
+  test "should filter by reminder scope" do
+    get pet_pet_documents_url(@pet, scope: "with_reminder")
+
+    assert_response :success
+    assert_select ".filter-chip.active", text: /С напоминанием/
   end
 
   test "should search documents" do
