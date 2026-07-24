@@ -92,6 +92,19 @@ jobs:
           # REDIS_URL: redis://localhost:6379/0
         run: bin/rails db:test:prepare test test:system
 
+      - name: Check release configuration task
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+          APP_HOST: petjournal.example
+          SECRET_KEY_BASE: test-secret-key-base
+          MAIL_FROM: PetJournal <no-reply@petjournal.example>
+          SMTP_ADDRESS: smtp.example
+          SMTP_DOMAIN: petjournal.example
+          SMTP_USER_NAME: test
+          SMTP_PASSWORD: test
+        run: bin/rails release:check
+
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4
         if: failure()
