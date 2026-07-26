@@ -5,8 +5,11 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     get root_url
 
     assert_response :success
-    assert_select ".guest-hero"
-    assert_select "h1", text: /Здоровье, уход и безопасность/
+    assert_select ".pj-landing"
+    assert_select ".pj-hero h1", text: /Помните всё важное/
+    assert_select ".pj-feature-grid article", count: 6
+    assert_select "#pettag"
+    assert_select "#faq"
   end
 
   test "should get signed in dashboard" do

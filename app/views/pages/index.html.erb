@@ -220,35 +220,5 @@
     <% end %>
   </div>
 <% else %>
-  <div class="guest-home py-4">
-    <section class="guest-hero mb-4">
-      <div>
-        <div class="text-muted small mb-1">PetJournal</div>
-        <h1 class="display-5 fw-semibold mb-3">Здоровье, уход и безопасность питомца</h1>
-        <p class="lead text-muted mb-4">Ведите журнал, храните документы, получайте напоминания и создавайте QR-профиль безопасности PetTag.</p>
-        <div class="d-flex flex-wrap gap-2">
-          <%= link_to "Войти", new_user_session_path, class: "btn btn-primary" %>
-          <%= link_to "Регистрация", new_user_registration_path, class: "btn btn-outline-secondary" %>
-        </div>
-      </div>
-    </section>
-
-    <div class="home-metrics">
-      <article class="dashboard-metric">
-        <div class="overview-card-label">Журнал</div>
-        <div class="overview-card-value">01</div>
-        <div class="overview-card-note">события здоровья и ухода</div>
-      </article>
-      <article class="dashboard-metric">
-        <div class="overview-card-label">Документы</div>
-        <div class="overview-card-value">02</div>
-        <div class="overview-card-note">файлы, сроки и напоминания</div>
-      </article>
-      <article class="dashboard-metric">
-        <div class="overview-card-label">PetTag</div>
-        <div class="overview-card-value">03</div>
-        <div class="overview-card-note">QR-профиль на случай потери</div>
-      </article>
-    </div>
-  </div>
+  <%= render "guest_home" %>
 <% end %>
