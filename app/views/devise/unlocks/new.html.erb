@@ -1,12 +1,30 @@
-<div class="auth-page py-4">
+<div class="auth-page">
   <section class="auth-card">
     <div class="auth-copy">
-      <div class="text-muted small mb-1">Разблокировка</div>
-      <h1 class="h3 mb-2">Повторить инструкцию</h1>
-      <p class="text-muted mb-0">Укажите эл. почту, чтобы получить письмо для разблокировки аккаунта.</p>
+      <%= link_to root_path, class: "auth-brand", aria: { label: "PetJournal — главная" } do %>
+        <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
+      <% end %>
+      <span>Разблокировка</span>
+      <h1>Восстановим вход в аккаунт</h1>
+      <p>Укажите эл. почту, чтобы получить письмо для разблокировки аккаунта.</p>
+      <ul>
+        <li>Инструкция придёт на почту аккаунта</li>
+        <li>Это помогает защитить данные питомцев</li>
+        <li>После разблокировки можно войти снова</li>
+      </ul>
+      <div class="auth-pettag-art" aria-hidden="true">
+        <span class="auth-pettag-ring"></span>
+        <span class="auth-pettag-qr"></span>
+        <span class="auth-pettag-label">PetTag</span>
+      </div>
     </div>
 
     <%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post, class: "auth-form" }) do |f| %>
+      <div class="auth-form-heading">
+        <span>Аккаунт</span>
+        <h2>Получить инструкцию</h2>
+      </div>
+
       <%= render "devise/shared/error_messages", resource: resource %>
 
       <div class="mb-3">
@@ -14,7 +32,7 @@
         <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
       </div>
 
-      <%= f.submit "Отправить инструкцию", class: "btn btn-primary w-100" %>
+      <%= f.submit "Отправить инструкцию", class: "btn btn-primary w-100 auth-submit" %>
     <% end %>
 
     <%= render "devise/shared/links" %>

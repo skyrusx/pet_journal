@@ -49,6 +49,19 @@ document.addEventListener("DOMContentLoaded", () => {
     window.setTimeout(dismiss, 5200);
   });
 
+  document.querySelectorAll("[data-password-toggle]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const field = button.closest(".auth-password-field");
+      const input = field?.querySelector("[data-password-input]");
+      if (!input) return;
+
+      const shouldShow = input.type === "password";
+      input.type = shouldShow ? "text" : "password";
+      button.classList.toggle("is-visible", shouldShow);
+      button.setAttribute("aria-label", shouldShow ? "Скрыть пароль" : "Показать пароль");
+    });
+  });
+
   document.querySelectorAll("[data-reminder-preset]").forEach((button) => {
     button.addEventListener("click", () => {
       const input = document.querySelector("[data-reminder-datetime]");

@@ -1,12 +1,30 @@
-<div class="auth-page py-4">
+<div class="auth-page">
   <section class="auth-card">
     <div class="auth-copy">
-      <div class="text-muted small mb-1">Подтверждение</div>
-      <h1 class="h3 mb-2">Отправить письмо еще раз</h1>
-      <p class="text-muted mb-0">Укажите эл. почту, чтобы повторно получить инструкцию подтверждения.</p>
+      <%= link_to root_path, class: "auth-brand", aria: { label: "PetJournal — главная" } do %>
+        <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
+      <% end %>
+      <span>Подтверждение почты</span>
+      <h1>Отправим инструкцию ещё раз</h1>
+      <p>Укажите эл. почту, чтобы повторно получить письмо подтверждения.</p>
+      <ul>
+        <li>Проверьте папку «Спам»</li>
+        <li>Используйте почту, указанную при регистрации</li>
+        <li>Подтверждение защищает аккаунт</li>
+      </ul>
+      <div class="auth-pettag-art" aria-hidden="true">
+        <span class="auth-pettag-ring"></span>
+        <span class="auth-pettag-qr"></span>
+        <span class="auth-pettag-label">PetTag</span>
+      </div>
     </div>
 
     <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post, class: "auth-form" }) do |f| %>
+      <div class="auth-form-heading">
+        <span>Почта</span>
+        <h2>Повторить письмо</h2>
+      </div>
+
       <%= render "devise/shared/error_messages", resource: resource %>
 
       <div class="mb-3">
@@ -18,7 +36,7 @@
                           class: "form-control" %>
       </div>
 
-      <%= f.submit "Отправить инструкцию", class: "btn btn-primary w-100" %>
+      <%= f.submit "Отправить инструкцию", class: "btn btn-primary w-100 auth-submit" %>
     <% end %>
 
     <%= render "devise/shared/links" %>

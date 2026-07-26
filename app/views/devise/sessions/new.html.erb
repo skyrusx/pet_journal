@@ -1,20 +1,41 @@
-<div class="auth-page py-4">
+<div class="auth-page">
   <section class="auth-card">
     <div class="auth-copy">
-      <div class="text-muted small mb-1">PetJournal</div>
-      <h1 class="h3 mb-2">Вход</h1>
-      <p class="text-muted mb-0">Вернитесь к карточкам питомцев, журналу событий и QR-профилям безопасности.</p>
+      <%= link_to root_path, class: "auth-brand", aria: { label: "PetJournal — главная" } do %>
+        <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
+      <% end %>
+      <span>С возвращением</span>
+      <h1>Войдите в PetJournal</h1>
+      <p>Вернитесь к карточкам питомцев, журналу событий, напоминаниям и QR-профилям безопасности.</p>
+      <ul>
+        <li>История здоровья под рукой</li>
+        <li>Документы и напоминания в одном месте</li>
+        <li>PetTag для спокойствия вне дома</li>
+      </ul>
+      <div class="auth-pettag-art" aria-hidden="true">
+        <span class="auth-pettag-ring"></span>
+        <span class="auth-pettag-qr"></span>
+        <span class="auth-pettag-label">PetTag</span>
+      </div>
     </div>
 
     <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "auth-form" }) do |f| %>
+      <div class="auth-form-heading">
+        <span>Вход</span>
+        <h2>Продолжить заботу</h2>
+      </div>
+
       <div class="mb-3">
-        <%= f.label :email, "Эл. почта", class: "form-label" %>
+        <%= f.label :email, "Электронная почта", class: "form-label" %>
         <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
       </div>
 
       <div class="mb-3">
         <%= f.label :password, "Пароль", class: "form-label" %>
-        <%= f.password_field :password, autocomplete: "current-password", class: "form-control" %>
+        <div class="auth-password-field">
+          <%= f.password_field :password, autocomplete: "current-password", class: "form-control", data: { password_input: true } %>
+          <%= render "devise/shared/password_toggle" %>
+        </div>
       </div>
 
       <% if devise_mapping.rememberable? %>
@@ -24,9 +45,13 @@
         </div>
       <% end %>
 
-      <%= f.submit "Войти", class: "btn btn-primary w-100" %>
+      <%= f.submit "Войти", class: "btn btn-primary w-100 auth-submit" %>
     <% end %>
 
-    <%= render "devise/shared/links" %>
+    <div class="auth-links auth-links-session">
+      <span>Нет аккаунта?</span>
+      <%= link_to "Создать аккаунт", new_registration_path(resource_name), class: "auth-link-primary" %>
+      <%= link_to "Забыли пароль?", new_password_path(resource_name), class: "auth-link-muted" %>
+    </div>
   </section>
 </div>

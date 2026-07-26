@@ -27,8 +27,9 @@
   </head>
 
   <% landing_page = controller_name == "pages" && action_name == "index" && !user_signed_in? %>
-  <body class="app-body <%= "pj-landing-body" if landing_page %>">
-    <% unless landing_page %>
+  <% guest_auth_page = devise_controller? && !user_signed_in? %>
+  <body class="app-body <%= "pj-landing-body" if landing_page %> <%= "pj-auth-body" if guest_auth_page %>">
+    <% unless landing_page || guest_auth_page %>
     <header class="app-header mb-4">
       <div class="container py-3 d-flex flex-wrap justify-content-between align-items-center gap-3">
         <%= link_to "PetJournal", root_path, class: "brand-link fs-4 fw-semibold" %>
@@ -55,6 +56,10 @@
     <div class="pj-landing-main">
       <%= yield %>
     </div>
+    <% elsif guest_auth_page %>
+    <main class="pj-auth-main">
+      <%= yield %>
+    </main>
     <% else %>
     <main class="container pb-4">
       <%= yield %>
@@ -85,7 +90,7 @@
       </div>
     <% end %>
 
-    <% unless landing_page %>
+    <% unless landing_page || guest_auth_page %>
     <button type="button" class="theme-fab" data-theme-toggle aria-label="Переключить тему">
       <span class="theme-fab-icon" aria-hidden="true"></span>
     </button>
