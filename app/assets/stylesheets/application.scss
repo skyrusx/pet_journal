@@ -187,12 +187,13 @@
 
 .pj-hero {
   min-height: 700px;
+  padding-bottom: 72px;
   background: var(--pj-green);
   color: #fff;
 }
 
 .pj-hero-grid {
-  min-height: 700px;
+  min-height: 628px;
   display: grid;
   grid-template-columns: .93fr 1.07fr;
   align-items: center;
@@ -302,6 +303,7 @@
   width: min(652px, 108%);
   height: auto;
   display: block;
+  transform: translateY(-28px);
 }
 
 .pj-marquee {
@@ -603,32 +605,26 @@
 
 .pj-step-grid article {
   min-height: 230px;
-  padding: 8px 18px 0;
-  position: relative;
+  padding: 0 18px;
   text-align: center;
 }
 
 .pj-step-grid article > b {
   display: block;
-  inset-inline: 0;
-  line-height: 1;
-  position: absolute;
+  height: 64px;
+  line-height: 64px;
+  margin-bottom: 10px;
   text-align: center;
-  top: -8px;
   color: #d6e0db;
   font-family: Georgia, serif;
   font-size: 70px;
   font-weight: 400;
-  pointer-events: none;
-  z-index: 0;
 }
 
 .pj-step-icon {
   width: 88px;
   height: 88px;
-  margin: 22px auto 26px;
-  position: relative;
-  z-index: 1;
+  margin: 0 auto 26px;
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -907,6 +903,12 @@
     text-align: center;
     white-space: normal;
   }
+  .pj-hero {
+    padding-bottom: 64px;
+  }
+  .pj-hero-grid {
+    padding-bottom: 64px;
+  }
   .pj-hero-copy { padding-top: 54px; }
   .pj-hero-copy {
     max-width: 100%;
@@ -940,6 +942,7 @@
   }
   .pj-hero-visual img {
     max-width: none;
+    transform: translateY(-14px);
     width: min(460px, 124vw);
   }
   .pj-marquee .pj-shell { justify-content: center; overflow: hidden; }
