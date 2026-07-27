@@ -98,7 +98,7 @@
 
     <section class="pj-section pj-tag-section" id="pettag">
       <div class="pj-shell pj-tag-grid">
-        <div class="pj-tag-art"><div class="pj-tag-shape"><span>⌗</span><strong>PetTag</strong><small>petjournal</small></div><i class="pj-paw">●<br>● ●<br>●</i></div>
+        <div class="pj-tag-art"><%= image_tag "petjournal/auth-pettag.png", alt: "Медный QR-жетон PetTag", class: "pj-tag-image", loading: "lazy" %></div>
         <div><span class="pj-kicker pj-kicker-light">PetTag — QR-профиль безопасности</span><h2>Если потерялся —<br><em>вас найдут быстрее</em></h2><p>Человек сканирует метку на ошейнике и видит безопасную страницу питомца: имя, важные особенности и способ связаться с вами.</p><ul><li>Без установки приложения</li><li>Контакты можно обновить в любой момент</li><li>Вы сами выбираете видимые данные</li></ul><%= link_to "Создать профиль PetTag", new_user_registration_path, class: "pj-button pj-button-lime" %></div>
       </div>
     </section>
