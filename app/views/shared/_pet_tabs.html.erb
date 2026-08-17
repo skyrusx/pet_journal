@@ -1,0 +1,5 @@
+<nav class="pet-tabs mb-4" aria-label="Навигация питомца">
+  <% pet_nav_items(pet).each do |label, path, active| %>
+    <%= link_to label, path, class: class_names("pet-tab", active: active) %>
+  <% end %>
+</nav>

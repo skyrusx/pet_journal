@@ -33,20 +33,10 @@
       <%= link_to "Добавить событие", new_pet_pet_event_path(@pet), class: "btn btn-primary" %>
       <%= link_to "Напоминание", new_pet_reminder_path(@pet), class: "btn btn-outline-primary" %>
       <%= link_to "Документ", new_pet_pet_document_path(@pet), class: "btn btn-outline-primary" %>
-      <%= link_to "Доступ", new_pet_profile_share_path(@pet), class: "btn btn-outline-secondary" %>
-      <%= link_to "Данные", edit_pet_path(@pet), class: "btn btn-outline-secondary" %>
     </div>
   </section>
 
-  <nav class="pet-tabs mb-4" aria-label="Навигация питомца">
-    <%= link_to "Обзор", pet_path(@pet), class: "pet-tab active" %>
-    <%= link_to "Журнал", pet_pet_events_path(@pet), class: "pet-tab" %>
-    <%= link_to "Напоминания", pet_reminders_path(@pet), class: "pet-tab" %>
-    <%= link_to "Документы", pet_pet_documents_path(@pet), class: "pet-tab" %>
-    <%= link_to "Жетон", pet_pet_tag_path(@pet), class: "pet-tab" %>
-    <%= link_to "Доступ", pet_profile_shares_path(@pet), class: "pet-tab" %>
-    <a href="#details" class="pet-tab">Данные</a>
-  </nav>
+  <%= render "shared/pet_tabs", pet: @pet %>
 
   <div class="dashboard-metrics mb-4">
     <article class="dashboard-metric">

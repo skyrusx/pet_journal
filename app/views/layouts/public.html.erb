@@ -6,16 +6,9 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <script>
-      (function () {
-        var storedTheme = localStorage.getItem("petjournal-theme");
-        var systemDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-        document.documentElement.dataset.theme = storedTheme || (systemDark ? "dark" : "light");
-      })();
-    </script>
-
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <%= favicon_link_tag "petjournal/favicon.ico" %>
+    <%= favicon_link_tag "petjournal/favicon-32.png", rel: "icon", type: "image/png" %>
+    <%= favicon_link_tag "petjournal/favicon-512.png", rel: "apple-touch-icon", type: "image/png" %>
 
     <%= stylesheet_link_tag "application" %>
     <%= javascript_importmap_tags %>
@@ -47,9 +40,5 @@
         <% end %>
       </div>
     <% end %>
-
-    <button type="button" class="theme-fab" data-theme-toggle aria-label="Переключить тему">
-      <span class="theme-fab-icon" aria-hidden="true"></span>
-    </button>
   </body>
 </html>

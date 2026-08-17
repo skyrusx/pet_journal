@@ -43,7 +43,7 @@ module NotificationChannelsHelper
   def notification_channel_configuration_label(channel)
     return "Канал готов к отправке." if channel.ready_for_delivery?
 
-    channel.configuration_issues.to_sentence
+    "Канал пока недоступен. Проверьте настройки подключения."
   end
 
   def notification_delivery_filter_options(counts)
@@ -58,10 +58,10 @@ module NotificationChannelsHelper
 
   def notification_channel_onboarding_steps
     [
-      ["Email", "Проверьте SMTP в окружении Rails. Канал email аккаунта создается автоматически, если других каналов нет."],
-      ["Telegram", "Создайте бота, задайте TELEGRAM_BOT_TOKEN и укажите chat_id пользователя или группы."],
-      ["VK", "Задайте VK_GROUP_TOKEN от сообщества и укажите peer_id нужного диалога."],
-      ["Push", "Задайте VAPID_PUBLIC_KEY и VAPID_PRIVATE_KEY, затем включите push в нужном браузере."]
+      ["Email", "Основной канал для системных уведомлений и напоминаний."],
+      ["Telegram", "Подключите чат, если удобнее получать напоминания в мессенджере."],
+      ["VK", "Подключите диалог VK, чтобы получать напоминания там, где вы чаще отвечаете."],
+      ["Push", "Включите уведомления в текущем браузере, если хотите получать быстрые сигналы на этом устройстве."]
     ]
   end
 end

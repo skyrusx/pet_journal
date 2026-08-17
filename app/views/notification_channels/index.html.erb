@@ -19,7 +19,6 @@
 
     <div class="journal-hero-actions">
       <%= link_to "Добавить канал", new_notification_channel_path, class: "btn btn-primary" %>
-      <%= link_to "Мои питомцы", pets_path, class: "btn btn-outline-secondary" %>
     </div>
   </section>
 
@@ -158,7 +157,7 @@
 
       <div class="action-panel mb-4" data-web-push-panel data-vapid-public-key="<%= @vapid_public_key %>">
         <div class="text-muted small mb-1">Push</div>
-        <h2 class="h4 mb-3">Этот браузер</h2>
+        <h2 class="h4 mb-3">Уведомления в браузере</h2>
         <% if @vapid_public_key.present? %>
           <p class="text-muted mb-3">Включите уведомления в этом браузере. Подписка сохранится как отдельный канал.</p>
           <div class="d-flex flex-wrap gap-2">
@@ -167,7 +166,7 @@
           </div>
           <p class="form-text mt-2 mb-0" data-web-push-status></p>
         <% else %>
-          <p class="text-muted mb-0">Push недоступен, потому что в окружении не заданы VAPID_PUBLIC_KEY и VAPID_PRIVATE_KEY.</p>
+          <p class="text-muted mb-0">Push-уведомления пока недоступны. Вы можете использовать email, Telegram или VK.</p>
         <% end %>
       </div>
 

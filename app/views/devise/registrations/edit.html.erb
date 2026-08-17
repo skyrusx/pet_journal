@@ -5,10 +5,9 @@
       <h1>Настройки входа</h1>
       <p>Обновите email или пароль для доступа к дневнику питомца.</p>
     </div>
-    <%= link_to "Назад", :back, class: "btn btn-outline-secondary auth-back-link" %>
   </div>
 
-  <div class="form-layout">
+  <div class="account-settings-layout">
     <%= form_for(resource, as: resource_name, url: edit_user_registration_path, html: { method: :put, class: "structured-form" }) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
 
@@ -69,18 +68,18 @@
         <%= f.submit "Сохранить аккаунт", class: "btn btn-primary" %>
       </div>
     <% end %>
-
-    <aside class="form-aside">
-      <div class="form-aside-panel danger-zone">
-        <div class="text-muted small mb-1">Опасное действие</div>
-        <h2 class="h5 mb-2">Удалить аккаунт</h2>
-        <p class="text-muted mb-3">Это удалит доступ к аккаунту. Используйте только если действительно хотите закрыть профиль.</p>
-        <%= button_to "Удалить аккаунт",
-                      edit_user_registration_path,
-                      data: { confirm: "Удалить аккаунт?", turbo_confirm: "Удалить аккаунт?" },
-                      method: :delete,
-                      class: "btn btn-outline-danger btn-sm" %>
-      </div>
-    </aside>
   </div>
+
+  <section class="account-danger-section danger-zone">
+    <div>
+      <div class="text-muted small mb-1">Опасная зона</div>
+      <h2 class="h5 mb-2">Удалить аккаунт</h2>
+      <p class="text-muted mb-0">Это удалит доступ к аккаунту. Используйте только если действительно хотите закрыть профиль.</p>
+    </div>
+    <%= button_to "Удалить аккаунт",
+                  edit_user_registration_path,
+                  data: { confirm: "Удалить аккаунт?", turbo_confirm: "Удалить аккаунт?" },
+                  method: :delete,
+                  class: "btn btn-outline-danger" %>
+  </section>
 </div>

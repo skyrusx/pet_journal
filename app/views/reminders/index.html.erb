@@ -43,15 +43,7 @@
     </div>
   </section>
 
-  <nav class="pet-tabs mb-4" aria-label="Навигация питомца">
-    <%= link_to "Обзор", pet_path(@pet), class: "pet-tab" %>
-    <%= link_to "Журнал", pet_pet_events_path(@pet), class: "pet-tab" %>
-    <%= link_to "Напоминания", pet_reminders_path(@pet), class: "pet-tab active" %>
-    <%= link_to "Документы", pet_pet_documents_path(@pet), class: "pet-tab" %>
-    <%= link_to "Жетон", pet_pet_tag_path(@pet), class: "pet-tab" %>
-    <%= link_to "Доступ", pet_profile_shares_path(@pet), class: "pet-tab" %>
-    <%= link_to "Данные", edit_pet_path(@pet), class: "pet-tab" %>
-  </nav>
+  <%= render "shared/pet_tabs", pet: @pet %>
 
   <section class="reminders-filter-panel mb-4">
     <div class="section-heading compact">
