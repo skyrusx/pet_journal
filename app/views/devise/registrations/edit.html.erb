@@ -35,12 +35,13 @@
           </div>
         </div>
 
-        <div class="row g-3">
+        <% if @minimum_password_length %>
+          <div class="form-text password-section-hint">Минимум <%= @minimum_password_length %> символов.</div>
+        <% end %>
+
+        <div class="row g-3 account-password-grid">
           <div class="col-md-6">
             <%= f.label :password, "Новый пароль", class: "form-label" %>
-            <% if @minimum_password_length %>
-              <div class="form-text">Минимум <%= @minimum_password_length %> символов.</div>
-            <% end %>
             <%= f.password_field :password, autocomplete: "new-password", class: "form-control" %>
           </div>
 
@@ -62,24 +63,24 @@
 
         <%= f.label :current_password, "Текущий пароль", class: "form-label" %>
         <%= f.password_field :current_password, autocomplete: "current-password", class: "form-control" %>
+
+        <div class="account-confirmation-actions">
+          <%= f.submit "Сохранить аккаунт", class: "btn btn-primary" %>
+        </div>
       </section>
-
-      <div class="form-actions">
-        <%= f.submit "Сохранить аккаунт", class: "btn btn-primary" %>
-      </div>
     <% end %>
-  </div>
 
-  <section class="account-danger-section danger-zone">
-    <div>
-      <div class="text-muted small mb-1">Опасная зона</div>
-      <h2 class="h5 mb-2">Удалить аккаунт</h2>
-      <p class="text-muted mb-0">Это удалит доступ к аккаунту. Используйте только если действительно хотите закрыть профиль.</p>
-    </div>
-    <%= button_to "Удалить аккаунт",
-                  edit_user_registration_path,
-                  data: { confirm: "Удалить аккаунт?", turbo_confirm: "Удалить аккаунт?" },
-                  method: :delete,
-                  class: "btn btn-outline-danger" %>
-  </section>
+    <section class="account-danger-section danger-zone">
+      <div>
+        <div class="text-muted small mb-1">Опасная зона</div>
+        <h2 class="h5 mb-2">Удалить аккаунт</h2>
+        <p class="text-muted mb-0">Это удалит доступ к аккаунту. Используйте только если действительно хотите закрыть профиль.</p>
+      </div>
+      <%= button_to "Удалить аккаунт",
+                    edit_user_registration_path,
+                    data: { confirm: "Удалить аккаунт?", turbo_confirm: "Удалить аккаунт?" },
+                    method: :delete,
+                    class: "btn btn-outline-danger" %>
+    </section>
+  </div>
 </div>

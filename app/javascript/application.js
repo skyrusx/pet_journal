@@ -18,6 +18,21 @@ function csrfToken() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".app-user-menu").forEach((menu) => {
+    menu.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+
+      menu.removeAttribute("open");
+      menu.querySelector("summary")?.focus();
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    document.querySelectorAll(".app-user-menu[open]").forEach((menu) => {
+      if (!menu.contains(event.target)) menu.removeAttribute("open");
+    });
+  });
+
   document.querySelectorAll("[data-flash-toast]").forEach((toast) => {
     const close = toast.querySelector("[data-flash-close]");
     const dismiss = () => {

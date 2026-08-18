@@ -7,7 +7,7 @@
   <header class="pj-header">
     <div class="pj-shell pj-header-inner">
       <%= link_to root_path, class: "pj-brand", aria: { label: "PetJournal — главная" } do %>
-        <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
+        <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 190, height: 54 %>
       <% end %>
       <nav class="pj-nav" aria-label="Основная навигация">
         <a href="#features">Возможности</a>
@@ -39,7 +39,10 @@
           </div>
         </div>
         <div class="pj-hero-visual">
-          <%= image_tag "petjournal/hero-composite.png", alt: "Хозяйка обнимает рыжего кота, рядом карточка питомца и PetTag" %>
+          <%= image_tag "petjournal/hero-composite.png",
+                        alt: "Хозяйка обнимает рыжего кота, рядом карточка питомца и PetTag",
+                        width: 760,
+                        height: 709 %>
         </div>
       </div>
     </section>
@@ -98,8 +101,25 @@
 
     <section class="pj-section pj-tag-section" id="pettag">
       <div class="pj-shell pj-tag-grid">
-        <div class="pj-tag-art"><%= image_tag "petjournal/auth-pettag.png", alt: "Медный QR-жетон PetTag", class: "pj-tag-image", loading: "lazy" %></div>
-        <div><span class="pj-kicker pj-kicker-light">PetTag — QR-профиль безопасности</span><h2>Если потерялся —<br><em>вас найдут быстрее</em></h2><p>Человек сканирует метку на ошейнике и видит безопасную страницу питомца: имя, важные особенности и способ связаться с вами.</p><ul><li>Без установки приложения</li><li>Контакты можно обновить в любой момент</li><li>Вы сами выбираете видимые данные</li></ul><%= link_to "Создать профиль PetTag", new_user_registration_path, class: "pj-button pj-button-lime" %></div>
+        <div class="pj-tag-art">
+          <%= image_tag "petjournal/auth-pettag.png",
+                        alt: "Медный QR-жетон PetTag",
+                        class: "pj-tag-image",
+                        width: 462,
+                        height: 520,
+                        loading: "lazy" %>
+        </div>
+        <div>
+          <span class="pj-kicker pj-kicker-light">PetTag — QR-профиль безопасности</span>
+          <h2>Если потерялся —<br><em>вас найдут быстрее</em></h2>
+          <p>Человек сканирует метку на ошейнике и видит безопасную страницу питомца: имя, важные особенности и способ связаться с вами.</p>
+          <ul>
+            <li>Без установки приложения</li>
+            <li>Контакты можно обновить в любой момент</li>
+            <li>Вы сами выбираете видимые данные</li>
+          </ul>
+          <%= link_to "Создать профиль PetTag", new_user_registration_path, class: "pj-button pj-button-lime" %>
+        </div>
       </div>
     </section>
 
@@ -125,12 +145,40 @@
     </section>
 
     <section class="pj-final">
-      <div class="pj-shell"><span class="pj-kicker pj-kicker-light">Пусть важное не теряется</span><h2>Начните заботиться<br><em>спокойнее уже сегодня</em></h2><p>Создайте первый журнал питомца за пару минут. Сервис предоставляется бесплатно.</p><%= link_to "Создать журнал", new_user_registration_path, class: "pj-button pj-button-lime" %><small>Это займёт около двух минут</small></div>
+      <div class="pj-shell">
+        <span class="pj-kicker pj-kicker-light">Пусть важное не теряется</span>
+        <h2>Начните заботиться<br><em>спокойнее уже сегодня</em></h2>
+        <p>Создайте первый журнал питомца за пару минут. Сервис предоставляется бесплатно.</p>
+        <%= link_to "Создать журнал", new_user_registration_path, class: "pj-button pj-button-lime" %>
+        <small>Это займёт около двух минут</small>
+      </div>
     </section>
   </main>
 
   <footer class="pj-footer">
-    <div class="pj-shell pj-footer-main"><div><%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %><p>Всё важное о здоровье, уходе и безопасности любимых питомцев.</p></div><div><b>Продукт</b><a href="#features">Возможности</a><a href="#pettag">PetTag</a><a href="#faq">Вопросы</a></div><div><b>Аккаунт</b><%= link_to "Войти", new_user_session_path %><%= link_to "Регистрация", new_user_registration_path %></div><div><b>Поддержка</b><a href="mailto:support@pet-journal.ru">support@pet-journal.ru</a><a href="https://vk.ru/petjournal" target="_blank" rel="noopener">VK PetJournal</a><span>Мы рядом, если нужна помощь</span></div></div>
+    <div class="pj-shell pj-footer-main">
+      <div>
+        <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 140, height: 40, loading: "lazy" %>
+        <p>Всё важное о здоровье, уходе и безопасности любимых питомцев.</p>
+      </div>
+      <div>
+        <b>Продукт</b>
+        <a href="#features">Возможности</a>
+        <a href="#pettag">PetTag</a>
+        <a href="#faq">Вопросы</a>
+      </div>
+      <div>
+        <b>Аккаунт</b>
+        <%= link_to "Войти", new_user_session_path %>
+        <%= link_to "Регистрация", new_user_registration_path %>
+      </div>
+      <div>
+        <b>Поддержка</b>
+        <a href="mailto:support@pet-journal.ru">support@pet-journal.ru</a>
+        <a href="https://vk.ru/petjournal" target="_blank" rel="noopener">VK PetJournal</a>
+        <span>Мы рядом, если нужна помощь</span>
+      </div>
+    </div>
     <div class="pj-shell pj-footer-bottom"><span>© <%= Date.current.year %> PetJournal</span><span>Сделано с заботой о тех, кто рядом ♡</span></div>
   </footer>
 </div>

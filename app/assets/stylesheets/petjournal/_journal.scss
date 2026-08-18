@@ -1,0 +1,458 @@
+.journal-timeline {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.journal-hero {
+  background: linear-gradient(135deg, var(--pj-surface) 0%, var(--pj-surface-strong) 100%);
+  border: 1px solid var(--pj-border);
+  border-radius: 14px;
+  box-shadow: var(--pj-shadow);
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.4fr);
+  padding: 1.25rem;
+}
+
+.journal-hero-stats {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.journal-hero-stats > div {
+  background: var(--pj-soft);
+  border: 1px solid var(--pj-border);
+  border-radius: 10px;
+  padding: 0.85rem;
+}
+
+.journal-hero-stats span {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.journal-hero-stats small {
+  color: var(--pj-muted);
+}
+
+.journal-hero-actions {
+  border-top: 1px solid var(--pj-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  grid-column: 1 / -1;
+  padding-top: 1rem;
+}
+
+.journal-workspace-hero {
+  background: linear-gradient(135deg, var(--pj-surface) 0%, var(--pj-surface-strong) 100%);
+  border: 1px solid var(--pj-border);
+  border-radius: 14px;
+  box-shadow: var(--pj-shadow);
+  padding: 1.25rem;
+}
+
+.journal-hero-main {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.72fr);
+}
+
+.journal-current-signal {
+  background: var(--pj-teal-soft);
+  border: 1px solid color-mix(in srgb, var(--pj-teal) 22%, var(--pj-border));
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.journal-current-signal span {
+  color: var(--pj-teal);
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-bottom: 0.55rem;
+  text-transform: uppercase;
+}
+
+.journal-current-signal h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.4rem;
+}
+
+.journal-current-signal p {
+  color: var(--pj-muted);
+  margin-bottom: 0;
+}
+
+.journal-metrics {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+.journal-metrics > div {
+  background: var(--pj-soft);
+  border: 1px solid var(--pj-border);
+  border-radius: 10px;
+  padding: 0.85rem;
+}
+
+.journal-metrics span {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.journal-metrics small {
+  color: var(--pj-muted);
+}
+
+.notification-hero-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 0;
+}
+
+.journal-quick-actions {
+  border-top: 1px solid var(--pj-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.journal-filter-panel {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  box-shadow: var(--pj-shadow);
+  padding: 0.85rem;
+}
+
+.journal-search {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.journal-search .form-control {
+  flex: 1 1 320px;
+}
+
+.journal-filter-group {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.journal-month-heading {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.journal-month-heading span {
+  color: var(--pj-muted);
+  font-size: 0.85rem;
+}
+
+.journal-month-heading .journal-month-title {
+  margin-bottom: 0;
+}
+
+.journal-event.enhanced {
+  grid-template-columns: 82px 1fr;
+}
+
+.journal-event-topline {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.journal-event-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.journal-month-title {
+  color: var(--pj-muted);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.journal-month-events {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.journal-event {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  box-shadow: var(--pj-shadow);
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 76px 1fr;
+  padding: 1rem;
+  position: relative;
+}
+
+.journal-event.success {
+  border-left: 4px solid var(--pj-success);
+}
+
+.journal-event.warning {
+  border-left: 4px solid var(--pj-amber);
+}
+
+.journal-event.info {
+  border-left: 4px solid var(--pj-info);
+}
+
+.journal-event.danger {
+  border-left: 4px solid var(--pj-danger);
+}
+
+.journal-event-date {
+  align-items: center;
+  background: var(--pj-soft);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  height: 70px;
+  justify-content: center;
+  padding: 0.65rem 0.35rem;
+}
+
+.event-structured-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.event-structured-preview span {
+  background: var(--pj-soft);
+  border: 1px solid var(--pj-border);
+  border-radius: 999px;
+  color: var(--pj-muted);
+  font-size: 0.8rem;
+  padding: 0.35rem 0.55rem;
+}
+
+.event-structured-preview strong {
+  color: var(--pj-ink);
+  font-weight: 700;
+}
+
+.reminder-list,
+.channel-grid,
+.delivery-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.reminder-card {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 76px minmax(0, 1fr) auto;
+  padding: 1rem;
+}
+
+.reminder-card.overdue {
+  border-left: 4px solid var(--pj-danger);
+}
+
+.reminder-date {
+  align-items: center;
+  background: var(--pj-soft);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 70px;
+  justify-content: center;
+}
+
+.reminder-date strong {
+  line-height: 1.1;
+}
+
+.reminder-date span {
+  color: var(--pj-muted);
+  font-size: 0.85rem;
+}
+
+.reminder-body {
+  min-width: 0;
+}
+
+.reminder-actions {
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.reminders-hero {
+  background: linear-gradient(135deg, var(--pj-surface) 0%, var(--pj-surface-strong) 100%);
+  border: 1px solid var(--pj-border);
+  border-radius: 14px;
+  box-shadow: var(--pj-shadow);
+  padding: 1.25rem;
+}
+
+.reminders-hero-main {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.72fr);
+}
+
+.reminders-current-signal {
+  background: var(--pj-teal-soft);
+  border: 1px solid color-mix(in srgb, var(--pj-teal) 22%, var(--pj-border));
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.reminders-current-signal.danger {
+  background: var(--pj-danger-soft);
+  border-color: color-mix(in srgb, var(--pj-danger) 28%, var(--pj-border));
+}
+
+.reminders-current-signal.warning {
+  background: var(--pj-amber-soft);
+  border-color: color-mix(in srgb, var(--pj-amber) 28%, var(--pj-border));
+}
+
+.reminders-current-signal span {
+  color: var(--pj-teal);
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-bottom: 0.55rem;
+  text-transform: uppercase;
+}
+
+.reminders-current-signal.danger span {
+  color: var(--pj-danger);
+}
+
+.reminders-current-signal.warning span {
+  color: var(--pj-amber);
+}
+
+.reminders-current-signal h2 {
+  font-size: 1.1rem;
+  margin-bottom: 0.4rem;
+}
+
+.reminders-current-signal p {
+  color: var(--pj-muted);
+  margin-bottom: 0;
+}
+
+.reminders-metrics {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+.reminders-metrics > div {
+  background: var(--pj-soft);
+  border: 1px solid var(--pj-border);
+  border-radius: 10px;
+  padding: 0.85rem;
+}
+
+.reminders-metrics span {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.reminders-metrics small {
+  color: var(--pj-muted);
+}
+
+.reminders-quick-actions {
+  border-top: 1px solid var(--pj-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.reminders-filter-panel {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 12px;
+  box-shadow: var(--pj-shadow);
+  padding: 0.85rem;
+}
+
+.reminders-filter-grid,
+.reminders-main,
+.reminders-side {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.reminders-layout {
+  align-items: start;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+}
+
+.reminders-side {
+  position: sticky;
+  top: 5rem;
+}
+
+.channel-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.channel-choice-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.channel-choice {
+  align-items: flex-start;
+  background: var(--pj-soft);
+  border: 1px solid var(--pj-border);
+  border-radius: 10px;
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.85rem;
+}
+
+.channel-choice span {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.channel-choice small {
+  color: var(--pj-muted);
+
+}

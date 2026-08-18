@@ -1,23 +1,25 @@
 <div class="notifications-page py-4">
-  <section class="journal-hero mb-4">
-    <div>
-      <div class="text-muted small mb-1">Настройки</div>
-      <h1 class="h3 mb-2">Уведомления</h1>
-      <p class="text-muted mb-0">Каналы доставки для напоминаний: эл. почта, Telegram, VK и браузерные push-уведомления.</p>
+  <section class="journal-workspace-hero notification-hero mb-4">
+    <div class="journal-hero-main">
+      <div>
+        <div class="text-muted small mb-1">Настройки</div>
+        <h1 class="h3 mb-2">Уведомления</h1>
+        <p class="text-muted mb-0">Каналы доставки для напоминаний: эл. почта, Telegram, VK и браузерные push-уведомления.</p>
+      </div>
+
+      <div class="journal-metrics notification-hero-stats">
+        <div>
+          <span><%= @channels.count %></span>
+          <small>каналов</small>
+        </div>
+        <div>
+          <span><%= @channels.count(&:enabled?) %></span>
+          <small>включено</small>
+        </div>
+      </div>
     </div>
 
-    <div class="journal-hero-stats">
-      <div>
-        <span><%= @channels.count %></span>
-        <small>каналов</small>
-      </div>
-      <div>
-        <span><%= @channels.count(&:enabled?) %></span>
-        <small>включено</small>
-      </div>
-    </div>
-
-    <div class="journal-hero-actions">
+    <div class="journal-quick-actions">
       <%= link_to "Добавить канал", new_notification_channel_path, class: "btn btn-primary" %>
     </div>
   </section>

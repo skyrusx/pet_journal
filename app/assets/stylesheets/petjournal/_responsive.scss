@@ -1,0 +1,585 @@
+/* Final UX polish: contrast, controls, navigation */
+.btn,
+.btn[type="submit"],
+button.btn,
+a.btn {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  line-height: 1.15;
+  margin: 0;
+  min-height: 44px;
+  text-align: center;
+  white-space: normal;
+}
+
+.btn-sm,
+.btn-group-sm > .btn {
+  min-height: 38px;
+}
+
+.btn-primary {
+  --bs-btn-color: #fffdf8;
+  --bs-btn-hover-color: #fffdf8;
+  --bs-btn-active-color: #fffdf8;
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: var(--pj-green);
+  --bs-btn-border-color: color-mix(in srgb, var(--pj-green) 24%, var(--pj-border));
+  --bs-btn-hover-bg: var(--pj-soft);
+  --bs-btn-hover-border-color: color-mix(in srgb, var(--pj-green) 44%, var(--pj-border));
+  --bs-btn-hover-color: var(--pj-green);
+  --bs-btn-active-bg: var(--pj-soft);
+  --bs-btn-active-border-color: color-mix(in srgb, var(--pj-green) 44%, var(--pj-border));
+  --bs-btn-active-color: var(--pj-green);
+}
+
+.btn-outline-danger {
+  --bs-btn-hover-color: #fffdf8;
+  --bs-btn-active-color: #fffdf8;
+}
+
+.btn:disabled,
+.btn.disabled,
+fieldset:disabled .btn {
+  opacity: .58;
+  pointer-events: none;
+}
+
+.home-hero .btn-primary,
+.dashboard-hero .btn-primary,
+.journal-workspace-hero .btn-primary,
+.documents-hero .btn-primary,
+.reminders-hero .btn-primary,
+.pet-tag-hero .btn-primary,
+.event-detail-hero .btn-primary,
+.form-page-header .btn-primary,
+.page-heading .btn-primary,
+.pet-tag-page > .d-flex .btn-primary {
+  --bs-btn-bg: var(--pj-lime);
+  --bs-btn-border-color: var(--pj-lime);
+  --bs-btn-color: var(--pj-deep);
+  --bs-btn-hover-bg: #dcff67;
+  --bs-btn-hover-border-color: #dcff67;
+  --bs-btn-hover-color: var(--pj-deep);
+  --bs-btn-active-bg: #b9e832;
+  --bs-btn-active-border-color: #b9e832;
+  --bs-btn-active-color: var(--pj-deep);
+  box-shadow: 0 12px 28px rgba(200, 244, 63, .18);
+}
+
+.home-hero .btn-outline-primary,
+.home-hero .btn-outline-secondary,
+.dashboard-hero .btn-outline-primary,
+.dashboard-hero .btn-outline-secondary,
+.journal-workspace-hero .btn-outline-primary,
+.journal-workspace-hero .btn-outline-secondary,
+.documents-hero .btn-outline-primary,
+.documents-hero .btn-outline-secondary,
+.reminders-hero .btn-outline-primary,
+.reminders-hero .btn-outline-secondary,
+.pet-tag-hero .btn-outline-primary,
+.pet-tag-hero .btn-outline-secondary,
+.event-detail-hero .btn-outline-primary,
+.event-detail-hero .btn-outline-secondary,
+.form-page-header .btn-outline-primary,
+.form-page-header .btn-outline-secondary,
+.page-heading .btn-outline-primary,
+.page-heading .btn-outline-secondary,
+.pet-tag-page > .d-flex .btn-outline-primary,
+.pet-tag-page > .d-flex .btn-outline-secondary {
+  --bs-btn-color: #fffdf8;
+  --bs-btn-border-color: rgba(255, 253, 248, .48);
+  --bs-btn-hover-bg: rgba(255, 253, 248, .12);
+  --bs-btn-hover-border-color: rgba(255, 253, 248, .76);
+  --bs-btn-hover-color: #fffdf8;
+  --bs-btn-active-bg: rgba(255, 253, 248, .18);
+  --bs-btn-active-border-color: rgba(255, 253, 248, .86);
+  --bs-btn-active-color: #fffdf8;
+  box-shadow: none;
+}
+
+.app-nav-link.active {
+  background: rgba(7, 57, 47, .08);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pj-green) 18%, transparent);
+  color: var(--pj-green);
+}
+
+.app-nav-link:hover {
+  background: var(--pj-green);
+  color: #fffdf8;
+}
+
+.app-user-menu {
+  position: relative;
+}
+
+.app-user-menu summary {
+  align-items: center;
+  background: rgba(255, 253, 248, .6);
+  border: 1px solid color-mix(in srgb, var(--pj-green) 14%, var(--pj-border));
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 9px;
+  list-style: none;
+  min-height: 42px;
+  max-width: 260px;
+  padding: 0 12px 0 5px;
+  transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+.app-user-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.app-user-menu summary::after {
+  color: var(--pj-muted);
+  content: "⌄";
+  font-size: 14px;
+  line-height: 1;
+}
+
+.app-user-menu summary:hover,
+.app-user-menu summary.active,
+.app-user-menu[open] summary {
+  background: #fffdf8;
+  border-color: color-mix(in srgb, var(--pj-green) 34%, var(--pj-border));
+  box-shadow: 0 8px 18px rgba(7, 57, 47, .08);
+}
+
+.app-user-menu .app-user-avatar {
+  align-items: center;
+  background: var(--pj-green);
+  border-radius: 50%;
+  color: #fffdf8;
+  display: inline-flex;
+  flex: 0 0 30px;
+  font-size: 13px;
+  height: 30px;
+  justify-content: center;
+  max-width: none;
+  width: 30px;
+}
+
+.app-user-email {
+  max-width: 168px;
+  min-width: 0;
+}
+
+.app-user-dropdown {
+  background: var(--pj-surface);
+  border: 1px solid var(--pj-border);
+  border-radius: 14px;
+  box-shadow: var(--pj-shadow-strong);
+  display: grid;
+  gap: 4px;
+  min-width: 240px;
+  overflow: hidden;
+  padding: 8px;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 40;
+}
+
+.app-user-dropdown-link {
+  align-items: center;
+  border-radius: 10px;
+  border: 0;
+  background: transparent;
+  color: var(--pj-green);
+  display: flex;
+  font-weight: 850;
+  min-height: 40px;
+  padding: 0 12px;
+  text-decoration: none;
+  width: 100%;
+}
+
+.app-user-dropdown-email {
+  color: var(--pj-muted);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  padding: 6px 10px 8px;
+}
+
+.app-user-dropdown-separator {
+  border-top: 1px solid var(--pj-border);
+  margin: 4px 0;
+}
+
+.app-user-dropdown-link:hover,
+.app-user-dropdown-link.active {
+  background: var(--pj-soft);
+  color: var(--pj-green);
+}
+
+.app-user-dropdown-form {
+  margin: 0;
+}
+
+.app-user-dropdown-danger {
+  color: var(--pj-muted);
+  font: inherit;
+  justify-content: flex-start;
+  min-height: 40px;
+  text-align: left;
+}
+
+.app-user-dropdown-danger:hover {
+  background: var(--pj-danger-soft);
+  color: var(--pj-danger);
+}
+
+.dashboard-status.success,
+.dashboard-hero .dashboard-status.neutral,
+.current-signal.success,
+.documents-current-signal.success,
+.reminders-current-signal.success {
+  background: rgba(255, 253, 248, .14);
+  border-color: rgba(255, 253, 248, .24);
+}
+
+.dashboard-status.success h2,
+.dashboard-status.success p,
+.dashboard-status.success span,
+.dashboard-hero .dashboard-status.neutral h2,
+.dashboard-hero .dashboard-status.neutral p,
+.current-signal.success h2,
+.current-signal.success p,
+.current-signal.success span {
+  color: #fffdf8;
+}
+
+.dashboard-hero .dashboard-status.neutral span {
+  color: var(--pj-lime);
+}
+
+.dashboard-status.warning h2,
+.dashboard-status.danger h2 {
+  color: var(--pj-ink);
+}
+
+.dashboard-status.warning p,
+.dashboard-status.danger p {
+  color: var(--pj-muted);
+}
+
+.dashboard-status.warning span,
+.dashboard-status.danger span {
+  color: var(--pj-danger);
+}
+
+.pet-tag-hero .pet-tag-stats > div {
+  min-height: 82px;
+}
+
+.pet-tag-hero .pet-tag-stats span,
+.pet-tag-hero .pet-tag-stats small {
+  color: #fffdf8;
+}
+
+.pet-tag-hero .pet-tag-stats small {
+  opacity: .76;
+}
+
+.dashboard-section .text-muted,
+.workspace-section .text-muted,
+.action-panel .text-muted,
+.details-panel .text-muted,
+.empty-panel .text-muted,
+.form-section .text-muted,
+.home-pet-card .text-muted,
+.document-card .text-muted,
+.reminder-card .text-muted,
+.journal-event .text-muted,
+.delivery-row .text-muted,
+.scan-item .text-muted {
+  color: #53645d !important;
+}
+
+.pet-tabs {
+  max-width: 100%;
+  scrollbar-width: thin;
+}
+
+.pet-tab {
+  min-height: 40px;
+}
+
+.journal-search,
+.document-search,
+.form-actions,
+.dashboard-actions,
+.journal-quick-actions,
+.documents-quick-actions,
+.reminders-quick-actions,
+.pet-tag-hero-actions,
+.event-detail-actions,
+.pet-card-actions,
+.document-card-actions,
+.reminder-actions {
+  align-items: center;
+}
+
+.reminder-actions form,
+.pet-card-actions form,
+.document-card-actions form,
+.event-detail-actions form,
+.documents-quick-actions form,
+.reminders-quick-actions form,
+.pet-tag-hero-actions form {
+  margin: 0;
+}
+
+.account-settings-layout {
+  max-width: 860px;
+}
+
+.password-section-hint {
+  margin: -0.35rem 0 0.85rem;
+}
+
+.account-password-grid .form-label {
+  margin-bottom: 0.5rem;
+}
+
+.account-confirmation-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.account-danger-section {
+  align-items: center;
+  border: 1px solid color-mix(in srgb, var(--pj-peach) 62%, var(--pj-border));
+  border-radius: 14px;
+  box-shadow: var(--pj-shadow);
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding: 22px;
+}
+
+.account-danger-section form {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.home-layout,
+.dashboard-layout,
+.documents-layout,
+.reminders-layout {
+  gap: 24px;
+}
+
+.home-main,
+.home-side,
+.dashboard-main,
+.dashboard-side,
+.documents-main,
+.documents-side,
+.reminders-main,
+.reminders-side {
+  gap: 24px;
+}
+
+.dashboard-metric {
+  min-height: 116px;
+}
+
+.overview-card-label,
+.filter-panel-title {
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: .02em;
+}
+
+.overview-card-note,
+.form-text,
+.form-hint {
+  line-height: 1.5;
+}
+
+.channel-card .text-danger,
+.delivery-row .text-danger,
+.scan-item .text-danger {
+  color: var(--pj-danger) !important;
+}
+
+.channel-card h3,
+.home-pet-card h2,
+.home-pet-card h3,
+.document-card h3,
+.reminder-card h3,
+.journal-event h3 {
+  overflow-wrap: anywhere;
+}
+
+.form-check-input {
+  flex: 0 0 auto;
+}
+
+.form-check-label {
+  line-height: 1.35;
+}
+
+@media (max-width: 980px) {
+  .app-header-inner {
+    grid-template-columns: 1fr auto;
+  }
+
+  .app-brand {
+    grid-column: 1;
+  }
+
+  .app-user-menu {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .app-nav {
+    grid-column: 1 / -1;
+  }
+
+  .app-footer-main {
+    grid-template-columns: minmax(220px, 1fr) minmax(260px, 1.2fr);
+  }
+
+  .app-footer-support {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 680px) {
+  .pj-auth-body {
+    max-width: 100vw;
+  }
+
+  .pj-auth-body .auth-copy,
+  .pj-auth-body .auth-form,
+  .pj-auth-body .auth-links {
+    overflow: hidden;
+  }
+
+  .pj-auth-body .auth-copy h1 {
+    font-size: clamp(32px, 9vw, 36px);
+    max-width: calc(100vw - 48px);
+    overflow-wrap: anywhere;
+  }
+
+  .pj-auth-body .auth-copy p,
+  .pj-auth-body .auth-copy li {
+    max-width: calc(100vw - 48px);
+  }
+
+  .pj-auth-body .auth-password-field,
+  .pj-auth-body .mb-3,
+  .pj-auth-body .form-check {
+    max-width: calc(100vw - 48px);
+  }
+
+  .pj-auth-body .auth-card .form-control,
+  .pj-auth-body .auth-card .btn-primary,
+  .pj-auth-body .auth-card .auth-submit {
+    width: 100% !important;
+  }
+
+  .app-user-menu .app-user-email {
+    max-width: 120px;
+  }
+
+  .app-user-dropdown {
+    max-width: calc(100vw - 32px);
+    min-width: min(260px, calc(100vw - 32px));
+    right: 0;
+  }
+
+  .pet-tabs {
+    border-radius: 14px;
+    overflow-x: auto;
+    padding: 6px;
+  }
+
+  .pet-tab {
+    flex: 0 0 auto;
+  }
+
+  .account-danger-section {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .account-danger-section .btn,
+  .account-danger-section form {
+    width: 100%;
+  }
+
+  .account-confirmation-actions {
+    justify-content: stretch;
+  }
+
+  .account-confirmation-actions .btn {
+    width: 100%;
+  }
+
+  .compact-filter-row {
+    align-items: start;
+    gap: 0.3rem;
+    grid-template-columns: 1fr;
+  }
+
+  .compact-filter-row .filter-chips {
+    flex-wrap: nowrap;
+    margin-inline: -2px;
+    overflow-x: auto;
+    padding: 2px;
+    scrollbar-width: thin;
+  }
+
+  .compact-filter-row .filter-chip {
+    flex: 0 0 auto;
+  }
+
+  .app-footer-inner {
+    padding: 24px 0 16px;
+  }
+
+  .app-footer-main {
+    gap: 18px;
+    grid-template-columns: 1fr;
+  }
+
+  .app-footer-nav {
+    display: grid;
+    gap: 8px;
+  }
+
+  .app-footer-nav a,
+  .app-footer-support a {
+    padding: 5px 0;
+  }
+
+  .app-footer-bottom {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .app-shell {
+    width: min(1240px, calc(100% - 80px));
+  }
+}
+
+@media (min-width: 1800px) {
+  .app-shell {
+    width: min(1320px, calc(100% - 128px));
+  }
+}

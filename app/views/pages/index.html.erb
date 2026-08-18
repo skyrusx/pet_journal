@@ -54,9 +54,8 @@
           <div class="dashboard-section">
             <div class="section-heading">
               <div>
-                <div class="text-muted small mb-1">Питомцы</div>
-                <h2 class="h4 mb-1">Карточки и текущий сигнал</h2>
-                <p class="text-muted mb-0">Один главный статус по каждому питомцу без перегруза карточек.</p>
+                <h2 class="h4 mb-1">Ваши питомцы</h2>
+                <p class="text-muted mb-0">Основные данные, ближайшие задачи и последние изменения.</p>
               </div>
               <%= link_to "Все питомцы", pets_path, class: "btn btn-outline-primary btn-sm" %>
             </div>
@@ -71,7 +70,7 @@
                 <article class="home-pet-card">
                   <div class="home-pet-card-main">
                     <% if pet.photo.attached? %>
-                      <%= image_tag pet.photo, class: "pet-card-photo" %>
+                      <%= image_tag pet.photo, class: "pet-card-photo", alt: pet.name, loading: "lazy" %>
                     <% else %>
                       <div class="pet-card-photo pet-card-photo-placeholder">
                         <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>

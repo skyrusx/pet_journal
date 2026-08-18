@@ -49,11 +49,11 @@
 
   <%= render "shared/pet_tabs", pet: @pet %>
 
-  <section class="journal-filter-panel mb-4">
+  <section class="journal-filter-panel compact-filter-panel mb-4">
     <div class="section-heading compact">
       <div>
-        <div class="text-muted small mb-1">Фильтры</div>
-        <h2 class="h5 mb-0"><%= journal_filter_summary(@selected_event_type, @selected_period, @selected_status, @query) %></h2>
+        <div class="filter-panel-title mb-0">Фильтры</div>
+        <div class="compact-filter-summary"><%= journal_filter_summary(@selected_event_type, @selected_period, @selected_status, @query) %></div>
       </div>
       <% if @selected_event_type.present? || @selected_period.present? || @selected_status.present? || @query.present? %>
         <%= link_to "Сбросить все", pet_pet_events_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
@@ -74,7 +74,7 @@
     <% end %>
 
     <div class="journal-filter-group">
-      <div>
+      <div class="compact-filter-row">
         <div class="filter-panel-title">Тип события</div>
         <div class="filter-chips">
           <%= link_to "Все #{content_tag(:span, @total_events_count)}".html_safe,
@@ -89,7 +89,7 @@
         </div>
       </div>
 
-      <div>
+      <div class="compact-filter-row">
         <div class="filter-panel-title">Период</div>
         <div class="filter-chips">
           <% event_period_filters(@pet, @selected_period).each do |label, path, active| %>
@@ -98,7 +98,7 @@
         </div>
       </div>
 
-      <div>
+      <div class="compact-filter-row">
         <div class="filter-panel-title">Состояние</div>
         <div class="filter-chips">
           <% event_status_filters(@pet, @selected_status).each do |label, path, active| %>

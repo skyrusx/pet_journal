@@ -5,7 +5,7 @@
   <section class="dashboard-hero mb-4">
     <div class="dashboard-identity">
       <% if @pet.photo.attached? %>
-        <%= image_tag @pet.photo, class: "pet-hero-avatar" %>
+        <%= image_tag @pet.photo, class: "pet-hero-avatar", alt: @pet.name %>
       <% else %>
         <div class="pet-hero-avatar pet-avatar-placeholder">
           <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
@@ -165,6 +165,34 @@
           </div>
         <% end %>
       </div>
+
+      <section id="details" class="dashboard-section">
+        <div class="section-heading compact">
+          <div>
+            <div class="text-muted small mb-1">Карточка питомца</div>
+            <h2 class="h4 mb-0">Данные</h2>
+          </div>
+          <%= link_to "Изменить", edit_pet_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
+        </div>
+
+        <dl class="details-list dashboard-details">
+          <div><dt>Вид</dt><dd><%= @pet.species.presence || "—" %></dd></div>
+          <div><dt>Порода</dt><dd><%= @pet.breed.presence || "—" %></dd></div>
+          <div><dt>Пол</dt><dd><%= pet_sex_label(@pet) %></dd></div>
+          <div><dt>Дата рождения</dt><dd><%= @pet.birth_date.present? ? @pet.birth_date.strftime("%d.%m.%Y") : "—" %></dd></div>
+          <div><dt>Окрас</dt><dd><%= @pet.color.presence || "—" %></dd></div>
+          <div><dt>Чип</dt><dd><%= @pet.chip_number.presence || "—" %></dd></div>
+          <div><dt>Ветпаспорт</dt><dd><%= @pet.passport_number.presence || "—" %></dd></div>
+          <div><dt>Стерилизация</dt><dd><%= @pet.neutered.nil? ? "—" : (@pet.neutered ? "Да" : "Нет") %></dd></div>
+        </dl>
+
+        <% if @pet.notes.present? %>
+          <div class="notes-box">
+            <div class="fw-semibold mb-1">Заметки</div>
+            <div class="text-muted"><%= simple_format(@pet.notes) %></div>
+          </div>
+        <% end %>
+      </section>
     </section>
 
     <aside class="dashboard-side">
@@ -302,32 +330,4 @@
       </section>
     </aside>
   </div>
-
-  <section id="details" class="dashboard-section mt-4">
-    <div class="section-heading compact">
-      <div>
-        <div class="text-muted small mb-1">Карточка питомца</div>
-        <h2 class="h4 mb-0">Данные</h2>
-      </div>
-      <%= link_to "Изменить", edit_pet_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
-    </div>
-
-    <dl class="details-list dashboard-details">
-      <div><dt>Вид</dt><dd><%= @pet.species.presence || "—" %></dd></div>
-      <div><dt>Порода</dt><dd><%= @pet.breed.presence || "—" %></dd></div>
-      <div><dt>Пол</dt><dd><%= pet_sex_label(@pet) %></dd></div>
-      <div><dt>Дата рождения</dt><dd><%= @pet.birth_date.present? ? @pet.birth_date.strftime("%d.%m.%Y") : "—" %></dd></div>
-      <div><dt>Окрас</dt><dd><%= @pet.color.presence || "—" %></dd></div>
-      <div><dt>Чип</dt><dd><%= @pet.chip_number.presence || "—" %></dd></div>
-      <div><dt>Ветпаспорт</dt><dd><%= @pet.passport_number.presence || "—" %></dd></div>
-      <div><dt>Стерилизация</dt><dd><%= @pet.neutered.nil? ? "—" : (@pet.neutered ? "Да" : "Нет") %></dd></div>
-    </dl>
-
-    <% if @pet.notes.present? %>
-      <div class="notes-box">
-        <div class="fw-semibold mb-1">Заметки</div>
-        <div class="text-muted"><%= simple_format(@pet.notes) %></div>
-      </div>
-    <% end %>
-  </section>
 </div>

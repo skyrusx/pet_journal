@@ -2,7 +2,7 @@
   <main class="public-pet-card">
     <div class="public-pet-photo-wrap">
       <% if @pet.photo.attached? %>
-        <%= image_tag @pet.photo, class: "public-pet-photo" %>
+        <%= image_tag @pet.photo, class: "public-pet-photo", alt: @pet.name %>
       <% else %>
         <div class="public-pet-photo public-pet-photo-placeholder">
           <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>

@@ -44,11 +44,11 @@
 
   <%= render "shared/pet_tabs", pet: @pet %>
 
-  <section class="documents-filter-panel mb-4">
+  <section class="documents-filter-panel compact-filter-panel mb-4">
     <div class="section-heading compact">
       <div>
-        <div class="text-muted small mb-1">Фильтры</div>
-        <h2 class="h5 mb-0"><%= document_filter_summary(@selected_type, @selected_status, @selected_scope, @query) %></h2>
+        <div class="filter-panel-title mb-0">Фильтры</div>
+        <div class="compact-filter-summary"><%= document_filter_summary(@selected_type, @selected_status, @selected_scope, @query) %></div>
       </div>
       <% if @selected_type.present? || @selected_status != "all" || @selected_scope != "all" || @query.present? %>
         <%= link_to "Сбросить все", pet_pet_documents_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
@@ -69,7 +69,7 @@
     <% end %>
 
     <div class="documents-filter-grid">
-      <div>
+      <div class="compact-filter-row">
         <div class="filter-panel-title">Статус</div>
         <div class="filter-chips">
           <% document_status_filters(@pet, @selected_status, @selected_type, @query).each do |label, path, active| %>
@@ -78,7 +78,7 @@
         </div>
       </div>
 
-      <div>
+      <div class="compact-filter-row">
         <div class="filter-panel-title">Тип</div>
         <div class="filter-chips">
           <% document_type_filters(@pet, @selected_type, @selected_status, @query).each do |label, path, active| %>
@@ -87,7 +87,7 @@
         </div>
       </div>
 
-      <div>
+      <div class="compact-filter-row">
         <div class="filter-panel-title">Состав</div>
         <div class="filter-chips">
           <% document_scope_filters(@pet, @selected_scope).each do |label, path, active| %>

@@ -20,12 +20,13 @@
 
   <% landing_page = controller_name == "pages" && action_name == "index" && !user_signed_in? %>
   <% guest_auth_page = devise_controller? && !user_signed_in? %>
-  <body class="app-body <%= "pj-landing-body" if landing_page %> <%= "pj-auth-body" if guest_auth_page %>">
+  <% internal_page = !(landing_page || guest_auth_page) %>
+  <body class="app-body <%= "app-internal-body" if internal_page %> <%= "pj-landing-body" if landing_page %> <%= "pj-auth-body" if guest_auth_page %>">
     <% unless landing_page || guest_auth_page %>
     <header class="app-header">
       <div class="app-shell app-header-inner">
         <%= link_to root_path, class: "app-brand", aria: { label: "PetJournal — рабочий стол" } do %>
-          <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
+          <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 168, height: 48 %>
         <% end %>
 
         <nav class="app-nav" aria-label="Основная навигация">
@@ -33,7 +34,6 @@
             <%= app_nav_link "Рабочий стол", root_path, active: request.path == root_path %>
             <%= app_nav_link "Мои питомцы", pets_path, active: request.path.start_with?(pets_path) %>
             <%= app_nav_link "Уведомления", notification_channels_path, active: controller_name == "notification_channels" %>
-            <%= app_nav_link "Аккаунт", edit_user_registration_path, active: devise_controller? %>
           <% else %>
             <%= app_nav_link "Войти", new_user_session_path %>
             <%= link_to "Регистрация", new_user_registration_path, class: "btn btn-primary btn-sm" %>
@@ -42,17 +42,21 @@
 
         <% if user_signed_in? %>
           <details class="app-user-menu">
-            <summary>
-              <span><%= current_user.email %></span>
+            <summary class="<%= "active" if devise_controller? %>" aria-label="Меню пользователя <%= current_user.email %>">
+              <span class="app-user-avatar" aria-hidden="true"><%= current_user.email.to_s.first.to_s.upcase.presence || "P" %></span>
+              <span class="app-user-email"><%= current_user.email %></span>
             </summary>
             <div class="app-user-dropdown">
               <div class="app-user-dropdown-email"><%= current_user.email %></div>
-              <%= link_to "Аккаунт", edit_user_registration_path, class: "app-user-dropdown-link" %>
+              <%= link_to "Настройки аккаунта",
+                          edit_user_registration_path,
+                          class: class_names("app-user-dropdown-link", active: devise_controller?) %>
+              <div class="app-user-dropdown-separator" aria-hidden="true"></div>
               <%= button_to "Выйти",
                             destroy_user_session_path,
                             method: :delete,
-                            class: "btn btn-outline-danger btn-sm",
-                            form_class: "m-0" %>
+                            class: "app-user-dropdown-link app-user-dropdown-danger",
+                            form_class: "app-user-dropdown-form" %>
             </div>
           </details>
         <% end %>
@@ -72,6 +76,37 @@
     <main class="app-shell app-main">
       <%= yield %>
     </main>
+    <% end %>
+
+    <% if internal_page %>
+      <footer class="app-footer">
+        <div class="app-shell app-footer-inner">
+          <div class="app-footer-main">
+            <div class="app-footer-brand">
+              <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 142, height: 41 %>
+              <p>Всё важное о питомцах — рядом.</p>
+            </div>
+
+            <nav class="app-footer-nav" aria-label="Навигация в подвале">
+              <%= link_to "Рабочий стол", root_path %>
+              <%= link_to "Мои питомцы", pets_path %>
+              <%= link_to "Уведомления", notification_channels_path %>
+              <%= link_to "Настройки аккаунта", edit_user_registration_path %>
+            </nav>
+
+            <div class="app-footer-support">
+              <div>Поддержка</div>
+              <%= mail_to "support@pet-journal.ru" %>
+              <%= link_to "VK PetJournal", "https://vk.ru/petjournal", target: "_blank", rel: "noopener" %>
+            </div>
+          </div>
+
+          <div class="app-footer-bottom">
+            <span>© <%= Date.current.year %> PetJournal</span>
+            <span>Сделано с заботой о тех, кто рядом ♡</span>
+          </div>
+        </div>
+      </footer>
     <% end %>
 
     <% if notice.present? || alert.present? %>
