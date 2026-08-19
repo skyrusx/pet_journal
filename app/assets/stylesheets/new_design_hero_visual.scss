@@ -3,7 +3,10 @@
 .pj-nd-hero__panel {
   position: relative;
   isolation: isolate;
-  background: #f8f5ec;
+  background:
+    radial-gradient(circle at 77% 24%, rgba(238, 224, 193, 0.62) 0, rgba(238, 224, 193, 0.18) 29%, transparent 53%),
+    radial-gradient(circle at 97% 39%, rgba(190, 208, 161, 0.42) 0, rgba(190, 208, 161, 0.12) 23%, transparent 45%),
+    linear-gradient(105deg, #fbf8f0 0%, #faf7ef 41%, #f4f0e5 71%, #eef1e4 100%);
 }
 
 /* The artwork spans the whole hero instead of being clipped by the right grid column. */
