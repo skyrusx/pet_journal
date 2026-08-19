@@ -1,11 +1,13 @@
-<div class="auth-page">
+<%= render "devise/shared/auth_header" %>
+
+<div class="auth-page auth-page-with-nav">
   <section class="auth-card">
     <div class="auth-copy">
       <%= link_to root_path, class: "auth-brand", aria: { label: "PetJournal — главная" } do %>
         <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 172, height: 49 %>
       <% end %>
       <span>Быстрый старт</span>
-      <h1>Создайте дневник питомца</h1>
+      <h1>Создайте свой PetJournal</h1>
       <p>Приватное пространство для истории здоровья, документов, напоминаний и PetTag.</p>
       <ul>
         <li>Первого питомца можно добавить сразу</li>
@@ -54,6 +56,9 @@
       <%= f.submit "Создать аккаунт", class: "btn btn-primary w-100 auth-submit" %>
     <% end %>
 
-    <%= render "devise/shared/links" %>
+    <div class="auth-links">
+      <span>Уже есть аккаунт?</span>
+      <%= link_to "Войти", new_session_path(resource_name), class: "auth-link-primary" %>
+    </div>
   </section>
 </div>
