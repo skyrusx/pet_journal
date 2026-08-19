@@ -1,4 +1,6 @@
-<div class="auth-page">
+<%= render "devise/shared/auth_header" %>
+
+<div class="auth-page auth-page-with-nav">
   <section class="auth-card">
     <div class="auth-copy">
       <%= link_to root_path, class: "auth-brand", aria: { label: "PetJournal — главная" } do %>
@@ -22,7 +24,7 @@
     <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "auth-form" }) do |f| %>
       <div class="auth-form-heading">
         <span>Доступ</span>
-        <h2>Сменить пароль</h2>
+        <h2>Новый пароль</h2>
       </div>
 
       <%= render "devise/shared/error_messages", resource: resource %>
@@ -47,9 +49,11 @@
         </div>
       </div>
 
-      <%= f.submit "Сменить пароль", class: "btn btn-primary w-100 auth-submit" %>
+      <%= f.submit "Сохранить новый пароль", class: "btn btn-primary w-100 auth-submit" %>
     <% end %>
 
-    <%= render "devise/shared/links" %>
+    <div class="auth-links">
+      <%= link_to "Вернуться ко входу", new_session_path(resource_name), class: "auth-link-primary" %>
+    </div>
   </section>
 </div>
