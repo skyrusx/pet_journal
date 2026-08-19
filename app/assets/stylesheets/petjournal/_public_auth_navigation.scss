@@ -140,86 +140,28 @@
   }
 }
 
-/* Auth pages keep their original design. Only the same mobile burger pattern
-   used on the public homepage is added in the upper-right corner. */
-.auth-nav {
+/* Auth mobile navigation intentionally reuses the exact public header
+   structure and classes instead of approximating its spacing/logo/button. */
+.auth-public-header {
   display: none;
 }
 
 @media (max-width: 680px) {
-  .auth-nav {
+  .auth-public-header {
+    --pj-green: #07392f;
+    --pj-deep: #052a23;
+    --pj-cream: #f7f1e5;
+    --pj-paper: #fffdf8;
+    --pj-lime: #c8f43f;
+    --pj-ink: #14352d;
+    --pj-border: #ded8c9;
     display: block;
-    inset: 0;
-    pointer-events: none;
-    position: absolute;
-    z-index: 1090;
   }
 
-  .auth-nav-toggle {
-    background: rgba(255, 255, 255, .08);
-    border: 1px solid rgba(255, 255, 255, .22);
-    border-radius: 12px;
-    color: #fffdf8;
-    display: inline-flex;
-    pointer-events: auto;
-    position: absolute;
-    right: 24px;
-    top: calc(28px + env(safe-area-inset-top));
-    z-index: 1091;
-  }
-
-  .auth-nav-toggle:hover,
-  .auth-nav-toggle:focus-visible {
-    background: rgba(255, 255, 255, .14);
-    border-color: rgba(255, 255, 255, .34);
-    color: #fffdf8;
-  }
-
-  .auth-nav-backdrop {
-    backdrop-filter: blur(2px);
-    background: rgba(3, 27, 23, .52);
-    inset: 0;
-    pointer-events: auto;
-    position: fixed;
-    z-index: 1092;
-  }
-
-  .auth-nav-panel {
-    background: #fffdf8;
-    border-left: 0;
-    box-shadow: -24px 0 60px rgba(5, 42, 35, .22);
-    display: grid;
-    grid-template-rows: auto auto 1fr;
-    height: 100dvh;
-    inset: 0 0 auto auto;
-    max-height: 100dvh;
-    max-width: min(344px, calc(100vw - 20px));
-    min-height: 100dvh;
-    overflow-y: auto;
-    padding: calc(16px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
-    pointer-events: auto;
-    position: fixed;
-    width: min(344px, calc(100vw - 20px));
-    z-index: 1093;
-  }
-
-  .auth-nav-panel[hidden],
-  .auth-nav-backdrop[hidden] {
+  /* The mobile header above replaces the logo row that already exists inside
+     the original auth hero. The auth content itself is otherwise untouched. */
+  .auth-copy > .auth-brand {
     display: none;
-  }
-
-  .auth-nav-panel .mobile-menu-header {
-    margin-bottom: 18px;
-  }
-
-  .auth-nav-panel .mobile-menu-brand img {
-    width: 132px;
-  }
-
-  .auth-nav-panel .mobile-menu-close {
-    background: #f7f1e5;
-    border-color: #ded8c9;
-    border-radius: 12px;
   }
 
   .auth-nav-links {
@@ -250,11 +192,5 @@
 
   .auth-nav-secondary-link {
     margin-top: 4px;
-  }
-}
-
-@media (max-width: 390px) {
-  .auth-nav-toggle {
-    right: 20px;
   }
 }
