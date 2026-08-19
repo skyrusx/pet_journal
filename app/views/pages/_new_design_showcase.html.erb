@@ -19,16 +19,9 @@
       <div class="pj-nd-showcase__app" aria-label="Пример интерфейса PetJournal">
         <header class="pj-nd-showcase__app-topbar">
           <div class="pj-nd-showcase__brand">
-            <span class="pj-nd-showcase__brand-mark" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <circle cx="7" cy="6" r="2.2" fill="currentColor" />
-                <circle cx="12" cy="4.5" r="2.2" fill="currentColor" />
-                <circle cx="17" cy="6" r="2.2" fill="currentColor" />
-                <circle cx="19" cy="10.5" r="2" fill="currentColor" />
-                <path d="M12 9.2c-3.7 0-6.5 3.1-6.5 6.2 0 2.7 2.2 4.1 4.3 3.3.8-.3 1.4-.8 2.2-.8s1.4.5 2.2.8c2.1.8 4.3-.6 4.3-3.3 0-3.1-2.8-6.2-6.5-6.2Z" fill="currentColor" />
-              </svg>
-            </span>
-            <span>PetJournal</span>
+            <%= image_tag "petjournal/logo-horizontal.png",
+                          alt: "PetJournal",
+                          class: "pj-nd-showcase__brand-logo" %>
           </div>
 
           <div class="pj-nd-showcase__topbar-actions" aria-hidden="true">
@@ -39,12 +32,17 @@
 
         <div class="pj-nd-showcase__grid">
           <article class="pj-nd-showcase__card pj-nd-showcase__card--pet">
-            <div class="pj-nd-showcase__pet-avatar" aria-hidden="true">
-              <div class="pj-nd-showcase__cat-face">🐱</div>
+            <div class="pj-nd-showcase__pet-avatar">
+              <%= image_tag "petjournal/new_design/showcase-cat.png",
+                            alt: "Тор",
+                            class: "pj-nd-showcase__pet-avatar-image" %>
             </div>
 
             <div class="pj-nd-showcase__pet-info">
-              <div class="pj-nd-showcase__pet-name">Тор <span aria-hidden="true">♂</span></div>
+              <div class="pj-nd-showcase__pet-name">
+                <span class="pj-nd-showcase__pet-name-text">Тор</span>
+                <span class="pj-nd-showcase__pet-sex" aria-label="Самец">♂</span>
+              </div>
               <div class="pj-nd-showcase__pet-meta">Британская короткошерстная,<br>3 года 2 месяца · 4,9 кг</div>
               <div class="pj-nd-showcase__status">Всё под контролем</div>
             </div>
@@ -91,7 +89,9 @@
           <article class="pj-nd-showcase__card pj-nd-showcase__card--tag">
             <h3>PetTag</h3>
             <div class="pj-nd-showcase__tag-image-wrap">
-              <%= image_tag "petjournal/auth-pettag.png", alt: "PetTag", class: "pj-nd-showcase__tag-image" %>
+              <%= image_tag "petjournal/new_design/showcase-pettag.png",
+                            alt: "PetTag",
+                            class: "pj-nd-showcase__tag-image" %>
             </div>
           </article>
         </div>
