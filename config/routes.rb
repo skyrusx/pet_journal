@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   root "pages#index"
+  get "new-design" => "pages#new_design", as: :new_design
 
   devise_for :users, skip: %i[sessions registrations passwords]
   devise_scope :user do
