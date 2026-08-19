@@ -1,5 +1,5 @@
 /* Calm premium polish for the authenticated product UI.
-   This layer is intentionally conservative: no layout or business-logic changes. */
+   This layer is intentionally conservative: no business-logic changes. */
 
 :root {
   --pj-shadow: 0 10px 28px rgba(7, 57, 47, .045);
@@ -22,7 +22,7 @@
 .overview-card-label,
 .auth-copy > span,
 .auth-form-heading span {
-  font-weight: 650;
+  font-weight: 600;
 }
 
 .btn,
@@ -59,7 +59,7 @@ a.btn {
 
 .app-footer-support > div {
   color: rgba(255, 253, 248, .72);
-  font-weight: 550;
+  font-weight: 500;
 }
 
 /* Unified filters: compact select-based control surface across the product. */
@@ -89,7 +89,7 @@ a.btn {
 .journal-filter-field label {
   color: var(--pj-muted);
   font-size: 12px;
-  font-weight: 550;
+  font-weight: 500;
 }
 
 .journal-filter-field .form-select,
@@ -122,8 +122,7 @@ a.btn {
   color: var(--pj-green);
 }
 
-/* Mobile sheets: neutral surfaces + restrained brand accent.
-   Lime remains reserved for the central Add action and primary CTA. */
+/* Mobile sheets: neutral surfaces + restrained brand accent. */
 .mobile-sheet {
   background: #fffdfa;
   border-top: 1px solid rgba(20, 53, 45, .1);
@@ -131,7 +130,7 @@ a.btn {
 }
 
 .mobile-sheet-header h2 {
-  font-weight: 650;
+  font-weight: 600;
   letter-spacing: -.02em;
 }
 
@@ -147,7 +146,7 @@ a.btn {
 
 .mobile-sheet-link {
   color: #183d34;
-  font-weight: 600;
+  font-weight: 550;
 }
 
 .mobile-sheet-link:hover,
@@ -178,7 +177,7 @@ a.btn {
 }
 
 .mobile-sheet-pet-copy strong {
-  font-weight: 650;
+  font-weight: 600;
 }
 
 .mobile-sheet-pet-copy small {
@@ -196,7 +195,7 @@ a.btn {
 
 /* Bottom navigation: calmer labels, clear state without over-emphasis. */
 .mobile-bottom-nav-item {
-  font-weight: 550;
+  font-weight: 500;
 }
 
 .mobile-bottom-nav-item.active:not(.mobile-bottom-add) {
@@ -205,6 +204,233 @@ a.btn {
 
 .mobile-bottom-nav-item:not(.active):not(.mobile-bottom-add) {
   color: #718079;
+}
+
+/* Release dashboard: action-first instead of metric-first. */
+.home-hero-calm {
+  align-items: end;
+}
+
+.home-attention-count {
+  align-items: center;
+  background: #f7f1e6;
+  border: 1px solid rgba(20, 53, 45, .1);
+  border-radius: 999px;
+  color: #52655f;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 600;
+  min-height: 34px;
+  padding: 0 12px;
+}
+
+.home-priority-list {
+  display: grid;
+  gap: 8px;
+}
+
+.home-priority-item {
+  align-items: center;
+  background: #fffdfa;
+  border: 1px solid rgba(20, 53, 45, .09);
+  border-radius: 12px;
+  color: inherit;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  min-height: 62px;
+  padding: 10px 14px;
+  text-decoration: none;
+  transition: border-color .18s ease, background-color .18s ease, transform .18s ease;
+}
+
+.home-priority-item:hover {
+  background: #fffefb;
+  border-color: rgba(7, 57, 47, .18);
+  color: inherit;
+  transform: translateY(-1px);
+}
+
+.home-priority-marker {
+  background: #98a9a2;
+  border-radius: 999px;
+  height: 8px;
+  width: 8px;
+}
+
+.home-priority-item.warning .home-priority-marker,
+.home-priority-item.document .home-priority-marker {
+  background: #b28b47;
+}
+
+.home-priority-item.danger .home-priority-marker {
+  background: #b96058;
+}
+
+.home-priority-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.home-priority-copy strong,
+.home-card-signal {
+  color: #173d34;
+  font-weight: 600;
+}
+
+.home-priority-copy small,
+.home-priority-time {
+  color: var(--pj-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.home-priority-time {
+  white-space: nowrap;
+}
+
+.home-priority-empty {
+  background: #f8f6f0;
+  border: 1px solid rgba(20, 53, 45, .08);
+  border-radius: 12px;
+  display: grid;
+  gap: 3px;
+  padding: 16px;
+}
+
+.home-priority-empty strong {
+  color: #31574d;
+  font-weight: 600;
+}
+
+.home-priority-empty span {
+  color: var(--pj-muted);
+  font-size: 13px;
+}
+
+.home-shortcut-list {
+  display: grid;
+  gap: 4px;
+}
+
+.home-shortcut-list a {
+  border-radius: 10px;
+  color: #173d34;
+  display: grid;
+  gap: 1px;
+  padding: 9px 10px;
+  text-decoration: none;
+  transition: background-color .18s ease;
+}
+
+.home-shortcut-list a:hover {
+  background: rgba(7, 57, 47, .045);
+  color: var(--pj-green);
+}
+
+.home-shortcut-list span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.home-shortcut-list small {
+  color: var(--pj-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.home-onboarding {
+  align-items: center;
+  display: grid;
+  gap: 28px;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, .8fr);
+}
+
+.home-onboarding-steps {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.home-onboarding-steps li {
+  align-items: center;
+  color: var(--pj-muted);
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 34px 1fr;
+}
+
+.home-onboarding-steps > li > span {
+  align-items: center;
+  background: #f1efe9;
+  border: 1px solid #ddd9cf;
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 600;
+  height: 34px;
+  justify-content: center;
+  width: 34px;
+}
+
+.home-onboarding-steps li.active > span {
+  background: #e7efea;
+  border-color: #cbd9d1;
+  color: var(--pj-green);
+}
+
+.home-onboarding-steps li div {
+  display: grid;
+  gap: 1px;
+}
+
+.home-onboarding-steps strong {
+  color: #31574d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.home-onboarding-steps small {
+  font-size: 12px;
+}
+
+/* Pet overview: nearest action + latest event before secondary detail. */
+.pet-focus-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pet-focus-card {
+  background: #fffdfa;
+  border: 1px solid rgba(20, 53, 45, .09);
+  border-radius: 14px;
+  box-shadow: var(--pj-shadow);
+  padding: 16px 18px;
+}
+
+.pet-focus-card.danger {
+  border-color: rgba(185, 96, 88, .28);
+}
+
+.pet-focus-card h2 {
+  color: #173d34;
+  font-weight: 600;
+}
+
+.pet-focus-link {
+  color: var(--pj-green);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pet-focus-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* Product-wide surface polish. */
@@ -218,7 +444,8 @@ a.btn {
 .form-section,
 .action-panel,
 .details-panel,
-.empty-panel {
+.empty-panel,
+.dashboard-section {
   box-shadow: var(--pj-shadow);
 }
 
@@ -251,6 +478,51 @@ a.btn {
   }
 
   .mobile-sheet-link {
-    font-weight: 600;
+    font-weight: 550;
+  }
+
+  .home-hero-calm {
+    align-items: stretch;
+  }
+
+  .home-hero-calm .home-hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero-calm .home-hero-actions .btn {
+    width: 100%;
+  }
+
+  .home-priority-item {
+    grid-template-columns: 10px minmax(0, 1fr);
+  }
+
+  .home-priority-time {
+    grid-column: 2;
+  }
+
+  .home-onboarding {
+    grid-template-columns: 1fr;
+  }
+
+  .pet-focus-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pet-dashboard-release .dashboard-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pet-dashboard-release .dashboard-actions .btn-primary {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-priority-item,
+  .home-shortcut-list a {
+    transition: none;
   }
 }
