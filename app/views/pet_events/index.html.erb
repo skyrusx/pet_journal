@@ -55,58 +55,55 @@
         <div class="filter-panel-title mb-0">Фильтры</div>
         <div class="compact-filter-summary"><%= journal_filter_summary(@selected_event_type, @selected_period, @selected_status, @query) %></div>
       </div>
-      <% if @selected_event_type.present? || @selected_period.present? || @selected_status.present? || @query.present? %>
-        <%= link_to "Сбросить все", pet_pet_events_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
-      <% end %>
     </div>
 
-    <%= form_with url: pet_pet_events_path(@pet), method: :get, class: "journal-search mb-3" do |form| %>
-      <%= hidden_field_tag :type, @selected_event_type %>
-      <%= hidden_field_tag :period, @selected_period %>
-      <%= hidden_field_tag :status, @selected_status %>
-      <%= form.search_field :q, value: @query, class: "form-control", placeholder: "Поиск: препарат, клиника, врач, диагноз, симптомы, рекомендации" %>
-      <%= form.submit "Найти", class: "btn btn-outline-primary" %>
-      <% if @query.present? %>
-        <%= link_to "Очистить поиск",
-                    pet_pet_events_path(@pet, type: @selected_event_type, period: @selected_period, status: @selected_status),
-                    class: "btn btn-outline-secondary" %>
+    <%= form_with url: pet_pet_events_path(@pet), method: :get, class: "journal-filter-form" do |form| %>
+      <div class="journal-filter-fields">
+        <div class="journal-filter-field">
+          <%= label_tag :type, "Тип события" %>
+          <%= select_tag :type,
+                         options_for_select(
+                           [["Все типы (#{@total_events_count})", ""]] +
+                             @event_type_filters.map { |event_type, label| ["#{label} (#{@event_type_counts.fetch(event_type, 0)})", event_type] },
+                           @selected_event_type
+                         ),
+                         class: "form-select" %>
+        </div>
+
+        <div class="journal-filter-field">
+          <%= label_tag :period, "Период" %>
+          <%= select_tag :period,
+                         options_for_select(
+                           [["Все время", ""], ["Месяц", "month"], ["3 месяца", "quarter"], ["Год", "year"]],
+                           @selected_period
+                         ),
+                         class: "form-select" %>
+        </div>
+
+        <div class="journal-filter-field">
+          <%= label_tag :status, "Состояние" %>
+          <%= select_tag :status,
+                         options_for_select(
+                           [["Все записи", ""], ["С файлами", "with_files"], ["С будущим действием", "follow_up"]],
+                           @selected_status
+                         ),
+                         class: "form-select" %>
+        </div>
+      </div>
+
+      <div class="journal-filter-search-row">
+        <%= form.search_field :q,
+                              value: @query,
+                              class: "form-control",
+                              placeholder: "Поиск: препарат, клиника, врач, диагноз…",
+                              aria: { label: "Поиск по журналу" } %>
+        <%= form.submit "Применить", class: "btn btn-outline-primary" %>
+      </div>
+
+      <% if @selected_event_type.present? || @selected_period.present? || @selected_status.present? || @query.present? %>
+        <%= link_to "Сбросить фильтры", pet_pet_events_path(@pet), class: "journal-filter-reset" %>
       <% end %>
     <% end %>
-
-    <div class="journal-filter-group">
-      <div class="compact-filter-row">
-        <div class="filter-panel-title">Тип события</div>
-        <div class="filter-chips">
-          <%= link_to "Все #{content_tag(:span, @total_events_count)}".html_safe,
-                      event_filter_path(@pet, nil),
-                      class: event_filter_class(@selected_event_type, nil) %>
-
-          <% @event_type_filters.each do |event_type, label| %>
-            <%= link_to "#{label} #{content_tag(:span, @event_type_counts.fetch(event_type, 0))}".html_safe,
-                        event_filter_path(@pet, event_type),
-                        class: event_filter_class(@selected_event_type, event_type) %>
-          <% end %>
-        </div>
-      </div>
-
-      <div class="compact-filter-row">
-        <div class="filter-panel-title">Период</div>
-        <div class="filter-chips">
-          <% event_period_filters(@pet, @selected_period).each do |label, path, active| %>
-            <%= link_to label, path, class: reminder_filter_class(active) %>
-          <% end %>
-        </div>
-      </div>
-
-      <div class="compact-filter-row">
-        <div class="filter-panel-title">Состояние</div>
-        <div class="filter-chips">
-          <% event_status_filters(@pet, @selected_status).each do |label, path, active| %>
-            <%= link_to label, path, class: reminder_filter_class(active) %>
-          <% end %>
-        </div>
-      </div>
-    </div>
   </section>
 
   <% if @pet_events.any? %>
