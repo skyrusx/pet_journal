@@ -73,8 +73,8 @@ module ApplicationHelper
       { label: "Событие в журнал", path: new_pet_pet_event_path(pet), icon: :journal },
       { label: "Напоминание", path: new_pet_reminder_path(pet), icon: :clock },
       { label: "Вес", path: new_pet_pet_event_path(pet, type: :weight), icon: :plus },
-      { label: "Препарат", path: new_pet_pet_event_path(pet, type: :treatment), icon: :plus },
-      { label: "Вакцинацию", path: new_pet_pet_event_path(pet, type: :vaccination), icon: :plus },
+      { label: "Лекарство / обработка", path: new_pet_pet_event_path(pet, type: :treatment), icon: :plus },
+      { label: "Вакцинация", path: new_pet_pet_event_path(pet, type: :vaccination), icon: :plus },
       { label: "Документ", path: new_pet_pet_document_path(pet), icon: :file }
     ]
   end
@@ -83,7 +83,7 @@ module ApplicationHelper
     pet = mobile_nav_pet
     items = [
       { label: "Мои питомцы", path: pets_path, icon: :paw, active: controller_name == "pets" },
-      { label: "Уведомления", path: notification_channels_path, icon: :bell, active: controller_name == "notification_channels", badge: mobile_notifications_badge },
+      { label: "Настройки уведомлений", path: notification_channels_path, icon: :bell, active: controller_name == "notification_channels" },
       { label: "Аккаунт", path: edit_user_registration_path, icon: :user, active: devise_controller? }
     ]
 
@@ -119,11 +119,10 @@ module ApplicationHelper
     count.positive? ? [count, 9].min : nil
   end
 
+  # The bell opens notification settings/history, not a notification inbox.
+  # Reminder urgency is shown only on the dedicated Reminders navigation item.
   def mobile_notifications_badge
-    return unless user_signed_in?
-
-    count = current_user.reminders.due.count
-    count.positive? ? [count, 9].min : nil
+    nil
   end
 
   def pet_nav_items(pet)
@@ -132,7 +131,7 @@ module ApplicationHelper
       ["Журнал", pet_pet_events_path(pet), controller_name == "pet_events"],
       ["Напоминания", pet_reminders_path(pet), controller_name == "reminders"],
       ["Документы", pet_pet_documents_path(pet), controller_name == "pet_documents"],
-      ["Жетон", pet_pet_tag_path(pet), controller_name == "pet_tags"],
+      ["PetTag", pet_pet_tag_path(pet), controller_name == "pet_tags"],
       ["Доступ", pet_profile_shares_path(pet), controller_name == "pet_profile_shares"],
       ["Данные", edit_pet_path(pet), controller_name == "pets" && action_name == "edit"]
     ]
