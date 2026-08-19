@@ -140,112 +140,121 @@
   }
 }
 
-/* Auth navigation intentionally changes only the navigation itself. */
+/* Auth pages keep their original design. Only the same mobile burger pattern
+   used on the public homepage is added in the upper-right corner. */
 .auth-nav {
-  background: #f7f1e5;
-  border-bottom: 1px solid rgba(20, 53, 45, .12);
-  box-shadow: 0 6px 20px rgba(7, 57, 47, .05);
-  padding: env(safe-area-inset-top) 22px 0;
-  position: sticky;
-  top: 0;
-  z-index: 80;
-}
-
-.auth-nav-inner {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  margin: 0 auto;
-  max-width: 960px;
-  min-height: 68px;
-}
-
-.auth-nav-brand-link,
-.auth-nav-action {
-  align-items: center;
-  display: inline-flex;
-  text-decoration: none;
-}
-
-.auth-nav-brand-link {
-  border-radius: 10px;
-  min-height: 48px;
-  padding: 4px 6px;
-}
-
-.auth-nav-brand-link img {
-  display: block;
-  height: auto;
-  width: 148px;
-}
-
-.auth-nav-brand-link:focus-visible,
-.auth-nav-action:focus-visible {
-  outline: 3px solid rgba(200, 244, 63, .6);
-  outline-offset: 2px;
-}
-
-.auth-nav-action {
-  background: #07392f;
-  border: 1px solid #07392f;
-  border-radius: 10px;
-  color: #fffdf8;
-  font-size: 13px;
-  font-weight: 850;
-  min-height: 44px;
-  padding: 0 16px;
-}
-
-.auth-nav-action:hover {
-  background: #052a23;
-  border-color: #052a23;
-  color: #fffdf8;
-}
-
-.auth-nav-action-muted {
-  background: transparent;
-  border-color: rgba(7, 57, 47, .2);
-  color: #07392f;
-}
-
-.auth-nav-action-muted:hover {
-  background: rgba(7, 57, 47, .07);
-  border-color: rgba(7, 57, 47, .28);
-  color: #07392f;
+  display: none;
 }
 
 @media (max-width: 680px) {
   .auth-nav {
-    padding-inline: 12px;
+    display: block;
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 1090;
   }
 
-  .auth-nav-inner {
-    min-height: 62px;
+  .auth-nav-toggle {
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .22);
+    border-radius: 12px;
+    color: #fffdf8;
+    display: inline-flex;
+    pointer-events: auto;
+    position: absolute;
+    right: 24px;
+    top: calc(28px + env(safe-area-inset-top));
+    z-index: 1091;
   }
 
-  .auth-nav-brand-link {
-    min-height: 44px;
-    padding-inline: 2px;
+  .auth-nav-toggle:hover,
+  .auth-nav-toggle:focus-visible {
+    background: rgba(255, 255, 255, .14);
+    border-color: rgba(255, 255, 255, .34);
+    color: #fffdf8;
   }
 
-  .auth-nav-brand-link img {
-    width: 136px;
+  .auth-nav-backdrop {
+    backdrop-filter: blur(2px);
+    background: rgba(3, 27, 23, .52);
+    inset: 0;
+    pointer-events: auto;
+    position: fixed;
+    z-index: 1092;
   }
 
-  .auth-nav-action {
-    font-size: 12px;
-    min-height: 40px;
-    padding: 0 11px;
+  .auth-nav-panel {
+    background: #fffdf8;
+    border-left: 0;
+    box-shadow: -24px 0 60px rgba(5, 42, 35, .22);
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    height: 100dvh;
+    inset: 0 0 auto auto;
+    max-height: 100dvh;
+    max-width: min(344px, calc(100vw - 20px));
+    min-height: 100dvh;
+    overflow-y: auto;
+    padding: calc(16px + env(safe-area-inset-top)) 16px calc(20px + env(safe-area-inset-bottom));
+    pointer-events: auto;
+    position: fixed;
+    width: min(344px, calc(100vw - 20px));
+    z-index: 1093;
+  }
+
+  .auth-nav-panel[hidden],
+  .auth-nav-backdrop[hidden] {
+    display: none;
+  }
+
+  .auth-nav-panel .mobile-menu-header {
+    margin-bottom: 18px;
+  }
+
+  .auth-nav-panel .mobile-menu-brand img {
+    width: 132px;
+  }
+
+  .auth-nav-panel .mobile-menu-close {
+    background: #f7f1e5;
+    border-color: #ded8c9;
+    border-radius: 12px;
+  }
+
+  .auth-nav-links {
+    align-content: start;
+    gap: 6px;
+  }
+
+  .auth-nav-links .mobile-menu-link {
+    border-radius: 12px;
+    font-size: 15px;
+    min-height: 50px;
+    padding: 0 12px;
+  }
+
+  .auth-nav-links .mobile-menu-cta {
+    background: #c8f43f;
+    border-radius: 12px;
+    color: #052a23;
+    font-size: 15px;
+    font-weight: 900;
+    margin-top: 10px;
+    min-height: 50px;
+  }
+
+  .auth-nav-links .mobile-menu-cta:hover {
+    color: #052a23;
+  }
+
+  .auth-nav-secondary-link {
+    margin-top: 4px;
   }
 }
 
 @media (max-width: 390px) {
-  .auth-nav-brand-link img {
-    width: 128px;
-  }
-
-  .auth-nav-action {
-    font-size: 11px;
-    padding-inline: 9px;
+  .auth-nav-toggle {
+    right: 20px;
   }
 }
