@@ -68,7 +68,7 @@ module PetDocumentsHelper
   def quick_document_actions(pet)
     [
       ["Ветпаспорт", new_pet_pet_document_path(pet, type: :passport)],
-      ["Прививка", new_pet_pet_document_path(pet, type: :vaccination)],
+      ["Вакцинация", new_pet_pet_document_path(pet, type: :vaccination)],
       ["Анализы", new_pet_pet_document_path(pet, type: :lab_result)],
       ["Назначение", new_pet_pet_document_path(pet, type: :prescription)],
       ["Справка", new_pet_pet_document_path(pet, type: :certificate)]
