@@ -87,9 +87,9 @@ module RemindersHelper
   def quick_reminder_actions(pet)
     [
       ["Лекарство", new_pet_reminder_path(pet, type: :medication)],
-      ["Прививка", new_pet_reminder_path(pet, type: :vaccination)],
-      ["Обработка", new_pet_reminder_path(pet, type: :treatment)],
-      ["Визит", new_pet_reminder_path(pet, type: :visit)],
+      ["Вакцинация", new_pet_reminder_path(pet, type: :vaccination)],
+      ["Обработка от паразитов", new_pet_reminder_path(pet, type: :treatment)],
+      ["Визит к врачу", new_pet_reminder_path(pet, type: :visit)],
       ["Вес", new_pet_reminder_path(pet, type: :weight)]
     ]
   end
