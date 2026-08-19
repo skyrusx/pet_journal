@@ -1,0 +1,210 @@
+/*
+ * PetJournal new landing design preview.
+ * This stylesheet is loaded only by app/views/layouts/new_design.html.erb.
+ * Keep every selector scoped to the new design so the current UI remains untouched.
+ */
+
+.pj-new-design-body {
+  margin: 0;
+  min-width: 320px;
+  background: #fdfcf8;
+  color: #202a23;
+  font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.pj-new-design,
+.pj-new-design *,
+.pj-new-design *::before,
+.pj-new-design *::after {
+  box-sizing: border-box;
+}
+
+.pj-new-design {
+  min-height: 100vh;
+  background: #fdfcf8;
+}
+
+.pj-nd-shell {
+  width: min(1240px, calc(100% - 96px));
+  margin-inline: auto;
+}
+
+.pj-nd-navbar {
+  position: relative;
+  z-index: 10;
+  background: rgba(253, 252, 248, 0.98);
+}
+
+.pj-nd-navbar__inner {
+  min-height: 88px;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 240px;
+  align-items: center;
+  column-gap: 24px;
+}
+
+.pj-nd-navbar__brand {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: flex-start;
+  text-decoration: none;
+}
+
+.pj-nd-navbar__logo {
+  display: block;
+  width: 180px;
+  height: auto;
+  object-fit: contain;
+}
+
+.pj-nd-navbar__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(26px, 2.6vw, 44px);
+  white-space: nowrap;
+}
+
+.pj-nd-navbar__nav a,
+.pj-nd-navbar__login {
+  color: #222a24;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.pj-nd-navbar__nav a:hover,
+.pj-nd-navbar__nav a:focus-visible,
+.pj-nd-navbar__login:hover,
+.pj-nd-navbar__login:focus-visible {
+  color: #1d5a37;
+}
+
+.pj-nd-navbar__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 28px;
+}
+
+.pj-nd-navbar__login {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
+.pj-nd-navbar__cta {
+  display: inline-flex;
+  min-height: 46px;
+  padding: 0 24px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #17492e;
+  border-radius: 10px;
+  background: #17492e;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.pj-nd-navbar__cta:hover,
+.pj-nd-navbar__cta:focus-visible {
+  border-color: #103d25;
+  background: #103d25;
+  color: #ffffff;
+}
+
+.pj-nd-navbar__cta:active {
+  transform: translateY(1px);
+}
+
+.pj-nd-navbar__nav a:focus-visible,
+.pj-nd-navbar__login:focus-visible,
+.pj-nd-navbar__cta:focus-visible,
+.pj-nd-navbar__brand:focus-visible {
+  outline: 3px solid rgba(151, 168, 58, 0.38);
+  outline-offset: 4px;
+}
+
+.pj-new-design__canvas {
+  min-height: 640px;
+}
+
+@media (max-width: 1100px) {
+  .pj-nd-shell {
+    width: min(100% - 48px, 1240px);
+  }
+
+  .pj-nd-navbar__inner {
+    grid-template-columns: 190px minmax(0, 1fr) 220px;
+    column-gap: 18px;
+  }
+
+  .pj-nd-navbar__logo {
+    width: 164px;
+  }
+
+  .pj-nd-navbar__nav {
+    gap: 24px;
+  }
+
+  .pj-nd-navbar__actions {
+    gap: 20px;
+  }
+
+  .pj-nd-navbar__cta {
+    padding-inline: 20px;
+  }
+}
+
+/* Mobile navigation is a separate redesign stage. For now keep the preview tidy without introducing a hamburger/menu implementation. */
+@media (max-width: 900px) {
+  .pj-nd-navbar__inner {
+    min-height: 76px;
+    grid-template-columns: 1fr auto;
+  }
+
+  .pj-nd-navbar__nav {
+    display: none;
+  }
+
+  .pj-nd-navbar__logo {
+    width: 154px;
+  }
+}
+
+@media (max-width: 560px) {
+  .pj-nd-shell {
+    width: calc(100% - 32px);
+  }
+
+  .pj-nd-navbar__inner {
+    min-height: 70px;
+    column-gap: 12px;
+  }
+
+  .pj-nd-navbar__logo {
+    width: 142px;
+  }
+
+  .pj-nd-navbar__login {
+    display: none;
+  }
+
+  .pj-nd-navbar__cta {
+    min-height: 40px;
+    padding-inline: 14px;
+    border-radius: 9px;
+    font-size: 12px;
+  }
+}
