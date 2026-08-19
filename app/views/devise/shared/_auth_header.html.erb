@@ -1,15 +1,42 @@
-<header class="auth-nav" aria-label="Навигация авторизации">
-  <div class="auth-nav-inner">
-    <%= link_to root_path, class: "auth-nav-brand-link", aria: { label: "PetJournal — на главную" } do %>
-      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 148, height: 42 %>
-    <% end %>
+<div class="auth-nav" data-mobile-menu-root>
+  <button class="mobile-menu-toggle pj-mobile-menu-toggle auth-nav-toggle"
+          type="button"
+          aria-label="Открыть меню"
+          aria-controls="auth-mobile-menu"
+          aria-expanded="false"
+          data-mobile-menu-open>
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+    <span aria-hidden="true"></span>
+  </button>
 
-    <% if controller_name == "sessions" %>
-      <%= link_to "Создать журнал", new_user_registration_path, class: "auth-nav-action" %>
-    <% elsif controller_name == "registrations" && action_name == "new" %>
-      <%= link_to "Войти", new_user_session_path, class: "auth-nav-action" %>
-    <% elsif controller_name == "passwords" %>
-      <%= link_to "К входу", new_user_session_path, class: "auth-nav-action auth-nav-action-muted" %>
-    <% end %>
-  </div>
-</header>
+  <div class="mobile-menu-backdrop auth-nav-backdrop" data-mobile-menu-backdrop hidden></div>
+
+  <nav class="mobile-menu-panel auth-nav-panel"
+       id="auth-mobile-menu"
+       aria-label="Навигация авторизации"
+       aria-hidden="true"
+       hidden
+       data-mobile-menu-panel>
+    <div class="mobile-menu-header">
+      <%= link_to root_path, class: "mobile-menu-brand", aria: { label: "PetJournal — главная" } do %>
+        <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 148, height: 42 %>
+      <% end %>
+      <button class="mobile-menu-close" type="button" aria-label="Закрыть меню" data-mobile-menu-close></button>
+    </div>
+
+    <div class="mobile-menu-links auth-nav-links">
+      <%= link_to "На главную", root_path, class: "mobile-menu-link", data: { mobile_menu_link: true } %>
+
+      <% if controller_name == "sessions" %>
+        <%= link_to "Забыли пароль?", new_user_password_path, class: "mobile-menu-link", data: { mobile_menu_link: true } %>
+        <%= link_to "Создать журнал", new_user_registration_path, class: "mobile-menu-cta", data: { mobile_menu_link: true } %>
+      <% elsif controller_name == "registrations" && action_name == "new" %>
+        <%= link_to "Войти", new_user_session_path, class: "mobile-menu-cta", data: { mobile_menu_link: true } %>
+      <% elsif controller_name == "passwords" %>
+        <%= link_to "Войти", new_user_session_path, class: "mobile-menu-cta", data: { mobile_menu_link: true } %>
+        <%= link_to "Создать журнал", new_user_registration_path, class: "mobile-menu-link auth-nav-secondary-link", data: { mobile_menu_link: true } %>
+      <% end %>
+    </div>
+  </nav>
+</div>
