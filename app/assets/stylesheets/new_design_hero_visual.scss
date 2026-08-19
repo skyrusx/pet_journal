@@ -1,32 +1,36 @@
-/* Hero image composition for the isolated new-design preview. */
-.pj-nd-hero__visual {
-  overflow: hidden;
+/* Hero artwork spans the entire hero panel so the image reads as one composition. */
+.pj-nd-hero__panel {
+  background-color: #f8f5ec;
+  background-image: url('/new_design/hero-pets-phone.jpg');
   background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 67% 50%;
+  background-size: contain;
+  background-position: center center;
 }
 
-.pj-nd-hero__visual::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: block;
-  background: linear-gradient(90deg, rgba(250, 247, 239, 0.92) 0%, rgba(250, 247, 239, 0.35) 12%, rgba(250, 247, 239, 0) 27%);
-  pointer-events: none;
+/* Disable the old decorative panel overlay so it does not wash out the photo. */
+.pj-nd-hero__panel::after {
+  display: none;
 }
 
+/* The right grid column remains only as layout space; the artwork now belongs to the whole panel. */
+.pj-nd-hero__visual {
+  overflow: visible;
+  background-image: none !important;
+  background: transparent !important;
+}
+
+.pj-nd-hero__visual::before,
 .pj-nd-hero__visual::after {
   display: none;
 }
 
-/* Keep the markup fallback out of the composition; the hero uses the same asset as a CSS background. */
 .pj-nd-hero__visual-image {
   display: none;
 }
 
 @media (max-width: 1100px) {
-  .pj-nd-hero__visual {
-    background-position: 62% 50%;
+  .pj-nd-hero__panel {
+    background-size: contain;
+    background-position: center center;
   }
 }
