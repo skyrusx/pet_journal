@@ -1,0 +1,16 @@
+<header class="auth-nav" aria-label="Навигация авторизации">
+  <div class="auth-nav-inner">
+    <%= link_to root_path, class: "auth-nav-back", aria: { label: "Вернуться на главную PetJournal" } do %>
+      <span class="auth-nav-back-icon" aria-hidden="true">←</span>
+      <span class="auth-nav-brand">PetJournal</span>
+    <% end %>
+
+    <% if controller_name == "sessions" %>
+      <%= link_to "Создать журнал", new_user_registration_path, class: "auth-nav-action" %>
+    <% elsif controller_name == "registrations" && action_name == "new" %>
+      <%= link_to "Войти", new_user_session_path, class: "auth-nav-action" %>
+    <% elsif controller_name == "passwords" %>
+      <%= link_to "Вернуться ко входу", new_user_session_path, class: "auth-nav-action auth-nav-action-muted" %>
+    <% end %>
+  </div>
+</header>
