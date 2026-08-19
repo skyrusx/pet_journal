@@ -1,8 +1,7 @@
 <header class="auth-nav" aria-label="Навигация авторизации">
   <div class="auth-nav-inner">
-    <%= link_to root_path, class: "auth-nav-back", aria: { label: "Вернуться на главную PetJournal" } do %>
-      <span class="auth-nav-back-icon" aria-hidden="true">←</span>
-      <span class="auth-nav-brand">PetJournal</span>
+    <%= link_to root_path, class: "auth-nav-brand-link", aria: { label: "PetJournal — на главную" } do %>
+      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 148, height: 42 %>
     <% end %>
 
     <% if controller_name == "sessions" %>
@@ -10,7 +9,7 @@
     <% elsif controller_name == "registrations" && action_name == "new" %>
       <%= link_to "Войти", new_user_session_path, class: "auth-nav-action" %>
     <% elsif controller_name == "passwords" %>
-      <%= link_to "Вернуться ко входу", new_user_session_path, class: "auth-nav-action auth-nav-action-muted" %>
+      <%= link_to "К входу", new_user_session_path, class: "auth-nav-action auth-nav-action-muted" %>
     <% end %>
   </div>
 </header>
