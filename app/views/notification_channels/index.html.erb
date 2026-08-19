@@ -88,9 +88,7 @@
               <%= label_tag :delivery_status, "Статус отправки" %>
               <%= select_tag :delivery_status,
                              options_for_select(
-                               notification_delivery_filter_options(@delivery_counts).map do |label, value, count|
-                                 ["#{label} (#{count})", value]
-                               end,
+                               notification_delivery_filter_options(@delivery_counts).map { |label, value, count| ["#{label} (#{count})", value] },
                                @selected_delivery_status
                              ),
                              class: "form-select" %>
