@@ -1,4 +1,5 @@
-/* Public + auth navigation polish. Loaded after responsive styles to keep this layer focused. */
+/* Public + auth navigation polish. Loaded after responsive styles.
+   Important: this layer must not restyle auth-page content. */
 
 @media (max-width: 767px) {
   .pj-header {
@@ -76,8 +77,8 @@
   .pj-mobile-menu-panel .mobile-menu-link:nth-child(4) {
     border-top: 1px solid #e6e0d4;
     margin-top: 12px;
-    padding-top: 14px;
     min-height: 64px;
+    padding-top: 14px;
   }
 
   .pj-mobile-menu-panel .mobile-menu-link:nth-child(4)::before {
@@ -97,8 +98,8 @@
     color: #052a23;
     font-size: 15px;
     font-weight: 900;
-    min-height: 50px;
     margin-top: 8px;
+    min-height: 50px;
   }
 
   .pj-mobile-menu-panel .mobile-menu-cta:hover {
@@ -112,9 +113,12 @@
   }
 }
 
+/* Auth navigation is an overlay only. It intentionally does not change
+   .auth-page, .auth-card, .auth-copy, .auth-form or .auth-links. */
 .auth-nav {
   left: 0;
   padding: calc(14px + env(safe-area-inset-top)) 22px 0;
+  pointer-events: none;
   position: absolute;
   right: 0;
   top: 0;
@@ -124,7 +128,7 @@
 .auth-nav-inner {
   align-items: center;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   margin: 0 auto;
   max-width: 960px;
   min-height: 44px;
@@ -136,31 +140,16 @@
   border-radius: 10px;
   display: inline-flex;
   min-height: 44px;
+  pointer-events: auto;
   text-decoration: none;
 }
 
 .auth-nav-back {
-  color: #14352d;
-  gap: 9px;
-  padding: 0 10px;
-}
-
-.auth-nav-back:hover {
-  background: rgba(7, 57, 47, .06);
-  color: #07392f;
-}
-
-.auth-nav-back-icon {
-  font-size: 21px;
-  line-height: 1;
-}
-
-.auth-nav-brand {
-  font-family: "Prata", Georgia, serif;
-  font-size: 17px;
+  display: none;
 }
 
 .auth-nav-action {
+  background: rgba(255, 253, 248, .92);
   border: 1px solid rgba(7, 57, 47, .16);
   color: #07392f;
   font-size: 13px;
@@ -177,125 +166,16 @@
   color: #52675f;
 }
 
-.auth-page-with-nav {
-  padding-top: 48px;
-}
-
 @media (max-width: 680px) {
-  .pj-auth-main {
-    background: #fffdf8;
-  }
-
   .auth-nav {
-    background: rgba(255, 253, 248, .96);
-    border-bottom: 1px solid #e6e0d4;
-    padding: calc(8px + env(safe-area-inset-top)) 12px 8px;
-    position: sticky;
-    top: 0;
-  }
-
-  .auth-nav-inner {
-    min-height: 44px;
+    padding: calc(12px + env(safe-area-inset-top)) 16px 0;
   }
 
   .auth-nav-action {
-    border: 0;
+    background: rgba(255, 253, 248, .94);
+    border-color: rgba(255, 253, 248, .55);
     font-size: 12px;
     min-height: 40px;
-    padding: 0 8px;
-  }
-
-  .auth-nav-back {
-    min-height: 40px;
-    padding: 0 8px;
-  }
-
-  .auth-page-with-nav {
-    min-height: calc(100dvh - 60px);
-    padding-top: 0;
-  }
-
-  .auth-page-with-nav .auth-card {
-    min-height: calc(100dvh - 60px);
-  }
-
-  .auth-page-with-nav .auth-copy {
-    background: #fffdf8;
-    color: #66756f;
-    min-height: 0;
-    padding: 24px 24px 8px;
-  }
-
-  .auth-page-with-nav .auth-copy .auth-brand,
-  .auth-page-with-nav .auth-copy ul,
-  .auth-page-with-nav .auth-copy .auth-pettag-art,
-  .auth-page-with-nav .auth-copy::before,
-  .auth-page-with-nav .auth-copy::after {
-    display: none;
-  }
-
-  .auth-page-with-nav .auth-copy > span {
-    color: #7d9416;
-    margin-bottom: 8px;
-  }
-
-  .auth-page-with-nav .auth-copy h1 {
-    color: #14352d;
-    font-size: 30px;
-    margin-bottom: 8px;
-    max-width: none;
-  }
-
-  .auth-page-with-nav .auth-copy p {
-    color: #66756f;
-    font-size: 14px;
-    line-height: 1.55;
-    margin: 0;
-    max-width: none;
-  }
-
-  .auth-page-with-nav .auth-form {
-    padding: 22px 24px 14px;
-  }
-
-  .auth-page-with-nav .auth-form-heading {
-    margin-bottom: 22px;
-  }
-
-  .auth-page-with-nav .auth-form-heading span {
-    margin-bottom: 7px;
-  }
-
-  .auth-page-with-nav .auth-form-heading h2 {
-    font-size: 28px;
-  }
-
-  .auth-page-with-nav .auth-links {
-    border-top: 1px solid #e6e0d4;
-    margin: 0 24px 28px;
-    padding-top: 18px;
-    width: auto;
-  }
-
-  .auth-page-with-nav .auth-links-session {
-    gap: 8px 12px;
-  }
-}
-
-@media (max-width: 390px) {
-  .auth-nav-action {
-    font-size: 11px;
-  }
-
-  .auth-page-with-nav .auth-copy {
-    padding-inline: 20px;
-  }
-
-  .auth-page-with-nav .auth-form {
-    padding-inline: 20px;
-  }
-
-  .auth-page-with-nav .auth-links {
-    margin-inline: 20px;
+    padding: 0 10px;
   }
 }
