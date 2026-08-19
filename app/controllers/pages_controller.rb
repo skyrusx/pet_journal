@@ -24,6 +24,10 @@ class PagesController < ApplicationController
     @active_profile_shares_count = PetProfileShare.active.joins(:pet).where(pets: { user_id: current_user.id }).count
   end
 
+  def new_design
+    render layout: "new_design"
+  end
+
   private
 
   def latest_events_by_pet_id(pets)
