@@ -33,9 +33,14 @@
       </div>
 
       <div class="pj-nd-hero__visual" aria-hidden="true">
-        <svg class="pj-nd-hero__heart" viewBox="0 0 88 82">
-          <path d="M44 72C31 58 13 44 13 27 13 17 19 10 28 10c8 0 13 5 16 11 3-6 8-11 16-11 9 0 15 7 15 17 0 17-18 31-31 45Z" />
-        </svg>
+        <%= image_tag "petjournal/new_design/hero-pets-phone.webp",
+                      alt: "",
+                      class: "pj-nd-hero__visual-image",
+                      width: 1200,
+                      height: 475,
+                      loading: "eager",
+                      decoding: "async",
+                      fetchpriority: "high" %>
       </div>
     </div>
 
