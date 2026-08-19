@@ -3,35 +3,12 @@
     <div>
       <div class="text-muted small mb-1">PetJournal</div>
       <h1 class="h3 mb-1">Мои питомцы</h1>
-      <p class="text-muted mb-0">Карточки питомцев, текущие сигналы и быстрые действия.</p>
+      <p class="text-muted mb-0">Откройте питомца, чтобы увидеть главное и продолжить его историю.</p>
     </div>
     <div class="home-hero-actions">
       <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
     </div>
   </section>
-
-  <div class="home-metrics mb-4">
-    <article class="dashboard-metric">
-      <div class="overview-card-label">Питомцы</div>
-      <div class="overview-card-value"><%= @pets.size %></div>
-      <div class="overview-card-note">карточек</div>
-    </article>
-    <article class="dashboard-metric">
-      <div class="overview-card-label">Напоминания</div>
-      <div class="overview-card-value"><%= @active_reminders_count %></div>
-      <div class="overview-card-note"><%= @overdue_reminders_count %> просрочено</div>
-    </article>
-    <article class="dashboard-metric">
-      <div class="overview-card-label">PetTag</div>
-      <div class="overview-card-value"><%= @pet_tag_scans_count %></div>
-      <div class="overview-card-note">сканирований</div>
-    </article>
-    <article class="dashboard-metric">
-      <div class="overview-card-label">Доступ</div>
-      <div class="overview-card-value"><%= @active_profile_shares_count %></div>
-      <div class="overview-card-note">активных ссылок</div>
-    </article>
-  </div>
 
   <% if @pets.any? %>
     <div class="home-pet-grid">
@@ -61,28 +38,32 @@
               </div>
 
               <div class="activity-line">
-                <div class="fw-semibold mb-1"><%= signal[:title] %></div>
+                <div class="home-card-signal mb-1"><%= signal[:title] %></div>
                 <div class="text-muted small"><%= signal[:body] %></div>
               </div>
             </div>
           </div>
 
           <div class="pet-card-actions">
-            <%= link_to "Открыть", pet_path(pet), class: "btn btn-outline-primary btn-sm" %>
-            <%= link_to "Событие", new_pet_pet_event_path(pet), class: "btn btn-primary btn-sm" %>
-            <%= link_to "Документ", new_pet_pet_document_path(pet), class: "btn btn-outline-secondary btn-sm" %>
-            <%= link_to "Доступ", pet_profile_shares_path(pet), class: "btn btn-outline-secondary btn-sm" %>
+            <%= link_to "Открыть", pet_path(pet), class: "btn btn-outline-secondary btn-sm" %>
+            <%= link_to "Добавить запись", new_pet_pet_event_path(pet), class: "btn btn-primary btn-sm" %>
           </div>
         </article>
       <% end %>
     </div>
   <% else %>
-    <div class="empty-panel home-empty">
+    <div class="empty-panel home-empty home-onboarding">
       <div>
+        <div class="text-muted small mb-1">Первый шаг</div>
         <h2 class="h4 mb-2">Добавьте первого питомца</h2>
-        <p class="text-muted mb-3">Начните с имени, вида и фото. Остальные данные можно заполнить позже.</p>
+        <p class="text-muted mb-3">Начните с имени. Фото и остальные данные можно спокойно заполнить позже.</p>
         <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
       </div>
+      <ol class="home-onboarding-steps" aria-label="Как начать пользоваться PetJournal">
+        <li class="active"><span>1</span><div><strong>Питомец</strong><small>Создайте карточку</small></div></li>
+        <li><span>2</span><div><strong>Первая запись</strong><small>Зафиксируйте важное</small></div></li>
+        <li><span>3</span><div><strong>Напоминание</strong><small>Запланируйте следующий шаг</small></div></li>
+      </ol>
     </div>
   <% end %>
 </div>
