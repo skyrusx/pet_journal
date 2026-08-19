@@ -1,63 +1,88 @@
 <% if user_signed_in? %>
-  <div class="home-dashboard py-4">
-    <section class="home-hero mb-4">
+  <div class="home-dashboard home-dashboard-release py-4">
+    <section class="home-hero home-hero-calm mb-4">
       <div>
-        <div class="text-muted small mb-1">PetJournal</div>
-        <h1 class="h2 mb-2">Рабочий стол питомцев</h1>
-        <p class="text-muted mb-0">Сегодняшние задачи, последние события, документы и безопасность в одном месте.</p>
+        <div class="text-muted small mb-1">Сегодня в PetJournal</div>
+        <h1 class="h2 mb-2">Всё важное о питомцах — без лишнего шума</h1>
+        <p class="text-muted mb-0">Сначала — что требует внимания, затем история и остальные разделы.</p>
       </div>
 
       <div class="home-hero-actions">
-        <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
         <% if @pets.any? %>
-          <%= link_to "Добавить событие", new_pet_pet_event_path(@pets.first), class: "btn btn-outline-primary" %>
-          <%= link_to "Напоминание", new_pet_reminder_path(@pets.first), class: "btn btn-outline-secondary" %>
+          <%= link_to "Добавить запись", new_pet_pet_event_path(@pets.first), class: "btn btn-primary" %>
+          <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-outline-secondary" %>
+        <% else %>
+          <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
         <% end %>
       </div>
     </section>
 
-    <div class="home-metrics mb-4">
-      <article class="dashboard-metric">
-        <div class="overview-card-label">Питомцы</div>
-        <div class="overview-card-value"><%= @pets.size %></div>
-        <div class="overview-card-note"><%= @pets.any? ? "активных карточек" : "добавьте первого" %></div>
-      </article>
-
-      <article class="dashboard-metric">
-        <div class="overview-card-label">Сегодня</div>
-        <div class="overview-card-value"><%= @today_reminders_count %></div>
-        <div class="overview-card-note"><%= @overdue_reminders_count %> просрочено</div>
-      </article>
-
-      <article class="dashboard-metric">
-        <div class="overview-card-label">Документы</div>
-        <div class="overview-card-value"><%= @expiring_documents.size %></div>
-        <div class="overview-card-note">скоро истекает</div>
-      </article>
-
-      <article class="dashboard-metric">
-        <div class="overview-card-label">PetTag</div>
-        <div class="overview-card-value"><%= @pet_tag_scans_count %></div>
-        <div class="overview-card-note">сканирований</div>
-      </article>
-
-      <article class="dashboard-metric">
-        <div class="overview-card-label">Доступ</div>
-        <div class="overview-card-value"><%= @active_profile_shares_count %></div>
-        <div class="overview-card-note"><%= @profile_share_views_count %> <%= russian_plural(@profile_share_views_count, "просмотр", "просмотра", "просмотров") %></div>
-      </article>
-    </div>
-
     <% if @pets.any? %>
-      <div class="home-layout">
+      <section class="dashboard-section home-today mb-4">
+        <div class="section-heading">
+          <div>
+            <div class="text-muted small mb-1">Главное сейчас</div>
+            <h2 class="h4 mb-1">Сегодня и ближайшее</h2>
+            <p class="text-muted mb-0">Только то, что может потребовать вашего внимания.</p>
+          </div>
+          <% if @overdue_reminders_count.positive? || @today_reminders_count.positive? %>
+            <span class="home-attention-count">
+              <%= @overdue_reminders_count + @today_reminders_count %>
+              <%= russian_plural(@overdue_reminders_count + @today_reminders_count, "дело", "дела", "дел") %>
+            </span>
+          <% end %>
+        </div>
+
+        <div class="home-priority-list">
+          <% priority_items = @next_reminders.first(3) %>
+          <% priority_items.each do |reminder| %>
+            <%= link_to pet_reminder_path(reminder.pet, reminder), class: class_names("home-priority-item", danger: reminder.overdue?, warning: reminder.due_today?) do %>
+              <span class="home-priority-marker" aria-hidden="true"></span>
+              <span class="home-priority-copy">
+                <strong><%= reminder.title %></strong>
+                <small><%= reminder.pet.name %> · <%= reminder.reminder_type_label %></small>
+              </span>
+              <span class="home-priority-time">
+                <% if reminder.overdue? %>
+                  Просрочено
+                <% elsif reminder.due_today? %>
+                  сегодня · <%= reminder.next_run_at.strftime("%H:%M") %>
+                <% else %>
+                  <%= reminder.next_run_at.strftime("%d.%m") %>
+                <% end %>
+              </span>
+            <% end %>
+          <% end %>
+
+          <% @expiring_documents.first(2).each do |document| %>
+            <%= link_to pet_pet_document_path(document.pet, document), class: "home-priority-item document" do %>
+              <span class="home-priority-marker" aria-hidden="true"></span>
+              <span class="home-priority-copy">
+                <strong><%= document.title %></strong>
+                <small><%= document.pet.name %> · документ</small>
+              </span>
+              <span class="home-priority-time">до <%= document.expires_on.strftime("%d.%m") %></span>
+            <% end %>
+          <% end %>
+
+          <% if priority_items.empty? && @expiring_documents.empty? %>
+            <div class="home-priority-empty">
+              <strong>Срочных дел нет</strong>
+              <span>Ближайшие напоминания и сроки документов появятся здесь.</span>
+            </div>
+          <% end %>
+        </div>
+      </section>
+
+      <div class="home-layout home-layout-release">
         <section class="home-main">
           <div class="dashboard-section">
             <div class="section-heading">
               <div>
-                <h2 class="h4 mb-1">Ваши питомцы</h2>
-                <p class="text-muted mb-0">Основные данные, ближайшие задачи и последние изменения.</p>
+                <h2 class="h4 mb-1">Мои питомцы</h2>
+                <p class="text-muted mb-0">Состояние и последнее важное изменение по каждому питомцу.</p>
               </div>
-              <%= link_to "Все питомцы", pets_path, class: "btn btn-outline-primary btn-sm" %>
+              <%= link_to "Все питомцы", pets_path, class: "btn btn-outline-secondary btn-sm" %>
             </div>
 
             <div class="home-pet-grid">
@@ -72,9 +97,7 @@
                     <% if pet.photo.attached? %>
                       <%= image_tag pet.photo, class: "pet-card-photo", alt: pet.name, loading: "lazy" %>
                     <% else %>
-                      <div class="pet-card-photo pet-card-photo-placeholder">
-                        <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
-                      </div>
+                      <div class="pet-card-photo pet-card-photo-placeholder"><%= pet.name.to_s.first.to_s.upcase.presence || "P" %></div>
                     <% end %>
 
                     <div class="pet-card-body">
@@ -87,16 +110,15 @@
                       </div>
 
                       <div class="activity-line">
-                        <div class="fw-semibold mb-1"><%= signal[:title] %></div>
+                        <div class="home-card-signal mb-1"><%= signal[:title] %></div>
                         <div class="text-muted small"><%= signal[:body] %></div>
                       </div>
                     </div>
                   </div>
 
                   <div class="pet-card-actions">
-                    <%= link_to "Открыть", pet_path(pet), class: "btn btn-outline-primary btn-sm" %>
-                    <%= link_to "Событие", new_pet_pet_event_path(pet), class: "btn btn-primary btn-sm" %>
-                    <%= link_to "Доступ", pet_profile_shares_path(pet), class: "btn btn-outline-secondary btn-sm" %>
+                    <%= link_to "Открыть", pet_path(pet), class: "btn btn-outline-secondary btn-sm" %>
+                    <%= link_to "Добавить запись", new_pet_pet_event_path(pet), class: "btn btn-primary btn-sm" %>
                   </div>
                 </article>
               <% end %>
@@ -107,7 +129,7 @@
             <div class="section-heading compact">
               <div>
                 <div class="text-muted small mb-1">Последняя активность</div>
-                <h2 class="h4 mb-0">Журнал</h2>
+                <h2 class="h4 mb-0">История</h2>
               </div>
             </div>
 
@@ -133,74 +155,55 @@
             <% else %>
               <div class="empty-state-inline">
                 <h3 class="h5 mb-2">Журнал пока пуст</h3>
-                <p class="text-muted mb-3">Добавьте первую запись любому питомцу: вес, прививку, визит или заметку.</p>
-                <%= link_to "Добавить событие", new_pet_pet_event_path(@pets.first), class: "btn btn-primary btn-sm" %>
+                <p class="text-muted mb-3">Добавьте вес, вакцинацию, визит к врачу или обычную заметку.</p>
+                <%= link_to "Добавить первую запись", new_pet_pet_event_path(@pets.first), class: "btn btn-primary btn-sm" %>
               </div>
             <% end %>
           </div>
         </section>
 
         <aside class="home-side">
-          <section class="dashboard-section">
+          <% primary_pet = @pets.first %>
+          <section class="dashboard-section home-shortcuts">
             <div class="section-heading compact">
               <div>
-                <div class="text-muted small mb-1">Напоминания</div>
-                <h2 class="h4 mb-0">Ближайшие</h2>
+                <div class="text-muted small mb-1">Быстрый доступ</div>
+                <h2 class="h4 mb-0"><%= primary_pet.name %></h2>
               </div>
             </div>
 
-            <% if @next_reminders.any? %>
-              <div class="compact-list">
-                <% @next_reminders.each do |reminder| %>
-                  <div>
-                    <span>
-                      <strong class="d-block text-dark"><%= reminder.title %></strong>
-                      <small><%= reminder.pet.name %> · <%= reminder.reminder_type_label %></small>
-                    </span>
-                    <strong><%= reminder.next_run_at.strftime("%d.%m") %></strong>
-                  </div>
-                <% end %>
-              </div>
-            <% else %>
-              <p class="text-muted mb-3">Активных напоминаний нет.</p>
-              <%= link_to "Создать напоминание", new_pet_reminder_path(@pets.first), class: "btn btn-primary btn-sm" %>
-            <% end %>
+            <nav class="home-shortcut-list" aria-label="Разделы питомца">
+              <%= link_to pet_pet_events_path(primary_pet) do %><span>Журнал</span><small>История и наблюдения</small><% end %>
+              <%= link_to pet_reminders_path(primary_pet) do %><span>Напоминания</span><small>Что сделать дальше</small><% end %>
+              <%= link_to pet_pet_documents_path(primary_pet) do %><span>Документы</span><small>Файлы и сроки</small><% end %>
+              <%= link_to pet_pet_tag_path(primary_pet) do %><span>PetTag</span><small>Безопасность и QR</small><% end %>
+              <%= link_to pet_profile_shares_path(primary_pet) do %><span>Доступ</span><small>Поделиться данными</small><% end %>
+            </nav>
           </section>
 
-          <section class="dashboard-section">
-            <div class="section-heading compact">
-              <div>
-                <div class="text-muted small mb-1">Документы</div>
-                <h2 class="h4 mb-0">Сроки</h2>
-              </div>
+          <section class="dashboard-section home-background-summary">
+            <div class="text-muted small mb-2">В фоне</div>
+            <div class="compact-list">
+              <div><span>Документы со сроком</span><strong><%= @expiring_documents.size %></strong></div>
+              <div><span>Сканирования PetTag</span><strong><%= @pet_tag_scans_count %></strong></div>
+              <div><span>Активный доступ</span><strong><%= @active_profile_shares_count %></strong></div>
             </div>
-
-            <% if @expiring_documents.any? %>
-              <div class="dashboard-alert-list">
-                <% @expiring_documents.each do |document| %>
-                  <div class="dashboard-alert warning">
-                    <div>
-                      <strong><%= document.title %></strong>
-                      <span><%= document.pet.name %> · до <%= document.expires_on.strftime("%d.%m.%Y") %></span>
-                    </div>
-                    <%= link_to "Открыть", pet_pet_document_path(document.pet, document), class: "btn btn-outline-secondary btn-sm" %>
-                  </div>
-                <% end %>
-              </div>
-            <% else %>
-              <p class="text-muted mb-0">Документов с ближайшим истечением нет.</p>
-            <% end %>
           </section>
-
         </aside>
       </div>
     <% else %>
-      <section class="empty-panel home-empty">
+      <section class="empty-panel home-empty home-onboarding">
         <div>
-          <h2 class="h4 mb-2">Добавьте первого питомца</h2>
-          <p class="text-muted mb-3">После этого здесь появятся журнал, напоминания, документы, PetTag и публичный доступ.</p>
+          <div class="text-muted small mb-1">Первый шаг</div>
+          <h2 class="h4 mb-2">Начнём с питомца</h2>
+          <p class="text-muted mb-3">Добавьте имя и основные данные. После этого PetJournal предложит создать первую запись и напоминание.</p>
           <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
         </div>
+        <ol class="home-onboarding-steps" aria-label="Как начать пользоваться PetJournal">
+          <li class="active"><span>1</span><div><strong>Питомец</strong><small>Создайте карточку</small></div></li>
+          <li><span>2</span><div><strong>Первая запись</strong><small>Зафиксируйте важное</small></div></li>
+          <li><span>3</span><div><strong>Напоминание</strong><small>Не держите всё в голове</small></div></li>
+        </ol>
       </section>
     <% end %>
   </div>
