@@ -16,10 +16,10 @@ class PetEvent < ApplicationRecord
 
   EVENT_TYPE_LABELS = {
     "note" => "Заметка",
-    "vaccination" => "Прививка",
-    "treatment" => "Обработка",
-    "visit" => "Прием у врача",
-    "illness" => "Болезнь / симптом",
+    "vaccination" => "Вакцинация",
+    "treatment" => "Лекарство / обработка",
+    "visit" => "Визит к врачу",
+    "illness" => "Симптом / болезнь",
     "weight" => "Вес",
     "document" => "Документ"
   }.freeze
