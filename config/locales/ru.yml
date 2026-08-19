@@ -49,8 +49,8 @@ ru:
       user: "Пользователь"
       pet: "Питомец"
       pet_event: "Событие"
-      pet_tag: "Жетон"
-      pet_tag_scan: "Сканирование жетона"
+      pet_tag: "PetTag"
+      pet_tag_scan: "Сканирование PetTag"
       pet_document: "Документ"
       pet_profile_share: "Публичный доступ"
       pet_profile_share_view: "Просмотр публичного доступа"
@@ -173,8 +173,8 @@ ru:
     types:
       other: "Другое"
       medication: "Лекарство"
-      vaccination: "Прививка"
-      treatment: "Обработка"
+      vaccination: "Вакцинация"
+      treatment: "Обработка от паразитов"
       visit: "Визит к врачу"
       weight: "Вес"
     repeat_rules:
@@ -229,7 +229,7 @@ ru:
     types:
       other: "Другое"
       passport: "Ветпаспорт"
-      vaccination: "Прививка"
+      vaccination: "Вакцинация"
       lab_result: "Анализы"
       prescription: "Назначение"
       certificate: "Справка"
