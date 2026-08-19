@@ -30,6 +30,7 @@
   height: 100%;
   display: block;
   object-fit: cover;
+  object-position: center;
 }
 
 .pj-nd-showcase__pet-name {
@@ -51,8 +52,15 @@
   height: 23px;
   display: inline-grid;
   place-items: center;
-  color: #174f31;
   line-height: 1;
+}
+
+.pj-nd-showcase__pet-sex--male {
+  color: #4f83d1;
+}
+
+.pj-nd-showcase__pet-sex--female {
+  color: #d97aa8;
 }
 
 .pj-nd-showcase__pet-sex svg {
@@ -60,7 +68,7 @@
   height: 21px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 2.5;
+  stroke-width: 2.8;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -68,17 +76,15 @@
 .pj-nd-showcase__tag-image-wrap {
   align-items: flex-end;
   justify-content: flex-end;
-  padding-right: 12px;
-  padding-bottom: 2px;
+  padding-right: 18px;
+  padding-bottom: 0;
 }
 
-.pj-nd-showcase__tag-image {
-  width: 118px;
-  height: 160px;
-  max-height: none;
+.pj-nd-showcase__tag-svg {
+  width: 126px;
+  height: 154px;
   display: block;
-  object-fit: contain;
-  transform: none;
+  overflow: visible;
 }
 
 @media (max-width: 1100px) {
@@ -89,5 +95,10 @@
   .pj-nd-showcase__pet-avatar {
     width: 96px;
     height: 96px;
+  }
+
+  .pj-nd-showcase__tag-svg {
+    width: 112px;
+    height: 138px;
   }
 }
