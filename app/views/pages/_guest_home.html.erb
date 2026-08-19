@@ -1,22 +1,11 @@
-<% content_for :title, "PetJournal — здоровье, уход и безопасность питомца" %>
+<% content_for :title, "PetJournal — всё важное о питомце в одном месте" %>
 <% content_for :head do %>
-  <meta name="description" content="Журнал здоровья питомца, документы, напоминания и QR-профиль PetTag — всё важное в одном месте.">
+  <meta name="description" content="Журнал здоровья, напоминания, документы и PetTag — чтобы всё важное о питомце было рядом, когда это действительно нужно.">
 <% end %>
 
-<div class="pj-landing pj-v2-landing">
+<div class="pj-landing pj-v2-landing pj-v2-landing-final">
   <header class="pj-v2-site-header" data-mobile-menu-root>
     <div class="pj-v2-shell pj-v2-header-inner">
-      <button class="pj-v2-menu-toggle"
-              type="button"
-              aria-label="Открыть меню"
-              aria-controls="landing-mobile-menu"
-              aria-expanded="false"
-              data-mobile-menu-open>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </button>
-
       <%= link_to root_path, class: "pj-v2-brand", aria: { label: "PetJournal — главная" } do %>
         <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 166, height: 48 %>
       <% end %>
@@ -32,7 +21,16 @@
         <%= link_to "Создать журнал", new_user_registration_path, class: "pj-v2-button pj-v2-button-small" %>
       </div>
 
-      <span class="pj-v2-mobile-spacer" aria-hidden="true"></span>
+      <button class="pj-v2-menu-toggle"
+              type="button"
+              aria-label="Открыть меню"
+              aria-controls="landing-mobile-menu"
+              aria-expanded="false"
+              data-mobile-menu-open>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
     </div>
 
     <div class="mobile-menu-backdrop pj-mobile-menu-backdrop" data-mobile-menu-backdrop hidden></div>
@@ -63,9 +61,9 @@
     <section class="pj-v2-shell pj-v2-hero" aria-labelledby="pj-v2-hero-title">
       <div class="pj-v2-hero-card">
         <div class="pj-v2-hero-copy">
-          <span class="pj-v2-kicker">Забота. Память. Спокойствие.</span>
-          <h1 id="pj-v2-hero-title">Все заботы о питомце<br>в одном месте</h1>
-          <p>Журнал здоровья, напоминания, документы и PetTag — чтобы всё важное было рядом даже тогда, когда голова занята другим.</p>
+          <span class="pj-v2-eyebrow">Забота. Память. Спокойствие.</span>
+          <h1 id="pj-v2-hero-title">Все заботы<br>о питомце<br>в одном месте</h1>
+          <p>Журнал здоровья, напоминания, документы и PetTag — чтобы всё важное было рядом, когда это действительно нужно.</p>
           <div class="pj-v2-hero-actions">
             <%= link_to "Создать журнал", new_user_registration_path, class: "pj-v2-button" %>
             <a href="#features" class="pj-v2-button pj-v2-button-secondary">Узнать больше</a>
@@ -74,136 +72,158 @@
 
         <div class="pj-v2-hero-visual">
           <%= image_tag "petjournal/hero-composite.png",
-                        alt: "PetJournal на телефоне рядом с питомцем",
+                        alt: "Питомцы и интерфейс PetJournal на телефоне",
                         width: 760,
-                        height: 709 %>
-        </div>
-
-        <div class="pj-v2-hero-strip" aria-label="Основные возможности">
-          <div><strong>Журнал</strong><span>история здоровья</span></div>
-          <div><strong>Напоминания</strong><span>важное вовремя</span></div>
-          <div><strong>Документы</strong><span>файлы и сроки</span></div>
-          <div><strong>PetTag</strong><span>безопасность питомца</span></div>
+                        height: 709,
+                        fetchpriority: "high" %>
         </div>
       </div>
     </section>
 
-    <section class="pj-v2-shell pj-v2-benefits" id="features">
+    <section class="pj-v2-shell pj-v2-benefits" id="features" aria-label="Главные преимущества PetJournal">
       <article>
-        <span class="pj-v2-benefit-icon">♡</span>
-        <div><h2>Здоровье под контролем</h2><p>История здоровья, прививки, анализы и осмотры в одном месте.</p></div>
+        <span class="pj-v2-benefit-icon"><%= pj_icon(:journal) %></span>
+        <div><h2>Здоровье под контролем</h2><p>История здоровья, прививки, анализы и осмотры — всё в одном месте.</p></div>
       </article>
       <article>
-        <span class="pj-v2-benefit-icon">◷</span>
-        <div><h2>Ничего не забыть</h2><p>Напоминания о событиях и приёмах вовремя, без заметок по разным приложениям.</p></div>
+        <span class="pj-v2-benefit-icon"><%= pj_icon(:bell) %></span>
+        <div><h2>Ничего не забыть</h2><p>Напоминания о событиях и приёмах вовремя, чтобы не пропустить важное.</p></div>
       </article>
       <article>
-        <span class="pj-v2-benefit-icon">◇</span>
-        <div><h2>Безопасность с PetTag</h2><p>QR-профиль поможет связаться с вами, если питомец потеряется.</p></div>
+        <span class="pj-v2-benefit-icon"><%= pj_icon(:tag) %></span>
+        <div><h2>Безопасность с PetTag</h2><p>QR-профиль поможет быстрее связаться с вами, если питомец потеряется.</p></div>
       </article>
     </section>
 
-    <section class="pj-v2-shell pj-v2-product" id="product">
-      <div class="pj-v2-section-copy">
-        <span class="pj-v2-kicker">Понятный ежедневный помощник</span>
-        <h2>Видно только то, что действительно важно</h2>
-        <p>PetJournal не превращает заботу в админку. Ближайшие события, питомцы и последние записи собраны компактно и читаются за несколько секунд.</p>
-      </div>
-
-      <div class="pj-v2-dashboard-preview" aria-label="Пример главного экрана PetJournal">
-        <aside class="pj-v2-preview-nav">
-          <strong>PetJournal</strong>
-          <span class="active">⌂ Главная</span>
-          <span>▤ Журнал</span>
-          <span>◷ Напоминания</span>
-          <span>▱ Документы</span>
-          <span>◇ PetTag</span>
-          <span>♙ Питомцы</span>
-        </aside>
-        <div class="pj-v2-preview-main">
-          <div class="pj-v2-preview-title"><div><small>Сегодня и ближайшее</small><strong>Что важно сейчас</strong></div><span>Смотреть всё</span></div>
-          <div class="pj-v2-preview-events">
-            <article><b>◷</b><div><strong>Вакцинация</strong><small>Тор · сегодня, 11:00</small></div><span>›</span></article>
-            <article><b>♡</b><div><strong>Осмотр у ветеринара</strong><small>Локи · завтра, 16:30</small></div><span>›</span></article>
-            <article><b>▤</b><div><strong>Чистка ушей</strong><small>Рыжуля · 25 авг.</small></div><span>›</span></article>
-          </div>
-
-          <div class="pj-v2-preview-title pj-v2-preview-title-pets"><strong>Мои питомцы</strong></div>
-          <div class="pj-v2-preview-pets">
-            <% ["Тор", "Локи", "Рыжуля", "Фрея"].each_with_index do |name, index| %>
-              <article><span><%= name.first %></span><strong><%= name %></strong><small><%= index.even? ? "Всё хорошо" : "Есть напоминание" %></small></article>
-            <% end %>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="pj-v2-shell pj-v2-feature-grid">
-      <article><span>▤</span><h2>Журнал здоровья</h2><p>Вес, симптомы, визиты, вакцинации, лекарства и заметки в единой хронологии.</p></article>
-      <article><span>◷</span><h2>Напоминания</h2><p>Одноразовые и повторяющиеся задачи, чтобы следующий шаг не потерялся.</p></article>
-      <article><span>▱</span><h2>Документы</h2><p>Ветпаспорт, анализы, назначения и другие файлы рядом с историей питомца.</p></article>
-      <article><span>↗</span><h2>Доступ</h2><p>Делитесь только выбранными данными с ветеринаром, близкими или передержкой.</p></article>
-      <article><span>♙</span><h2>Несколько питомцев</h2><p>Отдельная история и задачи для каждого питомца в одном аккаунте.</p></article>
-      <article class="pj-v2-feature-accent"><span>◇</span><h2>PetTag</h2><p>Публичный QR-профиль для экстренного контакта без раскрытия лишних данных.</p></article>
-    </section>
-
-    <section class="pj-v2-shell pj-v2-steps" id="how-it-works">
-      <div class="pj-v2-section-copy centered">
-        <span class="pj-v2-kicker">Как это работает</span>
-        <h2>Три простых шага</h2>
-      </div>
-      <div class="pj-v2-step-grid">
-        <article><span>1</span><h3>Добавьте питомца</h3><p>Имя, вид, дата рождения и основные особенности.</p></article>
-        <article><span>2</span><h3>Ведите историю</h3><p>Добавляйте события, документы и всё, что важно помнить.</p></article>
-        <article><span>3</span><h3>Получайте напоминания</h3><p>PetJournal подскажет, что требует внимания дальше.</p></article>
-      </div>
-    </section>
-
-    <section class="pj-v2-shell pj-v2-pettag" id="pettag">
-      <div class="pj-v2-pettag-art">
-        <%= image_tag "petjournal/auth-pettag.png",
-                      alt: "Жетон PetTag",
-                      width: 420,
-                      height: 474,
-                      loading: "lazy" %>
-      </div>
-      <div>
-        <span class="pj-v2-kicker">PetTag</span>
-        <h2>Спокойнее, если питомец потеряется</h2>
-        <p>Человек сканирует QR-код и получает безопасную страницу питомца с теми данными, которые вы разрешили показать.</p>
+    <section class="pj-v2-shell pj-v2-product" aria-labelledby="pj-v2-product-title">
+      <div class="pj-v2-product-copy">
+        <span class="pj-v2-kicker">Ваш питомец — под заботой</span>
+        <h2 id="pj-v2-product-title">PetJournal<br>в действии</h2>
         <ul>
-          <li>Без установки приложения</li>
-          <li>Контакты можно изменить в любой момент</li>
-          <li>Есть режим пропажи и история сканирований</li>
+          <li>Карточка питомца</li>
+          <li>Ближайшие события</li>
+          <li>Последние записи</li>
+          <li>Документы</li>
+          <li>PetTag</li>
         </ul>
-        <%= link_to "Создать журнал", new_user_registration_path, class: "pj-v2-button" %>
+      </div>
+
+      <div class="pj-v2-app-preview" aria-label="Пример главного экрана PetJournal">
+        <div class="pj-v2-preview-header">
+          <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 126, height: 36 %>
+          <div class="pj-v2-preview-header-actions"><%= pj_icon(:bell) %><%= pj_icon(:more) %></div>
+        </div>
+
+        <div class="pj-v2-preview-grid">
+          <article class="pj-v2-preview-pet-card">
+            <div class="pj-v2-demo-avatar pj-v2-demo-avatar-siamese" aria-label="Фото Тора, сиамского кота"><span>Т</span></div>
+            <div><h3>Тор <small>♂</small></h3><p>Сиамский кот</p><span>2 года 3 месяца · 4,3 кг</span><em>Всё под контролем</em></div>
+          </article>
+
+          <article class="pj-v2-preview-next">
+            <span>Ближайшее событие</span>
+            <div><%= pj_icon(:clock) %><p><strong>Вакцинация</strong><small>24 мая · 11:00</small></p></div>
+          </article>
+
+          <article class="pj-v2-preview-recent">
+            <span>Последние записи</span>
+            <div class="pj-v2-preview-mini-row"><%= pj_icon(:journal) %><p><strong>Осмотр у ветеринара</strong><small>22 мая</small></p></div>
+            <div class="pj-v2-preview-mini-row"><%= pj_icon(:file) %><p><strong>Анализы</strong><small>18 мая</small></p></div>
+          </article>
+
+          <article class="pj-v2-preview-tag">
+            <span>PetTag</span>
+            <%= image_tag "petjournal/auth-pettag.png", alt: "Жетон PetTag", width: 130, height: 148, loading: "lazy" %>
+            <small>Активен</small>
+          </article>
+        </div>
       </div>
     </section>
 
-    <section class="pj-v2-shell pj-v2-faq" id="faq">
-      <div class="pj-v2-section-copy">
-        <span class="pj-v2-kicker">Вопросы</span>
-        <h2>Перед началом</h2>
-      </div>
-      <div class="pj-v2-faq-list">
-        <details open><summary>PetJournal можно попробовать бесплатно?</summary><p>Да. Создать аккаунт и начать вести журнал можно без оплаты.</p></details>
-        <details><summary>Можно добавить несколько питомцев?</summary><p>Да. У каждого будет своя карточка, журнал, документы, напоминания и PetTag.</p></details>
-        <details><summary>Нужно устанавливать приложение?</summary><p>Нет. PetJournal работает в браузере на телефоне и компьютере.</p></details>
+    <section class="pj-v2-shell pj-v2-steps" id="how-it-works" aria-labelledby="pj-v2-steps-title">
+      <h2 id="pj-v2-steps-title">Как это работает</h2>
+      <div class="pj-v2-step-grid">
+        <article><b>1</b><span><%= pj_icon(:paw) %></span><h3>Добавьте питомца</h3><p>Создайте профиль и укажите важную информацию.</p></article>
+        <article><b>2</b><span><%= pj_icon(:journal) %></span><h3>Ведите его историю</h3><p>Записывайте события, наблюдения и заметки.</p></article>
+        <article><b>3</b><span><%= pj_icon(:bell) %></span><h3>PetJournal помогает помнить</h3><p>Напоминания подскажут, что важно сделать дальше.</p></article>
       </div>
     </section>
 
-    <section class="pj-v2-shell pj-v2-final-cta">
-      <div><span class="pj-v2-kicker">PetJournal</span><h2>Начните с одного питомца</h2><p>Добавить карточку и первую запись можно за несколько минут.</p></div>
-      <%= link_to "Создать журнал", new_user_registration_path, class: "pj-v2-button" %>
+    <section class="pj-v2-shell pj-v2-core-features" aria-label="Основные разделы PetJournal">
+      <article>
+        <span class="pj-v2-core-icon"><%= pj_icon(:journal) %></span>
+        <div><h2>Журнал</h2><p>Вакцинации · Вес · Лекарства · Обработка от паразитов · Визиты к врачу</p></div>
+        <a href="#product-journal">Подробнее</a>
+      </article>
+      <article>
+        <span class="pj-v2-core-icon"><%= pj_icon(:bell) %></span>
+        <div><h2>Напоминания</h2><p><strong>Вакцинация Нобивак DHPPi</strong><br>24 мая · 11:00</p></div>
+        <a href="#product-reminders">Подробнее</a>
+      </article>
+      <article>
+        <span class="pj-v2-core-icon"><%= pj_icon(:file) %></span>
+        <div><h2>Документы</h2><p>Ветпаспорт · Анализы · Сертификаты · Назначения</p></div>
+        <a href="#product-documents">Подробнее</a>
+      </article>
+      <article>
+        <span class="pj-v2-core-icon"><%= pj_icon(:tag) %></span>
+        <div><h2>PetTag</h2><p>QR-профиль · Режим «Потерялся» · Связь с владельцем · Местоположение</p></div>
+        <a href="#pettag">Как это работает</a>
+      </article>
+    </section>
+
+    <section class="pj-v2-shell pj-v2-story" id="product-journal">
+      <div class="pj-v2-story-visual pj-v2-story-journal" aria-hidden="true">
+        <div class="pj-v2-phone-demo">
+          <span>Журнал</span>
+          <div><%= pj_icon(:journal) %><p><b>Вакцинация</b><small>Нобивак DHPPi</small></p></div>
+          <div><%= pj_icon(:clock) %><p><b>Осмотр у ветеринара</b><small>22 мая</small></p></div>
+          <div><%= pj_icon(:file) %><p><b>Анализы</b><small>18 мая</small></p></div>
+        </div>
+      </div>
+      <div class="pj-v2-story-copy"><span>Журнал</span><h2>История здоровья всегда под рукой</h2><p>Вакцинации, осмотры, вес, лекарства, анализы и другие события собраны в понятной хронологии.</p></div>
+    </section>
+
+    <section class="pj-v2-shell pj-v2-story reverse" id="product-reminders">
+      <div class="pj-v2-story-copy"><span>Напоминания</span><h2>Напоминает о важном заранее</h2><p>Планы заботы и автоматические напоминания помогают ничего не пропустить.</p></div>
+      <div class="pj-v2-story-visual pj-v2-story-reminder" aria-hidden="true">
+        <div class="pj-v2-reminder-demo"><%= pj_icon(:bell) %><p><small>PetJournal напоминает</small><b>Вакцинация Нобивак DHPPi</b><span>Тор · сегодня в 11:00</span></p></div>
+      </div>
+    </section>
+
+    <section class="pj-v2-shell pj-v2-story" id="product-documents">
+      <div class="pj-v2-story-visual pj-v2-story-documents" aria-hidden="true">
+        <div class="pj-v2-document-demo"><%= pj_icon(:file) %><strong>Ветеринарный паспорт</strong><span>Всегда рядом с карточкой питомца</span></div>
+        <div class="pj-v2-document-demo secondary"><%= pj_icon(:file) %><strong>Сертификат о вакцинации</strong><span>Срок действия под контролем</span></div>
+      </div>
+      <div class="pj-v2-story-copy"><span>Документы</span><h2>Документы и анализы в одном месте</h2><p>Ветпаспорт, сертификаты, анализы и назначения доступны там, где они нужны.</p></div>
+    </section>
+
+    <section class="pj-v2-shell pj-v2-story reverse pj-v2-story-pettag" id="pettag">
+      <div class="pj-v2-story-copy"><span>PetTag</span><h2>PetTag помогает вернуться домой</h2><p>Если питомец потеряется, человек отсканирует QR-код и сможет безопасно связаться с владельцем.</p><ul><li>Без установки приложения</li><li>Режим «Потерялся»</li><li>Сообщение и местоположение нашедшего</li></ul></div>
+      <div class="pj-v2-story-visual pj-v2-story-tag"><%= image_tag "petjournal/auth-pettag.png", alt: "Жетон PetTag", width: 360, height: 408, loading: "lazy" %><div><strong>Потерялся</strong><span>Владелец уже получит уведомление</span></div></div>
+    </section>
+
+    <section class="pj-v2-shell pj-v2-trust" aria-label="Принципы PetJournal">
+      <div class="pj-v2-trust-brand"><%= image_tag "petjournal/logo-symbol.png", alt: "", width: 48, height: 48 %><p>PetJournal — это спокойствие<br>для вас и вашего питомца</p></div>
+      <div><%= pj_icon(:tag) %><span>Безопасность<br>и забота</span></div>
+      <div><%= pj_icon(:paw) %><span>Простота<br>использования</span></div>
+      <div><%= pj_icon(:file) %><span>Всё важное<br>под рукой</span></div>
+    </section>
+
+    <section class="pj-v2-shell pj-v2-final-banner">
+      <div><h2>Создайте PetJournal<br>своего питомца</h2><p>Начните с карточки питомца и первой записи — остальное можно добавить позже.</p><%= link_to "Создать журнал", new_user_registration_path, class: "pj-v2-button" %></div>
+      <div class="pj-v2-final-visual"><%= image_tag "petjournal/hero-composite.png", alt: "Питомцы рядом с владельцем", width: 760, height: 709, loading: "lazy" %></div>
     </section>
   </main>
 
-  <footer class="pj-v2-footer">
-    <div class="pj-v2-shell">
-      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 142, height: 41 %>
-      <span>© <%= Date.current.year %> PetJournal</span>
-      <%= mail_to "support@pet-journal.ru", "Поддержка" %>
-      <%= link_to "VK", "https://vk.ru/petjournal", target: "_blank", rel: "noopener" %>
+  <footer class="pj-v2-footer pj-v2-footer-final">
+    <div class="pj-v2-shell pj-v2-footer-grid">
+      <div class="pj-v2-footer-brand"><%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 142, height: 41 %><p>Забота. Память. Спокойствие.</p></div>
+      <nav aria-label="Возможности"><strong>Возможности</strong><a href="#product-journal">Журнал</a><a href="#pettag">PetTag</a><a href="#product-reminders">Напоминания</a></nav>
+      <nav aria-label="Поддержка"><strong>Поддержка</strong><%= mail_to "support@pet-journal.ru", "Написать нам" %></nav>
+      <div class="pj-v2-footer-social"><strong>Мы в соцсетях</strong><%= link_to "VK", "https://vk.ru/petjournal", target: "_blank", rel: "noopener" %></div>
+      <div class="pj-v2-footer-bottom"><span>© <%= Date.current.year %> PetJournal</span><span>Всё важное о питомце — рядом.</span></div>
     </div>
   </footer>
 </div>
