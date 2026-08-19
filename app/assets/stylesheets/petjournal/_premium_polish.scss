@@ -62,8 +62,10 @@ a.btn {
   font-weight: 550;
 }
 
-/* Journal filters: compact select-based control surface. */
-.journal-filter-panel {
+/* Unified filters: compact select-based control surface across the product. */
+.journal-filter-panel,
+.documents-filter-panel,
+.reminders-filter-panel {
   padding: 1rem;
 }
 
@@ -75,7 +77,7 @@ a.btn {
 .journal-filter-fields {
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
 .journal-filter-field {
@@ -207,6 +209,8 @@ a.btn {
 
 /* Product-wide surface polish. */
 .journal-filter-panel,
+.documents-filter-panel,
+.reminders-filter-panel,
 .journal-event,
 .reminder-card,
 .document-card,
@@ -234,6 +238,10 @@ a.btn {
 
   .journal-filter-search-row .btn {
     min-width: 0;
+    width: 100%;
+  }
+
+  .journal-filter-form > .d-flex .btn {
     width: 100%;
   }
 
