@@ -1,6 +1,6 @@
 <%= render "devise/shared/auth_header" %>
 
-<div class="auth-page auth-page-with-nav">
+<div class="auth-page">
   <section class="auth-card">
     <div class="auth-copy">
       <%= link_to root_path, class: "auth-brand", aria: { label: "PetJournal — главная" } do %>
@@ -52,7 +52,7 @@
 
     <div class="auth-links auth-links-session">
       <span>Нет аккаунта?</span>
-      <%= link_to "Создать журнал", new_registration_path(resource_name), class: "auth-link-primary" %>
+      <%= link_to "Создать аккаунт", new_registration_path(resource_name), class: "auth-link-primary" %>
       <%= link_to "Забыли пароль?", new_password_path(resource_name), class: "auth-link-muted" %>
     </div>
   </section>
