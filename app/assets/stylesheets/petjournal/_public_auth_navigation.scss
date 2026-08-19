@@ -113,7 +113,7 @@
     content: "Уже есть аккаунт?";
     display: block;
     font-size: 11px;
-    font-weight: 650;
+    font-weight: 500;
     left: 12px;
     position: absolute;
     top: 7px;
@@ -124,7 +124,7 @@
     border-radius: 12px;
     color: #052a23;
     font-size: 15px;
-    font-weight: 900;
+    font-weight: 700;
     margin-top: 8px;
     min-height: 50px;
   }
@@ -181,7 +181,7 @@
     border-radius: 12px;
     color: #052a23;
     font-size: 15px;
-    font-weight: 900;
+    font-weight: 700;
     margin-top: 10px;
     min-height: 50px;
   }
@@ -193,4 +193,50 @@
   .auth-nav-secondary-link {
     margin-top: 4px;
   }
+}
+
+/* Premium typography pass: fewer competing bold elements, clearer hierarchy. */
+.pj-nav a,
+.pj-login,
+.mobile-menu-link {
+  font-weight: 500;
+}
+
+.pj-button,
+.mobile-menu-cta,
+.auth-submit,
+.auth-card .btn-primary {
+  font-weight: 700;
+}
+
+.pj-eyebrow,
+.pj-kicker,
+.pj-marquee .pj-shell,
+.auth-copy > span,
+.auth-form-heading span,
+.auth-account-kicker {
+  font-weight: 700;
+}
+
+.pj-proof strong,
+.pj-feature-grid h3,
+.pj-step-grid h3,
+.pj-privacy-card h3,
+.pj-feature-grid small,
+.pj-product li b,
+.pj-tag-section li,
+.pj-faq summary,
+.pj-footer b,
+.auth-copy li,
+.auth-card .form-label,
+.auth-links a {
+  font-weight: 600;
+}
+
+.auth-card .form-check-label,
+.auth-links span,
+.form-text,
+.pj-footer a,
+.pj-footer span {
+  font-weight: 400;
 }
