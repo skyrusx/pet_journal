@@ -15,7 +15,7 @@
     <div class="form-section-heading">
       <div>
         <h2 class="h5 mb-1">Тип и дата</h2>
-        <p class="text-muted mb-0">Тип события определяет, как запись будет отображаться в журнале.</p>
+        <p class="text-muted mb-0">Выберите, что произошло — PetJournal покажет только подходящие поля.</p>
       </div>
       <span class="required-pill">Обязательно</span>
     </div>
@@ -60,7 +60,7 @@
   <section class="form-section structured-event-section" data-event-fields="vaccination">
     <div class="form-section-heading">
       <div>
-        <h2 class="h5 mb-1">Прививка</h2>
+        <h2 class="h5 mb-1">Вакцинация</h2>
         <p class="text-muted mb-0">Название вакцины, партия, клиника и срок действия.</p>
       </div>
     </div>
@@ -92,7 +92,7 @@
   <section class="form-section structured-event-section" data-event-fields="treatment">
     <div class="form-section-heading">
       <div>
-        <h2 class="h5 mb-1">Лекарство или обработка</h2>
+        <h2 class="h5 mb-1">Лекарство / обработка</h2>
         <p class="text-muted mb-0">Препарат, дозировка, курс и следующее действие.</p>
       </div>
     </div>
@@ -100,7 +100,7 @@
     <div class="row g-3">
       <div class="col-md-6">
         <%= f.label :medication_name, class: "form-label" %>
-        <%= f.text_field :medication_name, class: "form-control", placeholder: "Название препарата" %>
+        <%= f.text_field :medication_name, class: "form-control", placeholder: "Название препарата или средства" %>
       </div>
       <div class="col-md-6">
         <%= f.label :dosage, class: "form-label" %>
@@ -124,8 +124,8 @@
   <section class="form-section structured-event-section" data-event-fields="visit">
     <div class="form-section-heading">
       <div>
-        <h2 class="h5 mb-1">Визит</h2>
-        <p class="text-muted mb-0">Клиника, врач, диагноз, рекомендации и повторный прием.</p>
+        <h2 class="h5 mb-1">Визит к врачу</h2>
+        <p class="text-muted mb-0">Клиника, врач, диагноз, рекомендации и повторный приём.</p>
       </div>
     </div>
 
@@ -156,8 +156,8 @@
   <section class="form-section structured-event-section" data-event-fields="illness">
     <div class="form-section-heading">
       <div>
-        <h2 class="h5 mb-1">Болезнь или симптом</h2>
-        <p class="text-muted mb-0">Симптомы, тяжесть, даты и рекомендации.</p>
+        <h2 class="h5 mb-1">Симптом / болезнь</h2>
+        <p class="text-muted mb-0">Что заметили, насколько выражено, даты и рекомендации.</p>
       </div>
     </div>
 
@@ -193,11 +193,11 @@
     <div class="form-section-heading">
       <div>
         <h2 class="h5 mb-1">Документ</h2>
-        <p class="text-muted mb-0">Для полноценного хранения документов используйте раздел “Документы”; здесь можно оставить журнальную заметку.</p>
+        <p class="text-muted mb-0">Для полноценного хранения документов используйте раздел «Документы»; здесь можно оставить журнальную запись.</p>
       </div>
     </div>
 
-    <%= link_to "Открыть документы", pet_pet_documents_path(@pet), class: "btn btn-outline-primary btn-sm" %>
+    <%= link_to "Открыть документы", pet_pet_documents_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
   </section>
 
   <section class="form-section">
@@ -226,7 +226,7 @@
     <div class="form-section-heading">
       <div>
         <h2 class="h5 mb-1">Следующее действие</h2>
-        <p class="text-muted mb-0">Если заполнено поле “Следующее действие”, можно сразу создать напоминание.</p>
+        <p class="text-muted mb-0">Если у записи есть следующий шаг, можно сразу создать напоминание.</p>
       </div>
     </div>
 
@@ -260,7 +260,7 @@
   </section>
 
   <div class="form-actions">
-    <%= f.submit "Сохранить", class: "btn btn-primary" %>
+    <%= f.submit "Сохранить запись", class: "btn btn-primary" %>
     <%= link_to "К журналу", pet_pet_events_path(@pet), class: "btn btn-outline-secondary" %>
     <%= link_to "К обзору", pet_path(@pet), class: "btn btn-outline-secondary" %>
   </div>
