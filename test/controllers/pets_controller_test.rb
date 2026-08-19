@@ -20,7 +20,7 @@ class PetsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select ".dashboard-hero"
-    assert_select ".dashboard-metric", minimum: 5
+    assert_select ".pet-focus-card", count: 2
     assert_select ".dashboard-section", text: /Публичный доступ/
     assert_select ".dashboard-section", text: /PetTag/
   end
