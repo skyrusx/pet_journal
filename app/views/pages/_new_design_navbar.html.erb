@@ -1,0 +1,19 @@
+<header class="pj-nd-navbar">
+  <div class="pj-nd-shell pj-nd-navbar__inner">
+    <%= link_to new_design_path, class: "pj-nd-navbar__brand", aria: { label: "PetJournal — новый дизайн" } do %>
+      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", class: "pj-nd-navbar__logo" %>
+    <% end %>
+
+    <nav class="pj-nd-navbar__nav" aria-label="Основная навигация">
+      <a href="#features">Возможности</a>
+      <a href="#how-it-works">Как это работает</a>
+      <a href="#pettag">PetTag</a>
+      <a href="#blog">Блог</a>
+    </nav>
+
+    <div class="pj-nd-navbar__actions">
+      <%= link_to "Войти", new_user_session_path, class: "pj-nd-navbar__login" %>
+      <%= link_to "Создать журнал", new_user_registration_path, class: "pj-nd-navbar__cta" %>
+    </div>
+  </div>
+</header>
