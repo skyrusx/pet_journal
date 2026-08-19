@@ -24,7 +24,7 @@
   <body class="app-body <%= "app-internal-body" if internal_page %> <%= "pj-landing-body" if landing_page %> <%= "pj-auth-body" if guest_auth_page %>">
     <% unless landing_page || guest_auth_page %>
     <header class="app-header">
-      <div class="app-shell app-header-inner">
+      <div class="app-shell app-header-inner app-header-desktop">
         <%= link_to root_path, class: "app-brand", aria: { label: "PetJournal — рабочий стол" } do %>
           <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 168, height: 48 %>
         <% end %>
@@ -61,6 +61,36 @@
           </details>
         <% end %>
       </div>
+
+      <div class="app-shell mobile-app-header">
+        <%= link_to root_path, class: "mobile-app-brand", aria: { label: "PetJournal — рабочий стол" } do %>
+          <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 132, height: 38 %>
+        <% end %>
+
+        <% if user_signed_in? %>
+          <% pet = mobile_nav_pet %>
+          <div class="mobile-header-actions">
+            <%= link_to notification_channels_path,
+                        class: class_names("mobile-header-icon", active: controller_name == "notification_channels"),
+                        aria: { label: "Уведомления" } do %>
+              <%= pj_icon(:bell) %>
+              <% if mobile_notifications_badge.present? %>
+                <span class="mobile-nav-badge"><%= mobile_notifications_badge %></span>
+              <% end %>
+            <% end %>
+
+            <%= link_to pet.present? ? pet_path(pet) : edit_user_registration_path,
+                        class: "mobile-header-avatar",
+                        aria: { label: pet.present? ? "Профиль питомца #{pet.name}" : "Аккаунт" } do %>
+              <% if pet&.photo&.attached? %>
+                <%= image_tag pet.photo, alt: "", loading: "lazy" %>
+              <% else %>
+                <span><%= (pet&.name || current_user.email).to_s.first.to_s.upcase.presence || "P" %></span>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     </header>
     <% end %>
 
@@ -79,6 +109,139 @@
     <% end %>
 
     <% if internal_page %>
+      <% if user_signed_in? %>
+        <% mobile_nav_items = mobile_bottom_nav_items %>
+        <div data-mobile-sheet-root>
+          <div class="mobile-sheet-backdrop" data-mobile-sheet-backdrop hidden></div>
+
+          <nav class="mobile-bottom-nav" aria-label="Основная мобильная навигация">
+            <% mobile_nav_items.first(2).each do |item| %>
+              <%= link_to item[:path],
+                          class: class_names("mobile-bottom-nav-item", active: item[:active]),
+                          aria: { current: item[:active] ? "page" : nil, label: item[:aria_label] || item[:label] } do %>
+                <%= pj_icon(item[:icon]) %>
+                <span class="mobile-bottom-label"><%= item[:label] %></span>
+              <% end %>
+            <% end %>
+
+            <button class="mobile-bottom-nav-item mobile-bottom-add"
+                    type="button"
+                    aria-label="Добавить"
+                    aria-controls="mobile-add-sheet"
+                    aria-expanded="false"
+                    data-mobile-sheet-open>
+              <span class="mobile-bottom-add-icon"><%= pj_icon(:plus) %></span>
+              <span class="mobile-bottom-label">Добавить</span>
+            </button>
+
+            <% reminders_item = mobile_nav_items.third %>
+            <%= link_to reminders_item[:path],
+                        class: class_names("mobile-bottom-nav-item", active: reminders_item[:active]),
+                        aria: { current: reminders_item[:active] ? "page" : nil, label: reminders_item[:aria_label] } do %>
+              <span class="mobile-bottom-icon-wrap">
+                <%= pj_icon(reminders_item[:icon]) %>
+                <% if reminders_item[:badge].present? %>
+                  <span class="mobile-nav-badge"><%= reminders_item[:badge] %></span>
+                <% end %>
+              </span>
+              <span class="mobile-bottom-label"><%= reminders_item[:label] %></span>
+            <% end %>
+
+            <% more_item = mobile_nav_items.fourth %>
+            <button class="<%= class_names("mobile-bottom-nav-item", active: more_item[:active]) %>"
+                    type="button"
+                    aria-label="Ещё"
+                    aria-controls="mobile-more-sheet"
+                    aria-expanded="false"
+                    data-mobile-sheet-open>
+              <%= pj_icon(more_item[:icon]) %>
+              <span class="mobile-bottom-label"><%= more_item[:label] %></span>
+            </button>
+          </nav>
+
+          <section class="mobile-sheet"
+                   id="mobile-add-sheet"
+                   role="dialog"
+                   aria-modal="true"
+                   aria-labelledby="mobile-add-title"
+                   aria-hidden="true"
+                   hidden
+                   data-mobile-sheet>
+            <div class="mobile-sheet-handle" aria-hidden="true"></div>
+            <div class="mobile-sheet-header">
+              <h2 id="mobile-add-title">Добавить</h2>
+              <button class="mobile-sheet-close" type="button" aria-label="Закрыть" data-mobile-sheet-close></button>
+            </div>
+            <div class="mobile-sheet-list">
+              <% mobile_add_actions.each do |item| %>
+                <%= link_to item[:path], class: "mobile-sheet-link", data: { mobile_sheet_link: true } do %>
+                  <span class="mobile-sheet-link-icon"><%= pj_icon(item[:icon]) %></span>
+                  <span><%= item[:label] %></span>
+                  <%= pj_icon(:chevron, class: "mobile-sheet-chevron") %>
+                <% end %>
+              <% end %>
+            </div>
+          </section>
+
+          <section class="mobile-sheet"
+                   id="mobile-more-sheet"
+                   role="dialog"
+                   aria-modal="true"
+                   aria-labelledby="mobile-more-title"
+                   aria-hidden="true"
+                   hidden
+                   data-mobile-sheet>
+            <div class="mobile-sheet-handle" aria-hidden="true"></div>
+            <div class="mobile-sheet-header">
+              <h2 id="mobile-more-title">Ещё</h2>
+              <button class="mobile-sheet-close" type="button" aria-label="Закрыть" data-mobile-sheet-close></button>
+            </div>
+
+            <% pet = mobile_nav_pet %>
+            <% if pet.present? %>
+              <%= link_to pet_path(pet), class: "mobile-sheet-pet", data: { mobile_sheet_link: true } do %>
+                <% if pet.photo.attached? %>
+                  <%= image_tag pet.photo, class: "mobile-sheet-pet-photo", alt: "", loading: "lazy" %>
+                <% else %>
+                  <span class="mobile-sheet-pet-photo mobile-sheet-pet-placeholder"><%= pet.name.to_s.first.to_s.upcase.presence || "P" %></span>
+                <% end %>
+                <span class="mobile-sheet-pet-copy">
+                  <strong><%= pet.name %></strong>
+                  <small><%= pet_short_description(pet) %></small>
+                </span>
+                <%= pj_icon(:chevron, class: "mobile-sheet-chevron") %>
+              <% end %>
+            <% end %>
+
+            <div class="mobile-sheet-list">
+              <% mobile_more_menu_items.each do |item| %>
+                <%= link_to item[:path],
+                            class: class_names("mobile-sheet-link", active: item[:active]),
+                            data: { mobile_sheet_link: true },
+                            aria: { current: item[:active] ? "page" : nil } do %>
+                  <span class="mobile-sheet-link-icon"><%= pj_icon(item[:icon]) %></span>
+                  <span><%= item[:label] %></span>
+                  <% if item[:badge].present? %>
+                    <span class="mobile-sheet-badge"><%= item[:badge] %></span>
+                  <% end %>
+                  <%= pj_icon(:chevron, class: "mobile-sheet-chevron") %>
+                <% end %>
+              <% end %>
+            </div>
+
+            <div class="mobile-sheet-separator" aria-hidden="true"></div>
+            <%= button_to destroy_user_session_path,
+                          method: :delete,
+                          class: "mobile-sheet-link mobile-sheet-logout",
+                          form_class: "mobile-sheet-form",
+                          data: { mobile_sheet_link: true } do %>
+              <span class="mobile-sheet-link-icon"><%= pj_icon(:logout) %></span>
+              <span>Выйти</span>
+            <% end %>
+          </section>
+        </div>
+      <% end %>
+
       <footer class="app-footer">
         <div class="app-shell app-footer-inner">
           <div class="app-footer-main">

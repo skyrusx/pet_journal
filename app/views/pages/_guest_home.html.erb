@@ -4,7 +4,7 @@
 <% end %>
 
 <div class="pj-landing">
-  <header class="pj-header">
+  <header class="pj-header" data-mobile-menu-root>
     <div class="pj-shell pj-header-inner">
       <%= link_to root_path, class: "pj-brand", aria: { label: "PetJournal — главная" } do %>
         <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 190, height: 54 %>
@@ -19,7 +19,34 @@
         <%= link_to "Войти", new_user_session_path, class: "pj-login" %>
         <%= link_to "Создать журнал", new_user_registration_path, class: "pj-button pj-button-small" %>
       </div>
+      <button class="mobile-menu-toggle pj-mobile-menu-toggle"
+              type="button"
+              aria-label="Открыть меню"
+              aria-controls="landing-mobile-menu"
+              aria-expanded="false"
+              data-mobile-menu-open>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
     </div>
+
+    <div class="mobile-menu-backdrop pj-mobile-menu-backdrop" data-mobile-menu-backdrop hidden></div>
+    <nav class="mobile-menu-panel pj-mobile-menu-panel" id="landing-mobile-menu" aria-label="Мобильная навигация" aria-hidden="true" hidden data-mobile-menu-panel>
+      <div class="mobile-menu-header">
+        <%= link_to root_path, class: "mobile-menu-brand", aria: { label: "PetJournal — главная" } do %>
+          <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 148, height: 42 %>
+        <% end %>
+        <button class="mobile-menu-close" type="button" aria-label="Закрыть меню" data-mobile-menu-close></button>
+      </div>
+      <div class="mobile-menu-links">
+        <a href="#features" class="mobile-menu-link" data-mobile-menu-link>Возможности</a>
+        <a href="#how-it-works" class="mobile-menu-link" data-mobile-menu-link>Как это работает</a>
+        <a href="#pettag" class="mobile-menu-link" data-mobile-menu-link>PetTag</a>
+        <%= link_to "Войти", new_user_session_path, class: "mobile-menu-link", data: { mobile_menu_link: true } %>
+        <%= link_to "Создать журнал", new_user_registration_path, class: "mobile-menu-cta", data: { mobile_menu_link: true } %>
+      </div>
+    </nav>
   </header>
 
   <main>
