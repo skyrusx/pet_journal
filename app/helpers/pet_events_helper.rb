@@ -85,10 +85,10 @@ module PetEventsHelper
   def event_type_hint(event_type)
     {
       "note" => "Общее наблюдение или важная заметка.",
-      "vaccination" => "Прививки, ревакцинация и отметки в паспорте.",
-      "treatment" => "Обработка, лекарства, процедуры и уход.",
-      "visit" => "Приемы у врача, рекомендации и назначения.",
-      "illness" => "Симптомы, ухудшение самочувствия и лечение.",
+      "vaccination" => "Вакцинация, ревакцинация и отметки в ветпаспорте.",
+      "treatment" => "Лекарства, обработки от паразитов, процедуры и курс ухода.",
+      "visit" => "Визит к врачу, рекомендации и назначения.",
+      "illness" => "Симптомы, изменения самочувствия и течение болезни.",
       "weight" => "Контроль веса и динамика изменений.",
       "document" => "Паспорт, анализ, справка, назначение или чек."
     }.fetch(event_type.to_s, "Запись в журнале питомца.")
@@ -112,8 +112,8 @@ module PetEventsHelper
   def quick_event_actions(pet)
     [
       ["Вес", new_pet_pet_event_path(pet, type: :weight)],
-      ["Прививка", new_pet_pet_event_path(pet, type: :vaccination)],
-      ["Визит", new_pet_pet_event_path(pet, type: :visit)],
+      ["Вакцинация", new_pet_pet_event_path(pet, type: :vaccination)],
+      ["Визит к врачу", new_pet_pet_event_path(pet, type: :visit)],
       ["Документ", new_pet_pet_document_path(pet)],
       ["Заметка", new_pet_pet_event_path(pet, type: :note)]
     ]
