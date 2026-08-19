@@ -1,27 +1,55 @@
-/* Hero artwork spans the entire hero panel so the image reads as one composition. */
+/* Hero image layer for the isolated new-design preview.
+   Keep the artwork itself unchanged and let it continue behind the left copy. */
 .pj-nd-hero__panel {
-  background-color: #f8f5ec;
-  background-image: url('/new_design/hero-pets-phone.jpg');
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center center;
+  position: relative;
+  isolation: isolate;
+  background: #f8f5ec;
 }
 
-/* Disable the old decorative panel overlay so it does not wash out the photo. */
+/* The artwork spans the whole hero instead of being clipped by the right grid column. */
+.pj-nd-hero__visual {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  min-height: 0;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center center;
+  pointer-events: none;
+}
+
+/* Remove the old decorative layers over the photo. */
+.pj-nd-hero__visual::before,
+.pj-nd-hero__visual::after,
 .pj-nd-hero__panel::after {
   display: none;
 }
 
-/* The right grid column remains only as layout space; the artwork now belongs to the whole panel. */
-.pj-nd-hero__visual {
-  overflow: visible;
-  background-image: none !important;
-  background: transparent !important;
+/* Text stays above the image, but without an opaque left block. */
+.pj-nd-hero__copy {
+  position: relative;
+  z-index: 2;
+  background: transparent;
 }
 
-.pj-nd-hero__visual::before,
-.pj-nd-hero__visual::after {
-  display: none;
+/* Only a soft readable veil under the text; the photo remains visible through it. */
+.pj-nd-hero__copy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -34px;
+  right: -110px;
+  bottom: -34px;
+  left: -34px;
+  background: linear-gradient(
+    90deg,
+    rgba(250, 247, 239, 0.78) 0%,
+    rgba(250, 247, 239, 0.58) 54%,
+    rgba(250, 247, 239, 0.22) 78%,
+    rgba(250, 247, 239, 0) 100%
+  );
+  pointer-events: none;
 }
 
 .pj-nd-hero__visual-image {
@@ -29,8 +57,12 @@
 }
 
 @media (max-width: 1100px) {
-  .pj-nd-hero__panel {
-    background-size: contain;
-    background-position: center center;
+  .pj-nd-hero__visual {
+    background-size: cover;
+    background-position: 62% 50%;
+  }
+
+  .pj-nd-hero__copy::before {
+    right: -70px;
   }
 }
