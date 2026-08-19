@@ -6,25 +6,21 @@
       <%= link_to root_path, class: "auth-brand", aria: { label: "PetJournal — главная" } do %>
         <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 172, height: 49 %>
       <% end %>
-      <span>С возвращением</span>
-      <h1>Войдите в PetJournal</h1>
-      <p>Вернитесь к карточкам питомцев, журналу событий, напоминаниям и QR-профилям безопасности.</p>
+      <span>PetJournal</span>
+      <h1>Ваш журнал заботы о питомце</h1>
+      <p>История здоровья, документы, напоминания и PetTag — всё важное рядом.</p>
       <ul>
-        <li>История здоровья под рукой</li>
-        <li>Документы и напоминания в одном месте</li>
-        <li>PetTag для спокойствия вне дома</li>
+        <li>Напоминания о событиях</li>
+        <li>Документы и анализы</li>
+        <li>PetTag для безопасности</li>
       </ul>
-      <div class="auth-pettag-art" aria-hidden="true">
-        <span class="auth-pettag-ring"></span>
-        <span class="auth-pettag-qr"></span>
-        <span class="auth-pettag-label">PetTag</span>
-      </div>
+      <div class="auth-pettag-art" aria-hidden="true"></div>
     </div>
 
     <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "auth-form" }) do |f| %>
       <div class="auth-form-heading">
-        <span>Вход</span>
-        <h2>Продолжить заботу</h2>
+        <span>Добро пожаловать</span>
+        <h2>Вход</h2>
       </div>
 
       <div class="mb-3">
@@ -52,7 +48,7 @@
 
     <div class="auth-links auth-links-session">
       <span>Нет аккаунта?</span>
-      <%= link_to "Создать аккаунт", new_registration_path(resource_name), class: "auth-link-primary" %>
+      <%= link_to "Зарегистрироваться", new_registration_path(resource_name), class: "auth-link-primary" %>
       <%= link_to "Забыли пароль?", new_password_path(resource_name), class: "auth-link-muted" %>
     </div>
   </section>
