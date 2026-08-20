@@ -2,7 +2,9 @@
 
 .pj-auth-v2-visual::before {
   inset: 0;
-  background: url('/new_design/auth-login-woman-dog.jpg') 50% 50% / cover no-repeat;
+  background:
+    url('/new_design/auth-login-woman-dog.jpg') 50% 50% / cover no-repeat,
+    image-url('petjournal/hero-composite.png') 58% 50% / 132% auto no-repeat;
   filter: none;
   transform: none;
 }
