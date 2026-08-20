@@ -1,61 +1,88 @@
-<%= render "devise/shared/auth_header" %>
+<%= render "devise/shared/auth_v2_navbar" %>
 
-<div class="auth-page">
-  <section class="auth-card">
-    <div class="auth-copy">
-      <%= link_to root_path, class: "auth-brand", aria: { label: "PetJournal — главная" } do %>
-        <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 172, height: 49 %>
-      <% end %>
-      <span>Быстрый старт</span>
-      <h1>Создайте дневник питомца</h1>
-      <p>Приватное пространство для истории здоровья, документов, напоминаний и PetTag.</p>
-      <ul>
-        <li>Первого питомца можно добавить сразу</li>
-        <li>Без рекламы и лишнего шума</li>
-        <li>Данные закрыты по умолчанию</li>
-      </ul>
-      <div class="auth-pettag-art" aria-hidden="true">
-        <span class="auth-pettag-ring"></span>
-        <span class="auth-pettag-qr"></span>
-        <span class="auth-pettag-label">PetTag</span>
-      </div>
+<div class="pj-auth-v2 pj-auth-v2--registration">
+  <main class="pj-auth-v2-main">
+    <div class="pj-auth-v2-shell">
+      <section class="pj-auth-v2-stage" aria-labelledby="pj-auth-v2-title">
+        <div class="pj-auth-v2-visual" aria-hidden="true">
+          <div class="pj-auth-v2-brand-card">
+            <%= image_tag "petjournal/logo-horizontal.png", alt: "", class: "pj-auth-v2-brand-card__logo" %>
+            <h2>Ваш журнал заботы о питомце</h2>
+            <ul class="pj-auth-v2-brand-card__benefits">
+              <li>Напоминания о событиях</li>
+              <li>Документы в порядке</li>
+              <li>PetTag — безопасность</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pj-auth-v2-form-side">
+          <div class="pj-auth-v2-card">
+            <div class="pj-auth-v2-heading">
+              <h1 id="pj-auth-v2-title">Регистрация</h1>
+              <p>Создайте аккаунт, чтобы начать<br>заботиться о питомце.</p>
+            </div>
+
+            <%= render "devise/shared/error_messages", resource: resource %>
+
+            <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "pj-auth-v2-form pj-auth-v2-registration-form" }) do |f| %>
+              <div class="pj-auth-v2-field">
+                <%= f.label :name, "Имя" %>
+                <%= f.text_field :name,
+                                 autofocus: true,
+                                 autocomplete: "name",
+                                 placeholder: "Анна",
+                                 required: true,
+                                 class: "pj-auth-v2-input" %>
+              </div>
+
+              <div class="pj-auth-v2-field">
+                <%= f.label :email, "Email" %>
+                <%= f.email_field :email,
+                                  autocomplete: "email",
+                                  placeholder: "example@mail.ru",
+                                  required: true,
+                                  class: "pj-auth-v2-input" %>
+              </div>
+
+              <div class="pj-auth-v2-field">
+                <%= f.label :password, "Пароль" %>
+                <div class="pj-auth-v2-password">
+                  <%= f.password_field :password,
+                                       autocomplete: "new-password",
+                                       placeholder: "••••••••",
+                                       required: true,
+                                       class: "pj-auth-v2-input",
+                                       data: { password_input: true } %>
+                  <%= render "devise/shared/password_toggle" %>
+                </div>
+              </div>
+
+              <div class="pj-auth-v2-field">
+                <%= f.label :password_confirmation, "Повторите пароль" %>
+                <div class="pj-auth-v2-password">
+                  <%= f.password_field :password_confirmation,
+                                       autocomplete: "new-password",
+                                       placeholder: "••••••••",
+                                       required: true,
+                                       class: "pj-auth-v2-input",
+                                       data: { password_input: true } %>
+                  <%= render "devise/shared/password_toggle" %>
+                </div>
+              </div>
+
+              <%= f.submit "Зарегистрироваться", class: "pj-auth-v2-submit" %>
+            <% end %>
+
+            <p class="pj-auth-v2-register">
+              Уже есть аккаунт?
+              <%= link_to "Войти", new_session_path(resource_name) %>
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
+  </main>
 
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "auth-form" }) do |f| %>
-      <div class="auth-form-heading">
-        <span>Регистрация</span>
-        <h2>Начать заботиться спокойнее</h2>
-      </div>
-
-      <%= render "devise/shared/error_messages", resource: resource %>
-
-      <div class="mb-3">
-        <%= f.label :email, "Электронная почта", class: "form-label" %>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :password, "Пароль", class: "form-label" %>
-        <% if @minimum_password_length %>
-          <div class="form-text">Минимум <%= @minimum_password_length %> символов.</div>
-        <% end %>
-        <div class="auth-password-field">
-          <%= f.password_field :password, autocomplete: "new-password", class: "form-control", data: { password_input: true } %>
-          <%= render "devise/shared/password_toggle" %>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :password_confirmation, "Повторите пароль", class: "form-label" %>
-        <div class="auth-password-field">
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control", data: { password_input: true } %>
-          <%= render "devise/shared/password_toggle" %>
-        </div>
-      </div>
-
-      <%= f.submit "Создать аккаунт", class: "btn btn-primary w-100 auth-submit" %>
-    <% end %>
-
-    <%= render "devise/shared/links" %>
-  </section>
+  <%= render "devise/shared/auth_v2_footer" %>
 </div>
