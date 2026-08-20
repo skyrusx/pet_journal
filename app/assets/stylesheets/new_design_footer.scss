@@ -16,7 +16,7 @@
 
 .pj-nd-footer__top {
   display: grid;
-  grid-template-columns: minmax(250px, 1.1fr) minmax(190px, .85fr) minmax(330px, 1.3fr) minmax(140px, .55fr);
+  grid-template-columns: minmax(360px, 1.55fr) repeat(3, minmax(245px, 1fr));
   gap: 0;
   align-items: start;
 }
@@ -25,11 +25,12 @@
 .pj-nd-footer__column {
   min-width: 0;
   min-height: 118px;
-  padding: 0 34px;
+  padding: 0 30px;
 }
 
 .pj-nd-footer__brand {
   padding-left: 0;
+  padding-right: 42px;
 }
 
 .pj-nd-footer__column {
@@ -72,6 +73,13 @@
   line-height: 1.45;
 }
 
+/* Keep desktop footer labels on a single line. */
+.pj-nd-footer__column h3,
+.pj-nd-footer__column a,
+.pj-nd-footer__column p {
+  white-space: nowrap;
+}
+
 .pj-nd-footer__column a {
   display: block;
   width: fit-content;
@@ -87,7 +95,6 @@
 .pj-nd-footer__support p {
   margin: 8px 0 0;
   max-width: none;
-  white-space: nowrap;
 }
 
 .pj-nd-footer__vk {
@@ -134,7 +141,7 @@
   color: #385941 !important;
 }
 
-@media (max-width: 1050px) {
+@media (max-width: 1180px) {
   .pj-nd-footer__top {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     row-gap: 28px;
@@ -159,7 +166,9 @@
     border-left: 0;
   }
 
-  .pj-nd-footer__support p {
+  .pj-nd-footer__column h3,
+  .pj-nd-footer__column a,
+  .pj-nd-footer__column p {
     white-space: normal;
   }
 }
