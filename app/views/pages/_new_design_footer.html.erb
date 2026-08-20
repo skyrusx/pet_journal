@@ -1,0 +1,40 @@
+<footer class="pj-nd-footer" aria-label="Подвал PetJournal">
+  <div class="pj-nd-shell">
+    <div class="pj-nd-footer__panel">
+      <div class="pj-nd-footer__top">
+        <div class="pj-nd-footer__brand">
+          <%= link_to new_design_path, class: "pj-nd-footer__brand-link", aria: { label: "PetJournal" } do %>
+            <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", class: "pj-nd-footer__logo" %>
+          <% end %>
+          <p class="pj-nd-footer__tagline">Забота. Память. Спокойствие.</p>
+        </div>
+
+        <nav class="pj-nd-footer__column pj-nd-footer__nav" aria-label="Разделы сайта">
+          <h3>Разделы</h3>
+          <a href="#features">Возможности</a>
+          <a href="#how-it-works">Как это работает</a>
+        </nav>
+
+        <div class="pj-nd-footer__column pj-nd-footer__support">
+          <h3>Поддержка</h3>
+          <a href="mailto:support@pet-journal.ru">support@pet-journal.ru</a>
+          <p>Мы рядом, если нужна помощь</p>
+        </div>
+
+        <div class="pj-nd-footer__column pj-nd-footer__social">
+          <h3>Мы в соцсетях</h3>
+          <a class="pj-nd-footer__vk" href="https://vk.ru/petjournal" target="_blank" rel="noopener noreferrer" aria-label="PetJournal во ВКонтакте">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18.68 13.59c.15-.49 0-.84-.7-.84h-2.31c-.59 0-.86.31-1.01.65 0 0-1.18 2.88-2.85 4.75-.54.54-.79.71-1.08.71-.15 0-.36-.17-.36-.66v-4.61c0-.59-.17-.84-.66-.84H6.08c-.37 0-.59.27-.59.52 0 .56.84.69.93 2.27v3.43c0 .75-.14.89-.43.89-.79 0-2.71-2.9-3.85-6.21-.23-.64-.46-.9-1.05-.9H-1.22c-.66 0-.79.31-.79.65 0 .61.79 3.66 3.66 7.69C3.57 23.86 6.27 25 8.73 25c1.47 0 1.65-.33 1.65-.9V22c0-.67.14-.8.61-.8.35 0 .94.17 2.31 1.49 1.57 1.57 1.83 2.27 2.71 2.27h2.31c.66 0 .99-.33.8-.98-.21-.65-.96-1.6-1.95-2.72-.54-.64-1.35-1.33-1.6-1.67-.35-.44-.25-.64 0-1.03 0 0 2.83-3.98 3.12-5.33Z" transform="translate(3 -7)"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="pj-nd-footer__bottom">
+        <p>© <%= Time.current.year %> PetJournal. Все права защищены.</p>
+        <p class="pj-nd-footer__made-with-care">Сделано с заботой о тех, кто рядом ♡</p>
+      </div>
+    </div>
+  </div>
+</footer>
