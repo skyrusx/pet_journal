@@ -87,6 +87,21 @@
   fill: #b9cf67;
 }
 
+.pj-nd-step__paw {
+  width: 74px !important;
+  height: 74px !important;
+  overflow: visible;
+}
+
+.pj-nd-step__paw ellipse,
+.pj-nd-step__paw path {
+  fill: #b8cf63 !important;
+  stroke: #0f5a33 !important;
+  stroke-width: 2.6 !important;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .pj-nd-step h3 {
   margin: 0 0 12px;
   color: #1c211d;
@@ -143,6 +158,11 @@
   .pj-nd-step__icon svg {
     width: 62px;
     height: 62px;
+  }
+
+  .pj-nd-step__paw {
+    width: 66px !important;
+    height: 66px !important;
   }
 
   .pj-nd-step h3 {
