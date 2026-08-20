@@ -1,42 +1,52 @@
-<%= render "devise/shared/auth_header" %>
+<%= render "devise/shared/auth_v2_navbar" %>
 
-<div class="auth-page">
-  <section class="auth-card">
-    <div class="auth-copy">
-      <%= link_to root_path, class: "auth-brand", aria: { label: "PetJournal — главная" } do %>
-        <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 172, height: 49 %>
-      <% end %>
-      <span>Восстановление доступа</span>
-      <h1>Вернём доступ к журналу</h1>
-      <p>Укажите эл. почту, и мы отправим ссылку для смены пароля.</p>
-      <ul>
-        <li>Ссылка придёт на почту аккаунта</li>
-        <li>Старый пароль менять вручную не нужно</li>
-        <li>Ваши данные остаются закрытыми</li>
-      </ul>
-      <div class="auth-pettag-art" aria-hidden="true">
-        <span class="auth-pettag-ring"></span>
-        <span class="auth-pettag-qr"></span>
-        <span class="auth-pettag-label">PetTag</span>
-      </div>
+<div class="pj-auth-v2 pj-auth-v2--recovery">
+  <main class="pj-auth-v2-main">
+    <div class="pj-auth-v2-shell">
+      <section class="pj-auth-v2-stage" aria-labelledby="pj-auth-v2-title">
+        <div class="pj-auth-v2-visual" aria-hidden="true">
+          <div class="pj-auth-v2-brand-card">
+            <%= image_tag "petjournal/logo-horizontal.png", alt: "", class: "pj-auth-v2-brand-card__logo" %>
+            <h2>Ваш журнал заботы о питомце</h2>
+            <ul class="pj-auth-v2-brand-card__benefits">
+              <li>Напоминания о событиях</li>
+              <li>Документы в порядке</li>
+              <li>PetTag — безопасность</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pj-auth-v2-form-side">
+          <div class="pj-auth-v2-card">
+            <div class="pj-auth-v2-heading">
+              <h1 id="pj-auth-v2-title">Восстановление пароля</h1>
+              <p>Введите email, и мы отправим<br>ссылку для смены пароля.</p>
+            </div>
+
+            <%= render "devise/shared/error_messages", resource: resource %>
+
+            <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "pj-auth-v2-form" }) do |f| %>
+              <div class="pj-auth-v2-field">
+                <%= f.label :email, "Email" %>
+                <%= f.email_field :email,
+                                  autofocus: true,
+                                  autocomplete: "email",
+                                  placeholder: "example@mail.ru",
+                                  required: true,
+                                  class: "pj-auth-v2-input" %>
+              </div>
+
+              <%= f.submit "Отправить ссылку", class: "pj-auth-v2-submit" %>
+            <% end %>
+
+            <p class="pj-auth-v2-register pj-auth-v2-back-link">
+              <%= link_to "← Вернуться ко входу", new_session_path(resource_name) %>
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
+  </main>
 
-    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "auth-form" }) do |f| %>
-      <div class="auth-form-heading">
-        <span>Пароль</span>
-        <h2>Получить ссылку</h2>
-      </div>
-
-      <%= render "devise/shared/error_messages", resource: resource %>
-
-      <div class="mb-3">
-        <%= f.label :email, "Эл. почта", class: "form-label" %>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "form-control" %>
-      </div>
-
-      <%= f.submit "Отправить ссылку", class: "btn btn-primary w-100 auth-submit" %>
-    <% end %>
-
-    <%= render "devise/shared/links" %>
-  </section>
+  <%= render "devise/shared/auth_v2_footer" %>
 </div>
