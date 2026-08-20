@@ -8,12 +8,11 @@
           <div class="pj-auth-v2-brand-card">
             <%= image_tag "petjournal/logo-horizontal.png", alt: "", class: "pj-auth-v2-brand-card__logo" %>
             <h2>Ваш журнал заботы о питомце</h2>
-            <p>Здоровье, важные события и документы — всегда рядом.</p>
-            <div class="pj-auth-v2-brand-card__benefits">
-              <span>Напоминания о заботе</span>
-              <span>Документы в порядке</span>
-              <span>PetTag — безопасность</span>
-            </div>
+            <ul class="pj-auth-v2-brand-card__benefits">
+              <li>Напоминания о событиях</li>
+              <li>Документы в порядке</li>
+              <li>PetTag — безопасность</li>
+            </ul>
           </div>
         </div>
 
@@ -42,6 +41,7 @@
                 <div class="pj-auth-v2-password">
                   <%= f.password_field :password,
                                        autocomplete: "current-password",
+                                       placeholder: "••••••••",
                                        class: "pj-auth-v2-input",
                                        data: { password_input: true } %>
                   <%= render "devise/shared/password_toggle" %>
