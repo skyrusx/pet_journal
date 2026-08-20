@@ -1,0 +1,29 @@
+<header class="pj-auth-v2-navbar">
+  <div class="pj-auth-v2-shell pj-auth-v2-navbar__inner">
+    <%= link_to new_design_path, class: "pj-auth-v2-navbar__brand", aria: { label: "PetJournal — главная" } do %>
+      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", class: "pj-auth-v2-navbar__logo" %>
+    <% end %>
+
+    <nav class="pj-auth-v2-navbar__nav" aria-label="Основная навигация">
+      <%= link_to "Возможности", new_design_path(anchor: "features") %>
+      <%= link_to "Как это работает", new_design_path(anchor: "how-it-works") %>
+    </nav>
+
+    <div class="pj-auth-v2-navbar__actions">
+      <%= link_to "Создать журнал", new_user_registration_path, class: "pj-auth-v2-navbar__cta" %>
+    </div>
+
+    <details class="pj-auth-v2-navbar__mobile">
+      <summary aria-label="Открыть меню">
+        <span class="pj-auth-v2-navbar__burger" aria-hidden="true"><span></span></span>
+      </summary>
+      <div class="pj-auth-v2-navbar__mobile-panel">
+        <nav aria-label="Мобильная навигация">
+          <%= link_to "Возможности", new_design_path(anchor: "features") %>
+          <%= link_to "Как это работает", new_design_path(anchor: "how-it-works") %>
+          <%= link_to "Создать журнал", new_user_registration_path, class: "pj-auth-v2-navbar__mobile-cta" %>
+        </nav>
+      </div>
+    </details>
+  </div>
+</header>
