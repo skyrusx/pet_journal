@@ -30,6 +30,7 @@
                                   autofocus: true,
                                   autocomplete: "email",
                                   placeholder: "example@mail.ru",
+                                  required: true,
                                   class: "pj-auth-v2-input" %>
               </div>
 
@@ -42,6 +43,7 @@
                   <%= f.password_field :password,
                                        autocomplete: "current-password",
                                        placeholder: "••••••••",
+                                       required: true,
                                        class: "pj-auth-v2-input",
                                        data: { password_input: true } %>
                   <%= render "devise/shared/password_toggle" %>
