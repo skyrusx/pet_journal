@@ -36,7 +36,7 @@
           <div class="form-text">Минимум <%= @minimum_password_length %> символов.</div>
         <% end %>
         <div class="auth-password-field">
-          <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "form-control", data: { password_input: true } %>
+          <%= f.password_field :password, autofocus: true, autocomplete: "new-password", required: true, class: "form-control", data: { password_input: true } %>
           <%= render "devise/shared/password_toggle" %>
         </div>
       </div>
@@ -44,7 +44,7 @@
       <div class="mb-3">
         <%= f.label :password_confirmation, "Повторите пароль", class: "form-label" %>
         <div class="auth-password-field">
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control", data: { password_input: true } %>
+          <%= f.password_field :password_confirmation, autocomplete: "new-password", required: true, class: "form-control", data: { password_input: true } %>
           <%= render "devise/shared/password_toggle" %>
         </div>
       </div>
