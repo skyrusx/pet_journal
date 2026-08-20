@@ -1,0 +1,76 @@
+/* Registration screen uses the approved login auth shell and only adjusts the form density. */
+
+.pj-auth-v2--registration .pj-auth-v2-stage {
+  min-height: 650px;
+}
+
+.pj-auth-v2--registration .pj-auth-v2-visual {
+  min-height: 650px;
+}
+
+.pj-auth-v2--registration .pj-auth-v2-form-side {
+  padding-block: 30px;
+}
+
+.pj-auth-v2--registration .pj-auth-v2-card {
+  max-width: 380px;
+  padding: 28px 30px 26px;
+}
+
+.pj-auth-v2--registration .pj-auth-v2-heading {
+  margin-bottom: 20px;
+}
+
+.pj-auth-v2--registration .pj-auth-v2-registration-form {
+  gap: 12px;
+}
+
+.pj-auth-v2--registration .pj-auth-v2-register {
+  margin-top: 17px;
+}
+
+@media (max-width: 1050px) {
+  .pj-auth-v2--registration .pj-auth-v2-stage,
+  .pj-auth-v2--registration .pj-auth-v2-visual {
+    min-height: 630px;
+  }
+
+  .pj-auth-v2--registration .pj-auth-v2-form-side {
+    padding-block: 24px;
+  }
+}
+
+@media (max-width: 820px) {
+  .pj-auth-v2--registration .pj-auth-v2-stage,
+  .pj-auth-v2--registration .pj-auth-v2-visual {
+    min-height: 0;
+  }
+
+  .pj-auth-v2--registration .pj-auth-v2-form-side {
+    min-height: 0;
+    padding-top: 28px;
+    padding-bottom: 38px;
+  }
+
+  .pj-auth-v2--registration .pj-auth-v2-card {
+    width: min(100%, 430px);
+    max-width: 430px;
+    padding: 31px 34px 29px;
+  }
+}
+
+@media (max-width: 560px) {
+  .pj-auth-v2--registration .pj-auth-v2-form-side {
+    padding-top: 16px;
+    padding-bottom: 26px;
+  }
+
+  .pj-auth-v2--registration .pj-auth-v2-card {
+    width: 100%;
+    padding: 26px 20px 24px;
+  }
+
+  .pj-auth-v2--registration .pj-auth-v2-registration-form {
+    gap: 11px;
+  }
+}
