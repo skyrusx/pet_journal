@@ -29,18 +29,13 @@
   flex: 0 0 88px;
   display: grid;
   place-items: center;
-  color: #98b735;
 }
 
-.pj-nd-trust-strip__paw svg {
-  width: 78px;
-  height: 78px;
-}
-
-.pj-nd-trust-strip__paw ellipse,
-.pj-nd-trust-strip__paw path {
-  fill: currentColor;
-  stroke: none;
+.pj-nd-trust-strip__paw-image {
+  width: 82px;
+  height: 82px;
+  display: block;
+  object-fit: contain;
 }
 
 .pj-nd-trust-strip__brand p {
@@ -129,9 +124,9 @@
     flex-basis: 64px;
   }
 
-  .pj-nd-trust-strip__paw svg {
-    width: 58px;
-    height: 58px;
+  .pj-nd-trust-strip__paw-image {
+    width: 60px;
+    height: 60px;
   }
 
   .pj-nd-trust-strip__brand p {
