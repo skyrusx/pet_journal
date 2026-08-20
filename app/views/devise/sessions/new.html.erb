@@ -1,59 +1,81 @@
-<%= render "devise/shared/auth_header" %>
+<%= render "devise/shared/auth_v2_navbar" %>
 
-<div class="auth-page">
-  <section class="auth-card">
-    <div class="auth-copy">
-      <%= link_to root_path, class: "auth-brand", aria: { label: "PetJournal — главная" } do %>
-        <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 172, height: 49 %>
-      <% end %>
-      <span>С возвращением</span>
-      <h1>Войдите в PetJournal</h1>
-      <p>Вернитесь к карточкам питомцев, журналу событий, напоминаниям и QR-профилям безопасности.</p>
-      <ul>
-        <li>История здоровья под рукой</li>
-        <li>Документы и напоминания в одном месте</li>
-        <li>PetTag для спокойствия вне дома</li>
-      </ul>
-      <div class="auth-pettag-art" aria-hidden="true">
-        <span class="auth-pettag-ring"></span>
-        <span class="auth-pettag-qr"></span>
-        <span class="auth-pettag-label">PetTag</span>
-      </div>
-    </div>
-
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "auth-form" }) do |f| %>
-      <div class="auth-form-heading">
-        <span>Вход</span>
-        <h2>Продолжить заботу</h2>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :email, "Электронная почта", class: "form-label" %>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :password, "Пароль", class: "form-label" %>
-        <div class="auth-password-field">
-          <%= f.password_field :password, autocomplete: "current-password", class: "form-control", data: { password_input: true } %>
-          <%= render "devise/shared/password_toggle" %>
+<div class="pj-auth-v2">
+  <main class="pj-auth-v2-main">
+    <div class="pj-auth-v2-shell">
+      <section class="pj-auth-v2-stage" aria-labelledby="pj-auth-v2-title">
+        <div class="pj-auth-v2-visual" aria-hidden="true">
+          <div class="pj-auth-v2-brand-card">
+            <%= image_tag "petjournal/logo-horizontal.png", alt: "", class: "pj-auth-v2-brand-card__logo" %>
+            <h2>Ваш журнал заботы о питомце</h2>
+            <p>Здоровье, важные события и документы — всегда рядом.</p>
+            <div class="pj-auth-v2-brand-card__benefits">
+              <span>Напоминания</span>
+              <span>Документы</span>
+              <span>PetTag</span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <% if devise_mapping.rememberable? %>
-        <div class="form-check mb-3">
-          <%= f.check_box :remember_me, class: "form-check-input" %>
-          <%= f.label :remember_me, "Запомнить меня", class: "form-check-label" %>
+        <div class="pj-auth-v2-form-side">
+          <div class="pj-auth-v2-card">
+            <div class="pj-auth-v2-heading">
+              <h1 id="pj-auth-v2-title">Вход</h1>
+              <p>Добро пожаловать! Мы рады вас видеть.</p>
+            </div>
+
+            <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "pj-auth-v2-form" }) do |f| %>
+              <div class="pj-auth-v2-field">
+                <%= f.label :email, "Email" %>
+                <%= f.email_field :email,
+                                  autofocus: true,
+                                  autocomplete: "email",
+                                  placeholder: "example@mail.ru",
+                                  class: "pj-auth-v2-input" %>
+              </div>
+
+              <div class="pj-auth-v2-field">
+                <div class="pj-auth-v2-field-row">
+                  <%= f.label :password, "Пароль" %>
+                  <%= link_to "Забыли пароль?", new_password_path(resource_name), class: "pj-auth-v2-forgot" %>
+                </div>
+                <div class="pj-auth-v2-password">
+                  <%= f.password_field :password,
+                                       autocomplete: "current-password",
+                                       class: "pj-auth-v2-input",
+                                       data: { password_input: true } %>
+                  <%= render "devise/shared/password_toggle" %>
+                </div>
+              </div>
+
+              <%= f.submit "Войти", class: "pj-auth-v2-submit" %>
+            <% end %>
+
+            <div class="pj-auth-v2-divider"><span>или войдите через</span></div>
+
+            <div class="pj-auth-v2-socials" aria-label="Социальный вход">
+              <button class="pj-auth-v2-social" type="button" aria-disabled="true" title="Подключим VK ID следующим этапом">
+                <span class="pj-auth-v2-social__vk" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M6.79 7.3H4.05c.13 6.24 3.25 9.99 8.72 9.99h.31v-3.57c2.01.2 3.53 1.67 4.14 3.57h2.84c-.78-2.84-2.83-4.41-4.11-5.01 1.28-.74 3.08-2.54 3.51-4.98h-2.58c-.56 1.98-2.22 3.78-3.8 3.95V7.3H10.5v6.92c-1.6-.4-3.62-2.34-3.71-6.92Z"/>
+                  </svg>
+                </span>
+                <span>VK ID</span>
+              </button>
+
+              <button class="pj-auth-v2-social" type="button" aria-disabled="true" title="Подключим Яндекс ID следующим этапом">
+                <span class="pj-auth-v2-social__ya" aria-hidden="true">Я</span>
+                <span>Яндекс ID</span>
+              </button>
+            </div>
+
+            <p class="pj-auth-v2-register">
+              Нет аккаунта?
+              <%= link_to "Зарегистрироваться", new_registration_path(resource_name) %>
+            </p>
+          </div>
         </div>
-      <% end %>
-
-      <%= f.submit "Войти", class: "btn btn-primary w-100 auth-submit" %>
-    <% end %>
-
-    <div class="auth-links auth-links-session">
-      <span>Нет аккаунта?</span>
-      <%= link_to "Создать аккаунт", new_registration_path(resource_name), class: "auth-link-primary" %>
-      <%= link_to "Забыли пароль?", new_password_path(resource_name), class: "auth-link-muted" %>
+      </section>
     </div>
-  </section>
+  </main>
 </div>
