@@ -1,0 +1,26 @@
+/* Login photo + copy polish. The generated photo is served from public/new_design/auth-login-woman-dog.jpg. */
+
+.pj-auth-v2-visual::before {
+  inset: 0;
+  background: url('/new_design/auth-login-woman-dog.jpg') 50% 50% / cover no-repeat;
+  filter: none;
+  transform: none;
+}
+
+.pj-auth-v2-visual::after {
+  background: linear-gradient(180deg, rgba(255, 248, 235, .03), rgba(91, 67, 41, .06));
+}
+
+.pj-auth-v2-heading p {
+  color: #5f675f;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.42;
+}
+
+@media (max-width: 560px) {
+  .pj-auth-v2-heading p {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+}
