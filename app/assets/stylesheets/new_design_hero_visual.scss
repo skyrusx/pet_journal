@@ -59,9 +59,9 @@
   display: none;
 }
 
-/* Latin glyphs render optically heavier in the current font stack. */
+/* Latin glyphs render optically heavier in the current font stack, so tone PetTag down slightly. */
 .pj-nd-benefit__pettag {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 @media (max-width: 1100px) {
