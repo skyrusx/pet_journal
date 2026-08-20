@@ -31,7 +31,7 @@
 
       <div class="mb-3">
         <%= f.label :email, "Эл. почта", class: "form-label" %>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "form-control" %>
       </div>
 
       <%= f.submit "Отправить ссылку", class: "btn btn-primary w-100 auth-submit" %>
