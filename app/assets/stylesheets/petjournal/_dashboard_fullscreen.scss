@@ -59,6 +59,28 @@
     padding-right: clamp(28px, 3vw, 52px);
     padding-bottom: 48px;
   }
+
+  /* Keep pet cards close to the mockup instead of stretching them across a wide monitor. */
+  .pj-dash-pet-card__photo {
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+
+  .pj-dash-pet-card__photo img {
+    object-fit: cover;
+    object-position: center 38%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .pj-dash-pets-grid {
+    grid-template-columns: repeat(4, 176px) 150px;
+    justify-content: start;
+  }
+
+  .pj-dash-pet-add {
+    min-height: 228px;
+  }
 }
 
 @media (max-width: 820px) {
