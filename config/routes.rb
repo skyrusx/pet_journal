@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     patch :settings, on: :collection, action: :update_settings
   end
   resource :web_push_subscription, only: %i[create destroy]
+  resources :pet_tags, path: "pet-tags", only: :index
   get "p/:token" => "public_pet_tags#show", as: :public_pet_tag
   post "p/:token/location" => "public_pet_tags#location", as: :public_pet_tag_location
   get "share/:token" => "public_pet_profile_shares#show", as: :public_pet_profile_share
