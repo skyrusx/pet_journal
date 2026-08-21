@@ -254,8 +254,8 @@
   stroke-linejoin: round;
 }
 
-/* The journal state belongs to the event title, not to a separate visual row. */
-.pj-pet-summary-card__title-line {
+/* The journal state belongs on the same line as the event title. */
+.pj-pet-summary-card__row .pj-pet-summary-card__title-line {
   min-width: 0;
   display: flex;
   align-items: center;
@@ -272,6 +272,7 @@
   flex: 0 0 auto;
   margin: 0;
   padding: 3px 6px;
+  white-space: nowrap;
 }
 
 .pj-pet-summary-card__button--compact {
@@ -291,6 +292,17 @@
 
   .pj-pet-form__extra {
     margin-top: 16px;
+  }
+
+  /* Give the selected photo enough room to be meaningfully reviewed on a phone. */
+  .pj-pet-photo-upload {
+    min-height: 220px;
+    aspect-ratio: 4 / 3;
+  }
+
+  .pj-pet-photo-upload__preview {
+    object-fit: contain;
+    background: #f4f2ec;
   }
 
   /* The existing mobile card grid keeps receiving photo/body/chevron as its layout items. */
