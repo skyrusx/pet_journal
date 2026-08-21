@@ -20,6 +20,71 @@ function closeDashboardProfileMenus(except = null) {
   });
 }
 
+function closeDashboardMobileSheets() {
+  document.querySelectorAll("[data-dashboard-sheet].is-open").forEach((sheet) => {
+    sheet.classList.remove("is-open");
+    sheet.setAttribute("aria-hidden", "true");
+  });
+
+  document.querySelectorAll("[data-dashboard-sheet-toggle]").forEach((button) => {
+    button.setAttribute("aria-expanded", "false");
+  });
+
+  const backdrop = document.querySelector("[data-dashboard-sheet-backdrop]");
+  if (backdrop) backdrop.hidden = true;
+  document.body.classList.remove("pj-dashboard-sheet-open");
+}
+
+function openDashboardMobileSheet(name, button) {
+  const sheet = document.querySelector(`[data-dashboard-sheet="${name}"]`);
+  if (!sheet) return;
+
+  const alreadyOpen = sheet.classList.contains("is-open");
+  closeDashboardMobileSheets();
+  if (alreadyOpen) return;
+
+  sheet.classList.add("is-open");
+  sheet.setAttribute("aria-hidden", "false");
+  button?.setAttribute("aria-expanded", "true");
+
+  const backdrop = document.querySelector("[data-dashboard-sheet-backdrop]");
+  if (backdrop) backdrop.hidden = false;
+  document.body.classList.add("pj-dashboard-sheet-open");
+
+  window.setTimeout(() => {
+    sheet.querySelector("a, button")?.focus();
+  }, 40);
+}
+
+function initDashboardMobileSheets() {
+  document.querySelectorAll("[data-dashboard-sheet-toggle]").forEach((button) => {
+    if (button.dataset.dashboardSheetBound === "true") return;
+    button.dataset.dashboardSheetBound = "true";
+
+    button.addEventListener("click", () => {
+      openDashboardMobileSheet(button.dataset.dashboardSheetToggle, button);
+    });
+  });
+
+  document.querySelectorAll("[data-dashboard-sheet-close]").forEach((button) => {
+    if (button.dataset.dashboardSheetCloseBound === "true") return;
+    button.dataset.dashboardSheetCloseBound = "true";
+    button.addEventListener("click", closeDashboardMobileSheets);
+  });
+
+  document.querySelectorAll("[data-dashboard-sheet-backdrop]").forEach((backdrop) => {
+    if (backdrop.dataset.dashboardSheetBackdropBound === "true") return;
+    backdrop.dataset.dashboardSheetBackdropBound = "true";
+    backdrop.addEventListener("click", closeDashboardMobileSheets);
+  });
+
+  document.querySelectorAll("[data-dashboard-sheet] a").forEach((link) => {
+    if (link.dataset.dashboardSheetLinkBound === "true") return;
+    link.dataset.dashboardSheetLinkBound = "true";
+    link.addEventListener("click", closeDashboardMobileSheets);
+  });
+}
+
 function initDashboardSidebar() {
   document.querySelectorAll("[data-dashboard-root]").forEach((root) => {
     const button = root.querySelector("[data-dashboard-sidebar-toggle]");
@@ -55,6 +120,11 @@ function initDashboardSidebar() {
   });
 }
 
+function initDashboardUi() {
+  initDashboardSidebar();
+  initDashboardMobileSheets();
+}
+
 document.addEventListener("click", (event) => {
   document.querySelectorAll("[data-dashboard-profile-menu][open]").forEach((menu) => {
     if (!menu.contains(event.target)) menu.removeAttribute("open");
@@ -65,12 +135,15 @@ document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
 
   const openMenu = document.querySelector("[data-dashboard-profile-menu][open]");
-  if (!openMenu) return;
+  if (openMenu) {
+    openMenu.removeAttribute("open");
+    openMenu.querySelector("summary")?.focus();
+  }
 
-  openMenu.removeAttribute("open");
-  openMenu.querySelector("summary")?.focus();
+  closeDashboardMobileSheets();
 });
 
-document.addEventListener("DOMContentLoaded", initDashboardSidebar);
-document.addEventListener("turbo:load", initDashboardSidebar);
-document.addEventListener("turbo:render", initDashboardSidebar);
+document.addEventListener("DOMContentLoaded", initDashboardUi);
+document.addEventListener("turbo:load", initDashboardUi);
+document.addEventListener("turbo:render", initDashboardUi);
+document.addEventListener("turbo:before-cache", closeDashboardMobileSheets);
