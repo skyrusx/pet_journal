@@ -36,20 +36,15 @@ module PetEventsHelper
   end
 
   def event_status_filters(pet, selected_status)
-    [
-      ["Все записи", "all"],
-      ["С файлами", "with_files"],
-      ["С будущим действием", "follow_up"]
-    ].map do |label, status|
-      [label, pet_pet_events_path(pet, journal_filter_params.merge(status:).compact_blank), (selected_status.presence || "all") == status]
-    end
+    [["Все состояния", nil]] + PetEvent::STATUS_LABELS.map { |key, label| [label, key] }
   end
 
-  def journal_filter_summary(selected_event_type, selected_period, selected_status, query)
+  def journal_filter_summary(selected_event_type, selected_period, selected_status, query, selected_marker = nil)
     filters = []
     filters << PetEvent::EVENT_TYPE_LABELS[selected_event_type] if selected_event_type.present?
     filters << { "month" => "за месяц", "quarter" => "за 3 месяца", "year" => "за год" }[selected_period]
-    filters << { "with_files" => "с файлами", "follow_up" => "с будущим действием" }[selected_status]
+    filters << PetEvent::STATUS_LABELS[selected_status] if selected_status.present?
+    filters << { "with_files" => "с файлами", "follow_up" => "с будущим действием" }[selected_marker]
     filters << "поиск: #{query}" if query.present?
 
     filters.compact.presence&.join(" · ") || "Показаны все записи"
@@ -61,6 +56,13 @@ module PetEventsHelper
 
   def event_date_label(date)
     date.strftime("%d.%m.%Y")
+  end
+
+  def event_date_time_label(event)
+    date = event.event_date.strftime("%d.%m.%Y")
+    return date if event.event_time.blank?
+
+    "#{date}, #{event.event_time.strftime("%H:%M")}"
   end
 
   def event_attachment_label(event)
@@ -75,6 +77,7 @@ module PetEventsHelper
       "note" => "neutral",
       "vaccination" => "success",
       "treatment" => "warning",
+      "parasite_treatment" => "info",
       "visit" => "info",
       "illness" => "danger",
       "weight" => "neutral",
@@ -86,7 +89,8 @@ module PetEventsHelper
     {
       "note" => "Общее наблюдение или важная заметка.",
       "vaccination" => "Вакцинация, ревакцинация и отметки в ветпаспорте.",
-      "treatment" => "Лекарства, обработки от паразитов, процедуры и курс ухода.",
+      "treatment" => "Лекарство, дозировка, курс и следующее действие.",
+      "parasite_treatment" => "Обработка от клещей, блох, гельминтов и других паразитов.",
       "visit" => "Визит к врачу, рекомендации и назначения.",
       "illness" => "Симптомы, изменения самочувствия и течение болезни.",
       "weight" => "Контроль веса и динамика изменений.",
@@ -113,7 +117,8 @@ module PetEventsHelper
     [
       ["Вес", new_pet_pet_event_path(pet, type: :weight)],
       ["Вакцинация", new_pet_pet_event_path(pet, type: :vaccination)],
-      ["Лекарство / обработка", new_pet_pet_event_path(pet, type: :treatment)],
+      ["Лекарство", new_pet_pet_event_path(pet, type: :treatment)],
+      ["Обработка от паразитов", new_pet_pet_event_path(pet, type: :parasite_treatment)],
       ["Визит к врачу", new_pet_pet_event_path(pet, type: :visit)],
       ["Симптом / болезнь", new_pet_pet_event_path(pet, type: :illness)],
       ["Заметка", new_pet_pet_event_path(pet, type: :note)]
@@ -125,10 +130,10 @@ module PetEventsHelper
   end
 
   def journal_event_state(event)
-    if event.next_action_at.present? && event.next_action_at.future?
-      ["Есть следующий шаг", "planned"]
+    if event.status_planned?
+      [event.status_label, "planned"]
     else
-      ["Записано", "done"]
+      [event.status_label, "done"]
     end
   end
 
@@ -142,6 +147,7 @@ module PetEventsHelper
       "weight" => '<path d="M5 8.5h14v10H5z"/><path d="M8 8.5a4 4 0 0 1 8 0"/><path d="M12 8.5l2-2"/>',
       "vaccination" => '<path d="m7 17 10-10M9 5l10 10M5 9l10 10"/><path d="M5.5 18.5 8 16l-2-2-2.5 2.5z"/>',
       "treatment" => '<path d="M7 6.5h10a3 3 0 0 1 0 6H7a3 3 0 0 1 0-6z"/><path d="m10 6.5 4 6"/>',
+      "parasite_treatment" => '<path d="M12 4.5c2.8 2.1 4.4 4.6 4.4 7.2A4.4 4.4 0 0 1 12 16a4.4 4.4 0 0 1-4.4-4.3C7.6 9.1 9.2 6.6 12 4.5z"/><path d="M7.2 7.6 5 6M16.8 7.6 19 6M7.2 14.5 5 16M16.8 14.5 19 16M12 16v3.5"/>',
       "visit" => '<path d="M5 7h14v12H5z"/><path d="M9 7V5h6v2"/><path d="M12 10v6M9 13h6"/>',
       "illness" => '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M8.5 12h2l1-2 1.5 4 1-2h1.5"/>',
       "document" => '<path d="M7 3.5h7l3 3V20.5H7z"/><path d="M14 3.5V7h3M9.5 12h5M9.5 15.5h5"/>'
@@ -165,7 +171,8 @@ module PetEventsHelper
       q: params[:q].presence,
       type: params[:type].presence,
       period: params[:period].presence,
-      status: params[:status].presence
+      status: params[:status].presence,
+      marker: params[:marker].presence
     }
   end
 end
