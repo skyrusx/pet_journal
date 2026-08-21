@@ -1,12 +1,26 @@
-<div class="form-page py-4">
-  <div class="form-page-header">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1">Редактировать событие</h1>
-      <p class="text-muted mb-0">Обновите дату, описание или вложения записи.</p>
-    </div>
-    <%= link_to "Открыть событие", pet_pet_event_path(@pet, @pet_event), class: "btn btn-outline-secondary" %>
-  </div>
+<% content_for :title, "Редактировать #{journal_event_title(@pet_event)} — PetJournal" %>
 
-  <%= render "form" %>
+<div class="pj-journal-page pj-journal-form-page">
+  <header class="pj-workspace-topbar pj-journal-detail-topbar">
+    <%= link_to pet_pet_events_path(@pet), class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>Назад к журналу</span>
+    <% end %>
+
+    <div class="pj-journal-detail-actions">
+      <%= button_to "Удалить",
+                    pet_pet_event_path(@pet, @pet_event),
+                    method: :delete,
+                    class: "pj-journal-edit-delete",
+                    form: { onsubmit: "return confirm('Удалить событие?')" } %>
+    </div>
+  </header>
+
+  <div class="pj-journal-form-content">
+    <div class="pj-journal-mobile-back pj-journal-mobile-back--title">
+      <%= link_to pet_pet_event_path(@pet, @pet_event), aria: { label: "Назад к событию" } do %><%= pj_icon(:chevron) %><% end %>
+      <strong>Редактировать событие</strong>
+    </div>
+
+    <%= render "form" %>
+  </div>
 </div>
