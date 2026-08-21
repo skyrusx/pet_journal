@@ -44,6 +44,14 @@
             <%= f.date_field :event_date, required: true %>
           </div>
           <div class="pj-journal-field">
+            <%= f.label :event_time, "Время" %>
+            <%= f.time_field :event_time, step: 60 %>
+          </div>
+          <div class="pj-journal-field">
+            <%= f.label :status, "Состояние" %>
+            <%= f.select :status, PetEvent::STATUS_LABELS.map { |key, label| [label, key] } %>
+          </div>
+          <div class="pj-journal-field">
             <%= f.label :title, "Название" %>
             <%= f.text_field :title, placeholder: "Можно оставить пустым" %>
           </div>
@@ -74,11 +82,20 @@
 
         <div class="pj-journal-dynamic-section" data-event-fields="treatment">
           <div class="pj-journal-fields pj-journal-fields--two">
-            <div class="pj-journal-field"><%= f.label :medication_name, "Препарат / средство" %><%= f.text_field :medication_name, placeholder: "Название препарата или обработки" %></div>
+            <div class="pj-journal-field"><%= f.label :medication_name, "Препарат" %><%= f.text_field :medication_name, placeholder: "Название лекарства" %></div>
             <div class="pj-journal-field"><%= f.label :dosage, "Дозировка" %><%= f.text_field :dosage, placeholder: "Например, 1 таблетка" %></div>
             <div class="pj-journal-field"><%= f.label :course_started_on, "Начало курса" %><%= f.date_field :course_started_on %></div>
             <div class="pj-journal-field"><%= f.label :course_ended_on, "Окончание курса" %><%= f.date_field :course_ended_on %></div>
             <div class="pj-journal-field pj-journal-field--wide"><%= f.label :next_action_at, "Следующее действие" %><%= f.datetime_local_field :next_action_at %></div>
+          </div>
+        </div>
+
+        <div class="pj-journal-dynamic-section" data-event-fields="parasite_treatment">
+          <div class="pj-journal-fields pj-journal-fields--two">
+            <div class="pj-journal-field"><%= f.label :medication_name, "Средство" %><%= f.text_field :medication_name, placeholder: "Например, Бравекто" %></div>
+            <div class="pj-journal-field"><%= f.label :dosage, "Дозировка / способ" %><%= f.text_field :dosage, placeholder: "Например, 1 таблетка" %></div>
+            <div class="pj-journal-field"><%= f.label :course_started_on, "Дата обработки" %><%= f.date_field :course_started_on %></div>
+            <div class="pj-journal-field"><%= f.label :next_action_at, "Следующая обработка" %><%= f.datetime_local_field :next_action_at %></div>
           </div>
         </div>
 
@@ -104,7 +121,7 @@
         </div>
 
         <div class="pj-journal-dynamic-section" data-event-fields="note">
-          <p class="pj-journal-type-note">Для заметки достаточно даты, названия и описания.</p>
+          <p class="pj-journal-type-note">Для заметки достаточно даты, времени, состояния, названия и описания.</p>
         </div>
 
         <div class="pj-journal-dynamic-section" data-event-fields="document">
