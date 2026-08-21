@@ -20,6 +20,7 @@ module ApplicationHelper
       journal: '<path d="M6 4.5h9a3 3 0 0 1 3 3V20H8a3 3 0 0 0-3 3V6a1.5 1.5 0 0 1 1-1.5z"/><path d="M8 16h7M8 12h7M8 8h5"/>',
       plus: '<path d="M12 5v14M5 12h14"/>',
       clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+      alarm: '<circle cx="12" cy="13" r="7"/><path d="M12 9.5V13l2.6 1.7M6.4 4.2 3.8 6.8M17.6 4.2l2.6 2.6M7.2 19.1 5.8 21M16.8 19.1l1.4 1.9M9 3h6"/>',
       more: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
       paw: '<circle cx="7.2" cy="8.3" r="2"/><circle cx="12" cy="6.6" r="2"/><circle cx="16.8" cy="8.3" r="2"/><path d="M6.2 16.2c.5-3 3.1-5.2 5.8-5.2s5.3 2.2 5.8 5.2c.3 1.8-1 3.3-2.8 3.3-.9 0-1.7-.3-3-.3s-2.1.3-3 .3c-1.8 0-3.1-1.5-2.8-3.3z"/>',
       tag: '<path d="M4 12.5 12.5 4H20v7.5L11.5 20 4 12.5z"/><circle cx="16.5" cy="7.5" r="1.3"/>',
@@ -60,7 +61,7 @@ module ApplicationHelper
     [
       { key: :home, label: "Главная", path: root_path, icon: :home, active: mobile_nav_active?(:home) },
       { key: :journal, label: "Журнал", path: pet.present? ? pet_pet_events_path(pet) : pets_path, icon: :journal, active: mobile_nav_active?(:journal) },
-      { key: :reminders, label: "Напом.", aria_label: "Напоминания", path: pet.present? ? pet_reminders_path(pet) : pets_path, icon: :clock, active: mobile_nav_active?(:reminders), badge: mobile_reminders_badge },
+      { key: :reminders, label: "Напом.", aria_label: "Напоминания", path: pet.present? ? pet_reminders_path(pet) : pets_path, icon: :alarm, active: mobile_nav_active?(:reminders), badge: mobile_reminders_badge },
       { key: :more, label: "Ещё", icon: :more, active: mobile_nav_active?(:more) }
     ]
   end
@@ -71,7 +72,7 @@ module ApplicationHelper
 
     [
       { label: "Событие в журнал", path: new_pet_pet_event_path(pet), icon: :journal },
-      { label: "Напоминание", path: new_pet_reminder_path(pet), icon: :clock },
+      { label: "Напоминание", path: new_pet_reminder_path(pet), icon: :alarm },
       { label: "Вес", path: new_pet_pet_event_path(pet, type: :weight), icon: :plus },
       { label: "Лекарство", path: new_pet_pet_event_path(pet, type: :treatment), icon: :plus },
       { label: "Обработка от паразитов", path: new_pet_pet_event_path(pet, type: :parasite_treatment), icon: :plus },
