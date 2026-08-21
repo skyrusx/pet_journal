@@ -3,6 +3,7 @@ class RemindersController < ApplicationController
   before_action :set_pet
   before_action :set_reminder, only: %i[show edit update destroy complete pause resume snooze]
   before_action :set_notification_channels, only: %i[new create edit update show]
+  before_action :set_reminder_pets, only: %i[index new create edit update]
 
   layout "workspace_new_design"
 
@@ -10,7 +11,6 @@ class RemindersController < ApplicationController
     @selected_status = params[:status].presence_in(%w[all active today overdue paused completed]) || "active"
     @selected_type = params[:type].presence_in(Reminder.reminder_types.keys)
     @query = params[:q].to_s.strip
-    @reminder_pets = current_user.pets.order(:name)
     @reminders = filtered_reminders
     @total_count = @pet.reminders.count
     @active_count = @pet.reminders.status_active.count
@@ -32,11 +32,12 @@ class RemindersController < ApplicationController
   end
 
   def create
-    @reminder = @pet.reminders.new(reminder_params)
+    target_pet = selected_reminder_pet
+    @reminder = target_pet.reminders.new(reminder_params)
 
     if @reminder.save
       sync_notification_channels
-      redirect_to pet_reminders_path(@pet), notice: "Напоминание создано."
+      redirect_to pet_reminders_path(target_pet), notice: "Напоминание создано."
     else
       render :new, status: :unprocessable_entity
     end
@@ -45,13 +46,15 @@ class RemindersController < ApplicationController
   def edit; end
 
   def update
+    target_pet = selected_reminder_pet
     @reminder.assign_attributes(reminder_params)
+    @reminder.pet = target_pet
     @reminder.next_run_at = @reminder.remind_at
     @reminder.last_notified_at = nil
 
     if @reminder.save
       sync_notification_channels
-      redirect_to pet_reminder_path(@pet, @reminder), notice: "Напоминание обновлено."
+      redirect_to pet_reminder_path(target_pet, @reminder), notice: "Напоминание обновлено."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -102,6 +105,17 @@ class RemindersController < ApplicationController
 
   def set_notification_channels
     @notification_channels = current_user.notification_channels.enabled.order(:channel_type, :created_at)
+  end
+
+  def set_reminder_pets
+    @reminder_pets = current_user.pets.with_attached_photo.order(:name).to_a
+  end
+
+  def selected_reminder_pet
+    pet_id = params.dig(:reminder, :pet_id).presence
+    return @pet if pet_id.blank?
+
+    current_user.pets.find(pet_id)
   end
 
   def reminder_params
