@@ -51,6 +51,7 @@ Rails.application.routes.draw do
       patch :mark_lost
       patch :mark_found
       patch :mark_reunited
+      patch :mark_safe
       get "qr.:format" => "pet_tags#qr", as: :qr, constraints: { format: /svg|png/ }
     end
     resources :pet_events, path: :events
