@@ -1,3 +1,5 @@
+require "securerandom"
+
 class AddTagCodeToPetTags < ActiveRecord::Migration[7.2]
   ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".freeze
 
