@@ -1,36 +1,173 @@
-/* Mobile reminder filters: status and type share the full row equally. */
+/* Mobile Reminders controls should mirror the approved Journal mobile pattern. */
 
 @media (max-width: 820px) {
+  /* Pet selector: same size, rhythm and dropdown treatment as Journal. */
+  .pj-reminders-pet-switcher,
+  .pj-reminders-pet-switcher > summary {
+    width: 100%;
+  }
+
+  .pj-reminders-pet-switcher > summary {
+    min-width: 0;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 12px;
+    border: 1px solid #e3ded3;
+    border-radius: 14px;
+    color: #3f4d44;
+    background: #fffefa;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 3px 12px rgba(49, 57, 50, .025);
+  }
+
+  .pj-reminders-pet-avatar {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    font-size: 13px;
+  }
+
+  .pj-reminders-pet-switcher__copy {
+    display: block;
+    min-width: 0;
+  }
+
+  .pj-reminders-pet-switcher__copy small {
+    display: none;
+  }
+
+  .pj-reminders-pet-switcher__copy strong {
+    display: block;
+    overflow: hidden;
+    color: #3f4d44;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pj-reminders-pet-switcher > summary > .pj-nav-icon {
+    width: 16px;
+    height: 16px;
+    margin-left: auto;
+  }
+
+  .pj-reminders-pet-menu {
+    top: calc(100% + 8px);
+    width: 100%;
+    padding: 8px;
+    border-radius: 14px;
+    box-shadow: 0 16px 40px rgba(44, 52, 45, .14);
+  }
+
+  .pj-reminders-pet-option {
+    min-height: 54px;
+    grid-template-columns: 38px minmax(0, 1fr);
+    padding: 8px 10px;
+    border-radius: 10px;
+  }
+
+  .pj-reminders-pet-option .pj-reminders-pet-avatar {
+    width: 38px;
+    height: 38px;
+    flex-basis: 38px;
+  }
+
+  .pj-reminders-pet-option strong {
+    font-size: 13px;
+  }
+
+  .pj-reminders-pet-option small {
+    font-size: 11px;
+  }
+
+  /* First row: Status and Type split the available width 50/50. */
   .pj-reminders-filters {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 0;
+    border: 0;
+    background: transparent;
   }
 
   .pj-reminders-filters > .pj-reminders-filter:nth-of-type(1) {
-    grid-column: 1 / 3;
+    grid-column: 1;
+    grid-row: 1;
   }
 
   .pj-reminders-filters > .pj-reminders-filter:nth-of-type(2) {
-    grid-column: 3 / 5;
+    grid-column: 2;
+    grid-row: 1;
   }
 
-  /* Search occupies the complete second row; the submit button sits inside its right edge. */
+  .pj-reminders-filter select,
+  .pj-reminders-filter input {
+    height: 48px;
+    border-radius: 14px;
+    background: #fffefa;
+    font-size: 16px;
+    box-shadow: 0 3px 12px rgba(49, 57, 50, .025);
+  }
+
+  /* Second row: exactly the Journal search pattern — wide field + 48px action button. */
   .pj-reminders-filter--search {
     grid-column: 1 / -1 !important;
     grid-row: 2;
+    min-width: 0;
+    padding-right: 56px;
+  }
+
+  .pj-reminders-filter--search > span {
+    display: none;
   }
 
   .pj-reminders-filter--search input {
-    padding-right: 60px !important;
+    width: 100%;
+    padding: 0 14px;
   }
 
   .pj-reminders-filter-submit {
-    z-index: 2;
-    grid-column: 4 !important;
-    grid-row: 2;
-    justify-self: end;
+    position: absolute;
+    top: 56px;
+    right: 0;
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    min-height: 48px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border-radius: 14px;
+  }
+
+  .pj-reminders-filter-submit span {
+    display: none;
+  }
+
+  .pj-reminders-filter-submit svg {
+    width: 21px;
+    height: 21px;
+    display: block;
+    margin: auto;
+    stroke-width: 1.9;
+  }
+
+  .pj-reminders-filter-submit:active {
+    transform: scale(.96);
   }
 
   .pj-reminders-filter-reset {
     grid-column: 1 / -1;
+    grid-row: 3;
+    justify-self: end;
+    padding-right: 3px;
+    font-size: 12px;
   }
 }
