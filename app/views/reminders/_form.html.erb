@@ -24,17 +24,15 @@
       </div>
 
       <div class="pj-reminder-field">
-        <span class="pj-reminder-field__label">Питомец</span>
-        <div class="pj-reminder-form-pet">
-          <span class="pj-reminders-pet-avatar">
-            <% if pet.photo.attached? %>
-              <%= image_tag pet.photo, alt: "" %>
-            <% else %>
-              <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
-            <% end %>
-          </span>
-          <span><strong><%= pet.name %></strong><small><%= pet.breed.presence || pet.species.presence || "Питомец" %></small></span>
-        </div>
+        <%= form.label :pet_id do %>Питомец <span>*</span><% end %>
+        <%= form.collection_select :pet_id,
+                                   @reminder_pets,
+                                   :id,
+                                   :name,
+                                   {},
+                                   required: true,
+                                   aria: { label: "Питомец для напоминания" } %>
+        <small class="pj-reminder-field-hint">Можно выбрать другого питомца — напоминание будет сохранено в его разделе.</small>
       </div>
 
       <div class="pj-reminder-field">
