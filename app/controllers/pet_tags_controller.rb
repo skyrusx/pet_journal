@@ -1,7 +1,7 @@
 class PetTagsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pet
-  before_action :set_pet_tag, only: %i[show edit update rotate_token qr mark_lost mark_found mark_reunited]
+  before_action :set_pet_tag, only: %i[show edit update rotate_token qr mark_lost mark_found mark_reunited mark_safe]
   before_action :set_notification_channels, only: %i[show edit update]
 
   layout "workspace_new_design"
@@ -61,6 +61,12 @@ class PetTagsController < ApplicationController
     redirect_to pet_pet_tag_path(@pet), notice: "Питомец отмечен как вернувшийся домой."
   end
 
+  def mark_safe
+    @pet_tag.mark_safe!
+
+    redirect_to pet_pet_tag_path(@pet), notice: "Инцидент завершен. PetTag снова в обычном режиме."
+  end
+
   def qr
     qr_code = RQRCode::QRCode.new(public_pet_tag_url(@pet_tag.public_token))
 
@@ -91,7 +97,7 @@ class PetTagsController < ApplicationController
   def pet_tag_params
     params.fetch(:pet_tag, {}).permit(:enabled, :public_message, :behavior_notes, :medical_notes, :contact_phone,
                                       :show_phone, :lost_mode_enabled, :lost_message, :last_seen_location,
-                                      :notification_preference, :safety_status, :show_medical_notes, :found_message)
+                                      :notification_preference, :show_medical_notes, :found_message)
   end
 
   def set_notification_channels
