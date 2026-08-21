@@ -1,4 +1,10 @@
-<%= form_with model: [@pet, @pet_event], local: true, class: "pj-journal-form" do |f| %>
+<% initial_wizard_step = @pet_event.errors.any? || @pet_event.persisted? ? 2 : 1 %>
+<% cancel_path = @pet_event.persisted? ? pet_pet_event_path(@pet, @pet_event) : pet_pet_events_path(@pet) %>
+
+<%= form_with model: [@pet, @pet_event],
+              local: true,
+              class: "pj-journal-form",
+              data: { journal_wizard: true, initial_step: initial_wizard_step } do |f| %>
   <% if @pet_event.errors.any? %>
     <div class="pj-journal-form-errors" role="alert">
       <strong>Проверьте форму</strong>
@@ -8,22 +14,39 @@
 
   <div class="pj-journal-form-layout">
     <aside class="pj-journal-step-rail" aria-label="Этапы заполнения">
-      <span class="active"><b>1</b>Тип события</span>
-      <span><b>2</b>Детали</span>
-      <span><b>3</b>Дополнительно</span>
+      <button type="button"
+              class="pj-journal-step-rail__button <%= "active" if initial_wizard_step == 1 %>"
+              data-journal-wizard-nav="1"
+              <%= 'aria-current="step"' if initial_wizard_step == 1 %>>
+        <b>1</b><span>Тип события</span>
+      </button>
+      <button type="button"
+              class="pj-journal-step-rail__button <%= "active" if initial_wizard_step == 2 %>"
+              data-journal-wizard-nav="2"
+              <%= 'aria-current="step"' if initial_wizard_step == 2 %>>
+        <b>2</b><span>Детали</span>
+      </button>
+      <button type="button"
+              class="pj-journal-step-rail__button"
+              data-journal-wizard-nav="3"
+              disabled>
+        <b>3</b><span>Дополнительно</span>
+      </button>
     </aside>
 
     <div class="pj-journal-form-main">
-      <section class="pj-journal-form-section pj-journal-form-section--types">
+      <section class="pj-journal-form-section pj-journal-form-section--types"
+               data-journal-wizard-step="1"
+               <%= "hidden" unless initial_wizard_step == 1 %>>
         <div class="pj-journal-form-heading">
-          <h1><%= @pet_event.persisted? ? "Редактировать событие" : "Выберите тип события" %></h1>
-          <p>Запись попадёт в журнал <%= @pet.name %>. Поля ниже меняются в зависимости от выбранного типа.</p>
+          <h1><%= @pet_event.persisted? ? "Тип события" : "Выберите тип события" %></h1>
+          <p>Запись попадёт в журнал <%= @pet.name %>. После выбора перейдём к данным события.</p>
         </div>
 
         <div class="pj-journal-type-grid">
           <% PetEvent::EVENT_TYPE_LABELS.each do |key, label| %>
             <label class="pj-journal-type-option <%= event_tone(key) %>">
-              <%= f.radio_button :event_type, key, data: { event_type_radio: true } %>
+              <%= f.radio_button :event_type, key, data: { event_type_radio: true, journal_wizard_type: true } %>
               <span class="pj-journal-type-option__icon"><%= journal_event_icon(key) %></span>
               <strong><%= label %></strong>
               <small><%= event_type_hint(key) %></small>
@@ -31,11 +54,21 @@
             </label>
           <% end %>
         </div>
+
+        <p class="pj-journal-wizard-message" data-journal-wizard-message hidden>Выберите тип события, чтобы продолжить.</p>
+
+        <div class="pj-journal-form-actions pj-journal-form-actions--wizard">
+          <%= link_to "Отмена", cancel_path, class: "pj-journal-form-cancel" %>
+          <button type="button" class="pj-journal-form-save" data-journal-wizard-next>Далее</button>
+        </div>
       </section>
 
-      <section class="pj-journal-form-section">
-        <div class="pj-journal-form-heading pj-journal-form-heading--compact">
-          <span>2. Детали события</span>
+      <section class="pj-journal-form-section"
+               data-journal-wizard-step="2"
+               <%= "hidden" unless initial_wizard_step == 2 %>>
+        <div class="pj-journal-form-heading">
+          <h1><%= @pet_event.persisted? ? "Редактировать событие" : "Детали события" %></h1>
+          <p>Укажите основные данные. Поля ниже меняются в зависимости от выбранного типа события.</p>
         </div>
 
         <div class="pj-journal-fields pj-journal-fields--base">
@@ -130,11 +163,19 @@
             <%= link_to "раздел «Документы»", pet_pet_documents_path(@pet) %>.
           </div>
         </div>
+
+        <div class="pj-journal-form-actions pj-journal-form-actions--wizard">
+          <button type="button" class="pj-journal-form-cancel" data-journal-wizard-back>Назад</button>
+          <button type="button" class="pj-journal-form-save" data-journal-wizard-next>Далее</button>
+        </div>
       </section>
 
-      <section class="pj-journal-form-section">
-        <div class="pj-journal-form-heading pj-journal-form-heading--compact">
-          <span>3. Дополнительно</span>
+      <section class="pj-journal-form-section"
+               data-journal-wizard-step="3"
+               hidden>
+        <div class="pj-journal-form-heading">
+          <h1>Дополнительно</h1>
+          <p>Добавьте заметки, файлы или напоминание. Этот шаг можно пропустить и сразу сохранить событие.</p>
         </div>
 
         <div class="pj-journal-field">
@@ -161,12 +202,12 @@
           <%= check_box_tag :create_follow_up_reminder, "1", false %>
           <span><strong>Создать напоминание по следующему действию</strong><small>Работает для событий, где указана дата следующего шага.</small></span>
         </label>
-      </section>
 
-      <div class="pj-journal-form-actions">
-        <%= link_to "Отмена", @pet_event.persisted? ? pet_pet_event_path(@pet, @pet_event) : pet_pet_events_path(@pet), class: "pj-journal-form-cancel" %>
-        <%= f.submit(@pet_event.persisted? ? "Сохранить изменения" : "Сохранить", class: "pj-journal-form-save") %>
-      </div>
+        <div class="pj-journal-form-actions pj-journal-form-actions--wizard">
+          <button type="button" class="pj-journal-form-cancel" data-journal-wizard-back>Назад</button>
+          <%= f.submit(@pet_event.persisted? ? "Сохранить изменения" : "Сохранить событие", class: "pj-journal-form-save") %>
+        </div>
+      </section>
     </div>
   </div>
 <% end %>
