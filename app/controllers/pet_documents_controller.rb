@@ -51,10 +51,12 @@ class PetDocumentsController < ApplicationController
   def edit; end
 
   def update
+    original_pet_id = @document.pet_id
     target_pet = selected_pet
     @document.pet = target_pet
 
     if @document.update(document_params)
+      move_related_records_to!(target_pet) if original_pet_id != target_pet.id
       @pet = @document.pet
       sync_related_records
       redirect_to pet_pet_document_path(@document.pet, @document), notice: "Документ обновлен."
@@ -132,6 +134,11 @@ class PetDocumentsController < ApplicationController
   def sync_related_records
     @document.sync_journal_event! if params[:create_journal_event] == "1"
     @document.sync_expiry_reminder! if params[:create_expiry_reminder] == "1"
+  end
+
+  def move_related_records_to!(pet)
+    @document.pet_event&.update!(pet: pet)
+    @document.reminder&.update!(pet: pet)
   end
 
   def filtered_documents
