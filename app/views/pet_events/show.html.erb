@@ -26,9 +26,26 @@
   </header>
 
   <div class="pj-journal-content pj-journal-detail-content">
-    <%= link_to pet_pet_events_path(@pet), class: "pj-journal-mobile-back" do %>
-      <%= pj_icon(:chevron) %><span><%= @pet_event.event_type_label %></span>
-    <% end %>
+    <div class="pj-journal-mobile-detail-nav">
+      <%= link_to pet_pet_events_path(@pet), class: "pj-journal-mobile-back" do %>
+        <%= pj_icon(:chevron) %><span>К журналу</span>
+      <% end %>
+
+      <details class="pj-journal-more pj-journal-mobile-more">
+        <summary aria-label="Действия с событием"><%= pj_icon(:more) %></summary>
+        <div>
+          <%= link_to edit_pet_pet_event_path(@pet, @pet_event), class: "pj-journal-more__item" do %>
+            <span>Редактировать</span>
+          <% end %>
+          <%= button_to "Удалить запись",
+                        pet_pet_event_path(@pet, @pet_event),
+                        method: :delete,
+                        class: "pj-journal-more__item pj-journal-more__item--danger",
+                        form_class: "pj-journal-more__form",
+                        form: { onsubmit: "return confirm('Удалить событие?')" } %>
+        </div>
+      </details>
+    </div>
 
     <div class="pj-journal-detail-grid">
       <article class="pj-journal-event-sheet">
