@@ -47,8 +47,19 @@
     justify-self: end;
   }
 
+  /* User-requested experiment: all product sections are one tap away in the bottom bar. */
   .pj-mobile-tabs {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    padding-inline: 2px;
+  }
+
+  .pj-mobile-tabs__item {
+    padding-inline: 0;
+    font-size: 7.4px;
+  }
+
+  .pj-mobile-tabs__item span {
+    max-width: 50px;
   }
 
   .pj-mobile-tabs__more {
@@ -86,5 +97,21 @@
 
   .pj-dash-pet-add__plus {
     margin: 0;
+  }
+}
+
+@media (max-width: 380px) {
+  .pj-mobile-tabs__item {
+    font-size: 6.8px;
+  }
+
+  .pj-mobile-tabs__item .pj-nav-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .pj-mobile-tabs__add {
+    width: 46px;
+    height: 46px;
   }
 }
