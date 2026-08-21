@@ -8,14 +8,17 @@
     <% end %>
 
     <div class="pj-journal-detail-actions">
-      <%= link_to "Редактировать", edit_pet_pet_event_path(@pet, @pet_event), class: "pj-journal-secondary-action" %>
       <details class="pj-journal-more">
         <summary aria-label="Другие действия"><%= pj_icon(:more) %></summary>
         <div>
+          <%= link_to edit_pet_pet_event_path(@pet, @pet_event), class: "pj-journal-more__item" do %>
+            <span>Редактировать</span>
+          <% end %>
           <%= button_to "Удалить запись",
                         pet_pet_event_path(@pet, @pet_event),
                         method: :delete,
-                        class: "pj-journal-delete-action",
+                        class: "pj-journal-more__item pj-journal-more__item--danger",
+                        form_class: "pj-journal-more__form",
                         form: { onsubmit: "return confirm('Удалить событие?')" } %>
         </div>
       </details>
