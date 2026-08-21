@@ -91,6 +91,23 @@
       <% else %>
         <p class="pj-pettag-form-hint">Каналы уведомлений пока не настроены. Для PetTag будет использован email аккаунта.</p>
       <% end %>
+
+      <% if @pet_tag.persisted? %>
+        <div class="pj-pettag-token-management">
+          <div>
+            <strong>Публичный токен</strong>
+            <small>Если QR попал не туда, можно выпустить новую ссылку. Старый QR перестанет работать.</small>
+            <% if @pet_tag.token_rotated_at.present? %>
+              <small>Последняя замена: <%= @pet_tag.token_rotated_at.strftime("%d.%m.%Y %H:%M") %></small>
+            <% end %>
+          </div>
+          <%= button_to "Обновить ссылку",
+                        rotate_token_pet_pet_tag_path(@pet),
+                        method: :patch,
+                        class: "pj-pettag-token-rotate",
+                        form: { onsubmit: "return confirm('Обновить публичную ссылку? Старый QR-код перестанет работать.')" } %>
+        </div>
+      <% end %>
     </section>
   </div>
 
