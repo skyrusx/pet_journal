@@ -20,25 +20,22 @@
     </div>
 
     <div class="pj-reminders-toolbar">
-      <details class="pj-reminders-pet-switcher">
+      <details class="pj-reminders-pet-switcher pj-journal-pet-switcher">
         <summary>
-          <span class="pj-reminders-pet-avatar">
+          <span class="pj-reminders-pet-avatar pj-journal-pet-avatar">
             <% if @pet.photo.attached? %>
               <%= image_tag @pet.photo, alt: "" %>
             <% else %>
               <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
             <% end %>
           </span>
-          <span class="pj-reminders-pet-switcher__copy">
-            <small>Питомец</small>
-            <strong><%= @pet.name %></strong>
-          </span>
+          <span class="pj-reminders-pet-switcher__copy"><small>Питомец</small><strong><%= @pet.name %></strong></span>
           <%= pj_icon(:chevron) %>
         </summary>
-        <div class="pj-reminders-pet-menu">
+        <div class="pj-reminders-pet-menu pj-journal-pet-menu">
           <% @reminder_pets.each do |pet| %>
-            <%= link_to pet_reminders_path(pet), class: class_names("pj-reminders-pet-option", active: pet == @pet) do %>
-              <span class="pj-reminders-pet-avatar">
+            <%= link_to pet_reminders_path(pet), class: class_names("pj-reminders-pet-option", "pj-journal-pet-option", active: pet == @pet) do %>
+              <span class="pj-reminders-pet-avatar pj-journal-pet-avatar">
                 <% if pet.photo.attached? %>
                   <%= image_tag pet.photo, alt: "" %>
                 <% else %>
@@ -81,20 +78,22 @@
                        aria: { label: "Тип напоминания" } %>
       </div>
 
-      <div class="pj-reminders-filter pj-reminders-filter--search">
-        <span aria-hidden="true">
-          <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.75"/><path d="m15 15 4.25 4.25"/></svg>
-        </span>
-        <%= form.search_field :q,
-                              value: @query,
-                              placeholder: "Поиск по названию или заметке",
-                              aria: { label: "Поиск по напоминаниям" } %>
-      </div>
+      <div class="pj-reminders-search-row">
+        <div class="pj-reminders-filter pj-reminders-filter--search">
+          <span aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.75"/><path d="m15 15 4.25 4.25"/></svg>
+          </span>
+          <%= form.search_field :q,
+                                value: @query,
+                                placeholder: "Поиск по названию или заметке",
+                                aria: { label: "Поиск по напоминаниям" } %>
+        </div>
 
-      <button type="submit" class="pj-reminders-filter-submit" aria-label="Применить фильтры">
-        <span>Применить</span>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.75"/><path d="m15 15 4.25 4.25"/></svg>
-      </button>
+        <button type="submit" class="pj-reminders-filter-submit" aria-label="Применить фильтры">
+          <span>Применить</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.75"/><path d="m15 15 4.25 4.25"/></svg>
+        </button>
+      </div>
 
       <% if @selected_status != "active" || @selected_type.present? || @query.present? %>
         <%= link_to "Сбросить", pet_reminders_path(@pet), class: "pj-reminders-filter-reset" %>
