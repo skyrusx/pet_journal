@@ -43,7 +43,7 @@
           <div><dt>Пол</dt><dd><%= pet_sex_label(@pet) %></dd></div>
           <div><dt>Порода</dt><dd><%= @pet.breed.presence || "—" %></dd></div>
           <div><dt>Возраст</dt><dd><%= pet_age(@pet) %></dd></div>
-          <div><dt>Дата рождения</dt><dd><%= @pet.birth_date.present? ? l(@pet.birth_date, format: :long) : "—" %></dd></div>
+          <div><dt>Дата рождения</dt><dd><%= @pet.birth_date.present? ? @pet.birth_date.strftime("%d.%m.%Y") : "—" %></dd></div>
           <div><dt>Вес</dt><dd><%= pet_weight_label(@pet.weight) %></dd></div>
         </dl>
       </section>
