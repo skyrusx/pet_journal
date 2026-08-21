@@ -9,17 +9,35 @@
   <div class="pj-pet-form__grid">
     <div class="pj-pet-form__photo-column">
       <label class="pj-pet-form__label">Фото питомца</label>
-      <label class="pj-pet-photo-upload">
-        <% if @pet.photo.attached? %>
-          <%= image_tag @pet.photo, alt: @pet.name.presence || "Фото питомца", class: "pj-pet-photo-upload__preview" %>
-          <span class="pj-pet-photo-upload__change"><%= pj_icon(:plus) %></span>
-        <% else %>
-          <span class="pj-pet-photo-upload__icon">☁</span>
-          <strong>Загрузить фото</strong>
-          <small>PNG, JPG до 5 МБ</small>
-        <% end %>
-        <%= f.file_field :photo, accept: "image/png,image/jpeg,image/webp", class: "pj-pet-photo-upload__input" %>
-      </label>
+      <div class="pj-pet-photo-control" data-pet-photo-control data-has-existing-photo="<%= @pet.photo.attached? %>">
+        <label class="pj-pet-photo-upload">
+          <% if @pet.photo.attached? %>
+            <%= image_tag @pet.photo, alt: @pet.name.presence || "Фото питомца", class: "pj-pet-photo-upload__preview" %>
+          <% end %>
+
+          <span class="pj-pet-photo-upload__empty" <%= "hidden" if @pet.photo.attached? %>>
+            <span class="pj-pet-photo-upload__icon">☁</span>
+            <strong>Загрузить фото</strong>
+            <small>PNG, JPG до 5 МБ</small>
+          </span>
+
+          <span class="pj-pet-photo-upload__change" <%= "hidden" unless @pet.photo.attached? %> aria-hidden="true">↻</span>
+          <%= f.file_field :photo, accept: "image/png,image/jpeg,image/webp", class: "pj-pet-photo-upload__input" %>
+        </label>
+
+        <button type="button"
+                class="pj-pet-photo-remove"
+                data-pet-photo-remove
+                <%= "hidden" unless @pet.photo.attached? %>
+                aria-label="Удалить фото"
+                title="Удалить фото">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+          </svg>
+        </button>
+
+        <%= hidden_field_tag "pet[remove_photo]", "0", data: { pet_photo_remove_flag: true } %>
+      </div>
     </div>
 
     <div class="pj-pet-form__fields">
