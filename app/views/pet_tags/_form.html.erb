@@ -2,165 +2,100 @@
               url: pet_pet_tag_path(@pet),
               method: @pet_tag.persisted? ? :patch : :post,
               local: true,
-              class: "structured-form" do |f| %>
+              class: "pj-pettag-form" do |f| %>
   <% if @pet_tag.errors.any? %>
-    <div class="flash-stack" aria-live="polite" aria-atomic="true">
-      <div class="flash-toast alert" role="alert" data-flash-toast>
-        <div>
-          <strong>Проверьте форму</strong>
-          <p><%= @pet_tag.errors.full_messages.join(". ") %></p>
-        </div>
-        <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
-      </div>
+    <div class="pj-pettag-form-errors" role="alert">
+      <strong>Проверьте форму</strong>
+      <span><%= @pet_tag.errors.full_messages.join(". ") %></span>
     </div>
   <% end %>
 
-  <section class="form-section">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Публичный профиль</h2>
-        <p class="text-muted mb-0">Эта информация будет доступна по ссылке на жетоне.</p>
+  <div class="pj-pettag-form-grid">
+    <section class="pj-pettag-form-card">
+      <div class="pj-pettag-form-card__heading"><h2>Публичный профиль</h2><p>Что увидит человек после сканирования QR-кода.</p></div>
+
+      <label class="pj-pettag-toggle">
+        <%= f.check_box :enabled %>
+        <span><strong>Публичная страница включена</strong><small>Отключите, чтобы ссылка PetTag временно не открывалась</small></span>
+      </label>
+
+      <div class="pj-pettag-field">
+        <%= f.label :public_message, "Сообщение владельца" %>
+        <%= f.text_area :public_message, rows: 3, placeholder: "Если вы нашли питомца, пожалуйста, свяжитесь со мной" %>
       </div>
-      <% if @pet_tag.persisted? %>
-        <span class="status-pill"><%= @pet_tag.enabled? ? "Активен" : "Отключен" %></span>
-      <% end %>
-    </div>
-
-    <div class="form-check form-switch mb-3">
-      <%= f.check_box :enabled, class: "form-check-input", role: "switch" %>
-      <%= f.label :enabled, "Публичная страница включена", class: "form-check-label" %>
-    </div>
-
-    <div class="form-hint mb-3">
-      На публичной странице не показывается эл. почта владельца. Телефон и медицинские заметки появятся только если вы включите их ниже.
-    </div>
-
-    <div class="mb-3">
-      <%= f.label :public_message, "Сообщение", class: "form-label" %>
-      <%= f.text_area :public_message,
-                      rows: 3,
-                      class: "form-control",
-                      placeholder: "Например: если вы нашли меня, пожалуйста, свяжитесь с владельцем" %>
-    </div>
-
-    <div class="mb-3">
-      <%= f.label :behavior_notes, "Особенности поведения", class: "form-label" %>
-      <%= f.text_area :behavior_notes,
-                      rows: 3,
-                      class: "form-control",
-                      placeholder: "Пугливый, не любит руки, откликается на имя" %>
-    </div>
-
-    <div>
-      <%= f.label :medical_notes, "Важные медицинские заметки", class: "form-label" %>
-      <%= f.text_area :medical_notes,
-                      rows: 3,
-                      class: "form-control",
-                      placeholder: "Аллергии, лекарства, хронические состояния" %>
-    </div>
-
-    <div class="form-check form-switch mt-3">
-      <%= f.check_box :show_medical_notes, class: "form-check-input", role: "switch" %>
-      <%= f.label :show_medical_notes, "Показывать медицинские заметки на публичной странице", class: "form-check-label" %>
-    </div>
-  </section>
-
-  <section class="form-section lost-mode-section">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Режим потери</h2>
-        <p class="text-muted mb-0">Включайте только если питомец потерялся. Публичная страница станет более заметной.</p>
+      <div class="pj-pettag-field">
+        <%= f.label :behavior_notes, "Особенности поведения" %>
+        <%= f.text_area :behavior_notes, rows: 3, placeholder: "Пугливый, откликается на имя, не любит руки…" %>
       </div>
-      <span class="lost-pill">Режим потери</span>
-    </div>
-
-    <div class="mb-3">
-      <%= f.label :safety_status, "Статус безопасности", class: "form-label" %>
-      <%= f.select :safety_status, pet_tag_status_options, {}, class: "form-select" %>
-    </div>
-
-    <div class="mb-3">
-      <%= f.label :lost_message, "Сообщение при потере", class: "form-label" %>
-      <%= f.text_area :lost_message,
-                      rows: 3,
-                      class: "form-control",
-                      placeholder: "Например: пожалуйста, позвоните сразу, питомец может испугаться" %>
-    </div>
-
-    <div>
-      <%= f.label :last_seen_location, "Где видели в последний раз", class: "form-label" %>
-      <%= f.text_field :last_seen_location,
-                       class: "form-control",
-                       placeholder: "Район, улица или ориентир" %>
-    </div>
-
-    <div class="mt-3">
-      <%= f.label :found_message, "Сообщение когда питомца нашли", class: "form-label" %>
-      <%= f.text_area :found_message,
-                      rows: 3,
-                      class: "form-control",
-                      placeholder: "Например: спасибо, я уже связываюсь с человеком, который нашел питомца" %>
-    </div>
-  </section>
-
-  <section class="form-section">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Связь</h2>
-        <p class="text-muted mb-0">Показывайте только тот контакт, который готовы сделать публичным.</p>
-      </div>
-    </div>
-
-    <div class="row g-3">
-      <div class="col-md-7">
-        <%= f.label :contact_phone, "Телефон", class: "form-label" %>
-        <%= f.telephone_field :contact_phone, class: "form-control", placeholder: "+7..." %>
+      <div class="pj-pettag-field">
+        <%= f.label :medical_notes, "Важные медицинские заметки" %>
+        <%= f.text_area :medical_notes, rows: 3, placeholder: "Аллергии, лекарства, хронические состояния" %>
       </div>
 
-      <div class="col-md-5 d-flex align-items-end">
-        <div class="form-check form-switch mb-2">
-          <%= f.check_box :show_phone, class: "form-check-input", role: "switch" %>
-          <%= f.label :show_phone, "Показывать телефон", class: "form-check-label" %>
-        </div>
+      <label class="pj-pettag-toggle">
+        <%= f.check_box :show_medical_notes %>
+        <span><strong>Показывать медицинские заметки</strong><small>Только если эту информацию безопасно сделать публичной</small></span>
+      </label>
+    </section>
+
+    <section class="pj-pettag-form-card">
+      <div class="pj-pettag-form-card__heading"><h2>Режим потери</h2><p>Статус и информация, которая станет заметнее при потере питомца.</p></div>
+
+      <div class="pj-pettag-field">
+        <%= f.label :safety_status, "Статус безопасности" %>
+        <%= f.select :safety_status, pet_tag_status_options %>
+      </div>
+      <div class="pj-pettag-field">
+        <%= f.label :lost_message, "Сообщение при потере" %>
+        <%= f.text_area :lost_message, rows: 3, placeholder: "Пожалуйста, позвоните сразу — питомец может испугаться" %>
+      </div>
+      <div class="pj-pettag-field">
+        <%= f.label :last_seen_location, "Где видели в последний раз" %>
+        <%= f.text_field :last_seen_location, placeholder: "Район, улица или ориентир" %>
+      </div>
+      <div class="pj-pettag-field">
+        <%= f.label :found_message, "Сообщение после находки" %>
+        <%= f.text_area :found_message, rows: 3, placeholder: "Спасибо! Я уже связываюсь с человеком, который нашёл питомца" %>
+      </div>
+    </section>
+
+    <section class="pj-pettag-form-card">
+      <div class="pj-pettag-form-card__heading"><h2>Контакты и уведомления</h2><p>Как связаться с владельцем и когда PetJournal должен сообщать о сканах.</p></div>
+
+      <div class="pj-pettag-field">
+        <%= f.label :contact_phone, "Телефон" %>
+        <%= f.telephone_field :contact_phone, placeholder: "+7..." %>
       </div>
 
-      <div class="col-md-7">
-        <%= f.label :notification_preference, "Уведомления о сканах", class: "form-label" %>
-        <%= f.select :notification_preference, notification_options, {}, class: "form-select" %>
+      <label class="pj-pettag-toggle">
+        <%= f.check_box :show_phone %>
+        <span><strong>Показывать телефон</strong><small>Email владельца в PetTag никогда не публикуется</small></span>
+      </label>
+
+      <div class="pj-pettag-field">
+        <%= f.label :notification_preference, "Уведомления о сканах" %>
+        <%= f.select :notification_preference, notification_options %>
       </div>
-    </div>
 
-    <div class="form-hint mt-3">
-      Уведомления о геолокации отправляются всегда, когда человек добровольно передает место через публичную страницу. Повторная отправка по той же форме блокируется.
-    </div>
-
-    <% if @notification_channels&.any? %>
-      <div class="mt-3">
-        <div class="form-label">Каналы для PetTag</div>
-        <div class="channel-choice-grid">
+      <% if @notification_channels&.any? %>
+        <div class="pj-pettag-channel-list">
+          <span class="pj-pettag-field-label">Каналы PetTag</span>
+          <%= hidden_field_tag "pet_tag[notification_channel_ids][]", "" %>
           <% @notification_channels.each do |channel| %>
-            <label class="channel-choice">
-              <%= check_box_tag "pet_tag[notification_channel_ids][]",
-                                channel.id,
-                                @pet_tag.notification_channel_ids.include?(channel.id),
-                                class: "form-check-input" %>
-              <span>
-                <strong><%= channel.name %></strong>
-                <small><%= channel.channel_type_label %> · <%= channel.channel_web_push? ? "Браузерная подписка" : channel.address %></small>
-              </span>
+            <label class="pj-pettag-channel">
+              <%= check_box_tag "pet_tag[notification_channel_ids][]", channel.id, @pet_tag.notification_channel_ids.include?(channel.id) %>
+              <span><strong><%= channel.name %></strong><small><%= channel.channel_type_label %></small></span>
             </label>
           <% end %>
         </div>
-      </div>
-    <% else %>
-      <div class="form-hint mt-3">
-        Каналы уведомлений не настроены. PetTag будет использовать эл. почту аккаунта.
-      </div>
-    <% end %>
-  </section>
+      <% else %>
+        <p class="pj-pettag-form-hint">Каналы уведомлений пока не настроены. Для PetTag будет использован email аккаунта.</p>
+      <% end %>
+    </section>
+  </div>
 
-  <div class="form-actions">
-    <%= f.submit @pet_tag.persisted? ? "Сохранить настройки" : "Создать QR-профиль", class: "btn btn-primary" %>
-    <%= link_to "К обзору", pet_path(@pet), class: "btn btn-outline-secondary" %>
+  <div class="pj-pettag-form-actions">
+    <%= link_to "Отмена", @pet_tag.persisted? ? pet_pet_tag_path(@pet) : pet_path(@pet), class: "pj-pettag-secondary-button" %>
+    <%= f.submit @pet_tag.persisted? ? "Сохранить настройки" : "Создать PetTag", class: "pj-pettag-primary-button" %>
   </div>
 <% end %>
