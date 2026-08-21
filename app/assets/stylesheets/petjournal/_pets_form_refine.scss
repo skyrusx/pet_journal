@@ -1,0 +1,84 @@
+/* Small refinements after the first visual review of the pet pages. */
+
+@media (min-width: 821px) {
+  .pj-pet-form-content {
+    width: min(930px, calc(100% - 72px));
+  }
+
+  .pj-pet-form {
+    padding: 22px;
+  }
+
+  .pj-pet-form__grid {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 22px;
+  }
+
+  .pj-pet-photo-upload {
+    min-height: 202px;
+  }
+
+  .pj-pet-form__fields {
+    gap: 14px;
+  }
+
+  .pj-pet-form__extra {
+    margin-top: 20px;
+    padding-inline: 16px;
+  }
+
+  .pj-pet-form__extra > summary {
+    padding: 13px 0 10px;
+    font-size: 9px;
+  }
+
+  .pj-pet-form__extra > p {
+    margin-bottom: 13px;
+    font-size: 7.5px;
+  }
+
+  .pj-pet-form__extra-grid {
+    gap: 14px;
+    padding-bottom: 16px;
+  }
+}
+
+.pj-pet-profile-edit {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 11px;
+  border: 1px solid #ddd8ce;
+  border-radius: 7px;
+  color: #536159;
+  background: #fffefa;
+  font-family: "Manrope", sans-serif;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+}
+
+.pj-pet-profile-edit:hover {
+  color: #174f34;
+  border-color: #cbd4c6;
+  background: #f2f4e9;
+}
+
+@media (max-width: 820px) {
+  .pj-pet-profile-name-row {
+    flex-wrap: wrap;
+  }
+
+  .pj-pet-profile-edit {
+    min-height: 28px;
+    padding-inline: 10px;
+    font-size: 8px;
+  }
+
+  .pj-pet-form__extra {
+    margin-top: 16px;
+  }
+}
