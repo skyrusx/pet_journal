@@ -54,23 +54,13 @@
     </div>
   </section>
 
-  <section class="pj-mobile-sheet" data-dashboard-sheet="more" aria-hidden="true" aria-label="Дополнительные разделы">
+  <section class="pj-mobile-sheet" data-dashboard-sheet="more" aria-hidden="true" aria-label="Меню аккаунта">
     <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
     <div class="pj-mobile-sheet__head pj-mobile-sheet__head--icon-only">
       <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
     </div>
 
-    <nav class="pj-mobile-sheet__actions" aria-label="Дополнительные разделы">
-      <%= link_to documents_path, class: "pj-mobile-sheet__action" do %>
-        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:file) %></span>
-        <span><strong>Документы</strong><small>Файлы и сроки действия</small></span>
-      <% end %>
-
-      <%= link_to pettag_path, class: "pj-mobile-sheet__action" do %>
-        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:tag) %></span>
-        <span><strong>PetTag</strong><small>QR-профиль и безопасность</small></span>
-      <% end %>
-
+    <nav class="pj-mobile-sheet__actions" aria-label="Меню аккаунта">
       <%= link_to edit_user_registration_path, class: "pj-mobile-sheet__action" do %>
         <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:user) %></span>
         <span><strong>Профиль</strong><small>Аккаунт и персональные данные</small></span>
@@ -95,6 +85,10 @@
       <%= pj_icon(:paw) %><span>Питомцы</span>
     <% end %>
 
+    <%= link_to journal_path, class: "pj-mobile-tabs__item" do %>
+      <%= pj_icon(:journal) %><span>Журнал</span>
+    <% end %>
+
     <button type="button"
             class="pj-mobile-tabs__add"
             aria-label="Добавить"
@@ -103,13 +97,17 @@
       <%= pj_icon(:plus) %>
     </button>
 
-    <%= link_to journal_path, class: "pj-mobile-tabs__item" do %>
-      <%= pj_icon(:journal) %><span>Журнал</span>
+    <%= link_to documents_path, class: "pj-mobile-tabs__item" do %>
+      <%= pj_icon(:file) %><span>Документы</span>
+    <% end %>
+
+    <%= link_to pettag_path, class: "pj-mobile-tabs__item" do %>
+      <%= pj_icon(:tag) %><span>PetTag</span>
     <% end %>
 
     <button type="button"
             class="pj-mobile-tabs__item pj-mobile-tabs__more pj-mobile-tabs__more--icon-only"
-            aria-label="Ещё"
+            aria-label="Меню аккаунта"
             aria-expanded="false"
             data-dashboard-sheet-toggle="more">
       <%= pj_icon(:more) %>
