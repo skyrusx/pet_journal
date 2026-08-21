@@ -2,3 +2,4 @@
 
 pin "application"
 pin "dashboard_sidebar"
+pin "pet_photo_preview"
