@@ -4,7 +4,7 @@
 <% documents_path = primary_pet ? pet_pet_documents_path(primary_pet) : pets_path %>
 <% pettag_path = primary_pet ? pet_pet_tag_path(primary_pet) : pets_path %>
 <% add_path = primary_pet ? new_pet_pet_event_path(primary_pet) : new_pet_path %>
-<% display_name = current_user.name.presence || "Профиль" %>
+<% display_name = current_user.name.presence || current_user.email.to_s.split("@").first.presence || "Аккаунт" %>
 <% avatar_letter = display_name.to_s.first.to_s.upcase.presence || current_user.email.to_s.first.to_s.upcase %>
 
 <div class="pj-dash" data-dashboard-root>
@@ -43,9 +43,6 @@
         <% end %>
         <%= link_to pettag_path, class: "pj-dash-nav__item", aria: { label: "PetTag" }, title: "PetTag" do %>
           <%= pj_icon(:tag) %><span>PetTag</span>
-        <% end %>
-        <%= link_to edit_user_registration_path, class: "pj-dash-nav__item", aria: { label: "Профиль" }, title: "Профиль" do %>
-          <%= pj_icon(:user) %><span>Профиль</span>
         <% end %>
       </nav>
 
