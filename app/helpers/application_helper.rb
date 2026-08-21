@@ -90,7 +90,7 @@ module ApplicationHelper
     ]
 
     if pet.present?
-      items.insert(1, { label: "PetTag", path: pet_pet_tag_path(pet), icon: :tag, active: controller_name == "pet_tags" })
+      items.insert(1, { label: "PetTag", path: pet_tags_path, icon: :tag, active: controller_name == "pet_tags" })
       items.insert(2, { label: "Документы", path: pet_pet_documents_path(pet), icon: :file, active: controller_name == "pet_documents" })
       items.insert(3, { label: "Доступ", path: pet_profile_shares_path(pet), icon: :share, active: controller_name == "pet_profile_shares" })
     end
