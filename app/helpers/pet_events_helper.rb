@@ -113,10 +113,49 @@ module PetEventsHelper
     [
       ["Вес", new_pet_pet_event_path(pet, type: :weight)],
       ["Вакцинация", new_pet_pet_event_path(pet, type: :vaccination)],
+      ["Лекарство / обработка", new_pet_pet_event_path(pet, type: :treatment)],
       ["Визит к врачу", new_pet_pet_event_path(pet, type: :visit)],
-      ["Документ", new_pet_pet_document_path(pet)],
+      ["Симптом / болезнь", new_pet_pet_event_path(pet, type: :illness)],
       ["Заметка", new_pet_pet_event_path(pet, type: :note)]
     ]
+  end
+
+  def journal_event_title(event)
+    event.title.presence || event.event_type_label
+  end
+
+  def journal_event_state(event)
+    if event.next_action_at.present? && event.next_action_at.future?
+      ["Есть следующий шаг", "planned"]
+    else
+      ["Записано", "done"]
+    end
+  end
+
+  def journal_event_detail(event)
+    event.structured_rows.first&.last.presence || event.description.presence || event_type_hint(event.event_type)
+  end
+
+  def journal_event_icon(event_type)
+    paths = {
+      "note" => '<path d="M7 4.5h10v15H7z"/><path d="M9.5 8h5M9.5 11.5h5M9.5 15h3.5"/>',
+      "weight" => '<path d="M5 8.5h14v10H5z"/><path d="M8 8.5a4 4 0 0 1 8 0"/><path d="M12 8.5l2-2"/>',
+      "vaccination" => '<path d="m7 17 10-10M9 5l10 10M5 9l10 10"/><path d="M5.5 18.5 8 16l-2-2-2.5 2.5z"/>',
+      "treatment" => '<path d="M7 6.5h10a3 3 0 0 1 0 6H7a3 3 0 0 1 0-6z"/><path d="m10 6.5 4 6"/>',
+      "visit" => '<path d="M5 7h14v12H5z"/><path d="M9 7V5h6v2"/><path d="M12 10v6M9 13h6"/>',
+      "illness" => '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><path d="M8.5 12h2l1-2 1.5 4 1-2h1.5"/>',
+      "document" => '<path d="M7 3.5h7l3 3V20.5H7z"/><path d="M14 3.5V7h3M9.5 12h5M9.5 15.5h5"/>'
+    }
+
+    content_tag(
+      :svg,
+      paths.fetch(event_type.to_s, paths["note"]).html_safe,
+      class: "pj-journal-type-icon",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      aria: { hidden: true },
+      xmlns: "http://www.w3.org/2000/svg"
+    )
   end
 
   private
