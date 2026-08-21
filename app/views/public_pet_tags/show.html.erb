@@ -62,7 +62,7 @@
             </div>
 
             <div class="pj-public-tag-pet-meta">
-              <% if @pet.birth_date.present? %><span><%= distance_of_time_in_words(@pet.birth_date, Date.current) %></span><% end %>
+              <% if @pet.birth_date.present? %><span><%= pet_age_label(@pet.birth_date) %></span><% end %>
               <% if @pet.weight.present? %><span><%= @pet.weight %> кг</span><% end %>
               <% if @pet.color.present? %><span><%= @pet.color %></span><% end %>
             </div>
@@ -183,7 +183,7 @@
             <span>⌖</span>
             <span><strong>Добавить мою геолокацию</strong><small>Только с вашего разрешения</small></span>
           </button>
-          <div class="pj-public-tag-location-status" data-location-status></div>
+          <div class="pj-public-tag-location-status" data-location-status aria-live="polite"></div>
 
           <%= submit_tag "Отправить владельцу", class: "pj-public-tag-primary-button" %>
           <small class="pj-public-tag-form__privacy">Ваши данные не будут раскрыты публично.</small>
@@ -197,30 +197,3 @@
     <span>PetJournal · безопасность и забота</span>
   </footer>
 </div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var button = document.querySelector("[data-location-button]");
-    var status = document.querySelector("[data-location-status]");
-    var latitude = document.getElementById("location-latitude");
-    var longitude = document.getElementById("location-longitude");
-    if (!button || !status || !latitude || !longitude) return;
-
-    button.addEventListener("click", function () {
-      if (!navigator.geolocation) {
-        status.textContent = "Геолокация недоступна в этом браузере.";
-        return;
-      }
-
-      status.textContent = "Запрашиваем разрешение…";
-      navigator.geolocation.getCurrentPosition(function (position) {
-        latitude.value = position.coords.latitude;
-        longitude.value = position.coords.longitude;
-        button.classList.add("is-ready");
-        status.textContent = "Геолокация добавлена и будет отправлена вместе с сообщением.";
-      }, function () {
-        status.textContent = "Геолокация не получена. Можно указать место вручную.";
-      }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
-    });
-  });
-</script>
