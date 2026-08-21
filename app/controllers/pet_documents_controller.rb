@@ -38,9 +38,10 @@ class PetDocumentsController < ApplicationController
   def create
     target_pet = selected_pet
     @pet = target_pet
-    @document = target_pet.pet_documents.new(document_params)
+    @document = target_pet.pet_documents.new(document_attributes)
 
     if @document.save
+      append_uploaded_files!
       sync_related_records
       redirect_to pet_pet_document_path(@document.pet, @document), notice: "Документ добавлен."
     else
@@ -55,7 +56,8 @@ class PetDocumentsController < ApplicationController
     target_pet = selected_pet
     @document.pet = target_pet
 
-    if @document.update(document_params)
+    if @document.update(document_attributes)
+      append_uploaded_files!
       move_related_records_to!(target_pet) if original_pet_id != target_pet.id
       @pet = @document.pet
       sync_related_records
@@ -129,6 +131,19 @@ class PetDocumentsController < ApplicationController
       :notes,
       files: []
     )
+  end
+
+  def document_attributes
+    document_params.except(:files)
+  end
+
+  def uploaded_files
+    Array(document_params[:files]).reject(&:blank?)
+  end
+
+  def append_uploaded_files!
+    files = uploaded_files
+    @document.files.attach(files) if files.any?
   end
 
   def sync_related_records
