@@ -1,105 +1,120 @@
 <% if reminder.errors.any? %>
-  <div class="flash-stack inline" aria-live="polite" aria-atomic="true">
-    <div class="flash-toast alert" role="alert" data-flash-toast>
-      <div>
-        <strong>Проверьте форму</strong>
-        <p><%= reminder.errors.full_messages.to_sentence %></p>
-      </div>
-      <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
-    </div>
+  <div class="pj-reminder-form-errors" role="alert">
+    <strong>Проверьте форму</strong>
+    <span><%= reminder.errors.full_messages.to_sentence %></span>
   </div>
 <% end %>
 
-<%= form_with(model: [pet, reminder], class: "structured-form") do |form| %>
-  <section class="form-section">
-    <div class="form-section-heading">
-      <div>
-        <h2>Основное</h2>
-        <p>Что нужно не забыть и когда отправить первое уведомление.</p>
-      </div>
-    </div>
-
-    <div class="row g-3">
-      <div class="col-md-7">
-        <%= form.label :title, class: "form-label" %>
-        <%= form.text_field :title, class: "form-control", placeholder: "Например: дать таблетку" %>
+<%= form_with(model: [pet, reminder], class: "pj-reminder-form") do |form| %>
+  <div class="pj-reminder-form-grid">
+    <section class="pj-reminder-form-card">
+      <div class="pj-reminder-form-card__heading">
+        <h2>Основная информация</h2>
+        <p>Что нужно не забыть и для какого питомца.</p>
       </div>
 
-      <div class="col-md-5">
-        <%= form.label :reminder_type, class: "form-label" %>
-        <%= form.select :reminder_type, reminder_type_options, {}, class: "form-select" %>
+      <div class="pj-reminder-field">
+        <%= form.label :title do %>Название <span>*</span><% end %>
+        <%= form.text_field :title, placeholder: "Например, вакцинация Нобивак DHPPi", required: true %>
       </div>
 
-      <div class="col-md-6">
-        <%= form.label :remind_at, class: "form-label" %>
-        <%= form.datetime_local_field :remind_at, class: "form-control", data: { reminder_datetime: true } %>
-        <div class="preset-row mt-2">
-          <% reminder_datetime_presets.each do |label, value| %>
-            <button type="button"
-                    class="filter-chip small"
-                    data-reminder-preset="<%= value.strftime("%Y-%m-%dT%H:%M") %>">
-              <%= label %>
-            </button>
-          <% end %>
+      <div class="pj-reminder-field">
+        <%= form.label :reminder_type do %>Тип <span>*</span><% end %>
+        <%= form.select :reminder_type, reminder_type_options, {}, required: true %>
+      </div>
+
+      <div class="pj-reminder-field">
+        <span class="pj-reminder-field__label">Питомец</span>
+        <div class="pj-reminder-form-pet">
+          <span class="pj-reminders-pet-avatar">
+            <% if pet.photo.attached? %>
+              <%= image_tag pet.photo, alt: "" %>
+            <% else %>
+              <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
+            <% end %>
+          </span>
+          <span><strong><%= pet.name %></strong><small><%= pet.breed.presence || pet.species.presence || "Питомец" %></small></span>
         </div>
       </div>
 
-      <div class="col-md-6">
-        <%= form.label :repeat_rule, class: "form-label" %>
-        <%= form.select :repeat_rule, repeat_rule_options, {}, class: "form-select", data: { repeat_rule: true } %>
+      <div class="pj-reminder-field">
+        <%= form.label :note, "Заметка" %>
+        <%= form.text_area :note, rows: 5, placeholder: "Например: не забыть взять паспорт питомца." %>
       </div>
+    </section>
 
-      <div class="col-md-3" data-custom-repeat>
-        <%= form.label :repeat_interval, class: "form-label" %>
-        <%= form.number_field :repeat_interval, min: 1, max: 99, class: "form-control" %>
-      </div>
+    <div class="pj-reminder-form-side">
+      <section class="pj-reminder-form-card">
+        <div class="pj-reminder-form-card__heading">
+          <h2>Расписание</h2>
+          <p>Первый срок и правила повторения.</p>
+        </div>
 
-      <div class="col-md-3" data-custom-repeat>
-        <%= form.label :repeat_unit, class: "form-label" %>
-        <%= form.select :repeat_unit, repeat_unit_options, {}, class: "form-select" %>
-      </div>
+        <div class="pj-reminder-field">
+          <%= form.label :remind_at do %>Дата и время <span>*</span><% end %>
+          <%= form.datetime_local_field :remind_at, required: true, data: { reminder_datetime: true } %>
+          <div class="pj-reminder-presets">
+            <% reminder_datetime_presets.each do |label, value| %>
+              <button type="button" data-reminder-preset="<%= value.strftime("%Y-%m-%dT%H:%M") %>"><%= label %></button>
+            <% end %>
+          </div>
+        </div>
 
-      <div class="col-12">
-        <%= form.label :note, class: "form-label" %>
-        <%= form.text_area :note, rows: 4, class: "form-control", placeholder: "Дозировка, условия, комментарий для себя" %>
-      </div>
-    </div>
-  </section>
+        <div class="pj-reminder-field">
+          <%= form.label :repeat_rule, "Повтор" %>
+          <%= form.select :repeat_rule, repeat_rule_options, {}, data: { repeat_rule: true } %>
+        </div>
 
-  <section class="form-section">
-    <div class="form-section-heading">
-      <div>
-        <h2>Каналы доставки</h2>
-        <p>Можно выбрать конкретные каналы для этого напоминания. Если ничего не выбрать, будут использованы все включенные каналы.</p>
-      </div>
-    </div>
+        <div class="pj-reminder-custom-repeat" data-custom-repeat>
+          <div class="pj-reminder-field">
+            <%= form.label :repeat_interval, "Каждые" %>
+            <%= form.number_field :repeat_interval, min: 1, max: 99 %>
+          </div>
+          <div class="pj-reminder-field">
+            <%= form.label :repeat_unit, "Единица" %>
+            <%= form.select :repeat_unit, repeat_unit_options %>
+          </div>
+        </div>
+      </section>
 
-    <% if @notification_channels.any? %>
-      <div class="channel-choice-grid">
-        <% @notification_channels.each do |channel| %>
-          <label class="channel-choice">
-            <%= check_box_tag "reminder[notification_channel_ids][]",
-                              channel.id,
-                              reminder.notification_channel_ids.include?(channel.id),
-                              class: "form-check-input" %>
-            <span>
-              <strong><%= channel.name %></strong>
-              <small><%= channel.channel_type_label %> · <%= channel.channel_web_push? ? "Браузерная подписка" : channel.address %></small>
-            </span>
-          </label>
+      <section class="pj-reminder-form-card">
+        <div class="pj-reminder-form-card__heading">
+          <h2>Уведомления</h2>
+          <p>Выберите каналы именно для этого напоминания.</p>
+        </div>
+
+        <% if @notification_channels.any? %>
+          <div class="pj-reminder-channel-list">
+            <% @notification_channels.each do |channel| %>
+              <label class="pj-reminder-channel">
+                <%= check_box_tag "reminder[notification_channel_ids][]",
+                                  channel.id,
+                                  reminder.notification_channel_ids.include?(channel.id) %>
+                <span>
+                  <strong><%= channel.channel_type_label %></strong>
+                  <small><%= channel.name %><% if channel.address.present? && !channel.channel_web_push? %> · <%= channel.address %><% end %></small>
+                </span>
+              </label>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="pj-reminder-channel-empty">
+            <%= pj_icon(:bell) %>
+            <div>
+              <strong>Каналы ещё не настроены</strong>
+              <p>По умолчанию PetJournal использует эл. почту аккаунта.</p>
+              <%= link_to "Настроить уведомления", notification_channels_path %>
+            </div>
+          </div>
         <% end %>
-      </div>
-    <% else %>
-      <div class="empty-state-inline">
-        <div class="fw-semibold mb-1">Каналы еще не настроены</div>
-        <p class="text-muted mb-3">PetJournal отправит уведомление на эл. почту аккаунта, но лучше подключить нужные каналы заранее.</p>
-        <%= link_to "Настроить каналы", notification_channels_path, class: "btn btn-outline-primary btn-sm" %>
-      </div>
-    <% end %>
-  </section>
 
-  <div class="form-actions">
-    <%= form.submit reminder.persisted? ? "Сохранить" : "Создать напоминание", class: "btn btn-primary" %>
-    <%= link_to "Отмена", pet_reminders_path(pet), class: "btn btn-outline-secondary" %>
+        <p class="pj-reminder-channel-hint">Если ничего не выбрать, будут использованы все включённые каналы.</p>
+      </section>
+    </div>
+  </div>
+
+  <div class="pj-reminder-form-actions">
+    <%= link_to "Отмена", reminder.persisted? ? pet_reminder_path(pet, reminder) : pet_reminders_path(pet), class: "pj-reminder-form-cancel" %>
+    <%= form.submit reminder.persisted? ? "Сохранить изменения" : "Создать напоминание", class: "pj-reminders-primary-button" %>
   </div>
 <% end %>
