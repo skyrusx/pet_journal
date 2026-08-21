@@ -39,11 +39,14 @@
     </section>
 
     <section class="pj-pettag-form-card">
-      <div class="pj-pettag-form-card__heading"><h2>Режим потери</h2><p>Статус и информация, которая станет заметнее при потере питомца.</p></div>
+      <div class="pj-pettag-form-card__heading"><h2>Режим потери</h2><p>Информация, которая станет заметнее, если питомец потеряется.</p></div>
 
       <div class="pj-pettag-field">
-        <%= f.label :safety_status, "Статус безопасности" %>
-        <%= f.select :safety_status, pet_tag_status_options %>
+        <span class="pj-pettag-field-label">Статус безопасности</span>
+        <div class="pj-pettag-status-readonly">
+          <strong><%= @pet_tag.persisted? ? pet_tag_status_label(@pet_tag) : "В безопасности" %></strong>
+          <small>Статус меняется только через действия PetTag: «Потерялся» → «Найден» → «Дома» → завершение инцидента.</small>
+        </div>
       </div>
       <div class="pj-pettag-field">
         <%= f.label :lost_message, "Сообщение при потере" %>
