@@ -3,15 +3,30 @@ class PublicPetTagsController < ApplicationController
   before_action :prevent_public_indexing
 
   def show
-    @pet_tag = PetTag.includes(pet: { photo_attachment: :blob }).find_by!(public_token: params[:token], enabled: true)
+    @pet_tag = PetTag.includes(pet: { photo_attachment: :blob }).find_by(public_token: params[:token])
+
+    unless @pet_tag&.enabled?
+      render :unavailable, status: :not_found
+      return
+    end
+
     @pet = @pet_tag.pet
     @pet_tag_scan = record_scan(@pet_tag)
   end
 
   def location
-    @pet_tag = PetTag.find_by!(public_token: params[:token], enabled: true)
-    @pet_tag_scan = @pet_tag.pet_tag_scans.find_by!(public_token: params[:scan_token])
-    raise ActiveRecord::RecordNotFound unless scan_belongs_to_session?(@pet_tag, @pet_tag_scan)
+    @pet_tag = PetTag.find_by(public_token: params[:token])
+
+    unless @pet_tag&.enabled?
+      render :unavailable, status: :not_found
+      return
+    end
+
+    @pet_tag_scan = @pet_tag.pet_tag_scans.find_by(public_token: params[:scan_token])
+    unless @pet_tag_scan && scan_belongs_to_session?(@pet_tag, @pet_tag_scan)
+      render :unavailable, status: :not_found
+      return
+    end
 
     if @pet_tag_scan.location_shared?
       redirect_to public_pet_tag_path(@pet_tag.public_token), alert: "Сообщение уже отправлено владельцу."
