@@ -28,9 +28,7 @@
           <div class="pj-pet-profile-identity">
             <div class="pj-pet-profile-name-row">
               <h1><%= @pet.name %></h1>
-              <%= link_to edit_pet_path(@pet), class: "pj-pet-profile-edit", aria: { label: "Редактировать питомца" }, title: "Редактировать" do %>
-                ✎
-              <% end %>
+              <%= link_to "Редактировать", edit_pet_path(@pet), class: "pj-pet-profile-edit", aria: { label: "Редактировать данные питомца #{@pet.name}" } %>
             </div>
             <span class="pj-pet-profile-tag <%= "is-muted" unless tag_active %>">
               <span>●</span> PetTag <%= tag_label.downcase %>
