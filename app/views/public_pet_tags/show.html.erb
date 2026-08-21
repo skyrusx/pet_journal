@@ -103,9 +103,7 @@
             </div>
           </div>
 
-          <% if phone.present? %>
-            <%= link_to "Позвонить", "tel:#{phone.gsub(/[^\d+]/, "")}", class: "pj-public-tag-outline-button" %>
-          <% else %>
+          <% unless phone.present? %>
             <p class="pj-public-tag-muted">Телефон скрыт владельцем. Используйте форму сообщения.</p>
           <% end %>
         </article>
@@ -120,7 +118,7 @@
         </article>
 
         <article class="pj-public-tag-panel pj-public-tag-trust">
-          <span class="pj-public-tag-panel__label">Trust & Safety</span>
+          <span class="pj-public-tag-panel__label">Безопасность и приватность</span>
           <ul>
             <li>Показываются только данные, которыми поделился владелец</li>
             <li>Геолокация отправляется только после вашего разрешения</li>
