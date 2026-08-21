@@ -1,0 +1,128 @@
+<% primary_pet = Array(@pets).first %>
+<% journal_path = primary_pet ? pet_pet_events_path(primary_pet) : pets_path %>
+<% reminders_path = primary_pet ? pet_reminders_path(primary_pet) : pets_path %>
+<% documents_path = primary_pet ? pet_pet_documents_path(primary_pet) : pets_path %>
+<% pettag_path = primary_pet ? pet_pet_tag_path(primary_pet) : pets_path %>
+
+<div class="pj-mobile-chrome" data-dashboard-mobile-chrome>
+  <header class="pj-mobile-chrome__header">
+    <span class="pj-mobile-chrome__header-spacer" aria-hidden="true"></span>
+
+    <%= link_to root_path, class: "pj-mobile-chrome__brand", aria: { label: "PetJournal — главная" } do %>
+      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
+    <% end %>
+
+    <%= link_to notification_channels_path, class: "pj-mobile-chrome__bell", aria: { label: "Уведомления" } do %>
+      <%= pj_icon(:bell) %>
+    <% end %>
+  </header>
+
+  <div class="pj-mobile-chrome__backdrop" data-dashboard-sheet-backdrop hidden></div>
+
+  <section class="pj-mobile-sheet" data-dashboard-sheet="add" aria-hidden="true" aria-labelledby="pj-mobile-add-title">
+    <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+    <div class="pj-mobile-sheet__head">
+      <div>
+        <small>Быстрое действие</small>
+        <h2 id="pj-mobile-add-title">Что добавить?</h2>
+      </div>
+      <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+    </div>
+
+    <div class="pj-mobile-sheet__actions">
+      <%= link_to new_pet_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:paw) %></span>
+        <span><strong>Питомца</strong><small>Создать новую карточку</small></span>
+      <% end %>
+
+      <% if primary_pet %>
+        <%= link_to new_pet_pet_event_path(primary_pet), class: "pj-mobile-sheet__action" do %>
+          <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:journal) %></span>
+          <span><strong>Запись в журнал</strong><small>Событие, наблюдение или здоровье</small></span>
+        <% end %>
+
+        <%= link_to new_pet_reminder_path(primary_pet), class: "pj-mobile-sheet__action" do %>
+          <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:bell) %></span>
+          <span><strong>Напоминание</strong><small>Чтобы ничего не забыть</small></span>
+        <% end %>
+
+        <%= link_to new_pet_pet_document_path(primary_pet), class: "pj-mobile-sheet__action" do %>
+          <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:file) %></span>
+          <span><strong>Документ</strong><small>Файл, справка или паспорт</small></span>
+        <% end %>
+      <% else %>
+        <p class="pj-mobile-sheet__hint">После добавления питомца здесь появятся запись в журнал, напоминание и документ.</p>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="pj-mobile-sheet" data-dashboard-sheet="more" aria-hidden="true" aria-labelledby="pj-mobile-more-title">
+    <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+    <div class="pj-mobile-sheet__head">
+      <div>
+        <small>PetJournal</small>
+        <h2 id="pj-mobile-more-title">Ещё</h2>
+      </div>
+      <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+    </div>
+
+    <nav class="pj-mobile-sheet__actions" aria-label="Дополнительные разделы">
+      <%= link_to documents_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:file) %></span>
+        <span><strong>Документы</strong><small>Файлы и сроки действия</small></span>
+      <% end %>
+
+      <%= link_to pettag_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:tag) %></span>
+        <span><strong>PetTag</strong><small>QR-профиль и безопасность</small></span>
+      <% end %>
+
+      <%= link_to edit_user_registration_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:user) %></span>
+        <span><strong>Профиль</strong><small>Аккаунт и персональные данные</small></span>
+      <% end %>
+
+      <%= button_to destroy_user_session_path,
+                    method: :delete,
+                    class: "pj-mobile-sheet__action pj-mobile-sheet__action--logout",
+                    form_class: "pj-mobile-sheet__logout-form" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:logout) %></span>
+        <span><strong>Выйти</strong><small>Завершить текущую сессию</small></span>
+      <% end %>
+    </nav>
+  </section>
+
+  <nav class="pj-mobile-tabs" aria-label="Основная навигация">
+    <%= link_to root_path, class: "pj-mobile-tabs__item is-active", aria: { current: "page" } do %>
+      <%= pj_icon(:home) %><span>Главная</span>
+    <% end %>
+
+    <%= link_to pets_path, class: "pj-mobile-tabs__item" do %>
+      <%= pj_icon(:paw) %><span>Питомцы</span>
+    <% end %>
+
+    <button type="button"
+            class="pj-mobile-tabs__add"
+            aria-label="Добавить"
+            aria-expanded="false"
+            data-dashboard-sheet-toggle="add">
+      <%= pj_icon(:plus) %>
+    </button>
+
+    <%= link_to journal_path, class: "pj-mobile-tabs__item" do %>
+      <%= pj_icon(:journal) %><span>Журнал</span>
+    <% end %>
+
+    <%= link_to reminders_path, class: "pj-mobile-tabs__item" do %>
+      <%= pj_icon(:bell) %><span>Напоминания</span>
+    <% end %>
+
+    <button type="button"
+            class="pj-mobile-tabs__item pj-mobile-tabs__more"
+            aria-label="Ещё"
+            aria-expanded="false"
+            data-dashboard-sheet-toggle="more">
+      <%= pj_icon(:more) %><span>Ещё</span>
+    </button>
+  </nav>
+</div>
