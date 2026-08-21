@@ -1,0 +1,22 @@
+.pj-public-tag-owner > .pj-public-tag-outline-button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pj-public-tag-location-button:disabled {
+  cursor: wait;
+  opacity: .72;
+}
+
+.pj-public-tag-location-button.is-loading {
+  border-color: #d7ddcf;
+  background: #f4f5f0;
+}
+
+.pj-public-tag-location-status.is-success {
+  color: #587144;
+}
+
+.pj-public-tag-location-status.is-error {
+  color: #9a5149;
+}
