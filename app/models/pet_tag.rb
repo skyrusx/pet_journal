@@ -41,6 +41,10 @@ class PetTag < ApplicationRecord
     update!(safety_status: :reunited, lost_mode_enabled: false, reunited_at: Time.current)
   end
 
+  def mark_safe!
+    update!(safety_status: :safe, lost_mode_enabled: false)
+  end
+
   private
 
   def sync_legacy_lost_mode
