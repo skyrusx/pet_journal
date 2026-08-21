@@ -1,25 +1,21 @@
-<div class="form-page pet-form-page py-4">
-  <div class="form-page-header">
-    <div>
-      <h1 class="h3 mb-1">Новый питомец</h1>
-      <p class="text-muted mb-0">Начните с базовых данных. Остальное можно заполнить позже.</p>
+<% content_for :title, "Добавить питомца — PetJournal" %>
+
+<div class="pj-pets-page pj-pet-form-page">
+  <header class="pj-workspace-topbar pj-workspace-topbar--form">
+    <%= link_to pets_path, class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>К списку питомцев</span>
+    <% end %>
+    <%= link_to(@pet.persisted? ? pet_path(@pet) : pets_path, class: "pj-workspace-avatar", aria: { label: "Питомцы" }) do %>
+      <%= pj_icon(:paw) %>
+    <% end %>
+  </header>
+
+  <div class="pj-pets-content pj-pet-form-content">
+    <div class="pj-pet-form-heading">
+      <h1>Добавить питомца</h1>
+      <p>Заполните основные данные. Дополнительную информацию можно добавить позже.</p>
     </div>
-    <%= link_to "Мои питомцы", pets_path, class: "btn btn-outline-secondary" %>
-  </div>
 
-  <div class="form-layout">
     <%= render "form" %>
-
-    <aside class="form-aside">
-      <div class="form-aside-panel">
-        <div class="text-muted small mb-1">Что заполнить сначала</div>
-        <h2 class="h5 mb-3">Достаточно имени и фото</h2>
-        <div class="form-aside-list">
-          <div><span>1</span><p>Добавьте имя, чтобы создать карточку.</p></div>
-          <div><span>2</span><p>Фото поможет быстро узнавать питомца в списке.</p></div>
-          <div><span>3</span><p>Остальные данные можно заполнить постепенно.</p></div>
-        </div>
-      </div>
-    </aside>
   </div>
 </div>
