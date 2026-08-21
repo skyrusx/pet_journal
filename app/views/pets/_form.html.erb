@@ -59,10 +59,10 @@
         <span class="pj-pet-form__label">Пол</span>
         <div class="pj-pet-sex-toggle">
           <label class="<%= "is-selected" if @pet.sex == 0 %>">
-            <%= f.radio_button :sex, 0 %><span>Самец</span>
+            <%= f.radio_button :sex, 0 %><span>Мальчик</span>
           </label>
           <label class="<%= "is-selected" if @pet.sex == 1 %>">
-            <%= f.radio_button :sex, 1 %><span>Самка</span>
+            <%= f.radio_button :sex, 1 %><span>Девочка</span>
           </label>
         </div>
       </div>
@@ -76,18 +76,18 @@
       </div>
 
       <div class="pj-pet-field pj-pet-field--wide">
-        <%= f.label :notes, "Особые приметы", class: "pj-pet-form__label" %>
+        <%= f.label :notes, "Особые приметы и заметки", class: "pj-pet-form__label" %>
         <%= f.text_area :notes,
                         rows: 3,
                         class: "pj-pet-form__control pj-pet-form__textarea",
-                        placeholder: "Например: белое пятно на груди, шрам на правом ухе..." %>
+                        placeholder: "Например: белое пятно на груди, аллергия, важные привычки..." %>
       </div>
     </div>
   </div>
 
-  <details class="pj-pet-form__extra" <%= "open" if @pet.persisted? && [@pet.color, @pet.chip_number, @pet.passport_number].any?(&:present?) %>>
+  <details class="pj-pet-form__extra" open>
     <summary>Дополнительные данные</summary>
-    <p>Сохраняем текущие возможности карточки: окрас, чип, ветпаспорт и стерилизацию.</p>
+    <p>Необязательно, но эти данные полезны для идентификации питомца, документов и PetTag.</p>
     <div class="pj-pet-form__extra-grid">
       <div class="pj-pet-field">
         <%= f.label :color, "Окрас", class: "pj-pet-form__label" %>
@@ -95,11 +95,11 @@
       </div>
       <div class="pj-pet-field">
         <%= f.label :chip_number, "Номер чипа", class: "pj-pet-form__label" %>
-        <%= f.text_field :chip_number, class: "pj-pet-form__control" %>
+        <%= f.text_field :chip_number, class: "pj-pet-form__control", placeholder: "Если питомец чипирован" %>
       </div>
       <div class="pj-pet-field">
         <%= f.label :passport_number, "Номер ветпаспорта", class: "pj-pet-form__label" %>
-        <%= f.text_field :passport_number, class: "pj-pet-form__control" %>
+        <%= f.text_field :passport_number, class: "pj-pet-form__control", placeholder: "Если есть" %>
       </div>
       <label class="pj-pet-neutered-control">
         <%= f.check_box :neutered %>
