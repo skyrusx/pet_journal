@@ -5,13 +5,6 @@
     <%= link_to pet_path(@pet), class: "pj-workspace-back" do %>
       <%= pj_icon(:chevron) %><span>К профилю питомца</span>
     <% end %>
-    <%= link_to pet_path(@pet), class: "pj-workspace-avatar pj-workspace-avatar--pet", aria: { label: @pet.name } do %>
-      <% if @pet.photo.attached? %>
-        <%= image_tag @pet.photo, alt: "" %>
-      <% else %>
-        <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
-      <% end %>
-    <% end %>
   </header>
 
   <div class="pj-pets-content pj-pet-form-content">
