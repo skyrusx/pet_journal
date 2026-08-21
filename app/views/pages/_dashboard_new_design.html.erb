@@ -50,24 +50,38 @@
       </nav>
 
       <div class="pj-dash-sidebar__footer">
-        <%= link_to edit_user_registration_path, class: "pj-dash-account", title: display_name do %>
-          <span class="pj-dash-account__avatar"><%= avatar_letter %></span>
-          <span class="pj-dash-account__copy">
-            <strong><%= display_name %></strong>
-            <small><%= current_user.email %></small>
-          </span>
-          <%= pj_icon(:chevron) %>
-        <% end %>
+        <details class="pj-dash-profile-menu" data-dashboard-profile-menu>
+          <summary class="pj-dash-account" title="Меню профиля">
+            <span class="pj-dash-account__avatar"><%= avatar_letter %></span>
+            <span class="pj-dash-account__copy">
+              <strong><%= display_name %></strong>
+              <small><%= current_user.email %></small>
+            </span>
+            <%= pj_icon(:chevron) %>
+          </summary>
 
-        <%= button_to destroy_user_session_path,
-                      method: :delete,
-                      class: "pj-dash-logout",
-                      form_class: "pj-dash-logout-form",
-                      title: "Выйти",
-                      aria: { label: "Выйти из аккаунта" } do %>
-          <%= pj_icon(:logout) %>
-          <span>Выйти</span>
-        <% end %>
+          <div class="pj-dash-profile-popover">
+            <div class="pj-dash-profile-popover__identity">
+              <strong><%= display_name %></strong>
+              <small><%= current_user.email %></small>
+            </div>
+
+            <%= link_to edit_user_registration_path, class: "pj-dash-profile-popover__item" do %>
+              <%= pj_icon(:user) %>
+              <span>Профиль</span>
+            <% end %>
+
+            <div class="pj-dash-profile-popover__separator" aria-hidden="true"></div>
+
+            <%= button_to destroy_user_session_path,
+                          method: :delete,
+                          class: "pj-dash-profile-popover__item pj-dash-profile-popover__logout",
+                          form_class: "pj-dash-profile-popover__form" do %>
+              <%= pj_icon(:logout) %>
+              <span>Выйти</span>
+            <% end %>
+          </div>
+        </details>
       </div>
     </aside>
 
