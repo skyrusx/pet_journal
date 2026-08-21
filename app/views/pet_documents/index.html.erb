@@ -82,20 +82,22 @@
                        aria: { label: "Состав документов" } %>
       </div>
 
-      <div class="pj-documents-filter pj-documents-filter--search">
-        <span aria-hidden="true">
-          <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.75"/><path d="m15 15 4.25 4.25"/></svg>
-        </span>
-        <%= form.search_field :q,
-                              value: @query,
-                              placeholder: "Поиск по документам",
-                              aria: { label: "Поиск по документам" } %>
-      </div>
+      <div class="pj-documents-search-row">
+        <div class="pj-documents-filter pj-documents-filter--search">
+          <span aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.75"/><path d="m15 15 4.25 4.25"/></svg>
+          </span>
+          <%= form.search_field :q,
+                                value: @query,
+                                placeholder: "Поиск по документам",
+                                aria: { label: "Поиск по документам" } %>
+        </div>
 
-      <button type="submit" class="pj-documents-filter-submit" aria-label="Применить фильтры">
-        <span>Применить</span>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.75"/><path d="m15 15 4.25 4.25"/></svg>
-      </button>
+        <button type="submit" class="pj-documents-filter-submit" aria-label="Применить фильтры">
+          <span>Применить</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.75"/><path d="m15 15 4.25 4.25"/></svg>
+        </button>
+      </div>
 
       <% if @selected_type.present? || @selected_status != "all" || @selected_scope != "all" || @query.present? %>
         <%= link_to "Сбросить", pet_pet_documents_path(@pet), class: "pj-documents-filter-reset" %>
