@@ -1,4 +1,4 @@
-/* Final mobile workspace refinements: left-aligned brand, profile sheet tab and bottom-pinned footer. */
+/* Final mobile workspace refinements: left-aligned brand, compact navigation and bottom-pinned footer. */
 
 @media (max-width: 820px) {
   .pj-dash-main {
@@ -47,13 +47,44 @@
     justify-self: end;
   }
 
-  .pj-mobile-tabs__profile,
+  .pj-mobile-tabs {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
   .pj-mobile-tabs__more {
     color: #7c817d;
   }
 
-  .pj-mobile-tabs__profile[aria-expanded="true"],
   .pj-mobile-tabs__more[aria-expanded="true"] {
     color: #1c5b3b;
+  }
+
+  .pj-mobile-tabs__more--icon-only {
+    align-content: center;
+    gap: 0;
+  }
+
+  .pj-mobile-tabs__more--icon-only .pj-nav-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .pj-mobile-sheet__head--icon-only {
+    justify-content: flex-end;
+    margin-bottom: 10px;
+  }
+
+  /* Keep the add-pet circle aligned with pet avatars instead of centering in the taller flex row. */
+  .pj-dash-pet-add {
+    height: 54px;
+    min-height: 54px;
+    align-self: flex-start;
+    align-content: start;
+    padding: 0;
+    margin: 0;
+  }
+
+  .pj-dash-pet-add__plus {
+    margin: 0;
   }
 }
