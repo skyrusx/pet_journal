@@ -31,4 +31,15 @@
   --pj-input-border: #ded8c9;
   --pj-link: #07392f;
   --pj-header-bg: rgba(247, 241, 229, .92);
+
+  /* Shared typography scale. Keep product text readable by default and let
+     future accessibility settings override these tokens in one place. */
+  --pj-font-caption: .75rem;      /* 12px */
+  --pj-font-meta: .8125rem;       /* 13px */
+  --pj-font-body: .875rem;        /* 14px */
+  --pj-font-control: .875rem;     /* 14px */
+  --pj-font-card-title: 1rem;     /* 16px */
+  --pj-font-section-title: 1.25rem; /* 20px */
+  --pj-font-page-title: 1.75rem;  /* 28px */
+  --pj-font-mobile-control: 1rem; /* 16px; also prevents iOS input zoom */
 }
