@@ -29,6 +29,38 @@
   margin-top: 17px;
 }
 
+/* The desktop auth shell is intentionally fixed at 570px. Keep only the
+   registration form denser instead of changing the shared shell height. */
+@media (min-width: 821px) {
+  .pj-auth-v2--registration .pj-auth-v2-card {
+    padding: 24px 30px 22px;
+  }
+
+  .pj-auth-v2--registration .pj-auth-v2-heading {
+    margin-bottom: 16px;
+  }
+
+  .pj-auth-v2--registration .pj-auth-v2-registration-form {
+    gap: 10px;
+  }
+
+  .pj-auth-v2--registration .pj-auth-v2-field {
+    gap: 5px;
+  }
+
+  .pj-auth-v2--registration .pj-auth-v2-input {
+    min-height: 44px;
+  }
+
+  .pj-auth-v2--registration .pj-auth-v2-submit {
+    min-height: 45px;
+  }
+
+  .pj-auth-v2--registration .pj-auth-v2-register {
+    margin-top: 13px;
+  }
+}
+
 @media (max-width: 1050px) {
   .pj-auth-v2--registration .pj-auth-v2-stage,
   .pj-auth-v2--registration .pj-auth-v2-visual {
