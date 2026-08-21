@@ -2,8 +2,14 @@ class PetsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pet, only: %i[show edit update]
 
+  layout "workspace_new_design"
+
   def index
-    @pets = current_user.pets.with_attached_photo.order(created_at: :desc).to_a
+    @pets = current_user.pets
+                        .with_attached_photo
+                        .includes(:pet_tag, :reminders)
+                        .order(created_at: :desc)
+                        .to_a
     @latest_events_by_pet_id = latest_events_by_pet_id(@pets)
     @active_reminders_count = current_user.reminders.status_active.count
     @overdue_reminders_count = current_user.reminders.overdue.count
@@ -13,6 +19,7 @@ class PetsController < ApplicationController
 
   def show
     @recent_events = @pet.pet_events.with_attached_files.order(event_date: :desc, created_at: :desc).limit(5)
+    @events_count = @pet.pet_events.count
     @latest_events_by_type = latest_events_by_type(@pet)
     @attached_files_count = @pet.pet_events.joins(:files_attachments).count
     @documents_count = @pet.pet_documents.count
@@ -24,6 +31,7 @@ class PetsController < ApplicationController
     @pet_tag_scan_count = @pet_tag&.pet_tag_scans&.count.to_i
     @next_reminder = @pet.reminders.status_active.order(:next_run_at).first
     @upcoming_reminders = @pet.reminders.status_active.order(:next_run_at).limit(3)
+    @active_reminders_count = @pet.reminders.status_active.count
     @overdue_reminders_count = @pet.reminders.overdue.count
     @today_reminders_count = @pet.reminders.status_active.where(next_run_at: Time.current.beginning_of_day..Time.current.end_of_day).count
     @active_profile_shares = @pet.pet_profile_shares.active.order(created_at: :desc).limit(3)
