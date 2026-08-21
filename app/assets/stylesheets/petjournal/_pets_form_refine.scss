@@ -293,8 +293,9 @@
     margin-top: 16px;
   }
 
+  /* The existing mobile card grid keeps receiving photo/body/chevron as its layout items. */
   .pj-pet-list-card__main {
-    min-height: 0;
+    display: contents;
   }
 
   .pj-pet-list-card__edit {
