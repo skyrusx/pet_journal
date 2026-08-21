@@ -33,7 +33,7 @@
           <span class="pj-journal-event-heading__icon"><%= journal_event_icon(@pet_event.event_type) %></span>
           <div>
             <h1><%= journal_event_title(@pet_event) %></h1>
-            <p><%= @pet_event.event_date.strftime("%d.%m.%Y") %></p>
+            <p><%= event_date_time_label(@pet_event) %></p>
           </div>
           <span class="pj-journal-state <%= state_tone %>"><%= state_label %></span>
         </div>
@@ -41,6 +41,8 @@
         <dl class="pj-journal-detail-list">
           <div><dt>Питомец</dt><dd><%= @pet.name %></dd></div>
           <div><dt>Тип события</dt><dd><%= @pet_event.event_type_label %></dd></div>
+          <div><dt>Состояние</dt><dd><%= @pet_event.status_label %></dd></div>
+          <div><dt>Дата и время</dt><dd><%= event_date_time_label(@pet_event) %></dd></div>
           <% @pet_event.structured_rows.each do |label, value| %>
             <div><dt><%= label %></dt><dd><%= simple_format(value.to_s) %></dd></div>
           <% end %>
