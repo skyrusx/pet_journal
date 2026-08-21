@@ -149,15 +149,25 @@
         </div>
 
         <div class="pj-pettag-quick-grid">
-          <% unless @pet_tag.status_lost? %>
-            <%= button_to mark_lost_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-quick-action is-danger" do %>
-              <span class="pj-pettag-quick-action__icon">!</span>
-              <span><strong>Питомец потерялся</strong><small>Включить режим потери и усилить публичную страницу</small></span>
-            <% end %>
-          <% else %>
+          <% if @pet_tag.status_lost? %>
             <%= button_to mark_found_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-quick-action is-warning" do %>
               <span class="pj-pettag-quick-action__icon">✓</span>
               <span><strong>Питомца нашли</strong><small>Отметить, что с владельцем уже связались</small></span>
+            <% end %>
+          <% elsif @pet_tag.status_found? %>
+            <%= button_to mark_reunited_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-quick-action" do %>
+              <span class="pj-pettag-quick-action__icon">⌂</span>
+              <span><strong>Питомец дома</strong><small>Отметить возвращение питомца домой</small></span>
+            <% end %>
+          <% elsif @pet_tag.status_reunited? %>
+            <%= button_to mark_safe_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-quick-action" do %>
+              <span class="pj-pettag-quick-action__icon">✓</span>
+              <span><strong>Завершить инцидент</strong><small>Вернуть PetTag в обычное состояние</small></span>
+            <% end %>
+          <% else %>
+            <%= button_to mark_lost_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-quick-action is-danger" do %>
+              <span class="pj-pettag-quick-action__icon">!</span>
+              <span><strong>Питомец потерялся</strong><small>Включить режим потери и усилить публичную страницу</small></span>
             <% end %>
           <% end %>
 
@@ -177,29 +187,51 @@
         <div class="pj-pettag-card__heading">
           <div>
             <h2>Статус безопасности</h2>
-            <p>Текущий этап помогает не путать активный PetTag с реальной потерей питомца.</p>
+            <% if @pet_tag.status_safe? %>
+              <p>Обычное состояние PetTag. Сценарий потери сейчас не активен.</p>
+            <% else %>
+              <p>Этап активного инцидента: от потери питомца до возвращения домой.</p>
+            <% end %>
           </div>
         </div>
 
-        <div class="pj-pettag-status-flow">
-          <div class="pj-pettag-status-step <%= "is-current" if @pet_tag.status_lost? %> is-danger">
-            <span>1</span><strong>Потерялся</strong><small>Экстренный режим</small>
+        <% if @pet_tag.status_safe? %>
+          <div class="pj-pettag-safe-state">
+            <span class="pj-pettag-safe-state__icon">✓</span>
+            <span>
+              <strong>В безопасности</strong>
+              <small>Питомец не отмечен как потерявшийся. PetTag работает в обычном режиме.</small>
+            </span>
           </div>
-          <div class="pj-pettag-status-step <%= "is-current" if @pet_tag.status_found? %> is-warning">
-            <span>2</span><strong>Найден</strong><small>Есть контакт с нашедшим</small>
+        <% else %>
+          <div class="pj-pettag-status-flow">
+            <div class="pj-pettag-status-step <%= "is-current" if @pet_tag.status_lost? %> is-danger">
+              <span>1</span><strong>Потерялся</strong><small>Экстренный режим</small>
+            </div>
+            <div class="pj-pettag-status-step <%= "is-current" if @pet_tag.status_found? %> is-warning">
+              <span>2</span><strong>Найден</strong><small>Есть контакт с нашедшим</small>
+            </div>
+            <div class="pj-pettag-status-step <%= "is-current" if @pet_tag.status_reunited? %> is-success">
+              <span>3</span><strong>Дома</strong><small>Питомец вернулся</small>
+            </div>
           </div>
-          <div class="pj-pettag-status-step <%= "is-current" if @pet_tag.status_reunited? %> is-success">
-            <span>3</span><strong>Дома</strong><small>Питомец вернулся</small>
-          </div>
-        </div>
 
-        <% if @pet_tag.status_found? %>
-          <%= button_to "Отметить, что питомец дома", mark_reunited_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-primary-button pj-pettag-status-action" %>
-        <% elsif @pet_tag.status_lost? %>
-          <div class="pj-pettag-status-buttons">
-            <%= button_to "Найден", mark_found_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-secondary-button" %>
-            <%= button_to "Уже дома", mark_reunited_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-primary-button" %>
-          </div>
+          <% if @pet_tag.status_found? %>
+            <%= button_to "Отметить, что питомец дома", mark_reunited_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-primary-button pj-pettag-status-action" %>
+          <% elsif @pet_tag.status_lost? %>
+            <div class="pj-pettag-status-buttons">
+              <%= button_to "Найден", mark_found_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-secondary-button" %>
+              <%= button_to "Уже дома", mark_reunited_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-primary-button" %>
+            </div>
+          <% elsif @pet_tag.status_reunited? %>
+            <div class="pj-pettag-incident-complete">
+              <div>
+                <strong>Вернулся домой</strong>
+                <small><%= @pet_tag.reunited_at.present? ? @pet_tag.reunited_at.strftime("%d.%m.%Y в %H:%M") : "Инцидент можно завершить" %></small>
+              </div>
+              <%= button_to "Завершить инцидент", mark_safe_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-primary-button" %>
+            </div>
+          <% end %>
         <% end %>
       </section>
 
