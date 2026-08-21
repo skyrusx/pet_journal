@@ -12,7 +12,6 @@ function initJournalEventWizard() {
     let maxReached = currentStep;
 
     const sectionFor = (step) => steps.find((section) => Number(section.dataset.journalWizardStep) === step);
-
     const hasSelectedType = () => typeInputs.some((input) => input.checked);
 
     const validateStep = (step) => {
@@ -36,7 +35,7 @@ function initJournalEventWizard() {
       return true;
     };
 
-    const render = () => {
+    const render = ({ scroll = false } = {}) => {
       steps.forEach((section) => {
         const step = Number(section.dataset.journalWizardStep);
         section.hidden = step !== currentStep;
@@ -48,20 +47,24 @@ function initJournalEventWizard() {
         button.classList.toggle("active", active);
         button.classList.toggle("is-complete", step < currentStep || step < maxReached);
         button.disabled = step > maxReached;
-        button.toggleAttribute("aria-current", active);
-        if (active) button.setAttribute("aria-current", "step");
+
+        if (active) {
+          button.setAttribute("aria-current", "step");
+        } else {
+          button.removeAttribute("aria-current");
+        }
       });
 
       const stepOneNext = sectionFor(1)?.querySelector("[data-journal-wizard-next]");
       if (stepOneNext) stepOneNext.disabled = !hasSelectedType();
 
       if (message && hasSelectedType()) message.hidden = true;
-
       form.dataset.currentStep = String(currentStep);
 
-      const activeSection = sectionFor(currentStep);
-      activeSection?.querySelector("h1")?.focus({ preventScroll: true });
-      activeSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (scroll) {
+        const activeSection = sectionFor(currentStep);
+        activeSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     };
 
     const goTo = (step, { validate = false } = {}) => {
@@ -71,7 +74,7 @@ function initJournalEventWizard() {
 
       currentStep = step;
       maxReached = Math.max(maxReached, step);
-      render();
+      render({ scroll: true });
     };
 
     form.querySelectorAll("[data-journal-wizard-next]").forEach((button) => {
@@ -95,6 +98,13 @@ function initJournalEventWizard() {
         const stepOneNext = sectionFor(1)?.querySelector("[data-journal-wizard-next]");
         if (stepOneNext) stepOneNext.disabled = false;
       });
+    });
+
+    form.addEventListener("submit", (event) => {
+      if (currentStep >= 3) return;
+
+      event.preventDefault();
+      goTo(currentStep + 1, { validate: true });
     });
 
     render();
