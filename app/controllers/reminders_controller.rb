@@ -4,6 +4,8 @@ class RemindersController < ApplicationController
   before_action :set_reminder, only: %i[show edit update destroy complete pause resume snooze]
   before_action :set_notification_channels, only: %i[new create edit update show]
 
+  layout "workspace_new_design"
+
   def index
     @selected_status = params[:status].presence_in(%w[all active today overdue paused completed]) || "active"
     @selected_type = params[:type].presence_in(Reminder.reminder_types.keys)
