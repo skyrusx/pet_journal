@@ -1,172 +1,177 @@
-<div class="document-detail-page py-4">
-  <section class="documents-hero mb-4">
-    <div class="documents-hero-main">
-      <div>
-        <div class="text-muted small mb-1"><%= @pet.name %> · <%= @document.document_type_label %></div>
-        <h1 class="h3 mb-2"><%= @document.title %></h1>
-        <p class="text-muted mb-0"><%= [@document.issuer.presence, @document.number.presence].compact.join(" · ").presence || "Реквизиты не указаны" %></p>
-      </div>
+<% content_for :title, "#{@document.title} — PetJournal" %>
 
-      <div class="documents-current-signal">
-        <span>Статус документа</span>
-        <h2><%= @document.status_label %></h2>
-        <p>
-          <% if @document.expires_on.present? %>
-            Действует до <%= @document.expires_on.strftime("%d.%m.%Y") %>.
-          <% else %>
-            Срок действия не указан.
-          <% end %>
-        </p>
-      </div>
+<div class="pj-documents-page pj-document-detail-page">
+  <header class="pj-workspace-topbar">
+    <div class="pj-workspace-topbar__crumbs">
+      <%= link_to "Документы", pet_pet_documents_path(@pet) %>
+      <span>/</span>
+      <span><%= @document.title %></span>
     </div>
+    <%= link_to notification_channels_path, class: "pj-workspace-icon", aria: { label: "Настройки уведомлений" } do %>
+      <%= pj_icon(:bell) %>
+    <% end %>
+  </header>
 
-    <div class="documents-metrics">
-      <div><span><%= @document.files.count %></span><small><%= russian_plural(@document.files.count, "файл", "файла", "файлов") %></small></div>
-      <div><span><%= @document.pet_event.present? ? "Да" : "—" %></span><small>запись журнала</small></div>
-      <div><span><%= @document.reminder.present? ? "Да" : "—" %></span><small>напоминание</small></div>
-      <div><span><%= @document.issued_on&.strftime("%d.%m") || "—" %></span><small>выдан</small></div>
-      <div><span><%= @document.expires_on&.strftime("%d.%m") || "—" %></span><small>до даты</small></div>
-    </div>
-
-    <div class="documents-quick-actions">
-      <%= link_to "Редактировать", edit_pet_pet_document_path(@pet, @document), class: "btn btn-primary" %>
-      <%= link_to "К документам", pet_pet_documents_path(@pet), class: "btn btn-outline-secondary" %>
-      <%= link_to "Журнал", pet_pet_events_path(@pet, type: :document), class: "btn btn-outline-primary btn-sm" %>
-      <% if @document.reminder.present? %>
-        <%= link_to "Напоминание", pet_reminder_path(@pet, @document.reminder), class: "btn btn-outline-primary btn-sm" %>
+  <div class="pj-documents-content pj-document-detail-content">
+    <nav class="pj-mobile-context-nav pj-document-mobile-nav" aria-label="Навигация документа">
+      <%= link_to pet_pet_documents_path(@pet), class: "pj-mobile-context-back" do %>
+        <span aria-hidden="true">←</span><span>Документы</span>
       <% end %>
-    </div>
-  </section>
 
-  <div class="documents-layout">
-    <section class="documents-main">
-      <div class="dashboard-section">
-        <div class="section-heading compact">
-          <h2 class="h4 mb-0">Детали</h2>
-          <span class="<%= document_status_class(@document) %>"><%= @document.status_label %></span>
-        </div>
-
-        <dl class="details-list dashboard-details">
-          <div><dt>Тип</dt><dd><%= @document.document_type_label %></dd></div>
-          <div><dt>Кем выдан</dt><dd><%= @document.issuer.presence || "—" %></dd></div>
-          <div><dt>Номер</dt><dd><%= @document.number.presence || "—" %></dd></div>
-          <div><dt>Дата выдачи</dt><dd><%= @document.issued_on&.strftime("%d.%m.%Y") || "—" %></dd></div>
-          <div><dt>Действует до</dt><dd><%= @document.expires_on&.strftime("%d.%m.%Y") || "—" %></dd></div>
-          <div><dt>Напомнить за</dt><dd><%= @document.expiry_reminder_days %> <%= russian_plural(@document.expiry_reminder_days, "день", "дня", "дней") %></dd></div>
-        </dl>
-
-        <% if @document.notes.present? %>
-          <div class="notes-box">
-            <div class="fw-semibold mb-1">Заметки</div>
-            <div class="text-muted"><%= simple_format(@document.notes) %></div>
-          </div>
+      <div class="pj-document-mobile-actions">
+        <%= link_to edit_pet_pet_document_path(@pet, @document), class: "pj-document-icon-action is-edit", aria: { label: "Редактировать документ" } do %>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l4.1-1 10.8-10.8a2.1 2.1 0 0 0-3-3L5.1 16 4 20z"/><path d="m14.6 6.5 3 3"/></svg>
+        <% end %>
+        <%= button_to pet_pet_document_path(@pet, @document),
+                      method: :delete,
+                      class: "pj-document-icon-action is-danger",
+                      form_class: "pj-document-icon-action-form",
+                      form: { onsubmit: "return confirm('Удалить документ?')" },
+                      aria: { label: "Удалить документ" } do %>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg>
         <% end %>
       </div>
+    </nav>
 
-      <div class="dashboard-section">
-        <div class="section-heading compact">
-          <h2 class="h4 mb-0">Файлы</h2>
-          <span class="status-pill muted"><%= document_file_label(@document) %></span>
+    <div class="pj-document-detail-heading">
+      <div>
+        <div class="pj-document-detail-title-row">
+          <h1><%= @document.title %></h1>
+          <em class="pj-document-type-pill"><%= @document.document_type_label %></em>
+        </div>
+        <p><%= @document.issuer.presence || "Реквизиты можно заполнить позже" %></p>
+      </div>
+
+      <div class="pj-document-detail-actions">
+        <%= link_to edit_pet_pet_document_path(@pet, @document), class: "pj-document-edit-button" do %>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l4.1-1 10.8-10.8a2.1 2.1 0 0 0-3-3L5.1 16 4 20z"/><path d="m14.6 6.5 3 3"/></svg>
+          <span>Редактировать</span>
+        <% end %>
+        <%= button_to pet_pet_document_path(@pet, @document),
+                      method: :delete,
+                      class: "pj-document-icon-action is-danger",
+                      form_class: "pj-document-icon-action-form",
+                      form: { onsubmit: "return confirm('Удалить документ?')" },
+                      aria: { label: "Удалить документ" },
+                      title: "Удалить документ" do %>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="pj-document-detail-grid">
+      <section class="pj-document-info-card">
+        <div class="pj-document-info-card__heading">
+          <span class="pj-documents-row__icon"><%= pj_icon(:file) %></span>
+          <div>
+            <small>Питомец</small>
+            <strong><%= @pet.name %></strong>
+          </div>
+          <em class="pj-document-status is-<%= @document.status_tone %>"><%= @document.status_label %></em>
+        </div>
+
+        <dl class="pj-document-detail-list">
+          <div><dt>Дата выдачи</dt><dd><%= @document.issued_on&.strftime("%d.%m.%Y") || "—" %></dd></div>
+          <div><dt>Срок действия</dt><dd><%= @document.expires_on&.strftime("%d.%m.%Y") || "Без срока" %></dd></div>
+          <div><dt>Кем выдан</dt><dd><%= @document.issuer.presence || "—" %></dd></div>
+          <div><dt>Номер документа</dt><dd><%= @document.number.presence || "—" %></dd></div>
+          <div><dt>Напомнить заранее</dt><dd><%= @document.expiry_reminder_days %> <%= russian_plural(@document.expiry_reminder_days, "день", "дня", "дней") %></dd></div>
+        </dl>
+
+        <div class="pj-document-comment">
+          <span>Комментарий</span>
+          <p><%= @document.notes.presence || "—" %></p>
+        </div>
+      </section>
+
+      <aside class="pj-document-files-card">
+        <div class="pj-documents-section-heading is-compact">
+          <div><h2>Прикреплённые файлы</h2></div>
+          <span><%= @document.files.count %></span>
         </div>
 
         <% if @document.files.attached? %>
-          <div class="document-file-grid">
+          <div class="pj-document-file-list">
             <% @document.files.each do |file| %>
-              <div class="document-file-card">
-                <div>
-                  <div class="fw-semibold"><%= file.filename.to_s %></div>
-                  <div class="text-muted small"><%= number_to_human_size(file.byte_size) %></div>
-                </div>
-                <div class="d-flex flex-wrap gap-2">
-                  <%= link_to "Открыть", url_for(file), target: "_blank", rel: "noopener", class: "btn btn-outline-primary btn-sm" %>
-                  <%= button_to "Удалить",
-                                file_pet_pet_document_path(@pet, @document, file),
-                                method: :delete,
-                                class: "btn btn-outline-danger btn-sm",
-                                form: { onsubmit: "return confirm('Удалить файл?')" } %>
-                </div>
+              <div class="pj-document-file-row">
+                <%= link_to url_for(file), target: "_blank", rel: "noopener", class: "pj-document-file-row__main" do %>
+                  <span class="pj-document-file-preview"><%= pj_icon(:file) %></span>
+                  <span><strong><%= file.filename.to_s %></strong><small><%= number_to_human_size(file.byte_size) %> · <%= file.content_type.to_s.split("/").last.to_s.upcase.presence || "Файл" %></small></span>
+                <% end %>
+
+                <%= button_to file_pet_pet_document_path(@pet, @document, file),
+                              method: :delete,
+                              class: "pj-document-file-delete",
+                              form_class: "pj-document-file-delete-form",
+                              form: { onsubmit: "return confirm('Удалить файл?')" },
+                              aria: { label: "Удалить #{file.filename}" } do %>
+                  ×
+                <% end %>
               </div>
             <% end %>
           </div>
         <% else %>
-          <div class="empty-state-inline">
-            <div class="fw-semibold mb-1">Файлы не прикреплены</div>
-            <div class="text-muted mb-3">Добавьте PDF, фото или скан через редактирование документа.</div>
-            <%= link_to "Добавить файлы", edit_pet_pet_document_path(@pet, @document), class: "btn btn-primary btn-sm" %>
-          </div>
+          <p class="pj-document-files-empty">Файлы пока не прикреплены.</p>
         <% end %>
-      </div>
-    </section>
 
-    <aside class="documents-side">
-      <section class="dashboard-section">
-        <div class="text-muted small mb-1">Связи</div>
-        <h2 class="h4 mb-3">Журнал и напоминание</h2>
+        <%= link_to edit_pet_pet_document_path(@pet, @document), class: "pj-document-add-file" do %>
+          <%= pj_icon(:plus) %><span>Добавить файл</span>
+        <% end %>
+      </aside>
+    </div>
 
-        <div class="compact-list mb-3">
+    <div class="pj-document-related-grid">
+      <section class="pj-document-related-card">
+        <div class="pj-document-related-card__head">
+          <span class="pj-document-related-avatar">
+            <% if @pet.photo.attached? %>
+              <%= image_tag @pet.photo, alt: "" %>
+            <% else %>
+              <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
+            <% end %>
+          </span>
+          <div><small>Связанный питомец</small><strong><%= @pet.name %></strong><span><%= @pet.breed.presence || @pet.species.presence || "Питомец" %></span></div>
+        </div>
+        <%= link_to "Открыть профиль", pet_path(@pet), class: "pj-document-related-action" %>
+      </section>
+
+      <section class="pj-document-related-card">
+        <div class="pj-document-related-card__head">
+          <span class="pj-document-related-icon"><%= pj_icon(:journal) %></span>
           <div>
-            <span>Запись журнала</span>
-            <strong>
-              <% if @document.pet_event.present? %>
-                <%= link_to "Открыть", pet_pet_event_path(@pet, @document.pet_event), class: "text-decoration-none" %>
-              <% else %>
-                Не создана
-              <% end %>
-            </strong>
-          </div>
-          <div>
-            <span>Напоминание</span>
-            <strong>
-              <% if @document.reminder.present? %>
-                <%= link_to "Открыть", pet_reminder_path(@pet, @document.reminder), class: "text-decoration-none" %>
-              <% else %>
-                Не создано
-              <% end %>
-            </strong>
+            <small>Связанная запись</small>
+            <strong><%= @document.pet_event.present? ? (@document.pet_event.title.presence || "Запись в журнале") : "Не создана" %></strong>
+            <span><%= @document.pet_event&.event_date&.strftime("%d.%m.%Y") || "Можно создать автоматически" %></span>
           </div>
         </div>
 
-        <div class="d-grid gap-2">
-          <% if @document.pet_event.present? %>
-            <%= button_to "Обновить запись журнала",
-                          sync_journal_event_pet_pet_document_path(@pet, @document),
-                          method: :patch,
-                          class: "btn btn-outline-primary btn-sm w-100" %>
-          <% else %>
-            <%= button_to "Создать запись журнала",
-                          sync_journal_event_pet_pet_document_path(@pet, @document),
-                          method: :patch,
-                          class: "btn btn-primary btn-sm w-100" %>
-          <% end %>
+        <% if @document.pet_event.present? %>
+          <%= link_to "Открыть запись", pet_pet_event_path(@pet, @document.pet_event), class: "pj-document-related-action" %>
+          <%= button_to "Обновить из документа", sync_journal_event_pet_pet_document_path(@pet, @document), method: :patch, class: "pj-document-related-sync" %>
+        <% else %>
+          <%= button_to "Создать запись", sync_journal_event_pet_pet_document_path(@pet, @document), method: :patch, class: "pj-document-related-action" %>
+        <% end %>
+      </section>
 
-          <% if @document.reminder.present? %>
-            <%= button_to "Обновить напоминание",
-                          sync_expiry_reminder_pet_pet_document_path(@pet, @document),
-                          method: :patch,
-                          class: "btn btn-outline-primary btn-sm w-100" %>
-          <% elsif @document.expires_on.present? %>
-            <%= button_to "Создать напоминание",
-                          sync_expiry_reminder_pet_pet_document_path(@pet, @document),
-                          method: :patch,
-                          class: "btn btn-primary btn-sm w-100" %>
-          <% else %>
-            <%= link_to "Указать срок действия",
-                        edit_pet_pet_document_path(@pet, @document),
-                        class: "btn btn-outline-primary btn-sm w-100" %>
-          <% end %>
+      <section class="pj-document-related-card">
+        <div class="pj-document-related-card__head">
+          <span class="pj-document-related-icon"><%= pj_icon(:alarm) %></span>
+          <div>
+            <small>Связанное напоминание</small>
+            <strong><%= @document.reminder.present? ? @document.reminder.title : "Не создано" %></strong>
+            <span><%= @document.reminder&.next_run_at&.strftime("%d.%m.%Y, %H:%M") || (@document.expires_on.present? ? "Можно создать по сроку действия" : "Сначала укажите срок действия") %></span>
+          </div>
         </div>
-      </section>
 
-      <section class="dashboard-section">
-        <div class="text-muted small mb-1">Опасная зона</div>
-        <h2 class="h4 mb-3">Удаление</h2>
-        <p class="text-muted mb-3">Удаление уберет документ из библиотеки. Связанные файлы документа также будут удалены.</p>
-        <%= button_to "Удалить документ",
-                      pet_pet_document_path(@pet, @document),
-                      method: :delete,
-                      class: "btn btn-outline-danger btn-sm w-100",
-                      form: { onsubmit: "return confirm('Удалить документ?')" } %>
+        <% if @document.reminder.present? %>
+          <%= link_to "Открыть напоминание", pet_reminder_path(@pet, @document.reminder), class: "pj-document-related-action" %>
+          <%= button_to "Обновить из документа", sync_expiry_reminder_pet_pet_document_path(@pet, @document), method: :patch, class: "pj-document-related-sync" %>
+        <% elsif @document.expires_on.present? %>
+          <%= button_to "Создать напоминание", sync_expiry_reminder_pet_pet_document_path(@pet, @document), method: :patch, class: "pj-document-related-action" %>
+        <% else %>
+          <%= link_to "Указать срок действия", edit_pet_pet_document_path(@pet, @document), class: "pj-document-related-action" %>
+        <% end %>
       </section>
-    </aside>
+    </div>
   </div>
 </div>
