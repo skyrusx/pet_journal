@@ -70,10 +70,18 @@
         <% if document.persisted? && document.files.attached? %>
           <div class="pj-document-existing-files">
             <% document.files.each do |file| %>
-              <%= link_to url_for(file), target: "_blank", rel: "noopener", class: "pj-document-existing-file" do %>
-                <span><%= pj_icon(:file) %></span>
-                <span><strong><%= file.filename.to_s %></strong><small><%= number_to_human_size(file.byte_size) %></small></span>
-              <% end %>
+              <div class="pj-document-existing-file-wrap">
+                <%= link_to url_for(file), target: "_blank", rel: "noopener", class: "pj-document-existing-file" do %>
+                  <span><%= pj_icon(:file) %></span>
+                  <span><strong><%= file.filename.to_s %></strong><small><%= number_to_human_size(file.byte_size) %></small></span>
+                <% end %>
+                <%= link_to "×",
+                            file_pet_pet_document_path(pet, document, file),
+                            class: "pj-document-existing-file__remove",
+                            aria: { label: "Удалить #{file.filename}" },
+                            title: "Удалить файл",
+                            data: { turbo_method: :delete, turbo_confirm: "Удалить файл?" } %>
+              </div>
             <% end %>
           </div>
         <% end %>
