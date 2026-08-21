@@ -2,6 +2,9 @@ class PetDocumentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pet
   before_action :set_document, only: %i[show edit update destroy destroy_file sync_journal_event sync_expiry_reminder]
+  before_action :set_document_pets, only: %i[index new create edit update]
+
+  layout "workspace_new_design"
 
   def index
     @selected_type = params[:type].presence_in(PetDocument.document_types.keys)
@@ -33,11 +36,13 @@ class PetDocumentsController < ApplicationController
   end
 
   def create
-    @document = @pet.pet_documents.new(document_params)
+    target_pet = selected_pet
+    @pet = target_pet
+    @document = target_pet.pet_documents.new(document_params)
 
     if @document.save
       sync_related_records
-      redirect_to pet_pet_document_path(@pet, @document), notice: "Документ добавлен."
+      redirect_to pet_pet_document_path(@document.pet, @document), notice: "Документ добавлен."
     else
       render :new, status: :unprocessable_entity
     end
@@ -46,10 +51,15 @@ class PetDocumentsController < ApplicationController
   def edit; end
 
   def update
+    target_pet = selected_pet
+    @document.pet = target_pet
+
     if @document.update(document_params)
+      @pet = @document.pet
       sync_related_records
-      redirect_to pet_pet_document_path(@pet, @document), notice: "Документ обновлен."
+      redirect_to pet_pet_document_path(@document.pet, @document), notice: "Документ обновлен."
     else
+      @pet = target_pet
       render :edit, status: :unprocessable_entity
     end
   end
@@ -92,6 +102,17 @@ class PetDocumentsController < ApplicationController
 
   def set_document
     @document = @pet.pet_documents.find(params[:id])
+  end
+
+  def set_document_pets
+    @document_pets = current_user.pets.order(:name)
+  end
+
+  def selected_pet
+    pet_id = params.dig(:pet_document, :pet_id).presence
+    return @pet if pet_id.blank?
+
+    current_user.pets.find(pet_id)
   end
 
   def document_params
