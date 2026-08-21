@@ -8,9 +8,6 @@
     <%= link_to pets_path, class: "pj-workspace-back" do %>
       <%= pj_icon(:chevron) %><span>К списку питомцев</span>
     <% end %>
-    <%= link_to edit_user_registration_path, class: "pj-workspace-avatar", aria: { label: "Профиль" } do %>
-      <%= (current_user.name.presence || current_user.email).to_s.first.to_s.upcase %>
-    <% end %>
   </header>
 
   <div class="pj-pets-content pj-pet-profile-content">
@@ -89,12 +86,14 @@
             <div class="pj-pet-summary-card__row">
               <span class="pj-pet-summary-card__icon"><%= pj_icon(:journal) %></span>
               <div>
-                <strong><%= latest_event.title.presence || latest_event.event_type_label %></strong>
+                <div class="pj-pet-summary-card__title-line">
+                  <strong><%= latest_event.title.presence || latest_event.event_type_label %></strong>
+                  <span class="pj-pet-summary-status pj-pet-summary-status--inline">В журнале</span>
+                </div>
                 <small><%= latest_event.event_date.strftime("%d.%m.%Y") %></small>
               </div>
             </div>
-            <span class="pj-pet-summary-status">В журнале</span>
-            <%= link_to "Открыть журнал", pet_pet_events_path(@pet), class: "pj-pet-summary-card__button" %>
+            <%= link_to "Открыть журнал", pet_pet_events_path(@pet), class: "pj-pet-summary-card__button pj-pet-summary-card__button--compact" %>
           <% else %>
             <div class="pj-pet-summary-card__empty">Событий пока нет</div>
             <%= link_to "Добавить запись", new_pet_pet_event_path(@pet), class: "pj-pet-summary-card__button" %>
