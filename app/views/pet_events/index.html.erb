@@ -9,7 +9,10 @@
   </header>
 
   <div class="pj-journal-content">
-    <div class="pj-journal-mobile-title">Журнал</div>
+    <div class="pj-mobile-list-heading">
+      <h1>Журнал</h1>
+      <p>История здоровья и ухода за питомцем в одном месте</p>
+    </div>
 
     <div class="pj-journal-toolbar">
       <details class="pj-journal-pet-switcher">
@@ -119,16 +122,27 @@
       <div class="pj-journal-mobile-list">
         <% @pet_events.each do |event| %>
           <% state_label, state_tone = journal_event_state(event) %>
-          <%= link_to pet_pet_event_path(@pet, event), class: "pj-journal-mobile-card" do %>
-            <span class="pj-journal-mobile-card__icon"><%= journal_event_icon(event.event_type) %></span>
-            <span class="pj-journal-mobile-card__body">
-              <small><%= event_date_time_label(event) %></small>
-              <strong><%= journal_event_title(event) %></strong>
-              <span><%= truncate(journal_event_detail(event).to_s, length: 54) %></span>
-              <em class="pj-journal-state <%= state_tone %>"><%= state_label %></em>
-            </span>
-            <span class="pj-journal-mobile-card__chevron"><%= pj_icon(:chevron) %></span>
-          <% end %>
+          <article class="pj-journal-mobile-card-wrap">
+            <%= link_to pet_pet_event_path(@pet, event), class: "pj-journal-mobile-card" do %>
+              <span class="pj-journal-mobile-card__icon"><%= journal_event_icon(event.event_type) %></span>
+              <span class="pj-journal-mobile-card__body">
+                <small><%= event_date_time_label(event) %></small>
+                <strong><%= journal_event_title(event) %></strong>
+                <span><%= truncate(journal_event_detail(event).to_s, length: 54) %></span>
+                <em class="pj-journal-state <%= state_tone %>"><%= state_label %></em>
+              </span>
+            <% end %>
+
+            <%= link_to edit_pet_pet_event_path(@pet, event),
+                        class: "pj-journal-mobile-card__edit",
+                        aria: { label: "Редактировать #{journal_event_title(event)}" },
+                        title: "Редактировать" do %>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 20l4.1-1 10.8-10.8a2.1 2.1 0 0 0-3-3L5.1 16 4 20z"/>
+                <path d="m14.6 6.5 3 3"/>
+              </svg>
+            <% end %>
+          </article>
         <% end %>
       </div>
     <% else %>
