@@ -139,4 +139,22 @@
     width: 100%;
     min-height: 44px;
   }
+
+  .pj-pettag-scans-card .pj-pettag-scans-heading {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pj-pettag-scans-card .pj-pettag-scan-filter {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .pj-pettag-scans-card .pj-pettag-scan-filter select {
+    display: block;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+  }
 }
