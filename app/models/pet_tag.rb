@@ -1,4 +1,6 @@
 class PetTag < ApplicationRecord
+  TAG_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".freeze
+
   belongs_to :pet
   has_many :pet_tag_scans, dependent: :destroy
   has_many :pet_tag_notification_channels, dependent: :destroy
@@ -10,11 +12,14 @@ class PetTag < ApplicationRecord
   enum :safety_status, { safe: 0, lost: 1, found: 2, reunited: 3 }, prefix: :status
 
   validates :public_token, presence: true, uniqueness: true
+  validates :tag_code, presence: true, uniqueness: true, format: { with: /\APJT-[A-Z2-9]{4}-[A-Z2-9]{4}\z/ }
   validates :pet_id, uniqueness: true
   validates :public_message, length: { maximum: 500 }
   validates :behavior_notes, :medical_notes, :lost_message, :found_message, length: { maximum: 1_000 }
   validates :contact_phone, length: { maximum: 40 }
   validates :last_seen_location, length: { maximum: 255 }
+
+  before_validation :ensure_tag_code, on: :create
   before_validation :sync_legacy_lost_mode
 
   def public_path
@@ -46,6 +51,16 @@ class PetTag < ApplicationRecord
   end
 
   private
+
+  def ensure_tag_code
+    return if tag_code.present?
+
+    loop do
+      raw = Array.new(8) { TAG_CODE_ALPHABET[SecureRandom.random_number(TAG_CODE_ALPHABET.length)] }.join
+      self.tag_code = "PJT-#{raw.first(4)}-#{raw.last(4)}"
+      break unless self.class.exists?(tag_code: tag_code)
+    end
+  end
 
   def sync_legacy_lost_mode
     self.safety_status = :lost if self[:lost_mode_enabled] && status_safe?
