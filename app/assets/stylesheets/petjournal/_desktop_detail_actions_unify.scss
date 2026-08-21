@@ -1,0 +1,76 @@
+/* Desktop detail-page actions mirror the explicit icon pattern used on mobile. */
+
+.pj-desktop-detail-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.pj-desktop-detail-action-form {
+  display: contents;
+  margin: 0;
+}
+
+.pj-desktop-detail-action {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #dde3da;
+  border-radius: 11px;
+  color: #315f47;
+  background: #f2f5ed;
+  text-decoration: none;
+  box-shadow: none;
+  cursor: pointer;
+  transition: color 140ms ease, background 140ms ease, border-color 140ms ease, transform 120ms ease, box-shadow 140ms ease;
+}
+
+.pj-desktop-detail-action:hover,
+.pj-desktop-detail-action:focus-visible {
+  color: #25563d;
+  border-color: #cbd6c8;
+  background: #eaf0e4;
+  box-shadow: 0 5px 14px rgba(43, 73, 54, .08);
+  transform: translateY(-1px);
+}
+
+.pj-desktop-detail-action:active {
+  transform: translateY(0) scale(.97);
+  box-shadow: none;
+}
+
+.pj-desktop-detail-action svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pj-desktop-detail-action--danger {
+  color: #a35850;
+  border-color: #ecdcd7;
+  background: #fbf1ee;
+}
+
+.pj-desktop-detail-action--danger:hover,
+.pj-desktop-detail-action--danger:focus-visible {
+  color: #93483f;
+  border-color: #e2cbc5;
+  background: #f9e8e4;
+  box-shadow: 0 5px 14px rgba(147, 72, 63, .08);
+}
+
+@media (max-width: 820px) {
+  .pj-desktop-detail-actions {
+    display: none !important;
+  }
+}
