@@ -4,6 +4,8 @@ class PetTagsController < ApplicationController
   before_action :set_pet_tag, only: %i[show edit update rotate_token qr mark_lost mark_found mark_reunited]
   before_action :set_notification_channels, only: %i[show edit update]
 
+  layout "workspace_new_design"
+
   def show
     @scan_count = @pet_tag.persisted? ? @pet_tag.pet_tag_scans.count : 0
     @selected_scan_status = params[:scan_status].presence_in(%w[all scanned location_shared found_reported]) || "all"
@@ -18,6 +20,7 @@ class PetTagsController < ApplicationController
       sync_notification_channels
       redirect_to pet_pet_tag_path(@pet), notice: "QR-профиль создан."
     else
+      set_notification_channels
       render :show, status: :unprocessable_entity
     end
   end
