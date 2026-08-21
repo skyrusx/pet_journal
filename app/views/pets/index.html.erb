@@ -28,7 +28,9 @@
       <div class="pj-pets-grid">
         <% @pets.each do |pet| %>
           <% pet_tag = pet.pet_tag %>
-          <% tag_active = pet_tag&.persisted? && pet_tag.enabled? %>
+          <% tag_present = pet_tag&.persisted? %>
+          <% tag_active = tag_present && pet_tag.enabled? %>
+          <% tag_text = tag_present ? pet_tag_status_label(pet_tag).downcase : "не настроен" %>
           <%= link_to pet_path(pet), class: "pj-pet-list-card" do %>
             <span class="pj-pet-list-card__photo">
               <% if pet.photo.attached? %>
@@ -44,7 +46,7 @@
               <span class="pj-pet-list-card__age"><%= pet_age(pet) %></span>
               <span class="pj-pet-list-card__tag <%= "is-muted" unless tag_active %>">
                 <span class="pj-pet-list-card__tag-dot">●</span>
-                PetTag <%= tag_active ? pet_tag_status_label(pet_tag).downcase : "не настроен" %>
+                PetTag <%= tag_text %>
               </span>
             </span>
 
