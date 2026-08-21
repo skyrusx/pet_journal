@@ -73,7 +73,8 @@ module ApplicationHelper
       { label: "Событие в журнал", path: new_pet_pet_event_path(pet), icon: :journal },
       { label: "Напоминание", path: new_pet_reminder_path(pet), icon: :clock },
       { label: "Вес", path: new_pet_pet_event_path(pet, type: :weight), icon: :plus },
-      { label: "Лекарство / обработка", path: new_pet_pet_event_path(pet, type: :treatment), icon: :plus },
+      { label: "Лекарство", path: new_pet_pet_event_path(pet, type: :treatment), icon: :plus },
+      { label: "Обработка от паразитов", path: new_pet_pet_event_path(pet, type: :parasite_treatment), icon: :plus },
       { label: "Вакцинация", path: new_pet_pet_event_path(pet, type: :vaccination), icon: :plus },
       { label: "Документ", path: new_pet_pet_document_path(pet), icon: :file }
     ]
