@@ -28,7 +28,9 @@
           <div class="pj-pet-profile-identity">
             <div class="pj-pet-profile-name-row">
               <h1><%= @pet.name %></h1>
-              <%= link_to "Редактировать", edit_pet_path(@pet), class: "pj-pet-profile-edit", aria: { label: "Редактировать данные питомца #{@pet.name}" } %>
+              <%= link_to edit_pet_path(@pet), class: "pj-pet-profile-edit", aria: { label: "Редактировать питомца" }, title: "Редактировать" do %>
+                ✎
+              <% end %>
             </div>
             <span class="pj-pet-profile-tag <%= "is-muted" unless tag_active %>">
               <span>●</span> PetTag <%= tag_label.downcase %>
@@ -44,6 +46,19 @@
           <div><dt>Дата рождения</dt><dd><%= @pet.birth_date.present? ? @pet.birth_date.strftime("%d.%m.%Y") : "—" %></dd></div>
           <div><dt>Вес</dt><dd><%= pet_weight_label(@pet.weight) %></dd></div>
         </dl>
+
+        <details class="pj-pet-extra-details">
+          <summary>Дополнительные данные</summary>
+          <div class="pj-pet-extra-details__grid">
+            <div><span>Окрас</span><strong><%= @pet.color.presence || "—" %></strong></div>
+            <div><span>Номер чипа</span><strong><%= @pet.chip_number.presence || "—" %></strong></div>
+            <div><span>Ветпаспорт</span><strong><%= @pet.passport_number.presence || "—" %></strong></div>
+            <div><span>Стерилизация</span><strong><%= @pet.neutered.nil? ? "—" : (@pet.neutered ? "Да" : "Нет") %></strong></div>
+          </div>
+          <% if @pet.notes.present? %>
+            <div class="pj-pet-extra-details__notes"><span>Особые приметы и заметки</span><p><%= simple_format(@pet.notes) %></p></div>
+          <% end %>
+        </details>
       </section>
 
       <aside class="pj-pet-profile-side">
@@ -105,18 +120,5 @@
         <% end %>
       </div>
     </section>
-
-    <details class="pj-pet-extra-details">
-      <summary>Дополнительные данные</summary>
-      <div class="pj-pet-extra-details__grid">
-        <div><span>Окрас</span><strong><%= @pet.color.presence || "—" %></strong></div>
-        <div><span>Номер чипа</span><strong><%= @pet.chip_number.presence || "—" %></strong></div>
-        <div><span>Ветпаспорт</span><strong><%= @pet.passport_number.presence || "—" %></strong></div>
-        <div><span>Стерилизация</span><strong><%= @pet.neutered.nil? ? "—" : (@pet.neutered ? "Да" : "Нет") %></strong></div>
-      </div>
-      <% if @pet.notes.present? %>
-        <div class="pj-pet-extra-details__notes"><span>Особые приметы и заметки</span><p><%= simple_format(@pet.notes) %></p></div>
-      <% end %>
-    </details>
   </div>
 </div>
