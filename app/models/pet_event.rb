@@ -4,10 +4,20 @@ class PetEvent < ApplicationRecord
   has_many :pet_documents, dependent: :nullify
   has_many_attached :files
 
-  enum :event_type, { note: 0, vaccination: 1, treatment: 2, visit: 3, illness: 4, weight: 5, document: 6 }
+  enum :event_type, {
+    note: 0,
+    vaccination: 1,
+    treatment: 2,
+    visit: 3,
+    illness: 4,
+    weight: 5,
+    document: 6,
+    parasite_treatment: 7
+  }
   enum :severity, { mild: 0, moderate: 1, severe: 2, critical: 3 }, prefix: true
+  enum :status, { planned: 0, completed: 1 }, prefix: true
 
-  validates :event_type, :event_date, presence: true
+  validates :event_type, :event_date, :status, presence: true
   validates :weight_value, numericality: { greater_than: 0, less_than: 500 }, allow_blank: true
   validates :severity, presence: true, if: :illness?
   validate :valid_until_after_event_date
@@ -17,15 +27,25 @@ class PetEvent < ApplicationRecord
   EVENT_TYPE_LABELS = {
     "note" => "Заметка",
     "vaccination" => "Вакцинация",
-    "treatment" => "Лекарство / обработка",
+    "treatment" => "Лекарство",
+    "parasite_treatment" => "Обработка от паразитов",
     "visit" => "Визит к врачу",
     "illness" => "Симптом / болезнь",
     "weight" => "Вес",
     "document" => "Документ"
   }.freeze
 
+  STATUS_LABELS = {
+    "planned" => "Запланировано",
+    "completed" => "Завершено"
+  }.freeze
+
   def event_type_label
     EVENT_TYPE_LABELS[event_type] || event_type
+  end
+
+  def status_label
+    STATUS_LABELS[status] || status
   end
 
   def structured?
@@ -37,6 +57,7 @@ class PetEvent < ApplicationRecord
     when "weight" then weight_rows
     when "vaccination" then vaccination_rows
     when "treatment" then treatment_rows
+    when "parasite_treatment" then parasite_treatment_rows
     when "visit" then visit_rows
     when "illness" then illness_rows
     when "document" then document_rows
@@ -76,6 +97,15 @@ class PetEvent < ApplicationRecord
       ["Начало курса", course_started_on&.strftime("%d.%m.%Y")],
       ["Окончание курса", course_ended_on&.strftime("%d.%m.%Y")],
       ["Следующее действие", next_action_at&.strftime("%d.%m.%Y %H:%M")]
+    ].select { |_label, value| value.present? }
+  end
+
+  def parasite_treatment_rows
+    [
+      ["Средство", medication_name],
+      ["Дозировка / способ", dosage],
+      ["Дата обработки", course_started_on&.strftime("%d.%m.%Y")],
+      ["Следующая обработка", next_action_at&.strftime("%d.%m.%Y %H:%M")]
     ].select { |_label, value| value.present? }
   end
 
