@@ -11,6 +11,12 @@
   </header>
 
   <div class="pj-pets-content pj-pet-form-content">
+    <div class="pj-mobile-detail-nav pj-mobile-form-nav">
+      <%= link_to pets_path, class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К питомцам</span>
+      <% end %>
+    </div>
+
     <div class="pj-pet-form-heading">
       <h1>Добавить питомца</h1>
       <p>Заполните основные данные. Дополнительную информацию можно добавить позже.</p>
