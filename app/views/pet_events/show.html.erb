@@ -47,7 +47,7 @@
             <div><dt><%= label %></dt><dd><%= simple_format(value.to_s) %></dd></div>
           <% end %>
           <% if @pet_event.next_action_at.present? %>
-            <div><dt>Следующее действие</dt><dd><%= l(@pet_event.next_action_at, format: :short) %></dd></div>
+            <div><dt>Следующее действие</dt><dd><%= l(@pet_event.next_action_at, format: :default) %></dd></div>
           <% end %>
         </dl>
 
@@ -73,7 +73,7 @@
 
         <% if @pet_event.next_action_at.present? %>
           <section class="pj-journal-follow-up">
-            <div><strong>Не забыть следующий шаг</strong><small><%= l(@pet_event.next_action_at, format: :short) %></small></div>
+            <div><strong>Не забыть следующий шаг</strong><small><%= l(@pet_event.next_action_at, format: :default) %></small></div>
             <%= link_to "Создать напоминание",
                         new_pet_reminder_path(
                           @pet,
@@ -102,9 +102,9 @@
 
         <section class="pj-journal-history-card">
           <h2>История события</h2>
-          <div><span></span><p><strong>Создано</strong><small><%= l(@pet_event.created_at, format: :short) %></small></p></div>
+          <div><span></span><p><strong>Создано</strong><small><%= l(@pet_event.created_at, format: :default) %></small></p></div>
           <% if @pet_event.updated_at > @pet_event.created_at + 1.second %>
-            <div><span></span><p><strong>Обновлено</strong><small><%= l(@pet_event.updated_at, format: :short) %></small></p></div>
+            <div><span></span><p><strong>Обновлено</strong><small><%= l(@pet_event.updated_at, format: :default) %></small></p></div>
           <% end %>
         </section>
       </aside>
