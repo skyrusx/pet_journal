@@ -1,26 +1,25 @@
-<div class="form-page pet-form-page py-4">
-  <div class="form-page-header">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1">Редактировать данные</h1>
-      <p class="text-muted mb-0">Обновите карточку, документы и важные заметки.</p>
+<% content_for :title, "Редактировать #{@pet.name} — PetJournal" %>
+
+<div class="pj-pets-page pj-pet-form-page">
+  <header class="pj-workspace-topbar pj-workspace-topbar--form">
+    <%= link_to pet_path(@pet), class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>К профилю питомца</span>
+    <% end %>
+    <%= link_to pet_path(@pet), class: "pj-workspace-avatar pj-workspace-avatar--pet", aria: { label: @pet.name } do %>
+      <% if @pet.photo.attached? %>
+        <%= image_tag @pet.photo, alt: "" %>
+      <% else %>
+        <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
+      <% end %>
+    <% end %>
+  </header>
+
+  <div class="pj-pets-content pj-pet-form-content">
+    <div class="pj-pet-form-heading">
+      <h1>Редактировать питомца</h1>
+      <p>Обновите данные <%= @pet.name %>. Изменения сразу появятся в профиле.</p>
     </div>
-    <%= link_to "К обзору", pet_path(@pet), class: "btn btn-outline-secondary" %>
-  </div>
 
-  <div class="form-layout">
     <%= render "form" %>
-
-    <aside class="form-aside">
-      <div class="form-aside-panel">
-        <div class="text-muted small mb-1">Профиль питомца</div>
-        <h2 class="h5 mb-3">Эти данные усиливают обзор и PetTag</h2>
-        <div class="form-aside-list">
-          <div><span>1</span><p>Возраст, вес и пол делают обзор полезнее.</p></div>
-          <div><span>2</span><p>Чип и паспорт помогают держать документы под рукой.</p></div>
-          <div><span>3</span><p>Заметки можно использовать для публичного QR-профиля.</p></div>
-        </div>
-      </div>
-    </aside>
   </div>
 </div>
