@@ -15,6 +15,12 @@
   </header>
 
   <div class="pj-pets-content pj-pet-form-content">
+    <div class="pj-mobile-detail-nav pj-mobile-form-nav">
+      <%= link_to pet_path(@pet), class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К профилю</span>
+      <% end %>
+    </div>
+
     <div class="pj-pet-form-heading">
       <h1>Редактировать питомца</h1>
       <p>Обновите данные <%= @pet.name %>. Изменения сразу появятся в профиле.</p>
