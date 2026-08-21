@@ -8,9 +8,15 @@
   </header>
 
   <div class="pj-journal-form-content">
-    <div class="pj-journal-mobile-back pj-journal-mobile-back--title">
-      <%= link_to pet_pet_events_path(@pet), aria: { label: "Назад к журналу" } do %><%= pj_icon(:chevron) %><% end %>
-      <strong>Новое событие</strong>
+    <div class="pj-mobile-detail-nav pj-mobile-form-nav">
+      <%= link_to pet_pet_events_path(@pet), class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К журналу</span>
+      <% end %>
+    </div>
+
+    <div class="pj-mobile-form-heading">
+      <h1>Новое событие</h1>
+      <p>Добавьте запись в историю <%= @pet.name %>.</p>
     </div>
 
     <%= render "form" %>
