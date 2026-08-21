@@ -145,7 +145,7 @@
       </div>
     <% else %>
       <section class="pj-reminders-empty">
-        <span><%= pj_icon(:bell) %></span>
+        <span><%= pj_icon(:alarm) %></span>
         <h2><%= @query.present? || @selected_type.present? || @selected_status != "active" ? "Ничего не найдено" : "Напоминаний пока нет" %></h2>
         <p>Создайте напоминание о прививке, лекарстве, обработке или другом важном деле.</p>
         <%= link_to "Создать напоминание", new_pet_reminder_path(@pet), class: "pj-reminders-primary-button" %>
