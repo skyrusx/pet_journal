@@ -20,6 +20,7 @@
 
   <body class="pj-dashboard-body">
     <%= yield %>
+    <%= render "shared/dashboard_mobile_chrome" if user_signed_in? %>
 
     <% if notice.present? || alert.present? %>
       <div class="flash-stack" aria-live="polite" aria-atomic="true">
