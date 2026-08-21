@@ -1,189 +1,155 @@
-<div class="reminders-page reminders-dashboard py-4">
-  <section class="reminders-hero mb-4">
-    <div class="reminders-hero-main">
+<% content_for :title, "Напоминания — #{@pet.name} — PetJournal" %>
+
+<div class="pj-reminders-page pj-reminders-index">
+  <header class="pj-workspace-topbar">
+    <h1>Напоминания</h1>
+    <%= link_to notification_channels_path, class: "pj-workspace-icon", aria: { label: "Настройки уведомлений" }, title: "Настройки уведомлений" do %>
+      <%= pj_icon(:bell) %>
+    <% end %>
+  </header>
+
+  <div class="pj-reminders-content">
+    <div class="pj-reminders-heading">
       <div>
-        <div class="text-muted small mb-1"><%= @pet.name %></div>
-        <h1 class="h3 mb-2">Напоминания</h1>
-        <p class="text-muted mb-0">Лекарства, прививки, обработки, визиты и регулярный уход с доставкой в выбранные каналы.</p>
+        <h1>Напоминания</h1>
+        <p>Важные дела по уходу за питомцем — вовремя и без лишней суеты.</p>
       </div>
-
-      <div class="reminders-current-signal <%= @overdue_count.positive? ? "danger" : (@today_count.positive? ? "warning" : "success") %>">
-        <span>Что важно сейчас</span>
-        <% if @overdue_count.positive? %>
-          <h2><%= @overdue_count %> <%= russian_plural(@overdue_count, "напоминание просрочено", "напоминания просрочены", "напоминаний просрочены") %></h2>
-          <p>Закройте, отложите или поставьте на паузу просроченные задачи.</p>
-        <% elsif @today_count.positive? %>
-          <h2><%= @today_count %> сегодня</h2>
-          <p>Проверьте задачи на текущий день и отметьте выполнение.</p>
-        <% elsif @next_reminder.present? %>
-          <h2><%= @next_reminder.title %></h2>
-          <p>Следующее напоминание <%= @next_reminder.next_run_at.strftime("%d.%m.%Y %H:%M") %>.</p>
-        <% else %>
-          <h2>Активных задач нет</h2>
-          <p>Создайте первое напоминание для ухода или документов.</p>
-        <% end %>
-      </div>
-    </div>
-
-    <div class="reminders-metrics">
-      <div><span><%= @total_count %></span><small>всего</small></div>
-      <div><span><%= @active_count %></span><small>активно</small></div>
-      <div><span><%= @today_count %></span><small>сегодня</small></div>
-      <div><span><%= @overdue_count %></span><small>просрочено</small></div>
-      <div><span><%= @paused_count %></span><small>пауза</small></div>
-      <div><span><%= @completed_count %></span><small>выполнено</small></div>
-    </div>
-
-    <div class="reminders-quick-actions">
-      <%= link_to "Новое напоминание", new_pet_reminder_path(@pet), class: "btn btn-primary" %>
-      <%= link_to "Каналы уведомлений", notification_channels_path, class: "btn btn-outline-secondary" %>
-      <% quick_reminder_actions(@pet).each do |label, path| %>
-        <%= link_to label, path, class: "btn btn-outline-primary btn-sm" %>
+      <%= link_to new_pet_reminder_path(@pet), class: "pj-reminders-primary-button" do %>
+        <%= pj_icon(:plus) %><span>Создать напоминание</span>
       <% end %>
     </div>
-  </section>
 
-  <%= render "shared/pet_tabs", pet: @pet %>
+    <div class="pj-reminders-toolbar">
+      <details class="pj-reminders-pet-switcher">
+        <summary>
+          <span class="pj-reminders-pet-avatar">
+            <% if @pet.photo.attached? %>
+              <%= image_tag @pet.photo, alt: "" %>
+            <% else %>
+              <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
+            <% end %>
+          </span>
+          <span class="pj-reminders-pet-switcher__copy">
+            <small>Питомец</small>
+            <strong><%= @pet.name %></strong>
+          </span>
+          <%= pj_icon(:chevron) %>
+        </summary>
+        <div class="pj-reminders-pet-menu">
+          <% @reminder_pets.each do |pet| %>
+            <%= link_to pet_reminders_path(pet), class: class_names("pj-reminders-pet-option", active: pet == @pet) do %>
+              <span class="pj-reminders-pet-avatar">
+                <% if pet.photo.attached? %>
+                  <%= image_tag pet.photo, alt: "" %>
+                <% else %>
+                  <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
+                <% end %>
+              </span>
+              <span><strong><%= pet.name %></strong><small><%= pet.breed.presence || pet.species.presence || "Питомец" %></small></span>
+            <% end %>
+          <% end %>
+        </div>
+      </details>
 
-  <section class="reminders-filter-panel compact-filter-panel mb-4">
-    <div class="section-heading compact">
-      <div>
-        <div class="filter-panel-title mb-0">Фильтры</div>
-        <div class="compact-filter-summary"><%= reminder_filter_summary(@selected_status, @selected_type) %></div>
+      <div class="pj-reminders-summary" aria-label="Сводка по напоминаниям">
+        <span><strong><%= @active_count %></strong> активно</span>
+        <span class="<%= "is-alert" if @overdue_count.positive? %>"><strong><%= @overdue_count %></strong> просрочено</span>
+        <span><strong><%= @completed_count %></strong> выполнено</span>
       </div>
     </div>
 
-    <%= form_with url: pet_reminders_path(@pet), method: :get, class: "journal-filter-form" do |form| %>
-      <div class="journal-filter-fields">
-        <div class="journal-filter-field">
-          <%= label_tag :status, "Статус" %>
-          <%= select_tag :status,
-                         options_for_select(
-                           [
-                             ["Активные", "active"],
-                             ["Сегодня", "today"],
-                             ["Просроченные", "overdue"],
-                             ["Пауза", "paused"],
-                             ["Выполненные", "completed"],
-                             ["Все", "all"]
-                           ],
-                           @selected_status
-                         ),
-                         class: "form-select" %>
-        </div>
-
-        <div class="journal-filter-field">
-          <%= label_tag :type, "Тип" %>
-          <%= select_tag :type,
-                         options_for_select([["Все типы", ""]] + reminder_type_options, @selected_type),
-                         class: "form-select" %>
-        </div>
+    <%= form_with url: pet_reminders_path(@pet), method: :get, class: "pj-reminders-filters" do |form| %>
+      <div class="pj-reminders-filter">
+        <%= select_tag :status,
+                       options_for_select(
+                         [
+                           ["Все статусы", "all"],
+                           ["Активные", "active"],
+                           ["Сегодня", "today"],
+                           ["Просроченные", "overdue"],
+                           ["Пауза", "paused"],
+                           ["Выполненные", "completed"]
+                         ],
+                         @selected_status
+                       ),
+                       aria: { label: "Статус" } %>
       </div>
 
-      <div class="d-flex flex-wrap gap-2 align-items-center">
-        <%= form.submit "Применить", class: "btn btn-outline-primary" %>
-        <% if @selected_status != "active" || @selected_type.present? %>
-          <%= link_to "Сбросить фильтры", pet_reminders_path(@pet), class: "journal-filter-reset" %>
-        <% end %>
+      <div class="pj-reminders-filter">
+        <%= select_tag :type,
+                       options_for_select([["Все типы", ""]] + reminder_type_options, @selected_type),
+                       aria: { label: "Тип напоминания" } %>
       </div>
+
+      <div class="pj-reminders-filter pj-reminders-filter--search">
+        <span aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.75"/><path d="m15 15 4.25 4.25"/></svg>
+        </span>
+        <%= form.search_field :q,
+                              value: @query,
+                              placeholder: "Поиск по названию или заметке",
+                              aria: { label: "Поиск по напоминаниям" } %>
+      </div>
+
+      <button type="submit" class="pj-reminders-filter-submit" aria-label="Применить фильтры">
+        <span>Применить</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.75"/><path d="m15 15 4.25 4.25"/></svg>
+      </button>
+
+      <% if @selected_status != "active" || @selected_type.present? || @query.present? %>
+        <%= link_to "Сбросить", pet_reminders_path(@pet), class: "pj-reminders-filter-reset" %>
+      <% end %>
     <% end %>
-  </section>
 
-  <div class="reminders-layout">
-    <section class="reminders-main">
-      <div class="dashboard-section">
-        <div class="section-heading">
-          <div>
-            <div class="text-muted small mb-1">Задачи</div>
-            <h2 class="h4 mb-1">Список напоминаний</h2>
-            <p class="text-muted mb-0">Выполняйте, создавайте запись в журнале, откладывайте или ставьте на паузу.</p>
-          </div>
+    <% if @reminders.any? %>
+      <div class="pj-reminders-table-wrap">
+        <div class="pj-reminders-table-head">
+          <span>Название</span>
+          <span>Питомец</span>
+          <span>Тип</span>
+          <span>Дата и время</span>
+          <span>Повтор</span>
+          <span>Статус</span>
+          <span></span>
         </div>
 
-        <% if @reminders.any? %>
-          <div class="reminder-list enhanced">
-            <% @reminders.each do |reminder| %>
-              <article class="reminder-card enhanced <%= "overdue" if reminder.overdue? %>">
-                <div class="reminder-date">
-                  <strong><%= reminder.next_run_at.strftime("%d.%m") %></strong>
-                  <span><%= reminder.next_run_at.strftime("%H:%M") %></span>
-                </div>
-
-                <div class="reminder-body">
-                  <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                    <span class="event-badge"><%= reminder.reminder_type_label %></span>
-                    <span class="<%= reminder_status_class(reminder) %>"><%= reminder_status_label(reminder) %></span>
-                    <span class="status-pill muted"><%= reminder.repeat_rule_label %></span>
-                    <% if reminder.notification_channels.any? %>
-                      <span class="attachment-pill"><%= reminder.notification_channels.size %> канал</span>
-                    <% end %>
-                  </div>
-
-                  <h3 class="h5 mb-1"><%= link_to reminder.title, pet_reminder_path(@pet, reminder), class: "text-dark text-decoration-none" %></h3>
-                  <% if reminder.note.present? %>
-                    <p class="text-muted mb-0"><%= truncate(reminder.note, length: 150) %></p>
-                  <% else %>
-                    <p class="text-muted mb-0">Заметка не указана.</p>
-                  <% end %>
-                </div>
-
-                <div class="reminder-actions">
-                  <% unless reminder.status_completed? %>
-                    <%= button_to "Выполнено", complete_pet_reminder_path(@pet, reminder), method: :patch, class: "btn btn-outline-primary btn-sm" %>
-                    <%= button_to "Выполнено + запись", complete_pet_reminder_path(@pet, reminder, create_event: "1"), method: :patch, class: "btn btn-primary btn-sm" %>
-                    <%= button_to "Отложить на час", snooze_pet_reminder_path(@pet, reminder, preset: "hour"), method: :patch, class: "btn btn-outline-secondary btn-sm" %>
-                    <% if reminder.status_paused? %>
-                      <%= button_to "Включить", resume_pet_reminder_path(@pet, reminder), method: :patch, class: "btn btn-outline-primary btn-sm" %>
-                    <% else %>
-                      <%= button_to "Пауза", pause_pet_reminder_path(@pet, reminder), method: :patch, class: "btn btn-outline-secondary btn-sm" %>
-                    <% end %>
-                  <% end %>
-                </div>
-              </article>
-            <% end %>
-          </div>
-        <% else %>
-          <div class="empty-state-inline">
-            <h3 class="h5 mb-2">По фильтрам ничего нет</h3>
-            <p class="text-muted mb-3">Измените фильтр или создайте новое напоминание с нужным типом.</p>
-            <div class="d-flex flex-wrap gap-2">
-              <%= link_to "Сбросить фильтры", pet_reminders_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
-              <%= link_to "Создать напоминание", new_pet_reminder_path(@pet, type: @selected_type.presence), class: "btn btn-primary btn-sm" %>
-            </div>
-          </div>
+        <% @reminders.each do |reminder| %>
+          <%= link_to pet_reminder_path(@pet, reminder), class: "pj-reminders-row" do %>
+            <span class="pj-reminders-row__title">
+              <span class="pj-reminders-row__icon <%= reminder_type_tone(reminder) %>"><%= reminder_type_icon(reminder.reminder_type) %></span>
+              <span><strong><%= reminder.title %></strong><small><%= reminder.note.present? ? truncate(reminder.note, length: 46) : "Без заметки" %></small></span>
+            </span>
+            <span class="pj-reminders-row__pet"><%= @pet.name %></span>
+            <span><%= reminder.reminder_type_label %></span>
+            <span class="pj-reminders-row__date"><strong><%= reminder.next_run_at.strftime("%d.%m.%Y") %></strong><small><%= reminder.next_run_at.strftime("%H:%M") %></small></span>
+            <span><%= reminder.repeat_rule_label %></span>
+            <span><em class="pj-reminder-status <%= reminder_status_tone(reminder) %>"><%= reminder_status_label(reminder) %></em></span>
+            <span class="pj-reminders-row__chevron"><%= pj_icon(:chevron) %></span>
+          <% end %>
         <% end %>
       </div>
-    </section>
 
-    <aside class="reminders-side">
-      <section class="dashboard-section">
-        <div class="text-muted small mb-1">Доставка</div>
-        <h2 class="h4 mb-3">Каналы уведомлений</h2>
-        <p class="text-muted mb-3">Если каналы не настроены, PetJournal автоматически использует эл. почту аккаунта.</p>
-        <%= link_to "Настроить каналы", notification_channels_path, class: "btn btn-outline-primary btn-sm w-100" %>
-      </section>
-
-      <section class="dashboard-section">
-        <div class="section-heading compact">
-          <div>
-            <div class="text-muted small mb-1">Архив</div>
-            <h2 class="h4 mb-0">Выполненные</h2>
-          </div>
-        </div>
-
-        <% if @completed_reminders.any? %>
-          <div class="compact-list">
-            <% @completed_reminders.each do |reminder| %>
-              <div>
-                <span><%= reminder.title %></span>
-                <strong><%= reminder.last_completed_at&.strftime("%d.%m.%Y") || "—" %></strong>
-              </div>
-            <% end %>
-          </div>
-        <% else %>
-          <p class="text-muted mb-0">Выполненные напоминания появятся здесь.</p>
+      <div class="pj-reminders-mobile-list">
+        <% @reminders.each do |reminder| %>
+          <%= link_to pet_reminder_path(@pet, reminder), class: "pj-reminders-mobile-card" do %>
+            <span class="pj-reminders-row__icon <%= reminder_type_tone(reminder) %>"><%= reminder_type_icon(reminder.reminder_type) %></span>
+            <span class="pj-reminders-mobile-card__body">
+              <small><%= reminder.next_run_at.strftime("%d.%m.%Y, %H:%M") %> · <%= @pet.name %></small>
+              <strong><%= reminder.title %></strong>
+              <span><%= reminder.reminder_type_label %> · <%= reminder.repeat_rule_label %></span>
+              <em class="pj-reminder-status <%= reminder_status_tone(reminder) %>"><%= reminder_status_label(reminder) %></em>
+            </span>
+            <span class="pj-reminders-row__chevron"><%= pj_icon(:chevron) %></span>
+          <% end %>
         <% end %>
+      </div>
+    <% else %>
+      <section class="pj-reminders-empty">
+        <span><%= pj_icon(:bell) %></span>
+        <h2><%= @query.present? || @selected_type.present? || @selected_status != "active" ? "Ничего не найдено" : "Напоминаний пока нет" %></h2>
+        <p>Создайте напоминание о прививке, лекарстве, обработке или другом важном деле.</p>
+        <%= link_to "Создать напоминание", new_pet_reminder_path(@pet), class: "pj-reminders-primary-button" %>
       </section>
-    </aside>
+    <% end %>
   </div>
 </div>
