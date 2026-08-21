@@ -1,10 +1,19 @@
 class PetTagsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_pet
+  before_action :set_pet, except: :index
   before_action :set_pet_tag, only: %i[show edit update rotate_token qr mark_lost mark_found mark_reunited mark_safe]
   before_action :set_notification_channels, only: %i[show edit update]
 
   layout "workspace_new_design"
+
+  def index
+    @pets = current_user.pets.includes(:pet_tag, photo_attachment: :blob).order(:name)
+
+    if @pets.one?
+      redirect_to pet_pet_tag_path(@pets.first)
+      return
+    end
+  end
 
   def show
     @scan_count = @pet_tag.persisted? ? @pet_tag.pet_tag_scans.count : 0
@@ -40,7 +49,7 @@ class PetTagsController < ApplicationController
     @pet_tag.regenerate_public_token
     @pet_tag.update!(token_rotated_at: Time.current)
 
-    redirect_to pet_pet_tag_path(@pet), notice: "Публичная ссылка жетона обновлена."
+    redirect_to pet_pet_tag_path(@pet), notice: "Публичная ссылка жетона обновлена. PetTag ID не изменился."
   end
 
   def mark_lost
