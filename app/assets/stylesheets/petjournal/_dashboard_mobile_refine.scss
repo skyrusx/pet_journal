@@ -30,7 +30,7 @@
   }
 
   .pj-mobile-chrome__header {
-    grid-template-columns: minmax(0, 1fr) 42px;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 10px;
     padding-inline: 16px 14px;
   }
@@ -43,8 +43,27 @@
     width: 116px;
   }
 
-  .pj-mobile-chrome__bell {
-    justify-self: end;
+  .pj-mobile-chrome__header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  .pj-mobile-chrome__header-actions .pj-mobile-chrome__bell {
+    justify-self: auto;
+    transition: color 140ms ease, background 140ms ease, transform 120ms ease;
+  }
+
+  .pj-mobile-chrome__header-actions .pj-mobile-chrome__bell:hover,
+  .pj-mobile-chrome__header-actions .pj-mobile-chrome__bell:focus-visible,
+  .pj-mobile-chrome__header-actions .pj-mobile-chrome__bell.is-active {
+    color: #174f34;
+    background: #eef2e7;
+  }
+
+  .pj-mobile-chrome__header-actions .pj-mobile-chrome__bell:active {
+    transform: scale(.94);
   }
 
   /* User-requested experiment: all product sections are one tap away in the bottom bar. */
