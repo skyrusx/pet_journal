@@ -29,6 +29,9 @@
         <%= link_to root_path, class: "pj-dash-nav__item active", aria: { current: "page", label: "Главная" }, title: "Главная" do %>
           <%= pj_icon(:home) %><span>Главная</span>
         <% end %>
+        <%= link_to pets_path, class: "pj-dash-nav__item", aria: { label: "Питомцы" }, title: "Питомцы" do %>
+          <%= pj_icon(:paw) %><span>Питомцы</span>
+        <% end %>
         <%= link_to journal_path, class: "pj-dash-nav__item", aria: { label: "Журнал" }, title: "Журнал" do %>
           <%= pj_icon(:journal) %><span>Журнал</span>
         <% end %>
@@ -41,22 +44,31 @@
         <%= link_to pettag_path, class: "pj-dash-nav__item", aria: { label: "PetTag" }, title: "PetTag" do %>
           <%= pj_icon(:tag) %><span>PetTag</span>
         <% end %>
-        <%= link_to pets_path, class: "pj-dash-nav__item", aria: { label: "Питомцы" }, title: "Питомцы" do %>
-          <%= pj_icon(:paw) %><span>Питомцы</span>
-        <% end %>
         <%= link_to edit_user_registration_path, class: "pj-dash-nav__item", aria: { label: "Профиль" }, title: "Профиль" do %>
           <%= pj_icon(:user) %><span>Профиль</span>
         <% end %>
       </nav>
 
-      <%= link_to edit_user_registration_path, class: "pj-dash-account", title: display_name do %>
-        <span class="pj-dash-account__avatar"><%= avatar_letter %></span>
-        <span class="pj-dash-account__copy">
-          <strong><%= display_name %></strong>
-          <small><%= current_user.email %></small>
-        </span>
-        <%= pj_icon(:chevron) %>
-      <% end %>
+      <div class="pj-dash-sidebar__footer">
+        <%= link_to edit_user_registration_path, class: "pj-dash-account", title: display_name do %>
+          <span class="pj-dash-account__avatar"><%= avatar_letter %></span>
+          <span class="pj-dash-account__copy">
+            <strong><%= display_name %></strong>
+            <small><%= current_user.email %></small>
+          </span>
+          <%= pj_icon(:chevron) %>
+        <% end %>
+
+        <%= button_to destroy_user_session_path,
+                      method: :delete,
+                      class: "pj-dash-logout",
+                      form_class: "pj-dash-logout-form",
+                      title: "Выйти",
+                      aria: { label: "Выйти из аккаунта" } do %>
+          <%= pj_icon(:logout) %>
+          <span>Выйти</span>
+        <% end %>
+      </div>
     </aside>
 
     <main class="pj-dash-main">
@@ -65,12 +77,17 @@
           <summary aria-label="Открыть меню"><span></span><span></span><span></span></summary>
           <nav class="pj-dash-mobile-menu__panel" aria-label="Мобильное меню">
             <%= link_to "Главная", root_path, class: "active" %>
+            <%= link_to "Питомцы", pets_path %>
             <%= link_to "Журнал", journal_path %>
             <%= link_to "Напоминания", reminders_path %>
             <%= link_to "Документы", documents_path %>
             <%= link_to "PetTag", pettag_path %>
-            <%= link_to "Питомцы", pets_path %>
             <%= link_to "Профиль", edit_user_registration_path %>
+            <%= button_to "Выйти",
+                          destroy_user_session_path,
+                          method: :delete,
+                          class: "pj-dash-mobile-menu__logout",
+                          form_class: "pj-dash-mobile-menu__logout-form" %>
           </nav>
         </details>
 
