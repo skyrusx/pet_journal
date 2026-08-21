@@ -1,11 +1,29 @@
-<div class="py-4">
-  <div class="page-heading mb-4">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1">Новый документ</h1>
-      <p class="text-muted mb-0">Загрузите файл, задайте тип и срок действия.</p>
-    </div>
-  </div>
+<% content_for :title, "Новый документ — PetJournal" %>
 
-  <%= render "form", pet: @pet, document: @document %>
+<div class="pj-documents-page pj-document-form-page">
+  <header class="pj-workspace-topbar">
+    <div class="pj-workspace-topbar__crumbs">
+      <%= link_to "Документы", pet_pet_documents_path(@pet) %>
+      <span>/</span>
+      <span>Новый документ</span>
+    </div>
+    <%= link_to notification_channels_path, class: "pj-workspace-icon", aria: { label: "Настройки уведомлений" } do %>
+      <%= pj_icon(:bell) %>
+    <% end %>
+  </header>
+
+  <div class="pj-documents-content pj-document-form-content">
+    <nav class="pj-mobile-context-nav pj-document-form-mobile-nav" aria-label="Навигация формы">
+      <%= link_to pet_pet_documents_path(@pet), class: "pj-mobile-context-back" do %>
+        <span aria-hidden="true">←</span><span>Документы</span>
+      <% end %>
+    </nav>
+
+    <div class="pj-document-form-heading">
+      <h1>Новый документ</h1>
+      <p>Добавьте основные данные, файлы и при необходимости настройте связанные действия.</p>
+    </div>
+
+    <%= render "form", pet: @pet, document: @document %>
+  </div>
 </div>
