@@ -62,6 +62,7 @@ class PetsController < ApplicationController
 
   def update
     if @pet.update(pet_params)
+      @pet.photo.purge if remove_photo_requested? && @pet.photo.attached?
       redirect_to @pet, notice: "Данные питомца обновлены."
     else
       render :edit, status: :unprocessable_entity
@@ -77,6 +78,10 @@ class PetsController < ApplicationController
   def pet_params
     params.require(:pet).permit(:name, :species, :breed, :sex, :birth_date, :weight, :color, :chip_number,
                                 :passport_number, :neutered, :notes, :photo)
+  end
+
+  def remove_photo_requested?
+    ActiveModel::Type::Boolean.new.cast(params.dig(:pet, :remove_photo))
   end
 
   def latest_events_by_pet_id(pets)
