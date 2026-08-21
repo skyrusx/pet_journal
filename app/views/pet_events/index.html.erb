@@ -80,7 +80,12 @@
                        aria: { label: "Дополнительный фильтр" } %>
       </div>
 
-      <%= form.submit "Применить", class: "pj-journal-filter-submit" %>
+      <button type="submit" class="pj-journal-filter-submit pj-journal-filter-submit--icon" aria-label="Применить фильтры" title="Применить фильтры">
+        <span class="pj-journal-filter-submit__label">Применить</span>
+        <svg class="pj-journal-filter-submit__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h10M18 7h2M4 17h2M10 17h10M14 4v6M8 14v6"/>
+        </svg>
+      </button>
 
       <% if @selected_event_type.present? || @selected_period.present? || @selected_status.present? || @selected_marker.present? || @query.present? %>
         <%= link_to "Сбросить", pet_pet_events_path(@pet), class: "pj-journal-filter-reset" %>
