@@ -47,6 +47,9 @@
 
     <%= form_with url: pet_pet_events_path(@pet), method: :get, class: "pj-journal-filters" do |form| %>
       <div class="pj-journal-filter pj-journal-filter--search">
+        <span class="pj-journal-search-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+        </span>
         <%= form.search_field :q,
                               value: @query,
                               placeholder: "Поиск по событиям",
