@@ -33,7 +33,7 @@
       <%= pj_icon(:journal) %><span>Журнал</span>
     <% end %>
     <%= link_to workspace_reminders_path, class: class_names("pj-dash-nav__item", active: controller_name == "reminders"), aria: { label: "Напоминания" }, title: "Напоминания" do %>
-      <%= pj_icon(:bell) %><span>Напоминания</span>
+      <%= pj_icon(:alarm) %><span>Напоминания</span>
     <% end %>
     <%= link_to workspace_documents_path, class: class_names("pj-dash-nav__item", active: controller_name == "pet_documents"), aria: { label: "Документы" }, title: "Документы" do %>
       <%= pj_icon(:file) %><span>Документы</span>
