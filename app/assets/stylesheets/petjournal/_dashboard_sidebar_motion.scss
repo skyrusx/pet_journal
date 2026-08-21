@@ -2,15 +2,15 @@
 
 @media (min-width: 821px) {
   .pj-dash-shell {
-    transition: grid-template-columns 320ms cubic-bezier(.22, 1, .36, 1);
+    transition: grid-template-columns 480ms cubic-bezier(.4, 0, .2, 1);
   }
 
   .pj-dash-sidebar {
-    transition: padding 320ms cubic-bezier(.22, 1, .36, 1);
+    transition: padding 480ms cubic-bezier(.4, 0, .2, 1);
   }
 
   .pj-dash-sidebar__top {
-    transition: gap 280ms cubic-bezier(.22, 1, .36, 1);
+    transition: gap 430ms cubic-bezier(.4, 0, .2, 1);
   }
 
   .pj-dash-brand {
@@ -19,7 +19,7 @@
     height: 42px;
     flex: 0 1 auto;
     overflow: visible;
-    transition: width 300ms cubic-bezier(.22, 1, .36, 1), margin 300ms cubic-bezier(.22, 1, .36, 1);
+    transition: width 460ms cubic-bezier(.4, 0, .2, 1), margin 460ms cubic-bezier(.4, 0, .2, 1);
   }
 
   .pj-dash-brand__full,
@@ -29,7 +29,7 @@
     top: 50%;
     transform: translateY(-50%);
     transform-origin: left center;
-    transition: opacity 180ms ease, transform 300ms cubic-bezier(.22, 1, .36, 1);
+    transition: opacity 250ms ease, transform 440ms cubic-bezier(.4, 0, .2, 1);
   }
 
   .pj-dash-brand__full {
@@ -48,26 +48,26 @@
 
   .pj-dash-sidebar-toggle {
     transition:
-      color 160ms ease,
-      background 160ms ease,
-      border-color 160ms ease,
-      width 300ms cubic-bezier(.22, 1, .36, 1),
-      height 300ms cubic-bezier(.22, 1, .36, 1),
-      flex-basis 300ms cubic-bezier(.22, 1, .36, 1);
+      color 180ms ease,
+      background 180ms ease,
+      border-color 180ms ease,
+      width 440ms cubic-bezier(.4, 0, .2, 1),
+      height 440ms cubic-bezier(.4, 0, .2, 1),
+      flex-basis 440ms cubic-bezier(.4, 0, .2, 1);
   }
 
   .pj-dash-sidebar-toggle .pj-nav-icon {
-    transition: transform 320ms cubic-bezier(.22, 1, .36, 1);
+    transition: transform 460ms cubic-bezier(.4, 0, .2, 1);
   }
 
   .pj-dash-nav__item {
     transition:
-      width 300ms cubic-bezier(.22, 1, .36, 1),
-      min-height 220ms ease,
-      padding 300ms cubic-bezier(.22, 1, .36, 1),
-      gap 240ms ease,
-      background 160ms ease,
-      color 160ms ease;
+      width 460ms cubic-bezier(.4, 0, .2, 1),
+      min-height 300ms ease,
+      padding 460ms cubic-bezier(.4, 0, .2, 1),
+      gap 360ms ease,
+      background 180ms ease,
+      color 180ms ease;
   }
 
   .pj-dash-nav__item span {
@@ -78,25 +78,27 @@
     transform: translateX(0);
     white-space: nowrap;
     transition:
-      max-width 260ms cubic-bezier(.22, 1, .36, 1),
-      opacity 150ms ease 70ms,
-      transform 220ms cubic-bezier(.22, 1, .36, 1);
+      max-width 390ms cubic-bezier(.4, 0, .2, 1),
+      opacity 240ms ease 90ms,
+      transform 340ms cubic-bezier(.4, 0, .2, 1);
   }
 
-  .pj-dash-account,
-  .pj-dash-logout {
+  .pj-dash-account {
     transition:
-      width 300ms cubic-bezier(.22, 1, .36, 1),
-      padding 300ms cubic-bezier(.22, 1, .36, 1),
-      color 160ms ease,
-      background 160ms ease,
-      border-color 160ms ease;
+      width 460ms cubic-bezier(.4, 0, .2, 1),
+      padding 460ms cubic-bezier(.4, 0, .2, 1),
+      color 180ms ease,
+      background 180ms ease,
+      border-color 180ms ease;
   }
 
-  .pj-dash-account__copy,
-  .pj-dash-logout span {
+  .pj-dash-account__copy {
     opacity: 1;
-    transition: opacity 150ms ease 70ms, transform 220ms cubic-bezier(.22, 1, .36, 1);
+    transition: opacity 240ms ease 90ms, transform 340ms cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .pj-dash-account > .pj-nav-icon {
+    transition: transform 300ms cubic-bezier(.4, 0, .2, 1);
   }
 
   .pj-dash.is-sidebar-collapsed .pj-dash-brand {
@@ -134,14 +136,6 @@
     transform: translateX(-5px);
     pointer-events: none;
   }
-
-  .pj-dash.is-sidebar-collapsed .pj-dash-logout span {
-    display: inline-block;
-    width: 0;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateX(-5px);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -157,8 +151,7 @@
   .pj-dash-nav__item span,
   .pj-dash-account,
   .pj-dash-account__copy,
-  .pj-dash-logout,
-  .pj-dash-logout span {
+  .pj-dash-account > .pj-nav-icon {
     transition: none !important;
   }
 }
