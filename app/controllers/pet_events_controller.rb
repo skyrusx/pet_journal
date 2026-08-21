@@ -1,7 +1,10 @@
 class PetEventsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pet
+  before_action :set_journal_pets
   before_action :set_pet_event, only: %i[show edit update destroy]
+
+  layout "workspace_new_design"
 
   def index
     @event_type_filters = PetEvent::EVENT_TYPE_LABELS
@@ -60,6 +63,10 @@ class PetEventsController < ApplicationController
 
   def set_pet
     @pet = current_user.pets.find(params[:pet_id])
+  end
+
+  def set_journal_pets
+    @journal_pets = current_user.pets.with_attached_photo.order(:name).to_a
   end
 
   def set_pet_event
