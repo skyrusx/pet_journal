@@ -6,12 +6,18 @@
       <%= pj_icon(:chevron) %><span>Назад к журналу</span>
     <% end %>
 
-    <div class="pj-journal-detail-actions">
-      <%= button_to "Удалить",
-                    pet_pet_event_path(@pet, @pet_event),
+    <div class="pj-desktop-detail-actions" aria-label="Действия с событием">
+      <%= button_to pet_pet_event_path(@pet, @pet_event),
                     method: :delete,
-                    class: "pj-journal-edit-delete",
-                    form: { onsubmit: "return confirm('Удалить событие?')" } %>
+                    class: "pj-desktop-detail-action pj-desktop-detail-action--danger",
+                    form_class: "pj-desktop-detail-action-form",
+                    form: { onsubmit: "return confirm('Удалить событие?')" },
+                    aria: { label: "Удалить событие" },
+                    title: "Удалить" do %>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+        </svg>
+      <% end %>
     </div>
   </header>
 
