@@ -1,11 +1,52 @@
-<div class="py-4">
-  <div class="page-heading mb-4">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1">Редактировать напоминание</h1>
-      <p class="text-muted mb-0">Измените срок, повтор или описание задачи.</p>
-    </div>
-  </div>
+<% content_for :title, "Редактировать #{@reminder.title} — PetJournal" %>
 
-  <%= render "form", pet: @pet, reminder: @reminder %>
+<div class="pj-reminders-page pj-reminder-form-page">
+  <header class="pj-workspace-topbar pj-workspace-topbar--form">
+    <%= link_to pet_reminder_path(@pet, @reminder), class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>Назад к напоминанию</span>
+    <% end %>
+
+    <div class="pj-desktop-detail-actions" aria-label="Действия с напоминанием">
+      <%= button_to pet_reminder_path(@pet, @reminder),
+                    method: :delete,
+                    class: "pj-desktop-detail-action pj-desktop-detail-action--danger",
+                    form_class: "pj-desktop-detail-action-form",
+                    form: { onsubmit: "return confirm('Удалить напоминание?')" },
+                    aria: { label: "Удалить напоминание" },
+                    title: "Удалить" do %>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+        </svg>
+      <% end %>
+    </div>
+  </header>
+
+  <div class="pj-reminders-content pj-reminder-form-content">
+    <div class="pj-mobile-detail-nav pj-mobile-form-nav">
+      <%= link_to pet_reminder_path(@pet, @reminder), class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К напоминанию</span>
+      <% end %>
+
+      <div class="pj-mobile-detail-actions" aria-label="Действия с напоминанием">
+        <%= button_to pet_reminder_path(@pet, @reminder),
+                      method: :delete,
+                      class: "pj-mobile-detail-action pj-mobile-detail-action--danger",
+                      form_class: "pj-mobile-detail-action-form",
+                      form: { onsubmit: "return confirm('Удалить напоминание?')" },
+                      aria: { label: "Удалить напоминание" },
+                      title: "Удалить" do %>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+          </svg>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="pj-reminder-form-heading">
+      <h1>Редактировать напоминание</h1>
+      <p>Измените срок, повтор, заметку или каналы уведомлений.</p>
+    </div>
+
+    <%= render "form", pet: @pet, reminder: @reminder %>
+  </div>
 </div>
