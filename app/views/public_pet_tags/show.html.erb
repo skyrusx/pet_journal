@@ -1,118 +1,96 @@
-<div class="public-pet-page">
-  <main class="public-pet-card">
-    <div class="public-pet-photo-wrap">
-      <% if @pet.photo.attached? %>
-        <%= image_tag @pet.photo, class: "public-pet-photo", alt: @pet.name %>
-      <% else %>
-        <div class="public-pet-photo public-pet-photo-placeholder">
+<% content_for :title, "#{@pet.name} — PetTag — PetJournal" %>
+
+<div class="pj-public-pettag">
+  <header class="pj-public-pettag__brand">
+    <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
+    <span>PetTag</span>
+  </header>
+
+  <main class="pj-public-pettag__shell <%= "is-lost" if @pet_tag.status_lost? %>">
+    <section class="pj-public-pettag__identity">
+      <span class="pj-public-pettag__avatar">
+        <% if @pet.photo.attached? %>
+          <%= image_tag @pet.photo, alt: @pet.name %>
+        <% else %>
           <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
-        </div>
+        <% end %>
+      </span>
+      <div>
+        <h1><%= @pet.name %></h1>
+        <p><%= @pet.breed.presence || @pet.species.presence || "Питомец" %></p>
+      </div>
+      <span class="pj-public-pettag__status <%= @pet_tag.status_lost? ? "is-danger" : @pet_tag.status_found? ? "is-warning" : "is-success" %>">
+        <%= pet_tag_status_label(@pet_tag) %>
+      </span>
+    </section>
+
+    <% if @pet_tag.status_lost? %>
+      <section class="pj-public-pettag__alert">
+        <strong><%= @pet.name %> потерялся!</strong>
+        <p><%= @pet_tag.lost_message.presence || "Пожалуйста, свяжитесь с владельцем как можно скорее." %></p>
+        <% if @pet_tag.last_seen_location.present? %><small>Последнее место: <%= @pet_tag.last_seen_location %></small><% end %>
+      </section>
+    <% elsif @pet_tag.status_found? %>
+      <section class="pj-public-pettag__notice">
+        <strong>Питомца уже нашли</strong>
+        <p><%= @pet_tag.found_message.presence || "Владелец уже получил сообщение, но дополнительная информация всё ещё может быть полезна." %></p>
+      </section>
+    <% end %>
+
+    <% if @pet_tag.public_message.present? %>
+      <section class="pj-public-pettag__message"><%= @pet_tag.public_message %></section>
+    <% end %>
+
+    <% if @pet_tag.show_phone? && @pet_tag.contact_phone.present? %>
+      <%= link_to "Позвонить владельцу",
+                  "tel:#{@pet_tag.contact_phone.gsub(/[^\d+]/, "")}",
+                  class: "pj-public-pettag__call" %>
+    <% end %>
+
+    <div class="pj-public-pettag__info-grid">
+      <% if @pet_tag.behavior_notes.present? %>
+        <section><span>Поведение</span><p><%= @pet_tag.behavior_notes %></p></section>
+      <% end %>
+      <% if @pet_tag.show_medical_notes? && @pet_tag.medical_notes.present? %>
+        <section><span>Важно для здоровья</span><p><%= @pet_tag.medical_notes %></p></section>
       <% end %>
     </div>
 
-    <div class="public-pet-content">
-      <div class="public-kicker">PetJournal PetTag</div>
-      <% if @pet_tag.status_lost? %>
-        <div class="lost-mode-banner">Я потерялся</div>
-      <% elsif @pet_tag.status_found? %>
-        <div class="lost-mode-banner found">Меня нашли</div>
-      <% elsif @pet_tag.status_reunited? %>
-        <div class="lost-mode-banner safe">Я уже дома</div>
-      <% end %>
-      <h1 class="display-6 fw-semibold mb-2"><%= @pet.name %></h1>
-
-      <% if @pet_tag.status_lost? %>
-        <div class="lost-mode-message">
-          <h2>Нужна помощь</h2>
-          <p><%= @pet_tag.lost_message.presence || "Пожалуйста, свяжитесь с владельцем как можно скорее." %></p>
-          <% if @pet_tag.last_seen_location.present? %>
-            <div class="last-seen">Последнее место: <%= @pet_tag.last_seen_location %></div>
-          <% end %>
+    <section class="pj-public-pettag__found">
+      <% if @pet_tag_scan.location_shared? %>
+        <div class="pj-public-pettag__thanks">
+          <strong>Спасибо, информация уже отправлена владельцу.</strong>
+          <p>Повторная отправка из этого открытия PetTag заблокирована.</p>
         </div>
-      <% elsif @pet_tag.status_found? %>
-        <div class="lost-mode-message">
-          <h2>Питомца уже нашли</h2>
-          <p><%= @pet_tag.found_message.presence || "Владелец уже получил сообщение. Если питомец рядом с вами, все равно можно отправить контакт ниже." %></p>
-        </div>
-      <% end %>
-
-      <p class="lead text-muted mb-4">
-        <%= @pet_tag.public_message.presence || "Если вы нашли этого питомца, пожалуйста, свяжитесь с владельцем." %>
-      </p>
-
-      <div class="public-info-list">
-        <% if @pet_tag.behavior_notes.present? %>
-          <section>
-            <h2>Поведение</h2>
-            <p><%= @pet_tag.behavior_notes %></p>
-          </section>
-        <% end %>
-
-        <% if @pet_tag.show_medical_notes? && @pet_tag.medical_notes.present? %>
-          <section>
-            <h2>Важно для здоровья</h2>
-            <p><%= @pet_tag.medical_notes %></p>
-          </section>
-        <% end %>
-      </div>
-
-      <div class="public-action-panel">
-        <% if @pet_tag.show_phone? && @pet_tag.contact_phone.present? %>
-          <%= link_to "Позвонить владельцу",
-                      "tel:#{@pet_tag.contact_phone.gsub(/[^\d+]/, "")}",
-                      class: "btn #{@pet_tag.lost_mode_enabled? ? "btn-danger" : "btn-primary"} btn-lg" %>
-        <% else %>
-          <div class="public-safe-note">
-            Контакт владельца скрыт. Проверьте жетон или обратитесь в ближайшую ветклинику для помощи.
-          </div>
-        <% end %>
-      </div>
-
-      <section class="found-pet-panel">
-        <div class="found-pet-heading">
-          <div>
-            <h2>Я нашел питомца</h2>
-            <p>Можно один раз отправить владельцу контакт и примерное место. Браузер спросит разрешение на геолокацию отдельно.</p>
-          </div>
+      <% else %>
+        <div class="pj-public-pettag__found-heading">
+          <h2>Я нашёл питомца</h2>
+          <p>Оставьте контакт и примерное место. Геолокация передаётся только после вашего разрешения.</p>
         </div>
 
-        <%= form_with url: public_pet_tag_location_path(@pet_tag.public_token), method: :post, local: true, class: "found-pet-form" do |f| %>
+        <%= form_with url: public_pet_tag_location_path(@pet_tag.public_token), method: :post, local: true, class: "pj-public-pettag__form" do %>
           <%= hidden_field_tag :scan_token, @pet_tag_scan.public_token %>
           <%= hidden_field_tag :latitude, nil, id: "location-latitude" %>
           <%= hidden_field_tag :longitude, nil, id: "location-longitude" %>
 
-          <div class="row g-3 mb-3">
-            <div class="col-md-6">
-              <%= label_tag :finder_name, "Ваше имя", class: "form-label" %>
-              <%= text_field_tag :finder_name, nil, class: "form-control", placeholder: "Как к вам обращаться" %>
-            </div>
-
-            <div class="col-md-6">
-              <%= label_tag :finder_contact, "Контакт для связи", class: "form-label" %>
-              <%= text_field_tag :finder_contact, nil, class: "form-control", placeholder: "Телефон или мессенджер" %>
-            </div>
+          <div class="pj-public-pettag__field-row">
+            <label><span>Ваше имя</span><%= text_field_tag :finder_name, nil, placeholder: "Как к вам обращаться" %></label>
+            <label><span>Контакт для связи</span><%= text_field_tag :finder_contact, nil, placeholder: "Телефон или мессенджер" %></label>
           </div>
+          <label><span>Ориентир</span><%= text_field_tag :location_note, nil, placeholder: "Например, у входа в парк" %></label>
+          <label><span>Сообщение владельцу</span><%= text_area_tag :finder_message, nil, rows: 3, placeholder: "Где питомец и в каком он состоянии" %></label>
 
-          <div class="mb-3">
-            <%= label_tag :location_note, "Ориентир или комментарий", class: "form-label" %>
-            <%= text_field_tag :location_note, nil, class: "form-control", placeholder: "Например: у входа в парк" %>
+          <div class="pj-public-pettag__form-actions">
+            <button type="button" class="pj-public-pettag__secondary" data-location-button>Добавить геолокацию</button>
+            <%= submit_tag "Отправить владельцу", class: "pj-public-pettag__submit" %>
           </div>
-
-          <div class="mb-3">
-            <%= label_tag :finder_message, "Сообщение владельцу", class: "form-label" %>
-            <%= text_area_tag :finder_message, nil, rows: 3, class: "form-control", placeholder: "Где питомец сейчас, в каком он состоянии, как быстрее связаться" %>
-          </div>
-
-          <div class="d-flex flex-wrap gap-2">
-            <button class="btn btn-outline-primary" type="button" data-location-button>Определить геолокацию</button>
-            <%= submit_tag "Отправить владельцу", class: "btn btn-primary" %>
-          </div>
-
-          <div class="location-status text-muted small mt-2" data-location-status></div>
+          <div class="pj-public-pettag__location-status" data-location-status></div>
         <% end %>
-      </section>
-    </div>
+      <% end %>
+    </section>
   </main>
+
+  <footer class="pj-public-pettag__footer">PetJournal · Только данные, которыми владелец решил поделиться</footer>
 </div>
 
 <script>
@@ -121,7 +99,6 @@
     var status = document.querySelector("[data-location-status]");
     var latitude = document.getElementById("location-latitude");
     var longitude = document.getElementById("location-longitude");
-
     if (!button || !status || !latitude || !longitude) return;
 
     button.addEventListener("click", function () {
@@ -129,15 +106,13 @@
         status.textContent = "Геолокация недоступна в этом браузере.";
         return;
       }
-
-      status.textContent = "Запрашиваем разрешение на геолокацию...";
-
+      status.textContent = "Запрашиваем разрешение…";
       navigator.geolocation.getCurrentPosition(function (position) {
         latitude.value = position.coords.latitude;
         longitude.value = position.coords.longitude;
-        status.textContent = "Геолокация добавлена. Теперь можно отправить ее владельцу.";
+        status.textContent = "Геолокация добавлена и будет отправлена вместе с сообщением.";
       }, function () {
-        status.textContent = "Геолокация не получена. Можно отправить только ориентир.";
+        status.textContent = "Геолокация не получена. Можно отправить ориентир вручную.";
       }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
     });
   });
