@@ -1,0 +1,414 @@
+/* Final visual alignment for Reminders.
+   Reuse the same desktop proportions, surfaces, typography and controls as Pets/Journal. */
+
+@media (min-width: 821px) {
+  .pj-reminders-content {
+    width: min(1180px, calc(100% - 72px));
+    padding: 32px 0 44px;
+  }
+
+  .pj-reminders-heading {
+    min-height: 40px;
+    margin-bottom: 18px;
+  }
+
+  .pj-reminders-heading p,
+  .pj-reminder-form-heading p {
+    color: #939791;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .pj-reminders-primary-button,
+  .pj-reminder-form-cancel,
+  .pj-reminder-filter-submit,
+  .pj-reminder-complete-button,
+  .pj-reminder-secondary-button {
+    min-height: 38px;
+    padding-inline: 16px;
+    border-radius: 7px;
+    font-size: 13px;
+  }
+
+  /* List page: match the Journal toolbar/filter/table rhythm. */
+  .pj-reminders-toolbar {
+    gap: 18px;
+    margin-bottom: 14px;
+  }
+
+  .pj-reminders-pet-switcher > summary {
+    min-width: 190px;
+    min-height: 39px;
+    grid-template-columns: 28px minmax(0, 1fr) 15px;
+    gap: 8px;
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+
+  .pj-reminders-pet-avatar {
+    width: 27px;
+    height: 27px;
+    flex-basis: 27px;
+    font-size: 10px;
+  }
+
+  .pj-reminders-pet-switcher__copy small {
+    display: none;
+  }
+
+  .pj-reminders-pet-switcher__copy strong {
+    font-size: 13px;
+  }
+
+  .pj-reminders-summary {
+    gap: 6px;
+  }
+
+  .pj-reminders-summary > span {
+    min-height: 30px;
+    padding: 0 9px;
+    border-color: #e6e1d7;
+    background: #fffefa;
+    font-size: 11px;
+  }
+
+  .pj-reminders-summary strong {
+    font-size: 12px;
+  }
+
+  .pj-reminders-filters {
+    grid-template-columns: 150px 150px minmax(220px, 1fr) auto auto;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 10px;
+    border-color: #e6e1d7;
+    border-radius: 9px;
+  }
+
+  .pj-reminders-filter select,
+  .pj-reminders-filter input {
+    height: 37px;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+
+  .pj-reminder-filter-submit {
+    min-height: 37px;
+    border-radius: 7px;
+    font-size: 12px;
+  }
+
+  .pj-reminders-table-wrap {
+    border-color: #e6e1d7;
+    border-radius: 10px;
+  }
+
+  .pj-reminders-table-head,
+  .pj-reminders-row {
+    grid-template-columns: minmax(230px, 1.5fr) 125px 120px 135px 130px 105px 20px;
+    gap: 12px;
+  }
+
+  .pj-reminders-table-head {
+    min-height: 38px;
+    padding: 0 14px;
+    color: #8a908a;
+    background: #f6f4ee;
+    font-size: 11px;
+  }
+
+  .pj-reminders-row {
+    min-height: 64px;
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+
+  .pj-reminders-row__icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+  }
+
+  .pj-reminders-row__title {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 9px;
+  }
+
+  .pj-reminders-row__title strong {
+    font-size: 13px;
+  }
+
+  .pj-reminders-row__title small,
+  .pj-reminders-row__date small {
+    font-size: 11px;
+  }
+
+  .pj-reminder-status {
+    min-height: 22px;
+    padding-inline: 8px;
+    font-size: 10.5px;
+  }
+
+  /* Detail page: same composition as Journal event details. */
+  .pj-reminder-detail-content {
+    padding-top: 28px;
+  }
+
+  .pj-reminder-detail-grid {
+    grid-template-columns: minmax(0, 1fr) 250px;
+    gap: 24px;
+  }
+
+  .pj-reminder-detail-card,
+  .pj-reminder-history-card {
+    border: 1px solid #e5dfd5;
+    border-radius: 10px;
+    background: #fffefa;
+  }
+
+  .pj-reminder-detail-card {
+    padding: 18px;
+  }
+
+  .pj-reminder-detail-heading {
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+    gap: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e9e4da;
+  }
+
+  .pj-reminder-detail-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+  }
+
+  .pj-reminder-detail-heading h1 {
+    margin: 0 0 3px;
+    color: #354139;
+    font-family: "Prata", Georgia, serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.25;
+  }
+
+  .pj-reminder-detail-heading p {
+    margin: 0;
+    color: #929791;
+    font-size: 12px;
+  }
+
+  .pj-reminder-detail-list {
+    margin: 0;
+  }
+
+  .pj-reminder-detail-list > div {
+    min-height: 44px;
+    grid-template-columns: 160px minmax(0, 1fr);
+    gap: 18px;
+    border-bottom: 1px solid #ebe6dd;
+  }
+
+  .pj-reminder-detail-list dt {
+    color: #8a908a;
+    font-size: 12px;
+  }
+
+  .pj-reminder-detail-list dd {
+    color: #455149;
+    font-size: 13px;
+  }
+
+  .pj-reminder-note {
+    margin-top: 14px;
+  }
+
+  .pj-reminder-note h2,
+  .pj-reminder-history-card h2 {
+    font-size: 14px;
+  }
+
+  .pj-reminder-note p {
+    border-radius: 8px;
+    font-size: 13px;
+  }
+
+  .pj-reminder-history-card {
+    padding: 14px;
+  }
+
+  .pj-reminder-history-row strong,
+  .pj-reminder-delivery-row strong {
+    font-size: 12px;
+  }
+
+  .pj-reminder-history-row small,
+  .pj-reminder-delivery-row small,
+  .pj-reminder-history-empty {
+    font-size: 11px;
+  }
+
+  .pj-reminder-action-bar {
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e9e4da;
+  }
+
+  /* Create/edit: one unified workspace form instead of a visually separate mini-app. */
+  .pj-reminder-form-content {
+    width: min(1180px, calc(100% - 72px));
+    padding: 28px 0 44px;
+  }
+
+  .pj-reminder-form-heading {
+    margin-bottom: 16px;
+  }
+
+  .pj-reminder-form-heading h1 {
+    margin: 0 0 4px;
+    color: #354139;
+    font-family: "Prata", Georgia, serif;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .pj-reminder-form {
+    overflow: hidden;
+    border: 1px solid #e5dfd5;
+    border-radius: 10px;
+    background: #fffefa;
+  }
+
+  .pj-reminder-form-grid {
+    grid-template-columns: minmax(0, 1.45fr) minmax(320px, .95fr);
+    gap: 0;
+  }
+
+  .pj-reminder-form-grid > .pj-reminder-form-card {
+    padding: 20px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .pj-reminder-form-side {
+    gap: 0;
+    border-left: 1px solid #ebe6dd;
+  }
+
+  .pj-reminder-form-side > .pj-reminder-form-card {
+    padding: 20px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .pj-reminder-form-side > .pj-reminder-form-card + .pj-reminder-form-card {
+    border-top: 1px solid #ebe6dd;
+  }
+
+  .pj-reminder-form-card__heading {
+    margin-bottom: 16px;
+  }
+
+  .pj-reminder-form-card__heading h2 {
+    margin: 0 0 4px;
+    color: #3b473f;
+    font-size: 14px;
+    font-weight: 750;
+  }
+
+  .pj-reminder-form-card__heading p {
+    margin: 0;
+    color: #929791;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .pj-reminder-field {
+    margin-bottom: 14px;
+  }
+
+  .pj-reminder-field > label,
+  .pj-reminder-field__label {
+    margin-bottom: 6px;
+    color: #4b584f;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .pj-reminder-field input,
+  .pj-reminder-field select {
+    min-height: 40px;
+    padding: 0 11px;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+
+  .pj-reminder-field textarea {
+    min-height: 100px;
+    padding: 10px 11px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .pj-reminder-form-pet {
+    min-height: 54px;
+    padding: 8px 10px;
+    border: 1px solid #e3ded3;
+    border-radius: 7px;
+    background: #fbfaf6;
+  }
+
+  .pj-reminder-form-pet strong {
+    font-size: 13px;
+  }
+
+  .pj-reminder-form-pet small {
+    font-size: 11px;
+  }
+
+  .pj-reminder-presets {
+    gap: 6px;
+    margin-top: 7px;
+  }
+
+  .pj-reminder-presets button {
+    min-height: 28px;
+    padding: 0 8px;
+    border-radius: 6px;
+    font-size: 10.5px;
+  }
+
+  .pj-reminder-channel {
+    min-height: 46px;
+    padding: 8px 10px;
+    border-radius: 7px;
+  }
+
+  .pj-reminder-channel strong {
+    font-size: 12px;
+  }
+
+  .pj-reminder-channel small,
+  .pj-reminder-channel-hint {
+    font-size: 11px;
+  }
+
+  .pj-reminder-form-actions {
+    margin: 0;
+    padding: 14px 20px;
+    border-top: 1px solid #ebe6dd;
+    background: #fffefa;
+  }
+
+  .pj-reminder-form-cancel {
+    min-width: 110px;
+    border: 1px solid #ded9cf;
+    color: #58655d;
+    background: #fffefa;
+  }
+}
