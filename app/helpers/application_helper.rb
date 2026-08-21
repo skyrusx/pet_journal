@@ -9,6 +9,21 @@ module ApplicationHelper
     end
   end
 
+  def pet_age_label(birth_date, today: Date.current)
+    return nil if birth_date.blank?
+
+    months = (today.year - birth_date.year) * 12 + today.month - birth_date.month
+    months -= 1 if today.day < birth_date.day
+    months = [months, 0].max
+
+    years, remaining_months = months.divmod(12)
+    parts = []
+    parts << "#{years} #{russian_plural(years, "год", "года", "лет")}" if years.positive?
+    parts << "#{remaining_months} #{russian_plural(remaining_months, "месяц", "месяца", "месяцев")}" if remaining_months.positive?
+
+    parts.presence&.join(" ") || "меньше месяца"
+  end
+
   def app_nav_link(label, path, active: false, **options)
     classes = class_names("app-nav-link", active: active)
     link_to(label, path, options.merge(class: classes))
