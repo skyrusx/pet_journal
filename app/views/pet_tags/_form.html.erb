@@ -101,11 +101,10 @@
               <small>Последняя замена: <%= @pet_tag.token_rotated_at.strftime("%d.%m.%Y %H:%M") %></small>
             <% end %>
           </div>
-          <%= button_to "Обновить ссылку",
-                        rotate_token_pet_pet_tag_path(@pet),
-                        method: :patch,
-                        class: "pj-pettag-token-rotate",
-                        form: { onsubmit: "return confirm('Обновить публичную ссылку? Старый QR-код перестанет работать.')" } %>
+          <%= link_to "Обновить ссылку",
+                      rotate_token_pet_pet_tag_path(@pet),
+                      class: "pj-pettag-token-rotate",
+                      data: { turbo_method: :patch, turbo_confirm: "Обновить публичную ссылку? Старый QR-код перестанет работать." } %>
         </div>
       <% end %>
     </section>
