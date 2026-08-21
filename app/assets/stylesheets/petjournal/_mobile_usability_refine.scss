@@ -1,5 +1,9 @@
 /* Mobile usability pass after real-device visual review. */
 
+.pj-mobile-list-heading {
+  display: none;
+}
+
 .pj-journal-filter--search {
   position: relative;
 }
@@ -42,6 +46,34 @@
 }
 
 @media (max-width: 820px) {
+  /* All mobile list pages share one title/subtitle hierarchy. */
+  .pj-mobile-list-heading {
+    display: grid;
+    gap: 5px;
+    margin-bottom: 16px;
+  }
+
+  .pj-mobile-list-heading h1 {
+    margin: 0;
+    color: #354139;
+    font-family: "Prata", Georgia, serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.25;
+  }
+
+  .pj-mobile-list-heading p {
+    margin: 0;
+    color: #899189;
+    font-size: var(--pj-font-meta);
+    line-height: 1.45;
+  }
+
+  .pj-pets-page--index .pj-pets-heading,
+  .pj-journal-mobile-title {
+    display: none !important;
+  }
+
   /* The bottom navigation already closes the mobile workspace visually. */
   .pj-dash-footer,
   .pj-workspace-footer {
@@ -92,6 +124,34 @@
     line-height: 1.2;
   }
 
+  /* Journal: the pet selector owns the toolbar on mobile; adding is handled by the central + button. */
+  .pj-journal-toolbar {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .pj-journal-toolbar .pj-journal-add {
+    display: none !important;
+  }
+
+  .pj-journal-pet-switcher {
+    display: block;
+    width: 100%;
+  }
+
+  .pj-journal-pet-switcher > summary {
+    width: 100%;
+    min-width: 0 !important;
+    min-height: 44px;
+    padding: 6px 12px;
+  }
+
+  .pj-journal-pet-menu {
+    width: 100% !important;
+    max-width: none;
+  }
+
   /* Journal search gets a real magnifier and the compact action gets an explicit filter icon. */
   .pj-journal-search-icon {
     left: 13px;
@@ -111,7 +171,18 @@
   .pj-journal-filter-submit--icon {
     min-width: 42px;
     width: 42px;
+    min-height: 42px;
+    height: 42px;
+    display: grid !important;
+    place-items: center;
     padding: 0 !important;
+    color: #fff !important;
+    line-height: 1;
+  }
+
+  .pj-journal-filter-submit--icon::after {
+    content: none !important;
+    display: none !important;
   }
 
   .pj-journal-filter-submit__label {
@@ -122,9 +193,58 @@
     width: 20px;
     height: 20px;
     display: block;
+    margin: 0;
     fill: none;
     stroke: currentColor;
     stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Journal event cards expose editing exactly as a separate trailing action. */
+  .pj-journal-mobile-card-wrap {
+    min-width: 0;
+    min-height: 92px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 38px;
+    align-items: center;
+    gap: 6px;
+    padding-right: 8px;
+    overflow: hidden;
+    border: 1px solid #e7e1d7;
+    border-radius: 9px;
+    background: #fffefa;
+  }
+
+  .pj-journal-mobile-card-wrap .pj-journal-mobile-card {
+    min-height: 90px;
+    grid-template-columns: 37px minmax(0, 1fr);
+    gap: 9px;
+    padding: 11px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .pj-journal-mobile-card__edit {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    justify-self: end;
+    border: 1px solid #e2ded4;
+    border-radius: 50%;
+    color: #657169;
+    background: #f8f7f2;
+    text-decoration: none;
+  }
+
+  .pj-journal-mobile-card__edit svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.65;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
