@@ -3,7 +3,6 @@
 <% reminders_path = primary_pet ? pet_reminders_path(primary_pet) : pets_path %>
 <% documents_path = primary_pet ? pet_pet_documents_path(primary_pet) : pets_path %>
 <% pettag_path = primary_pet ? pet_pet_tag_path(primary_pet) : pets_path %>
-<% display_name = current_user.name.presence || current_user.email.to_s.split("@").first.presence || "Аккаунт" %>
 
 <div class="pj-mobile-chrome" data-dashboard-mobile-chrome>
   <header class="pj-mobile-chrome__header">
@@ -55,39 +54,9 @@
     </div>
   </section>
 
-  <section class="pj-mobile-sheet" data-dashboard-sheet="profile" aria-hidden="true" aria-labelledby="pj-mobile-profile-title">
+  <section class="pj-mobile-sheet" data-dashboard-sheet="more" aria-hidden="true" aria-label="Дополнительные разделы">
     <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
-    <div class="pj-mobile-sheet__head">
-      <div>
-        <small><%= current_user.email %></small>
-        <h2 id="pj-mobile-profile-title"><%= display_name %></h2>
-      </div>
-      <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
-    </div>
-
-    <div class="pj-mobile-sheet__actions">
-      <%= link_to edit_user_registration_path, class: "pj-mobile-sheet__action" do %>
-        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:user) %></span>
-        <span><strong>Профиль</strong><small>Аккаунт и персональные данные</small></span>
-      <% end %>
-
-      <%= button_to destroy_user_session_path,
-                    method: :delete,
-                    class: "pj-mobile-sheet__action pj-mobile-sheet__action--logout",
-                    form_class: "pj-mobile-sheet__logout-form" do %>
-        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:logout) %></span>
-        <span><strong>Выйти</strong><small>Завершить текущую сессию</small></span>
-      <% end %>
-    </div>
-  </section>
-
-  <section class="pj-mobile-sheet" data-dashboard-sheet="more" aria-hidden="true" aria-labelledby="pj-mobile-more-title">
-    <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
-    <div class="pj-mobile-sheet__head">
-      <div>
-        <small>PetJournal</small>
-        <h2 id="pj-mobile-more-title">Ещё</h2>
-      </div>
+    <div class="pj-mobile-sheet__head pj-mobile-sheet__head--icon-only">
       <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
     </div>
 
@@ -100,6 +69,19 @@
       <%= link_to pettag_path, class: "pj-mobile-sheet__action" do %>
         <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:tag) %></span>
         <span><strong>PetTag</strong><small>QR-профиль и безопасность</small></span>
+      <% end %>
+
+      <%= link_to edit_user_registration_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:user) %></span>
+        <span><strong>Профиль</strong><small>Аккаунт и персональные данные</small></span>
+      <% end %>
+
+      <%= button_to destroy_user_session_path,
+                    method: :delete,
+                    class: "pj-mobile-sheet__action pj-mobile-sheet__action--logout",
+                    form_class: "pj-mobile-sheet__logout-form" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:logout) %></span>
+        <span><strong>Выйти</strong><small>Завершить текущую сессию</small></span>
       <% end %>
     </nav>
   </section>
@@ -126,19 +108,11 @@
     <% end %>
 
     <button type="button"
-            class="pj-mobile-tabs__item pj-mobile-tabs__profile"
-            aria-label="Профиль"
-            aria-expanded="false"
-            data-dashboard-sheet-toggle="profile">
-      <%= pj_icon(:user) %><span>Профиль</span>
-    </button>
-
-    <button type="button"
-            class="pj-mobile-tabs__item pj-mobile-tabs__more"
+            class="pj-mobile-tabs__item pj-mobile-tabs__more pj-mobile-tabs__more--icon-only"
             aria-label="Ещё"
             aria-expanded="false"
             data-dashboard-sheet-toggle="more">
-      <%= pj_icon(:more) %><span>Ещё</span>
+      <%= pj_icon(:more) %>
     </button>
   </nav>
 </div>
