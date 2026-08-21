@@ -10,9 +10,21 @@
       <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
     <% end %>
 
-    <%= link_to reminders_path, class: "pj-mobile-chrome__bell", aria: { label: "Напоминания" }, title: "Напоминания" do %>
-      <%= pj_icon(:bell) %>
-    <% end %>
+    <div class="pj-mobile-chrome__header-actions" aria-label="Быстрые разделы">
+      <%= link_to reminders_path,
+                  class: class_names("pj-mobile-chrome__bell", "is-active": controller_name == "reminders"),
+                  aria: { label: "Напоминания", current: controller_name == "reminders" ? "page" : nil },
+                  title: "Напоминания" do %>
+        <%= pj_icon(:alarm) %>
+      <% end %>
+
+      <%= link_to notification_channels_path,
+                  class: class_names("pj-mobile-chrome__bell", "is-active": controller_name == "notification_channels"),
+                  aria: { label: "Настройки уведомлений", current: controller_name == "notification_channels" ? "page" : nil },
+                  title: "Настройки уведомлений" do %>
+        <%= pj_icon(:bell) %>
+      <% end %>
+    </div>
   </header>
 
   <div class="pj-mobile-chrome__backdrop" data-dashboard-sheet-backdrop hidden></div>
@@ -40,7 +52,7 @@
         <% end %>
 
         <%= link_to new_pet_reminder_path(primary_pet), class: "pj-mobile-sheet__action" do %>
-          <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:bell) %></span>
+          <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:alarm) %></span>
           <span><strong>Напоминание</strong><small>Чтобы ничего не забыть</small></span>
         <% end %>
 
