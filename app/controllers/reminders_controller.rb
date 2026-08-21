@@ -7,6 +7,8 @@ class RemindersController < ApplicationController
   def index
     @selected_status = params[:status].presence_in(%w[all active today overdue paused completed]) || "active"
     @selected_type = params[:type].presence_in(Reminder.reminder_types.keys)
+    @query = params[:q].to_s.strip
+    @reminder_pets = current_user.pets.order(:name)
     @reminders = filtered_reminders
     @total_count = @pet.reminders.count
     @active_count = @pet.reminders.status_active.count
@@ -150,6 +152,12 @@ class RemindersController < ApplicationController
   def filtered_reminders
     scope = @pet.reminders.order(:next_run_at)
     scope = scope.where(reminder_type: @selected_type) if @selected_type.present?
+
+    if @query.present?
+      escaped_query = ActiveRecord::Base.sanitize_sql_like(@query)
+      pattern = "%#{escaped_query}%"
+      scope = scope.where("reminders.title ILIKE :pattern OR reminders.note ILIKE :pattern", pattern: pattern)
+    end
 
     case @selected_status
     when "all" then scope
