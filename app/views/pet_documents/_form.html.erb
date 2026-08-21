@@ -61,10 +61,10 @@
     </section>
 
     <div class="pj-document-form-side">
-      <section class="pj-document-form-card pj-document-upload-card">
+      <section class="pj-document-form-card pj-document-upload-card" data-document-file-control>
         <div class="pj-document-form-card__heading">
           <h2>Файлы</h2>
-          <p>PDF, фото или сканы. Можно выбрать несколько файлов.</p>
+          <p>PDF, фото, сканы и другие файлы. Можно выбрать несколько.</p>
         </div>
 
         <% if document.persisted? && document.files.attached? %>
@@ -78,13 +78,15 @@
           </div>
         <% end %>
 
-        <label class="pj-document-dropzone">
+        <label class="pj-document-dropzone" data-document-file-dropzone>
           <span class="pj-document-dropzone__icon"><%= pj_icon(:file) %></span>
-          <strong><%= document.files.attached? ? "Добавить ещё файлы" : "Перетащите файл сюда" %></strong>
-          <small>или</small>
+          <strong><%= document.files.attached? ? "Добавить ещё файлы" : "Перетащите файлы сюда" %></strong>
+          <small>или выберите их с устройства</small>
           <span class="pj-document-dropzone__button">Выбрать файлы</span>
           <%= form.file_field :files, multiple: true, class: "pj-document-dropzone__input" %>
         </label>
+
+        <div class="pj-document-selected-files" data-document-file-previews hidden aria-live="polite"></div>
       </section>
 
       <section class="pj-document-form-card pj-document-related-settings">
