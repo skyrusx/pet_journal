@@ -26,8 +26,8 @@
   </header>
 
   <div class="pj-journal-content pj-journal-detail-content">
-    <div class="pj-journal-mobile-detail-nav">
-      <%= link_to pet_pet_events_path(@pet), class: "pj-journal-mobile-back" do %>
+    <div class="pj-mobile-detail-nav pj-journal-mobile-detail-nav">
+      <%= link_to pet_pet_events_path(@pet), class: "pj-mobile-context-back pj-journal-mobile-back" do %>
         <%= pj_icon(:chevron) %><span>К журналу</span>
       <% end %>
 
