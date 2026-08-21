@@ -15,6 +15,15 @@
       <%= link_to pets_path, class: "pj-mobile-context-back" do %>
         <%= pj_icon(:chevron) %><span>К питомцам</span>
       <% end %>
+
+      <details class="pj-journal-more pj-journal-mobile-more pj-pet-mobile-more">
+        <summary aria-label="Действия с питомцем"><%= pj_icon(:more) %></summary>
+        <div>
+          <%= link_to edit_pet_path(@pet), class: "pj-journal-more__item" do %>
+            <span>Редактировать</span>
+          <% end %>
+        </div>
+      </details>
     </div>
 
     <div class="pj-pet-profile-layout">
