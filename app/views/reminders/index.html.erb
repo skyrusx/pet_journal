@@ -114,33 +114,56 @@
         </div>
 
         <% @reminders.each do |reminder| %>
-          <%= link_to pet_reminder_path(@pet, reminder), class: "pj-reminders-row" do %>
-            <span class="pj-reminders-row__title">
-              <span class="pj-reminders-row__icon <%= reminder_type_tone(reminder) %>"><%= reminder_type_icon(reminder.reminder_type) %></span>
-              <span><strong><%= reminder.title %></strong><small><%= reminder.note.present? ? truncate(reminder.note, length: 46) : "Без заметки" %></small></span>
-            </span>
-            <span class="pj-reminders-row__pet"><%= @pet.name %></span>
-            <span><%= reminder.reminder_type_label %></span>
-            <span class="pj-reminders-row__date"><strong><%= reminder.next_run_at.strftime("%d.%m.%Y") %></strong><small><%= reminder.next_run_at.strftime("%H:%M") %></small></span>
-            <span><%= reminder.repeat_rule_label %></span>
-            <span><em class="pj-reminder-status <%= reminder_status_tone(reminder) %>"><%= reminder_status_label(reminder) %></em></span>
-            <span class="pj-reminders-row__chevron"><%= pj_icon(:chevron) %></span>
-          <% end %>
+          <article class="pj-reminders-row-wrap">
+            <%= link_to pet_reminder_path(@pet, reminder), class: "pj-reminders-row" do %>
+              <span class="pj-reminders-row__title">
+                <span class="pj-reminders-row__icon <%= reminder_type_tone(reminder) %>"><%= reminder_type_icon(reminder.reminder_type) %></span>
+                <span><strong><%= reminder.title %></strong><small><%= reminder.note.present? ? truncate(reminder.note, length: 46) : "Без заметки" %></small></span>
+              </span>
+              <span class="pj-reminders-row__pet"><%= reminder.pet.name %></span>
+              <span><%= reminder.reminder_type_label %></span>
+              <span class="pj-reminders-row__date"><strong><%= reminder.next_run_at.strftime("%d.%m.%Y") %></strong><small><%= reminder.next_run_at.strftime("%H:%M") %></small></span>
+              <span><%= reminder.repeat_rule_label %></span>
+              <span><em class="pj-reminder-status <%= reminder_status_tone(reminder) %>"><%= reminder_status_label(reminder) %></em></span>
+              <span class="pj-reminders-row__chevron"><%= pj_icon(:chevron) %></span>
+            <% end %>
+
+            <%= link_to edit_pet_reminder_path(reminder.pet, reminder),
+                        class: "pj-reminders-row__edit",
+                        aria: { label: "Редактировать #{reminder.title}" },
+                        title: "Редактировать" do %>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 20l4.1-1 10.8-10.8a2.1 2.1 0 0 0-3-3L5.1 16 4 20z"/>
+                <path d="m14.6 6.5 3 3"/>
+              </svg>
+            <% end %>
+          </article>
         <% end %>
       </div>
 
       <div class="pj-reminders-mobile-list">
         <% @reminders.each do |reminder| %>
-          <%= link_to pet_reminder_path(@pet, reminder), class: "pj-reminders-mobile-card" do %>
-            <span class="pj-reminders-row__icon <%= reminder_type_tone(reminder) %>"><%= reminder_type_icon(reminder.reminder_type) %></span>
-            <span class="pj-reminders-mobile-card__body">
-              <small><%= reminder.next_run_at.strftime("%d.%m.%Y, %H:%M") %> · <%= @pet.name %></small>
-              <strong><%= reminder.title %></strong>
-              <span><%= reminder.reminder_type_label %> · <%= reminder.repeat_rule_label %></span>
-              <em class="pj-reminder-status <%= reminder_status_tone(reminder) %>"><%= reminder_status_label(reminder) %></em>
-            </span>
-            <span class="pj-reminders-row__chevron"><%= pj_icon(:chevron) %></span>
-          <% end %>
+          <article class="pj-reminders-mobile-card-wrap">
+            <%= link_to pet_reminder_path(reminder.pet, reminder), class: "pj-reminders-mobile-card" do %>
+              <span class="pj-reminders-row__icon <%= reminder_type_tone(reminder) %>"><%= reminder_type_icon(reminder.reminder_type) %></span>
+              <span class="pj-reminders-mobile-card__body">
+                <small><%= reminder.next_run_at.strftime("%d.%m.%Y, %H:%M") %> · <%= reminder.pet.name %></small>
+                <strong><%= reminder.title %></strong>
+                <span><%= reminder.reminder_type_label %> · <%= reminder.repeat_rule_label %></span>
+                <em class="pj-reminder-status <%= reminder_status_tone(reminder) %>"><%= reminder_status_label(reminder) %></em>
+              </span>
+            <% end %>
+
+            <%= link_to edit_pet_reminder_path(reminder.pet, reminder),
+                        class: "pj-reminders-row__edit",
+                        aria: { label: "Редактировать #{reminder.title}" },
+                        title: "Редактировать" do %>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 20l4.1-1 10.8-10.8a2.1 2.1 0 0 0-3-3L5.1 16 4 20z"/>
+                <path d="m14.6 6.5 3 3"/>
+              </svg>
+            <% end %>
+          </article>
         <% end %>
       </div>
     <% else %>
