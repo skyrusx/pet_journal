@@ -1,4 +1,4 @@
-<% primary_pet = Array(@pets).first %>
+<% primary_pet = ((defined?(@pet) && @pet&.persisted?) ? @pet : Array(@pets).first) || current_user.pets.order(created_at: :desc).first %>
 <% journal_path = primary_pet ? pet_pet_events_path(primary_pet) : pets_path %>
 <% reminders_path = primary_pet ? pet_reminders_path(primary_pet) : pets_path %>
 <% documents_path = primary_pet ? pet_pet_documents_path(primary_pet) : pets_path %>
@@ -81,15 +81,15 @@
   </section>
 
   <nav class="pj-mobile-tabs" aria-label="Основная навигация">
-    <%= link_to root_path, class: "pj-mobile-tabs__item is-active", aria: { current: "page" } do %>
+    <%= link_to root_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pages"), aria: { current: controller_name == "pages" ? "page" : nil } do %>
       <%= pj_icon(:home) %><span>Главная</span>
     <% end %>
 
-    <%= link_to pets_path, class: "pj-mobile-tabs__item" do %>
+    <%= link_to pets_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pets"), aria: { current: controller_name == "pets" ? "page" : nil } do %>
       <%= pj_icon(:paw) %><span>Питомцы</span>
     <% end %>
 
-    <%= link_to journal_path, class: "pj-mobile-tabs__item" do %>
+    <%= link_to journal_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pet_events"), aria: { current: controller_name == "pet_events" ? "page" : nil } do %>
       <%= pj_icon(:journal) %><span>Журнал</span>
     <% end %>
 
@@ -101,11 +101,11 @@
       <%= pj_icon(:plus) %>
     </button>
 
-    <%= link_to documents_path, class: "pj-mobile-tabs__item" do %>
+    <%= link_to documents_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pet_documents"), aria: { current: controller_name == "pet_documents" ? "page" : nil } do %>
       <%= pj_icon(:file) %><span>Документы</span>
     <% end %>
 
-    <%= link_to pettag_path, class: "pj-mobile-tabs__item" do %>
+    <%= link_to pettag_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pet_tags"), aria: { current: controller_name == "pet_tags" ? "page" : nil } do %>
       <%= pj_icon(:tag) %><span>PetTag</span>
     <% end %>
 
