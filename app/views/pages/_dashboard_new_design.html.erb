@@ -1,0 +1,230 @@
+<% primary_pet = @pets.first %>
+<% journal_path = primary_pet ? pet_pet_events_path(primary_pet) : pets_path %>
+<% reminders_path = primary_pet ? pet_reminders_path(primary_pet) : pets_path %>
+<% documents_path = primary_pet ? pet_pet_documents_path(primary_pet) : pets_path %>
+<% pettag_path = primary_pet ? pet_pet_tag_path(primary_pet) : pets_path %>
+<% add_path = primary_pet ? new_pet_pet_event_path(primary_pet) : new_pet_path %>
+<% display_name = current_user.name.presence || "Профиль" %>
+<% avatar_letter = display_name.to_s.first.to_s.upcase.presence || current_user.email.to_s.first.to_s.upcase %>
+
+<div class="pj-dash">
+  <div class="pj-dash-shell">
+    <aside class="pj-dash-sidebar" aria-label="Навигация PetJournal">
+      <%= link_to root_path, class: "pj-dash-brand", aria: { label: "PetJournal — главная" } do %>
+        <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
+      <% end %>
+
+      <nav class="pj-dash-nav">
+        <%= link_to root_path, class: "pj-dash-nav__item active", aria: { current: "page" } do %>
+          <%= pj_icon(:home) %><span>Главная</span>
+        <% end %>
+        <%= link_to journal_path, class: "pj-dash-nav__item" do %>
+          <%= pj_icon(:journal) %><span>Журнал</span>
+        <% end %>
+        <%= link_to reminders_path, class: "pj-dash-nav__item" do %>
+          <%= pj_icon(:bell) %><span>Напоминания</span>
+        <% end %>
+        <%= link_to documents_path, class: "pj-dash-nav__item" do %>
+          <%= pj_icon(:file) %><span>Документы</span>
+        <% end %>
+        <%= link_to pettag_path, class: "pj-dash-nav__item" do %>
+          <%= pj_icon(:tag) %><span>PetTag</span>
+        <% end %>
+        <%= link_to pets_path, class: "pj-dash-nav__item" do %>
+          <%= pj_icon(:paw) %><span>Питомцы</span>
+        <% end %>
+        <%= link_to edit_user_registration_path, class: "pj-dash-nav__item" do %>
+          <%= pj_icon(:user) %><span>Профиль</span>
+        <% end %>
+        <%= link_to notification_channels_path, class: "pj-dash-nav__item" do %>
+          <%= pj_icon(:settings) %><span>Настройки</span>
+        <% end %>
+      </nav>
+
+      <%= link_to edit_user_registration_path, class: "pj-dash-account" do %>
+        <span class="pj-dash-account__avatar"><%= avatar_letter %></span>
+        <span class="pj-dash-account__copy">
+          <strong><%= display_name %></strong>
+          <small><%= current_user.email %></small>
+        </span>
+        <%= pj_icon(:chevron) %>
+      <% end %>
+    </aside>
+
+    <main class="pj-dash-main">
+      <header class="pj-dash-mobile-header">
+        <details class="pj-dash-mobile-menu">
+          <summary aria-label="Открыть меню"><span></span><span></span><span></span></summary>
+          <nav class="pj-dash-mobile-menu__panel" aria-label="Мобильное меню">
+            <%= link_to "Главная", root_path, class: "active" %>
+            <%= link_to "Журнал", journal_path %>
+            <%= link_to "Напоминания", reminders_path %>
+            <%= link_to "Документы", documents_path %>
+            <%= link_to "PetTag", pettag_path %>
+            <%= link_to "Питомцы", pets_path %>
+            <%= link_to "Профиль", edit_user_registration_path %>
+            <%= link_to "Настройки", notification_channels_path %>
+          </nav>
+        </details>
+
+        <%= link_to root_path, class: "pj-dash-mobile-brand", aria: { label: "PetJournal" } do %>
+          <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
+        <% end %>
+
+        <%= link_to notification_channels_path, class: "pj-dash-bell", aria: { label: "Уведомления" } do %>
+          <%= pj_icon(:bell) %>
+        <% end %>
+      </header>
+
+      <div class="pj-dash-desktop-actions">
+        <%= link_to notification_channels_path, class: "pj-dash-bell", aria: { label: "Уведомления" } do %>
+          <%= pj_icon(:bell) %>
+        <% end %>
+      </div>
+
+      <div class="pj-dash-content">
+        <% if @pets.any? %>
+          <section class="pj-dash-section pj-dash-upcoming">
+            <div class="pj-dash-section__head">
+              <h1>Сегодня и ближайшее</h1>
+              <%= link_to "Смотреть все", reminders_path %>
+            </div>
+
+            <% upcoming = @next_reminders.first(3) %>
+            <% if upcoming.any? %>
+              <div class="pj-dash-upcoming__grid">
+                <% upcoming.each_with_index do |reminder, index| %>
+                  <% tone = %w[sage rose peach][index % 3] %>
+                  <% date_text = if reminder.next_run_at.to_date == Date.current
+                                   "Сегодня, #{reminder.next_run_at.strftime('%H:%M')}"
+                                 elsif reminder.next_run_at.to_date == Date.current + 1
+                                   "Завтра, #{reminder.next_run_at.strftime('%H:%M')}"
+                                 else
+                                   reminder.next_run_at.strftime('%d.%m, %H:%M')
+                                 end %>
+                  <%= link_to pet_reminder_path(reminder.pet, reminder), class: "pj-dash-upcoming-card pj-dash-tone--#{tone}" do %>
+                    <span class="pj-dash-upcoming-card__icon"><%= pj_icon(index == 1 ? :paw : :journal) %></span>
+                    <span class="pj-dash-upcoming-card__copy">
+                      <small><%= date_text %></small>
+                      <strong><%= reminder.title %></strong>
+                      <span><%= reminder.pet.name %></span>
+                    </span>
+                    <span class="pj-dash-upcoming-card__chevron"><%= pj_icon(:chevron) %></span>
+                  <% end %>
+                <% end %>
+              </div>
+            <% else %>
+              <div class="pj-dash-calm-empty">
+                <span class="pj-dash-calm-empty__icon"><%= pj_icon(:journal) %></span>
+                <div><strong>На ближайшее время всё спокойно</strong><span>Новые напоминания появятся здесь.</span></div>
+              </div>
+            <% end %>
+          </section>
+
+          <section class="pj-dash-section pj-dash-pets-section">
+            <div class="pj-dash-section__head">
+              <h2>Мои питомцы</h2>
+            </div>
+
+            <div class="pj-dash-pets-grid">
+              <% @pets.first(4).each do |pet| %>
+                <%= link_to pet_path(pet), class: "pj-dash-pet-card" do %>
+                  <span class="pj-dash-pet-card__photo">
+                    <% if pet.photo.attached? %>
+                      <%= image_tag pet.photo, alt: pet.name, loading: "lazy" %>
+                    <% else %>
+                      <span class="pj-dash-pet-card__placeholder"><%= pet.name.to_s.first.to_s.upcase.presence || "P" %></span>
+                    <% end %>
+                  </span>
+                  <span class="pj-dash-pet-card__name"><%= pet.name %></span>
+                  <span class="pj-dash-pet-card__meta"><%= pet_age(pet) %><br><%= pet_short_description(pet) %></span>
+                  <span class="pj-dash-pet-card__tag <%= "muted" unless pet.pet_tag.present? %>">
+                    <span>●</span> PetTag <%= pet.pet_tag.present? ? "активен" : "не настроен" %>
+                  </span>
+                <% end %>
+              <% end %>
+
+              <%= link_to new_pet_path, class: "pj-dash-pet-add" do %>
+                <span class="pj-dash-pet-add__plus">+</span>
+                <span>Добавить<br>питомца</span>
+              <% end %>
+            </div>
+          </section>
+
+          <div class="pj-dash-lower-grid">
+            <section class="pj-dash-section pj-dash-recent">
+              <div class="pj-dash-section__head">
+                <h2>Последние события</h2>
+                <%= link_to "Смотреть все", journal_path %>
+              </div>
+
+              <% if @recent_events.any? %>
+                <div class="pj-dash-recent-list">
+                  <% @recent_events.first(3).each_with_index do |event, index| %>
+                    <% tone = %w[sage rose peach][index % 3] %>
+                    <%= link_to pet_pet_event_path(event.pet, event), class: "pj-dash-recent-item" do %>
+                      <span class="pj-dash-recent-item__icon pj-dash-tone--<%= tone %>"><%= pj_icon(index == 1 ? :paw : :journal) %></span>
+                      <span class="pj-dash-recent-item__copy">
+                        <small><%= event.event_date.strftime('%d.%m.%Y') %></small>
+                        <strong><%= event.title.presence || event.event_type_label %></strong>
+                        <span><%= event.pet.name %></span>
+                      </span>
+                      <span class="pj-dash-recent-item__chevron"><%= pj_icon(:chevron) %></span>
+                    <% end %>
+                  <% end %>
+                </div>
+              <% else %>
+                <div class="pj-dash-calm-empty pj-dash-calm-empty--compact">
+                  <span class="pj-dash-calm-empty__icon"><%= pj_icon(:journal) %></span>
+                  <div><strong>Событий пока нет</strong><span>Первая запись появится здесь.</span></div>
+                </div>
+              <% end %>
+            </section>
+
+            <aside class="pj-dash-pettag-card">
+              <div class="pj-dash-pettag-card__title">PetTag</div>
+              <%= image_tag "petjournal/auth-pettag.png", alt: "PetTag", class: "pj-dash-pettag-card__image" %>
+              <% if primary_pet&.pet_tag.present? %>
+                <div class="pj-dash-pettag-card__status-row">
+                  <span class="pj-dash-pettag-card__status"><span>●</span> <%= primary_pet.pet_tag.lost_mode_enabled? ? "Режим поиска" : "Активен" %></span>
+                  <span class="pj-dash-pettag-card__qr">QR-код профиля</span>
+                </div>
+                <%= link_to "Управление PetTag", pettag_path, class: "pj-dash-pettag-card__button" %>
+              <% else %>
+                <div class="pj-dash-pettag-card__status-row">
+                  <span class="pj-dash-pettag-card__status muted">Не настроен</span>
+                </div>
+                <%= link_to "Настроить PetTag", pettag_path, class: "pj-dash-pettag-card__button" %>
+              <% end %>
+            </aside>
+          </div>
+        <% else %>
+          <section class="pj-dash-empty-state">
+            <span class="pj-dash-empty-state__icon"><%= pj_icon(:paw) %></span>
+            <h1>Добавьте первого питомца</h1>
+            <p>После этого здесь появятся ближайшие дела, журнал, документы и PetTag.</p>
+            <%= link_to "Добавить питомца", new_pet_path, class: "pj-dash-empty-state__button" %>
+          </section>
+        <% end %>
+      </div>
+
+      <nav class="pj-dash-bottom-nav" aria-label="Основная мобильная навигация">
+        <%= link_to root_path, class: "pj-dash-bottom-nav__item active", aria: { current: "page" } do %>
+          <%= pj_icon(:home) %><span>Главная</span>
+        <% end %>
+        <%= link_to journal_path, class: "pj-dash-bottom-nav__item" do %>
+          <%= pj_icon(:journal) %><span>Журнал</span>
+        <% end %>
+        <%= link_to add_path, class: "pj-dash-bottom-nav__add", aria: { label: "Добавить" } do %>
+          <%= pj_icon(:plus) %>
+        <% end %>
+        <%= link_to reminders_path, class: "pj-dash-bottom-nav__item" do %>
+          <%= pj_icon(:bell) %><span>Напом.</span>
+        <% end %>
+        <%= link_to edit_user_registration_path, class: "pj-dash-bottom-nav__item" do %>
+          <%= pj_icon(:more) %><span>Ещё</span>
+        <% end %>
+      </nav>
+    </main>
+  </div>
+</div>
