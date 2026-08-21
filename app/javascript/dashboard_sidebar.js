@@ -14,6 +14,12 @@ function saveDashboardSidebarPreference(collapsed) {
   }
 }
 
+function closeDashboardProfileMenus(except = null) {
+  document.querySelectorAll("[data-dashboard-profile-menu][open]").forEach((menu) => {
+    if (menu !== except) menu.removeAttribute("open");
+  });
+}
+
 function initDashboardSidebar() {
   document.querySelectorAll("[data-dashboard-root]").forEach((root) => {
     const button = root.querySelector("[data-dashboard-sidebar-toggle]");
@@ -33,14 +39,37 @@ function initDashboardSidebar() {
     };
 
     button.addEventListener("click", () => {
+      closeDashboardProfileMenus();
       collapsed = !collapsed;
       saveDashboardSidebarPreference(collapsed);
       render();
     });
 
+    root.querySelectorAll("[data-dashboard-profile-menu]").forEach((menu) => {
+      menu.addEventListener("toggle", () => {
+        if (menu.open) closeDashboardProfileMenus(menu);
+      });
+    });
+
     render();
   });
 }
+
+document.addEventListener("click", (event) => {
+  document.querySelectorAll("[data-dashboard-profile-menu][open]").forEach((menu) => {
+    if (!menu.contains(event.target)) menu.removeAttribute("open");
+  });
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+
+  const openMenu = document.querySelector("[data-dashboard-profile-menu][open]");
+  if (!openMenu) return;
+
+  openMenu.removeAttribute("open");
+  openMenu.querySelector("summary")?.focus();
+});
 
 document.addEventListener("DOMContentLoaded", initDashboardSidebar);
 document.addEventListener("turbo:load", initDashboardSidebar);
