@@ -1,5 +1,4 @@
 <% content_for :title, "Питомцы — PetJournal" %>
-<% account_name = current_user.name.presence || current_user.email.to_s.split("@").first.presence || "Аккаунт" %>
 
 <div class="pj-pets-page pj-pets-page--index">
   <header class="pj-workspace-topbar">
@@ -7,9 +6,6 @@
     <div class="pj-workspace-topbar__actions">
       <%= link_to(@pets.first ? pet_reminders_path(@pets.first) : pets_path, class: "pj-workspace-icon", aria: { label: "Напоминания" }) do %>
         <%= pj_icon(:bell) %>
-      <% end %>
-      <%= link_to edit_user_registration_path, class: "pj-workspace-avatar", aria: { label: "Профиль" } do %>
-        <%= account_name.to_s.first.to_s.upcase %>
       <% end %>
     </div>
   </header>
@@ -31,27 +27,40 @@
           <% tag_present = pet_tag&.persisted? %>
           <% tag_active = tag_present && pet_tag.enabled? %>
           <% tag_text = tag_present ? pet_tag_status_label(pet_tag).downcase : "не настроен" %>
-          <%= link_to pet_path(pet), class: "pj-pet-list-card" do %>
-            <span class="pj-pet-list-card__photo">
-              <% if pet.photo.attached? %>
-                <%= image_tag pet.photo, alt: pet.name, loading: "lazy" %>
-              <% else %>
-                <span class="pj-pet-list-card__placeholder"><%= pet.name.to_s.first.to_s.upcase.presence || "P" %></span>
-              <% end %>
-            </span>
 
-            <span class="pj-pet-list-card__body">
-              <strong class="pj-pet-list-card__name"><%= pet.name %></strong>
-              <span class="pj-pet-list-card__breed"><%= pet.breed.presence || pet.species.presence || "Данные не заполнены" %></span>
-              <span class="pj-pet-list-card__age"><%= pet_age(pet) %></span>
-              <span class="pj-pet-list-card__tag <%= "is-muted" unless tag_active %>">
-                <span class="pj-pet-list-card__tag-dot">●</span>
-                PetTag <%= tag_text %>
+          <article class="pj-pet-list-card">
+            <%= link_to pet_path(pet), class: "pj-pet-list-card__main", aria: { label: "Открыть профиль #{pet.name}" } do %>
+              <span class="pj-pet-list-card__photo">
+                <% if pet.photo.attached? %>
+                  <%= image_tag pet.photo, alt: pet.name, loading: "lazy" %>
+                <% else %>
+                  <span class="pj-pet-list-card__placeholder"><%= pet.name.to_s.first.to_s.upcase.presence || "P" %></span>
+                <% end %>
               </span>
-            </span>
 
-            <span class="pj-pet-list-card__chevron"><%= pj_icon(:chevron) %></span>
-          <% end %>
+              <span class="pj-pet-list-card__body">
+                <strong class="pj-pet-list-card__name"><%= pet.name %></strong>
+                <span class="pj-pet-list-card__breed"><%= pet.breed.presence || pet.species.presence || "Данные не заполнены" %></span>
+                <span class="pj-pet-list-card__age"><%= pet_age(pet) %></span>
+                <span class="pj-pet-list-card__tag <%= "is-muted" unless tag_active %>">
+                  <span class="pj-pet-list-card__tag-dot">●</span>
+                  PetTag <%= tag_text %>
+                </span>
+              </span>
+
+              <span class="pj-pet-list-card__chevron"><%= pj_icon(:chevron) %></span>
+            <% end %>
+
+            <%= link_to edit_pet_path(pet),
+                        class: "pj-pet-list-card__edit",
+                        aria: { label: "Редактировать #{pet.name}" },
+                        title: "Редактировать" do %>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 20l4.1-1 10.8-10.8a2.1 2.1 0 0 0-3-3L5.1 16 4 20z"/>
+                <path d="m14.6 6.5 3 3"/>
+              </svg>
+            <% end %>
+          </article>
         <% end %>
 
         <%= link_to new_pet_path, class: "pj-pet-list-add" do %>
