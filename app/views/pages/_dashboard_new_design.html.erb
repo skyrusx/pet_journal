@@ -7,41 +7,49 @@
 <% display_name = current_user.name.presence || "Профиль" %>
 <% avatar_letter = display_name.to_s.first.to_s.upcase.presence || current_user.email.to_s.first.to_s.upcase %>
 
-<div class="pj-dash">
+<div class="pj-dash" data-dashboard-root>
   <div class="pj-dash-shell">
-    <aside class="pj-dash-sidebar" aria-label="Навигация PetJournal">
-      <%= link_to root_path, class: "pj-dash-brand", aria: { label: "PetJournal — главная" } do %>
-        <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
-      <% end %>
+    <aside class="pj-dash-sidebar" aria-label="Навигация PetJournal" data-dashboard-sidebar>
+      <div class="pj-dash-sidebar__top">
+        <%= link_to root_path, class: "pj-dash-brand", aria: { label: "PetJournal — главная" } do %>
+          <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", class: "pj-dash-brand__full" %>
+          <%= image_tag "petjournal/logo-symbol.png", alt: "", class: "pj-dash-brand__compact" %>
+        <% end %>
+
+        <button type="button"
+                class="pj-dash-sidebar-toggle"
+                aria-label="Свернуть боковое меню"
+                aria-expanded="true"
+                data-dashboard-sidebar-toggle>
+          <%= pj_icon(:chevron) %>
+        </button>
+      </div>
 
       <nav class="pj-dash-nav">
-        <%= link_to root_path, class: "pj-dash-nav__item active", aria: { current: "page" } do %>
+        <%= link_to root_path, class: "pj-dash-nav__item active", aria: { current: "page", label: "Главная" }, title: "Главная" do %>
           <%= pj_icon(:home) %><span>Главная</span>
         <% end %>
-        <%= link_to journal_path, class: "pj-dash-nav__item" do %>
+        <%= link_to journal_path, class: "pj-dash-nav__item", aria: { label: "Журнал" }, title: "Журнал" do %>
           <%= pj_icon(:journal) %><span>Журнал</span>
         <% end %>
-        <%= link_to reminders_path, class: "pj-dash-nav__item" do %>
+        <%= link_to reminders_path, class: "pj-dash-nav__item", aria: { label: "Напоминания" }, title: "Напоминания" do %>
           <%= pj_icon(:bell) %><span>Напоминания</span>
         <% end %>
-        <%= link_to documents_path, class: "pj-dash-nav__item" do %>
+        <%= link_to documents_path, class: "pj-dash-nav__item", aria: { label: "Документы" }, title: "Документы" do %>
           <%= pj_icon(:file) %><span>Документы</span>
         <% end %>
-        <%= link_to pettag_path, class: "pj-dash-nav__item" do %>
+        <%= link_to pettag_path, class: "pj-dash-nav__item", aria: { label: "PetTag" }, title: "PetTag" do %>
           <%= pj_icon(:tag) %><span>PetTag</span>
         <% end %>
-        <%= link_to pets_path, class: "pj-dash-nav__item" do %>
+        <%= link_to pets_path, class: "pj-dash-nav__item", aria: { label: "Питомцы" }, title: "Питомцы" do %>
           <%= pj_icon(:paw) %><span>Питомцы</span>
         <% end %>
-        <%= link_to edit_user_registration_path, class: "pj-dash-nav__item" do %>
+        <%= link_to edit_user_registration_path, class: "pj-dash-nav__item", aria: { label: "Профиль" }, title: "Профиль" do %>
           <%= pj_icon(:user) %><span>Профиль</span>
-        <% end %>
-        <%= link_to notification_channels_path, class: "pj-dash-nav__item" do %>
-          <%= pj_icon(:settings) %><span>Настройки</span>
         <% end %>
       </nav>
 
-      <%= link_to edit_user_registration_path, class: "pj-dash-account" do %>
+      <%= link_to edit_user_registration_path, class: "pj-dash-account", title: display_name do %>
         <span class="pj-dash-account__avatar"><%= avatar_letter %></span>
         <span class="pj-dash-account__copy">
           <strong><%= display_name %></strong>
@@ -63,7 +71,6 @@
             <%= link_to "PetTag", pettag_path %>
             <%= link_to "Питомцы", pets_path %>
             <%= link_to "Профиль", edit_user_registration_path %>
-            <%= link_to "Настройки", notification_channels_path %>
           </nav>
         </details>
 
@@ -77,9 +84,11 @@
       </header>
 
       <div class="pj-dash-desktop-actions">
-        <%= link_to notification_channels_path, class: "pj-dash-bell", aria: { label: "Уведомления" } do %>
-          <%= pj_icon(:bell) %>
-        <% end %>
+        <div class="pj-dash-desktop-actions__inner">
+          <%= link_to notification_channels_path, class: "pj-dash-bell", aria: { label: "Уведомления" } do %>
+            <%= pj_icon(:bell) %>
+          <% end %>
+        </div>
       </div>
 
       <div class="pj-dash-content">
@@ -207,6 +216,11 @@
           </section>
         <% end %>
       </div>
+
+      <footer class="pj-dash-footer">
+        <span>© <%= Date.current.year %> PetJournal. Все права защищены.</span>
+        <span>Сделано с заботой о тех, кто рядом ♡</span>
+      </footer>
 
       <nav class="pj-dash-bottom-nav" aria-label="Основная мобильная навигация">
         <%= link_to root_path, class: "pj-dash-bottom-nav__item active", aria: { current: "page" } do %>
