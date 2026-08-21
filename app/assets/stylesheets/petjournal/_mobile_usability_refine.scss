@@ -32,6 +32,11 @@
   padding-left: 38px !important;
 }
 
+.pj-journal-filter-submit__icon {
+  display: none;
+}
+
+.pj-mobile-detail-nav,
 .pj-journal-mobile-detail-nav {
   display: none;
 }
@@ -87,7 +92,7 @@
     line-height: 1.2;
   }
 
-  /* Journal search gets a real magnifier instead of relying on browser chrome. */
+  /* Journal search gets a real magnifier and the compact action gets an explicit filter icon. */
   .pj-journal-search-icon {
     left: 13px;
     width: 19px;
@@ -103,31 +108,63 @@
     padding-left: 42px !important;
   }
 
-  /* Event details: make navigation semantically clear and expose editing on mobile. */
+  .pj-journal-filter-submit--icon {
+    min-width: 42px;
+    width: 42px;
+    padding: 0 !important;
+  }
+
+  .pj-journal-filter-submit__label {
+    display: none;
+  }
+
+  .pj-journal-filter-submit__icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Pet and event details use one mobile context-navigation pattern. */
+  .pj-mobile-detail-nav,
   .pj-journal-mobile-detail-nav {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 14px;
+    min-height: 40px;
+    margin: 0 0 14px;
   }
 
+  .pj-mobile-context-back,
   .pj-journal-mobile-detail-nav .pj-journal-mobile-back {
-    margin: 0;
     min-height: 40px;
     display: inline-flex;
     align-items: center;
     gap: 7px;
+    margin: 0;
     color: #5e6b63;
     font-size: var(--pj-font-meta);
     font-weight: 700;
     text-decoration: none;
   }
 
+  .pj-mobile-context-back .pj-nav-icon,
   .pj-journal-mobile-detail-nav .pj-journal-mobile-back .pj-nav-icon {
     width: 17px;
     height: 17px;
+    flex: 0 0 17px;
+    transform: rotate(180deg);
+    stroke: currentColor;
+  }
+
+  .pj-pet-profile-content > .pj-mobile-detail-nav {
+    grid-column: 1 / -1;
   }
 
   .pj-journal-mobile-more {
