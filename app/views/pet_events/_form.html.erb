@@ -16,14 +16,12 @@
     <aside class="pj-journal-step-rail" aria-label="Этапы заполнения">
       <button type="button"
               class="pj-journal-step-rail__button <%= "active" if initial_wizard_step == 1 %>"
-              data-journal-wizard-nav="1"
-              <%= 'aria-current="step"' if initial_wizard_step == 1 %>>
+              data-journal-wizard-nav="1">
         <b>1</b><span>Тип события</span>
       </button>
       <button type="button"
               class="pj-journal-step-rail__button <%= "active" if initial_wizard_step == 2 %>"
-              data-journal-wizard-nav="2"
-              <%= 'aria-current="step"' if initial_wizard_step == 2 %>>
+              data-journal-wizard-nav="2">
         <b>2</b><span>Детали</span>
       </button>
       <button type="button"
