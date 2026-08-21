@@ -1,267 +1,155 @@
-<%= form_with model: [@pet, @pet_event], local: true, class: "structured-form" do |f| %>
+<%= form_with model: [@pet, @pet_event], local: true, class: "pj-journal-form" do |f| %>
   <% if @pet_event.errors.any? %>
-    <div class="flash-stack" aria-live="polite" aria-atomic="true">
-      <div class="flash-toast alert" role="alert" data-flash-toast>
-        <div>
-          <strong>Проверьте форму</strong>
-          <p><%= @pet_event.errors.full_messages.to_sentence %></p>
-        </div>
-        <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
-      </div>
+    <div class="pj-journal-form-errors" role="alert">
+      <strong>Проверьте форму</strong>
+      <span><%= @pet_event.errors.full_messages.to_sentence %></span>
     </div>
   <% end %>
 
-  <section class="form-section">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Тип и дата</h2>
-        <p class="text-muted mb-0">Выберите, что произошло — PetJournal покажет только подходящие поля.</p>
-      </div>
-      <span class="required-pill">Обязательно</span>
-    </div>
+  <div class="pj-journal-form-layout">
+    <aside class="pj-journal-step-rail" aria-label="Этапы заполнения">
+      <span class="active"><b>1</b>Тип события</span>
+      <span><b>2</b>Детали</span>
+      <span><b>3</b>Дополнительно</span>
+    </aside>
 
-    <div class="event-type-grid mb-3">
-      <% PetEvent::EVENT_TYPE_LABELS.each do |key, label| %>
-        <label class="event-type-option <%= event_tone(key) %>">
-          <%= f.radio_button :event_type, key, data: { event_type_radio: true } %>
-          <span>
-            <strong><%= label %></strong>
-            <small><%= event_type_hint(key) %></small>
-          </span>
-        </label>
-      <% end %>
-    </div>
-
-    <div>
-      <%= f.label :event_date, "Дата события", class: "form-label" %>
-      <%= f.date_field :event_date, class: "form-control" %>
-    </div>
-  </section>
-
-  <section class="form-section structured-event-section" data-event-fields="weight">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Вес</h2>
-        <p class="text-muted mb-0">Значение сохранится в событии и обновит текущий вес в профиле питомца.</p>
-      </div>
-    </div>
-
-    <div class="row g-3">
-      <div class="col-md-6">
-        <%= f.label :weight_value, class: "form-label" %>
-        <div class="input-group">
-          <%= f.number_field :weight_value, step: 0.01, min: 0, class: "form-control" %>
-          <%= f.select :weight_unit, [["кг", "kg"], ["г", "g"]], {}, class: "form-select" %>
+    <div class="pj-journal-form-main">
+      <section class="pj-journal-form-section pj-journal-form-section--types">
+        <div class="pj-journal-form-heading">
+          <h1><%= @pet_event.persisted? ? "Редактировать событие" : "Выберите тип события" %></h1>
+          <p>Запись попадёт в журнал <%= @pet.name %>. Поля ниже меняются в зависимости от выбранного типа.</p>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <section class="form-section structured-event-section" data-event-fields="vaccination">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Вакцинация</h2>
-        <p class="text-muted mb-0">Название вакцины, партия, клиника и срок действия.</p>
-      </div>
-    </div>
-
-    <div class="row g-3">
-      <div class="col-md-6">
-        <%= f.label :vaccine_name, class: "form-label" %>
-        <%= f.text_field :vaccine_name, class: "form-control", placeholder: "Например: Nobivac Rabies" %>
-      </div>
-      <div class="col-md-6">
-        <%= f.label :vaccine_batch, class: "form-label" %>
-        <%= f.text_field :vaccine_batch, class: "form-control", placeholder: "Серия / партия" %>
-      </div>
-      <div class="col-md-6">
-        <%= f.label :clinic_name, class: "form-label" %>
-        <%= f.text_field :clinic_name, class: "form-control" %>
-      </div>
-      <div class="col-md-6">
-        <%= f.label :veterinarian_name, class: "form-label" %>
-        <%= f.text_field :veterinarian_name, class: "form-control" %>
-      </div>
-      <div class="col-md-6">
-        <%= f.label :valid_until, class: "form-label" %>
-        <%= f.date_field :valid_until, class: "form-control" %>
-      </div>
-    </div>
-  </section>
-
-  <section class="form-section structured-event-section" data-event-fields="treatment">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Лекарство / обработка</h2>
-        <p class="text-muted mb-0">Препарат, дозировка, курс и следующее действие.</p>
-      </div>
-    </div>
-
-    <div class="row g-3">
-      <div class="col-md-6">
-        <%= f.label :medication_name, class: "form-label" %>
-        <%= f.text_field :medication_name, class: "form-control", placeholder: "Название препарата или средства" %>
-      </div>
-      <div class="col-md-6">
-        <%= f.label :dosage, class: "form-label" %>
-        <%= f.text_field :dosage, class: "form-control", placeholder: "Например: 1 таблетка после еды" %>
-      </div>
-      <div class="col-md-4">
-        <%= f.label :course_started_on, class: "form-label" %>
-        <%= f.date_field :course_started_on, class: "form-control" %>
-      </div>
-      <div class="col-md-4">
-        <%= f.label :course_ended_on, class: "form-label" %>
-        <%= f.date_field :course_ended_on, class: "form-control" %>
-      </div>
-      <div class="col-md-4">
-        <%= f.label :next_action_at, class: "form-label" %>
-        <%= f.datetime_local_field :next_action_at, class: "form-control" %>
-      </div>
-    </div>
-  </section>
-
-  <section class="form-section structured-event-section" data-event-fields="visit">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Визит к врачу</h2>
-        <p class="text-muted mb-0">Клиника, врач, диагноз, рекомендации и повторный приём.</p>
-      </div>
-    </div>
-
-    <div class="row g-3">
-      <div class="col-md-6">
-        <%= f.label :clinic_name, class: "form-label" %>
-        <%= f.text_field :clinic_name, class: "form-control" %>
-      </div>
-      <div class="col-md-6">
-        <%= f.label :veterinarian_name, class: "form-label" %>
-        <%= f.text_field :veterinarian_name, class: "form-control" %>
-      </div>
-      <div class="col-12">
-        <%= f.label :diagnosis, class: "form-label" %>
-        <%= f.text_field :diagnosis, class: "form-control" %>
-      </div>
-      <div class="col-12">
-        <%= f.label :recommendations, class: "form-label" %>
-        <%= f.text_area :recommendations, rows: 4, class: "form-control" %>
-      </div>
-      <div class="col-md-6">
-        <%= f.label :next_action_at, class: "form-label" %>
-        <%= f.datetime_local_field :next_action_at, class: "form-control" %>
-      </div>
-    </div>
-  </section>
-
-  <section class="form-section structured-event-section" data-event-fields="illness">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Симптом / болезнь</h2>
-        <p class="text-muted mb-0">Что заметили, насколько выражено, даты и рекомендации.</p>
-      </div>
-    </div>
-
-    <div class="row g-3">
-      <div class="col-12">
-        <%= f.label :symptoms, class: "form-label" %>
-        <%= f.text_area :symptoms, rows: 4, class: "form-control", placeholder: "Что заметили" %>
-      </div>
-      <div class="col-md-4">
-        <%= f.label :severity, class: "form-label" %>
-        <%= f.select :severity, event_severity_options, { include_blank: "Не указана" }, class: "form-select" %>
-      </div>
-      <div class="col-md-4">
-        <%= f.label :symptom_started_on, class: "form-label" %>
-        <%= f.date_field :symptom_started_on, class: "form-control" %>
-      </div>
-      <div class="col-md-4">
-        <%= f.label :symptom_ended_on, class: "form-label" %>
-        <%= f.date_field :symptom_ended_on, class: "form-control" %>
-      </div>
-      <div class="col-12">
-        <%= f.label :diagnosis, class: "form-label" %>
-        <%= f.text_field :diagnosis, class: "form-control" %>
-      </div>
-      <div class="col-12">
-        <%= f.label :recommendations, class: "form-label" %>
-        <%= f.text_area :recommendations, rows: 4, class: "form-control" %>
-      </div>
-    </div>
-  </section>
-
-  <section class="form-section structured-event-section" data-event-fields="document">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Документ</h2>
-        <p class="text-muted mb-0">Для полноценного хранения документов используйте раздел «Документы»; здесь можно оставить журнальную запись.</p>
-      </div>
-    </div>
-
-    <%= link_to "Открыть документы", pet_pet_documents_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
-  </section>
-
-  <section class="form-section">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Содержание</h2>
-        <p class="text-muted mb-0">Заголовок можно не заполнять: тогда в журнале будет показан тип события.</p>
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <%= f.label :title, "Заголовок", class: "form-label" %>
-      <%= f.text_field :title, class: "form-control", placeholder: "Например: плановый осмотр" %>
-    </div>
-
-    <div>
-      <%= f.label :description, "Описание", class: "form-label" %>
-      <%= f.text_area :description,
-                      rows: 6,
-                      class: "form-control",
-                      placeholder: "Что произошло, какие рекомендации дали, что нужно проверить позже" %>
-    </div>
-  </section>
-
-  <section class="form-section" data-follow-up-section>
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Следующее действие</h2>
-        <p class="text-muted mb-0">Если у записи есть следующий шаг, можно сразу создать напоминание.</p>
-      </div>
-    </div>
-
-    <div class="form-check form-switch">
-      <%= check_box_tag :create_follow_up_reminder, "1", false, class: "form-check-input", role: "switch" %>
-      <%= label_tag :create_follow_up_reminder, "Создать напоминание по следующему действию", class: "form-check-label" %>
-    </div>
-  </section>
-
-  <section class="form-section">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Файлы</h2>
-        <p class="text-muted mb-0">Прикрепите анализы, назначения, чеки или фотографии.</p>
-      </div>
-    </div>
-
-    <%= f.label :files, "Вложения", class: "form-label" %>
-    <%= f.file_field :files, multiple: true, class: "form-control" %>
-
-    <% if @pet_event.persisted? && @pet_event.files.attached? %>
-      <div class="attached-files">
-        <div class="fw-semibold mb-2">Уже прикреплено</div>
-        <div class="d-flex flex-column gap-2">
-          <% @pet_event.files.each do |file| %>
-            <%= link_to file.filename.to_s, url_for(file), target: "_blank", rel: "noopener" %>
+        <div class="pj-journal-type-grid">
+          <% PetEvent::EVENT_TYPE_LABELS.each do |key, label| %>
+            <label class="pj-journal-type-option <%= event_tone(key) %>">
+              <%= f.radio_button :event_type, key, data: { event_type_radio: true } %>
+              <span class="pj-journal-type-option__icon"><%= journal_event_icon(key) %></span>
+              <strong><%= label %></strong>
+              <small><%= event_type_hint(key) %></small>
+              <i>✓</i>
+            </label>
           <% end %>
         </div>
-      </div>
-    <% end %>
-  </section>
+      </section>
 
-  <div class="form-actions">
-    <%= f.submit "Сохранить запись", class: "btn btn-primary" %>
-    <%= link_to "К журналу", pet_pet_events_path(@pet), class: "btn btn-outline-secondary" %>
-    <%= link_to "К обзору", pet_path(@pet), class: "btn btn-outline-secondary" %>
+      <section class="pj-journal-form-section">
+        <div class="pj-journal-form-heading pj-journal-form-heading--compact">
+          <span>2. Детали события</span>
+        </div>
+
+        <div class="pj-journal-fields pj-journal-fields--base">
+          <div class="pj-journal-field">
+            <%= f.label :event_date, "Дата события" %>
+            <%= f.date_field :event_date, required: true %>
+          </div>
+          <div class="pj-journal-field">
+            <%= f.label :title, "Название" %>
+            <%= f.text_field :title, placeholder: "Можно оставить пустым" %>
+          </div>
+        </div>
+
+        <div class="pj-journal-dynamic-section" data-event-fields="weight">
+          <div class="pj-journal-fields">
+            <div class="pj-journal-field">
+              <%= f.label :weight_value, "Вес" %>
+              <div class="pj-journal-inline-control">
+                <%= f.number_field :weight_value, step: 0.01, min: 0, placeholder: "0" %>
+                <%= f.select :weight_unit, [["кг", "kg"], ["г", "g"]] %>
+              </div>
+              <small>Если единица — кг, текущий вес питомца тоже обновится.</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="pj-journal-dynamic-section" data-event-fields="vaccination">
+          <div class="pj-journal-fields pj-journal-fields--two">
+            <div class="pj-journal-field"><%= f.label :vaccine_name, "Вакцина" %><%= f.text_field :vaccine_name, placeholder: "Например, Nobivac DHPPi" %></div>
+            <div class="pj-journal-field"><%= f.label :vaccine_batch, "Номер партии" %><%= f.text_field :vaccine_batch, placeholder: "Серия / партия" %></div>
+            <div class="pj-journal-field"><%= f.label :clinic_name, "Клиника" %><%= f.text_field :clinic_name, placeholder: "Название клиники" %></div>
+            <div class="pj-journal-field"><%= f.label :veterinarian_name, "Ветеринар" %><%= f.text_field :veterinarian_name, placeholder: "Имя врача" %></div>
+            <div class="pj-journal-field"><%= f.label :valid_until, "Действует до" %><%= f.date_field :valid_until %></div>
+          </div>
+        </div>
+
+        <div class="pj-journal-dynamic-section" data-event-fields="treatment">
+          <div class="pj-journal-fields pj-journal-fields--two">
+            <div class="pj-journal-field"><%= f.label :medication_name, "Препарат / средство" %><%= f.text_field :medication_name, placeholder: "Название препарата или обработки" %></div>
+            <div class="pj-journal-field"><%= f.label :dosage, "Дозировка" %><%= f.text_field :dosage, placeholder: "Например, 1 таблетка" %></div>
+            <div class="pj-journal-field"><%= f.label :course_started_on, "Начало курса" %><%= f.date_field :course_started_on %></div>
+            <div class="pj-journal-field"><%= f.label :course_ended_on, "Окончание курса" %><%= f.date_field :course_ended_on %></div>
+            <div class="pj-journal-field pj-journal-field--wide"><%= f.label :next_action_at, "Следующее действие" %><%= f.datetime_local_field :next_action_at %></div>
+          </div>
+        </div>
+
+        <div class="pj-journal-dynamic-section" data-event-fields="visit">
+          <div class="pj-journal-fields pj-journal-fields--two">
+            <div class="pj-journal-field"><%= f.label :clinic_name, "Клиника" %><%= f.text_field :clinic_name, placeholder: "Название клиники" %></div>
+            <div class="pj-journal-field"><%= f.label :veterinarian_name, "Ветеринар" %><%= f.text_field :veterinarian_name, placeholder: "Имя врача" %></div>
+            <div class="pj-journal-field pj-journal-field--wide"><%= f.label :diagnosis, "Диагноз" %><%= f.text_field :diagnosis, placeholder: "Если поставлен" %></div>
+            <div class="pj-journal-field pj-journal-field--wide"><%= f.label :recommendations, "Рекомендации" %><%= f.text_area :recommendations, rows: 3 %></div>
+            <div class="pj-journal-field"><%= f.label :next_action_at, "Повторный приём / действие" %><%= f.datetime_local_field :next_action_at %></div>
+          </div>
+        </div>
+
+        <div class="pj-journal-dynamic-section" data-event-fields="illness">
+          <div class="pj-journal-fields pj-journal-fields--two">
+            <div class="pj-journal-field pj-journal-field--wide"><%= f.label :symptoms, "Симптомы" %><%= f.text_area :symptoms, rows: 3, placeholder: "Что заметили" %></div>
+            <div class="pj-journal-field"><%= f.label :severity, "Тяжесть" %><%= f.select :severity, event_severity_options, { include_blank: "Не указана" } %></div>
+            <div class="pj-journal-field"><%= f.label :diagnosis, "Диагноз" %><%= f.text_field :diagnosis %></div>
+            <div class="pj-journal-field"><%= f.label :symptom_started_on, "Начало симптомов" %><%= f.date_field :symptom_started_on %></div>
+            <div class="pj-journal-field"><%= f.label :symptom_ended_on, "Окончание симптомов" %><%= f.date_field :symptom_ended_on %></div>
+            <div class="pj-journal-field pj-journal-field--wide"><%= f.label :recommendations, "Рекомендации" %><%= f.text_area :recommendations, rows: 3 %></div>
+          </div>
+        </div>
+
+        <div class="pj-journal-dynamic-section" data-event-fields="note">
+          <p class="pj-journal-type-note">Для заметки достаточно даты, названия и описания.</p>
+        </div>
+
+        <div class="pj-journal-dynamic-section" data-event-fields="document">
+          <div class="pj-journal-type-note">
+            В журнале сохранится запись о документе. Для отдельной карточки документа используйте
+            <%= link_to "раздел «Документы»", pet_pet_documents_path(@pet) %>.
+          </div>
+        </div>
+      </section>
+
+      <section class="pj-journal-form-section">
+        <div class="pj-journal-form-heading pj-journal-form-heading--compact">
+          <span>3. Дополнительно</span>
+        </div>
+
+        <div class="pj-journal-field">
+          <%= f.label :description, "Заметки" %>
+          <%= f.text_area :description, rows: 4, placeholder: "Что произошло, рекомендации, важные наблюдения..." %>
+        </div>
+
+        <div class="pj-journal-file-control">
+          <div><strong>Файлы</strong><small>Анализы, назначения, чеки или фотографии</small></div>
+          <%= f.file_field :files, multiple: true %>
+        </div>
+
+        <% if @pet_event.persisted? && @pet_event.files.attached? %>
+          <div class="pj-journal-attached-files">
+            <% @pet_event.files.each do |file| %>
+              <%= link_to url_for(file), target: "_blank", rel: "noopener" do %>
+                <%= pj_icon(:file) %><span><strong><%= file.filename %></strong><small><%= number_to_human_size(file.byte_size) %></small></span>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+
+        <label class="pj-journal-follow-up-toggle" data-follow-up-section>
+          <%= check_box_tag :create_follow_up_reminder, "1", false %>
+          <span><strong>Создать напоминание по следующему действию</strong><small>Работает для событий, где указана дата следующего шага.</small></span>
+        </label>
+      </section>
+
+      <div class="pj-journal-form-actions">
+        <%= link_to "Отмена", @pet_event.persisted? ? pet_pet_event_path(@pet, @pet_event) : pet_pet_events_path(@pet), class: "pj-journal-form-cancel" %>
+        <%= f.submit(@pet_event.persisted? ? "Сохранить изменения" : "Сохранить", class: "pj-journal-form-save") %>
+      </div>
+    </div>
   </div>
 <% end %>
