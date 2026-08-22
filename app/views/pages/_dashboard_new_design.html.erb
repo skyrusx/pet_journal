@@ -6,6 +6,7 @@
 <% add_path = primary_pet ? new_pet_pet_event_path(primary_pet) : new_pet_path %>
 <% display_name = current_user.name.presence || current_user.email.to_s.split("@").first.presence || "Аккаунт" %>
 <% avatar_letter = display_name.to_s.first.to_s.upcase.presence || current_user.email.to_s.first.to_s.upcase %>
+<% reminders_badge = mobile_reminders_badge %>
 
 <div class="pj-dash" data-dashboard-root>
   <div class="pj-dash-shell">
@@ -36,7 +37,10 @@
           <%= pj_icon(:journal) %><span>Журнал</span>
         <% end %>
         <%= link_to reminders_path, class: "pj-dash-nav__item", aria: { label: "Напоминания" }, title: "Напоминания" do %>
-          <%= pj_icon(:bell) %><span>Напоминания</span>
+          <%= pj_icon(:alarm) %><span>Напоминания</span>
+          <% if reminders_badge.present? %>
+            <span class="pj-dash-nav__badge" aria-label="Актуальных напоминаний: <%= reminders_badge %>"><%= reminders_badge %></span>
+          <% end %>
         <% end %>
         <%= link_to documents_path, class: "pj-dash-nav__item", aria: { label: "Документы" }, title: "Документы" do %>
           <%= pj_icon(:file) %><span>Документы</span>
@@ -270,7 +274,7 @@
           <%= pj_icon(:plus) %>
         <% end %>
         <%= link_to reminders_path, class: "pj-dash-bottom-nav__item" do %>
-          <%= pj_icon(:bell) %><span>Напом.</span>
+          <%= pj_icon(:alarm) %><span>Напом.</span>
         <% end %>
         <%= link_to edit_user_registration_path, class: "pj-dash-bottom-nav__item" do %>
           <%= pj_icon(:more) %><span>Ещё</span>
