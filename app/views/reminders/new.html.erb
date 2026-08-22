@@ -5,6 +5,7 @@
     <%= link_to pet_reminders_path(@pet), class: "pj-workspace-back" do %>
       <%= pj_icon(:chevron) %><span>Назад к напоминаниям</span>
     <% end %>
+    <%= render "shared/workspace_notification_link" %>
   </header>
 
   <div class="pj-reminders-content pj-reminder-form-content">
