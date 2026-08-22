@@ -1,7 +1,10 @@
 class PetProfileSharesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pet
+  before_action :set_pet_choices
   before_action :set_share, only: %i[show edit update destroy enable disable rotate_token qr]
+
+  layout "workspace_new_design"
 
   def index
     @shares = @pet.pet_profile_shares.recent.includes(:pet_profile_share_views)
@@ -85,6 +88,10 @@ class PetProfileSharesController < ApplicationController
 
   def set_pet
     @pet = current_user.pets.find(params[:pet_id])
+  end
+
+  def set_pet_choices
+    @pet_choices = current_user.pets.order(:name)
   end
 
   def set_share
