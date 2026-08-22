@@ -44,6 +44,9 @@
     <%= link_to pet_tags_path, class: class_names("pj-dash-nav__item", active: controller_name == "pet_tags"), aria: { label: "PetTag" }, title: "PetTag" do %>
       <%= pj_icon(:tag) %><span>PetTag</span>
     <% end %>
+    <%= link_to settings_path, class: class_names("pj-dash-nav__item", active: controller_name == "settings"), aria: { label: "Настройки" }, title: "Настройки" do %>
+      <%= pj_icon(:settings) %><span>Настройки</span>
+    <% end %>
   </nav>
 
   <div class="pj-dash-sidebar__footer">
@@ -72,11 +75,6 @@
         <%= link_to edit_user_registration_path, class: "pj-dash-profile-popover__item" do %>
           <%= pj_icon(:user) %>
           <span>Профиль</span>
-        <% end %>
-
-        <%= link_to settings_path, class: "pj-dash-profile-popover__item" do %>
-          <%= pj_icon(:settings) %>
-          <span>Настройки</span>
         <% end %>
 
         <div class="pj-dash-profile-popover__separator" aria-hidden="true"></div>
