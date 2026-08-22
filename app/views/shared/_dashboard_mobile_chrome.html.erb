@@ -3,6 +3,7 @@
 <% reminders_path = primary_pet ? pet_reminders_path(primary_pet) : pets_path %>
 <% documents_path = primary_pet ? pet_pet_documents_path(primary_pet) : pets_path %>
 <% pettag_path = primary_pet ? pet_pet_tag_path(primary_pet) : pets_path %>
+<% reminders_badge = mobile_reminders_badge %>
 
 <div class="pj-mobile-chrome" data-dashboard-mobile-chrome>
   <header class="pj-mobile-chrome__header">
@@ -16,6 +17,9 @@
                   aria: { label: "Напоминания", current: controller_name == "reminders" ? "page" : nil },
                   title: "Напоминания" do %>
         <%= pj_icon(:alarm) %>
+        <% if reminders_badge.present? %>
+          <span class="pj-mobile-chrome__badge" aria-hidden="true"><%= reminders_badge %></span>
+        <% end %>
       <% end %>
 
       <%= link_to notification_channels_path,
