@@ -38,6 +38,7 @@
 
         <div class="pj-settings-text-options" role="radiogroup" aria-label="Размер текста">
           <% [
+            ["compact", "Уменьшенный", "Больше информации помещается на экране", "Aa"],
             ["standard", "Стандартный", "Оптимальный баланс текста и пространства", "Aa"],
             ["comfortable", "Увеличенный", "Немного крупнее для более лёгкого чтения", "Aa"],
             ["large", "Крупный", "Максимальная читаемость интерфейса", "Aa"]
@@ -68,10 +69,10 @@
         <div class="pj-settings-field">
           <%= f.label :notifications_time_zone, "Часовой пояс" %>
           <%= f.select :notifications_time_zone,
-                       options_for_select(@time_zones.map { |zone| [zone.to_s, zone.name] }, current_user.notifications_time_zone_name),
+                       options_for_select(@time_zone_options, current_user.notifications_time_zone_name),
                        {},
                        class: "pj-settings-select" %>
-          <small>Один часовой пояс используется во всём PetJournal, включая уведомления.</small>
+          <small>Часовые пояса России отображаются на русском и используются во всём PetJournal, включая уведомления.</small>
         </div>
       </section>
 
