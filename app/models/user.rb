@@ -1,7 +1,21 @@
 class User < ApplicationRecord
+  AVATAR_CONTENT_TYPES = %w[image/jpeg image/png image/webp].freeze
+  AVATAR_MAX_SIZE = 5.megabytes
+
+  has_one_attached :avatar
+
   has_many :pets, dependent: :destroy
   has_many :notification_channels, dependent: :destroy
   has_many :reminders, through: :pets
+
+  attr_accessor :remove_avatar
+
+  validates :name, length: { maximum: 80 }, allow_blank: true
+  validates :phone, length: { maximum: 32 }, allow_blank: true
+  validate :acceptable_avatar
+
+  after_commit :purge_avatar_if_requested, on: :update
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -24,5 +38,24 @@ class User < ApplicationRecord
     else
       current_minutes >= start_minutes || current_minutes < end_minutes
     end
+  end
+
+  private
+
+  def acceptable_avatar
+    return unless avatar.attached?
+
+    unless AVATAR_CONTENT_TYPES.include?(avatar.blob.content_type)
+      errors.add(:avatar, "должен быть JPG, PNG или WebP")
+    end
+
+    errors.add(:avatar, "должен быть меньше 5 МБ") if avatar.blob.byte_size > AVATAR_MAX_SIZE
+  end
+
+  def purge_avatar_if_requested
+    return unless ActiveModel::Type::Boolean.new.cast(remove_avatar)
+    return unless avatar.attached?
+
+    avatar.purge_later
   end
 end
