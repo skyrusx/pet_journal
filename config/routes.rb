@@ -23,6 +23,9 @@ Rails.application.routes.draw do
     put "password" => "devise/passwords#update"
   end
 
+  get "settings" => "settings#edit", as: :settings
+  patch "settings" => "settings#update"
+
   resources :notification_channels, except: %i[show] do
     post :test, on: :member
     post "deliveries/:delivery_id/retry", action: :retry_delivery, on: :collection, as: :retry_delivery
@@ -36,16 +39,13 @@ Rails.application.routes.draw do
   get "share/:token" => "public_pet_profile_shares#show", as: :public_pet_profile_share
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
+  # Reveal health status on /up if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Render dynamic PWA files from app/views/pwa/*
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-
-  # Defines the root path route ("/")
-  # root "posts#index"
 
   resources :pets, only: %i[index show new create edit update] do
     resource :pet_tag, path: :tag, only: %i[show create edit update] do
