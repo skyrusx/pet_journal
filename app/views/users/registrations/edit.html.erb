@@ -3,15 +3,21 @@
 <% avatar_letter = display_name.to_s.first.to_s.upcase.presence || "P" %>
 
 <div class="pj-account-page">
-  <header class="pj-workspace-topbar pj-account-topbar">
-    <div class="pj-account-heading">
-      <span class="pj-account-eyebrow">Аккаунт</span>
-      <h1>Профиль</h1>
-      <p>Контактные данные и безопасность аккаунта PetJournal.</p>
-    </div>
+  <header class="pj-workspace-topbar">
+    <h1>Профиль</h1>
+    <%= link_to notification_channels_path, class: "pj-workspace-icon", aria: { label: "Настройки уведомлений" }, title: "Настройки уведомлений" do %>
+      <%= pj_icon(:bell) %>
+    <% end %>
   </header>
 
   <div class="pj-account-content">
+    <div class="pj-account-heading">
+      <div>
+        <h1>Профиль</h1>
+        <p>Контактные данные и безопасность аккаунта PetJournal.</p>
+      </div>
+    </div>
+
     <% if resource.errors.any? %>
       <div class="pj-account-errors" role="alert">
         <strong>Не удалось сохранить изменения</strong>
@@ -125,29 +131,23 @@
             <div class="pj-account-password-grid">
               <div class="pj-account-field">
                 <%= f.label :password, "Новый пароль" %>
-                <div class="pj-account-password-field">
+                <div class="pj-account-password-field auth-password-field">
                   <%= f.password_field :password,
                                        autocomplete: "new-password",
                                        placeholder: "Оставьте пустым, если не меняете",
-                                       data: { account_password_input: true } %>
-                  <button type="button"
-                          class="pj-account-password-toggle"
-                          aria-label="Показать пароль"
-                          data-account-password-toggle>Показать</button>
+                                       data: { password_input: true } %>
+                  <%= render "devise/shared/password_toggle" %>
                 </div>
               </div>
 
               <div class="pj-account-field">
                 <%= f.label :password_confirmation, "Повторите пароль" %>
-                <div class="pj-account-password-field">
+                <div class="pj-account-password-field auth-password-field">
                   <%= f.password_field :password_confirmation,
                                        autocomplete: "new-password",
                                        placeholder: "Повторите новый пароль",
-                                       data: { account_password_input: true } %>
-                  <button type="button"
-                          class="pj-account-password-toggle"
-                          aria-label="Показать пароль"
-                          data-account-password-toggle>Показать</button>
+                                       data: { password_input: true } %>
+                  <%= render "devise/shared/password_toggle" %>
                 </div>
               </div>
             </div>
@@ -158,15 +158,12 @@
 
             <div class="pj-account-field pj-account-current-password">
               <%= f.label :current_password, "Текущий пароль" %>
-              <div class="pj-account-password-field">
+              <div class="pj-account-password-field auth-password-field">
                 <%= f.password_field :current_password,
                                      autocomplete: "current-password",
                                      placeholder: "Нужен для смены email или пароля",
-                                     data: { account_password_input: true } %>
-                <button type="button"
-                        class="pj-account-password-toggle"
-                        aria-label="Показать пароль"
-                        data-account-password-toggle>Показать</button>
+                                     data: { password_input: true } %>
+                <%= render "devise/shared/password_toggle" %>
               </div>
               <small>Текущий пароль требуется только при изменении email или пароля.</small>
             </div>
