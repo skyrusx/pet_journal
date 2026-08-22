@@ -1,9 +1,10 @@
 <% primary_pet = ((defined?(@pet) && @pet&.persisted?) ? @pet : Array(@pets).first) || current_user.pets.order(created_at: :desc).first %>
-<% journal_path = primary_pet ? pet_pet_events_path(primary_pet) : pets_path %>
-<% reminders_path = primary_pet ? pet_reminders_path(primary_pet) : pets_path %>
-<% documents_path = primary_pet ? pet_pet_documents_path(primary_pet) : pets_path %>
+<% journal_path = primary_pet ? pet_pet_events_path(primary_pet) : journal_overview_path %>
+<% reminders_path = primary_pet ? pet_reminders_path(primary_pet) : reminders_overview_path %>
+<% documents_path = primary_pet ? pet_pet_documents_path(primary_pet) : documents_overview_path %>
 <% pettag_path = primary_pet ? pet_pet_tag_path(primary_pet) : pets_path %>
 <% reminders_badge = mobile_reminders_badge %>
+<% empty_workspace_section = controller_name == "workspace_sections" ? action_name : nil %>
 
 <div class="pj-mobile-chrome" data-dashboard-mobile-chrome>
   <header class="pj-mobile-chrome__header">
@@ -13,8 +14,8 @@
 
     <div class="pj-mobile-chrome__header-actions" aria-label="Быстрые разделы">
       <%= link_to reminders_path,
-                  class: class_names("pj-mobile-chrome__bell", "is-active": controller_name == "reminders"),
-                  aria: { label: "Напоминания", current: controller_name == "reminders" ? "page" : nil },
+                  class: class_names("pj-mobile-chrome__bell", "is-active": controller_name == "reminders" || empty_workspace_section == "reminders"),
+                  aria: { label: "Напоминания", current: (controller_name == "reminders" || empty_workspace_section == "reminders") ? "page" : nil },
                   title: "Напоминания" do %>
         <%= pj_icon(:alarm) %>
         <% if reminders_badge.present? %>
@@ -115,7 +116,7 @@
       <%= pj_icon(:paw) %><span>Питомцы</span>
     <% end %>
 
-    <%= link_to journal_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pet_events"), aria: { current: controller_name == "pet_events" ? "page" : nil } do %>
+    <%= link_to journal_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pet_events" || empty_workspace_section == "journal"), aria: { current: (controller_name == "pet_events" || empty_workspace_section == "journal") ? "page" : nil } do %>
       <%= pj_icon(:journal) %><span>Журнал</span>
     <% end %>
 
@@ -127,7 +128,7 @@
       <%= pj_icon(:plus) %>
     </button>
 
-    <%= link_to documents_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pet_documents"), aria: { current: controller_name == "pet_documents" ? "page" : nil } do %>
+    <%= link_to documents_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pet_documents" || empty_workspace_section == "documents"), aria: { current: (controller_name == "pet_documents" || empty_workspace_section == "documents") ? "page" : nil } do %>
       <%= pj_icon(:file) %><span>Документы</span>
     <% end %>
 
