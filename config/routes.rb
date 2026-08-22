@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   get "journal" => "workspace_sections#journal", as: :journal_overview
   get "reminders" => "workspace_sections#reminders", as: :reminders_overview
   get "documents" => "workspace_sections#documents", as: :documents_overview
+  get "public-access" => "workspace_sections#public_access", as: :public_access_overview
 
   resources :notification_channels, except: %i[show] do
     post :test, on: :member
