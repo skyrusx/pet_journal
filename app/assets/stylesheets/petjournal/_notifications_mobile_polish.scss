@@ -104,6 +104,103 @@
     grid-row: 3;
   }
 
+  /* Delivery history must explicitly reset the desktop six-column grid after
+     notification standardization. Each delivery becomes a compact mobile card. */
+  .pj-notifications-history {
+    overflow: hidden;
+  }
+
+  .pj-notifications-history-filter {
+    min-width: 0;
+  }
+
+  .pj-notifications-delivery-table {
+    width: 100%;
+    min-width: 0;
+    overflow: visible;
+  }
+
+  .pj-notifications-delivery-row {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) max-content;
+    grid-template-rows: auto auto auto;
+    column-gap: 12px;
+    row-gap: 12px;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .pj-notifications-delivery-row > div {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .pj-notifications-delivery-row__date {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .pj-notifications-delivery-row > div:nth-child(5) {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: max-content;
+    justify-self: end;
+    align-self: center;
+  }
+
+  .pj-notifications-delivery-row > div:nth-child(5) .pj-notifications-status {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pj-notifications-delivery-row__channel {
+    grid-column: 1;
+    grid-row: 2;
+    min-width: 0;
+  }
+
+  .pj-notifications-delivery-row__channel > span:last-child {
+    min-width: 0;
+  }
+
+  .pj-notifications-delivery-row__channel strong,
+  .pj-notifications-delivery-row__channel small {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pj-notifications-delivery-row__attempts {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+    align-self: center;
+    white-space: nowrap;
+  }
+
+  .pj-notifications-delivery-row__reminder {
+    grid-column: 1;
+    grid-row: 3;
+    min-width: 0;
+  }
+
+  .pj-notifications-delivery-row__reminder strong,
+  .pj-notifications-delivery-row__reminder small {
+    overflow-wrap: anywhere;
+  }
+
+  .pj-notifications-delivery-row__action {
+    grid-column: 2;
+    grid-row: 3;
+    justify-self: end;
+    align-self: end;
+  }
+
   /* The explanatory block must be a normal vertical mobile section, not a desktop two-column rail. */
   .pj-notifications-help {
     width: 100%;
@@ -202,6 +299,17 @@
 
   .pj-notifications-status {
     min-height: 24px;
+    padding-inline: 7px;
+    font-size: 10.5px;
+  }
+
+  .pj-notifications-delivery-row {
+    column-gap: 9px;
+    row-gap: 10px;
+    padding: 13px;
+  }
+
+  .pj-notifications-delivery-row > div:nth-child(5) .pj-notifications-status {
     padding-inline: 7px;
     font-size: 10.5px;
   }
