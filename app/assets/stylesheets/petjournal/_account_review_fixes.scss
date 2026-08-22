@@ -167,7 +167,27 @@
 
   .pj-account-content {
     width: 100%;
+    max-width: none;
+    margin: 0;
     padding: 24px 14px 128px;
+    box-sizing: border-box;
+  }
+
+  /* Desktop overrides in this file are loaded after account_new_design.scss,
+     so the mobile single-column layout must be restated here as well. */
+  .pj-account-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .pj-account-profile-card,
+  .pj-account-security-card {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    box-sizing: border-box;
   }
 
   .pj-account-heading {
@@ -198,6 +218,10 @@
   .pj-account-field input[type="password"] {
     height: 50px;
     font-size: 16px;
+  }
+
+  .pj-account-password-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .pj-account-password-field .auth-password-toggle {
