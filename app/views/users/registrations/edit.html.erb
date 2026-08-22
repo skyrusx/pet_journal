@@ -44,7 +44,7 @@
                      url: edit_user_registration_path,
                      html: { method: :put, id: "pj-profile-form", class: "pj-account-form", multipart: true }) do |f| %>
           <div class="pj-account-avatar-block">
-            <div class="pj-account-avatar" data-account-avatar-preview>
+            <div class="pj-account-avatar" data-account-avatar-preview data-account-avatar-letter="<%= avatar_letter %>">
               <% if resource.avatar.attached? %>
                 <%= image_tag resource.avatar, alt: "Фото профиля #{display_name}" %>
               <% else %>
@@ -61,15 +61,21 @@
                                  accept: "image/jpeg,image/png,image/webp",
                                  class: "pj-account-avatar-input",
                                  data: { account_avatar_input: true } %>
+
+                <% if resource.avatar.attached? %>
+                  <button type="button"
+                          class="pj-account-avatar-remove-button"
+                          data-account-avatar-remove
+                          aria-label="Удалить фото"
+                          title="Удалить фото">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+                    </svg>
+                  </button>
+                <% end %>
               </div>
               <small>JPG, PNG или WebP до 5 МБ.</small>
-
-              <% if resource.avatar.attached? %>
-                <label class="pj-account-remove-avatar">
-                  <%= f.check_box :remove_avatar %>
-                  <span>Удалить текущее фото</span>
-                </label>
-              <% end %>
+              <%= f.hidden_field :remove_avatar, value: "0", data: { account_avatar_remove_flag: true } %>
             </div>
           </div>
 
@@ -88,9 +94,10 @@
               <%= f.label :phone, "Телефон" %>
               <%= f.telephone_field :phone,
                                     autocomplete: "tel",
-                                    placeholder: "+7 999 123-45-67",
-                                    maxlength: 32,
-                                    inputmode: "tel" %>
+                                    placeholder: "+7 (999) 123-45-67",
+                                    maxlength: 18,
+                                    inputmode: "tel",
+                                    data: { account_phone_input: true } %>
               <small>Телефон не публикуется автоматически. Позже его можно будет подставлять в контакт PetTag по вашему выбору.</small>
             </div>
           </div>
@@ -182,7 +189,7 @@
         <h2 id="pj-contact-note-title">Контакты и PetTag</h2>
         <p>Имя, телефон и фотография хранятся в вашем профиле. Публичный PetTag по-прежнему показывает только те контактные данные, которые вы разрешили для конкретного питомца.</p>
       </div>
-      <%= link_to "Открыть PetTag", pet_tags_path, class: "pj-account-secondary-button" %>
+      <%= link_to "Открыть PetTag", pet_tags_path, class: "pj-account-secondary-button pj-account-pettag-link" %>
     </section>
 
     <section class="pj-account-danger" aria-labelledby="pj-danger-title">
