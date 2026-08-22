@@ -26,7 +26,7 @@ module NotificationChannelsHelper
     {
       "email" => "name@example.ru",
       "telegram" => "Подключается через бота",
-      "vk" => "Например, vk.ru/skyrusx или @skyrusx"
+      "vk" => "Например, vk.ru/username или @username"
     }.fetch(channel_type.to_s, "Укажите адрес канала")
   end
 
