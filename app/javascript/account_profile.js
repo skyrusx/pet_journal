@@ -1,13 +1,19 @@
-function normalizeRussianPhonePrefix(value) {
-  const raw = value.toString();
-  const trimmed = raw.trim();
-  if (!trimmed) return "";
+function formatRussianPhone(value) {
+  let digits = value.toString().replace(/\D/g, "");
 
-  if (trimmed.startsWith("+7")) return trimmed;
-  if (trimmed.startsWith("8")) return `+7${trimmed.slice(1)}`;
-  if (trimmed.startsWith("7")) return `+7${trimmed.slice(1)}`;
+  if (digits.startsWith("8")) digits = digits.slice(1);
+  else if (digits.startsWith("7")) digits = digits.slice(1);
 
-  return `+7 ${trimmed}`;
+  const local = digits.slice(0, 10);
+  let result = "+7";
+
+  if (local.length > 0) result += ` (${local.slice(0, 3)}`;
+  if (local.length >= 3) result += ")";
+  if (local.length > 3) result += ` ${local.slice(3, 6)}`;
+  if (local.length > 6) result += `-${local.slice(6, 8)}`;
+  if (local.length > 8) result += `-${local.slice(8, 10)}`;
+
+  return result;
 }
 
 function initAccountProfile() {
@@ -63,7 +69,7 @@ function initAccountProfile() {
     if (input.dataset.pjAccountPhoneBound === "true") return;
     input.dataset.pjAccountPhoneBound = "true";
 
-    if (input.value.trim() !== "") input.value = normalizeRussianPhonePrefix(input.value);
+    if (input.value.trim() !== "") input.value = formatRussianPhone(input.value);
 
     input.addEventListener("focus", () => {
       if (input.value.trim() === "") {
@@ -73,10 +79,12 @@ function initAccountProfile() {
     });
 
     input.addEventListener("input", () => {
-      const value = input.value;
-      if (value === "" || value.startsWith("+7")) return;
+      if (input.value.trim() === "") {
+        input.value = "+7 ";
+      } else {
+        input.value = formatRussianPhone(input.value);
+      }
 
-      input.value = normalizeRussianPhonePrefix(value);
       input.setSelectionRange(input.value.length, input.value.length);
     });
 
