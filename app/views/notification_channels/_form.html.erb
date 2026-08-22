@@ -9,10 +9,13 @@
   <div class="pj-notifications-form-grid">
     <div class="pj-notifications-field">
       <%= form.label :channel_type, "Тип канала" %>
-      <% if channel.channel_web_push? %>
+      <% if channel.persisted? || channel.channel_web_push? %>
         <div class="pj-notifications-readonly-field">
           <span class="pj-notifications-readonly-field__icon"><%= notification_channel_icon(channel) %></span>
-          <span><strong>Web Push</strong><small>Подписка этого браузера</small></span>
+          <span>
+            <strong><%= channel.channel_type_label %></strong>
+            <small><%= channel.channel_web_push? ? "Подписка этого браузера" : "Тип канала нельзя изменить после подключения" %></small>
+          </span>
         </div>
         <%= form.hidden_field :channel_type %>
       <% else %>
@@ -23,12 +26,13 @@
       <% end %>
     </div>
 
-    <div class="pj-notifications-field">
+    <div class="pj-notifications-field" data-standard-channel-field <%= "hidden" if channel.new_record? && channel.channel_telegram? %>>
       <%= form.label :name, "Название" %>
       <%= form.text_field :name,
-                          placeholder: channel.channel_web_push? ? "Например, Рабочий MacBook" : "Например, Telegram владельца",
-                          required: true %>
-      <small>Название видно только вам и помогает различать несколько каналов одного типа.</small>
+                          placeholder: "Например, Личная почта",
+                          required: true,
+                          data: { channel_name_input: true } %>
+      <small>Название видно только вам. Можно оставить предложенный вариант.</small>
     </div>
 
     <% if channel.channel_web_push? %>
@@ -45,19 +49,55 @@
       <%= form.hidden_field :address %>
     <% else %>
       <% current_type = channel.channel_type.presence || "email" %>
-      <div class="pj-notifications-field pj-notifications-field--wide" data-address-field>
+      <div class="pj-notifications-field pj-notifications-field--wide"
+           data-address-field
+           data-standard-channel-field
+           <%= "hidden" if current_type == "telegram" %>>
         <%= form.label :address,
                        notification_channel_address_label(current_type),
                        data: { channel_address_label: true } %>
         <%= form.text_field :address,
+                            value: notification_channel_form_address(channel),
                             placeholder: notification_channel_address_placeholder(current_type),
-                            required: true,
+                            required: current_type != "telegram",
+                            autocomplete: current_type == "email" ? "email" : "off",
                             data: { channel_address_input: true } %>
         <small data-channel-hint><%= notification_channel_hint(current_type) %></small>
       </div>
+
+      <div class="pj-notifications-form-info pj-notifications-form-info--wide"
+           data-telegram-connect-panel
+           <%= "hidden" unless current_type == "telegram" %>>
+        <span><%= notification_channel_icon(:telegram) %></span>
+        <div>
+          <% if channel.persisted? && channel.channel_telegram? %>
+            <strong>Telegram уже подключён</strong>
+            <p><%= notification_channel_display_address(channel) %>. Чтобы подключить другой аккаунт, добавьте новый Telegram-канал.</p>
+          <% elsif telegram_connection_url.present? %>
+            <strong>Подключите Telegram в один шаг</strong>
+            <p>Откройте <%= telegram_bot_label %> и нажмите Start. PetJournal сам получит нужный chat_id и сохранит подключение.</p>
+            <%= link_to "Подключить Telegram",
+                        telegram_connection_url,
+                        class: "pj-notifications-primary-button",
+                        target: "_blank",
+                        rel: "noopener",
+                        data: { telegram_connect_link: true } %>
+            <small>После Start вернитесь в PetJournal и обновите страницу — канал появится автоматически.</small>
+          <% else %>
+            <strong>Telegram пока не настроен</strong>
+            <p>Подключение через бота станет доступно после настройки Telegram-бота PetJournal.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <% if channel.persisted? && channel.channel_telegram? %>
+        <%= form.hidden_field :address %>
+      <% end %>
     <% end %>
 
-    <label class="pj-notifications-toggle-row pj-notifications-form-toggle pj-notifications-field--wide">
+    <label class="pj-notifications-toggle-row pj-notifications-form-toggle pj-notifications-field--wide"
+           data-standard-channel-field
+           <%= "hidden" if channel.new_record? && channel.channel_telegram? %>>
       <span>
         <strong>Получать уведомления через этот канал</strong>
         <small>Канал можно временно выключить, не удаляя его настройки.</small>
@@ -74,8 +114,18 @@
     <p>Если в конкретном напоминании выбраны каналы — PetJournal использует их. Если ничего не выбрано — используются все включённые каналы. Когда дополнительных каналов нет, остаётся email аккаунта.</p>
   </div>
 
-  <div class="pj-notifications-form-actions">
+  <div class="pj-notifications-form-actions"
+       data-standard-channel-actions
+       <%= "hidden" if channel.new_record? && channel.channel_telegram? %>>
     <%= link_to "Отмена", notification_channels_path, class: "pj-notifications-secondary-button" %>
-    <%= form.submit channel.persisted? ? "Сохранить изменения" : "Добавить канал", class: "pj-notifications-primary-button" %>
+    <%= form.submit channel.persisted? ? "Сохранить изменения" : "Добавить канал",
+                    class: "pj-notifications-primary-button",
+                    data: { channel_submit: true } %>
   </div>
+
+  <% if channel.new_record? %>
+    <div class="pj-notifications-form-actions" data-telegram-only-actions <%= "hidden" unless channel.channel_telegram? %>>
+      <%= link_to "Вернуться к уведомлениям", notification_channels_path, class: "pj-notifications-secondary-button" %>
+    </div>
+  <% end %>
 <% end %>
