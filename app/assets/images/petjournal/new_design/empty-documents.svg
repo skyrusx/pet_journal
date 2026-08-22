@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 220" role="img" aria-hidden="true">
+  <defs><filter id="s" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#526957" flood-opacity=".13"/></filter></defs>
+  <path d="M49 58c31-40 107-49 157-17 46 29 55 84 25 124-34 46-111 56-159 29-49-28-57-93-23-136Z" fill="#f2f4e5"/>
+  <g filter="url(#s)">
+    <path d="M94 57h66l29 29v79H94Z" fill="#fffdf7" stroke="#d8dfc8" stroke-width="3"/>
+    <path d="M160 57v31h29" fill="#eef1df" stroke="#d8dfc8" stroke-width="3"/>
+    <path d="M111 104h56M111 124h48" stroke="#a4b397" stroke-width="4" stroke-linecap="round"/>
+    <path d="M68 105h58l13 16h75l-12 65H74Z" fill="#5d815d" stroke="#4d704f" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M75 117h132" stroke="#739270" stroke-width="3"/>
+  </g>
+  <path d="M214 62l4 8 8 4-8 4-4 8-4-8-8-4 8-4 4-8Z" fill="#b6cb9a"/>
+</svg>
