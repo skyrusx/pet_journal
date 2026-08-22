@@ -1,21 +1,13 @@
-function formatRussianPhone(value) {
-  let digits = value.replace(/\D/g, "");
-  if (!digits) return "";
+function normalizeRussianPhonePrefix(value) {
+  const raw = value.toString();
+  const trimmed = raw.trim();
+  if (!trimmed) return "";
 
-  if (digits.startsWith("8")) digits = `7${digits.slice(1)}`;
-  if (!digits.startsWith("7")) digits = `7${digits}`;
-  digits = digits.slice(0, 11);
+  if (trimmed.startsWith("+7")) return trimmed;
+  if (trimmed.startsWith("8")) return `+7${trimmed.slice(1)}`;
+  if (trimmed.startsWith("7")) return `+7${trimmed.slice(1)}`;
 
-  const local = digits.slice(1);
-  let result = "+7";
-
-  if (local.length > 0) result += ` (${local.slice(0, 3)}`;
-  if (local.length >= 3) result += ")";
-  if (local.length > 3) result += ` ${local.slice(3, 6)}`;
-  if (local.length > 6) result += `-${local.slice(6, 8)}`;
-  if (local.length > 8) result += `-${local.slice(8, 10)}`;
-
-  return result;
+  return `+7 ${trimmed}`;
 }
 
 function initAccountProfile() {
@@ -71,10 +63,25 @@ function initAccountProfile() {
     if (input.dataset.pjAccountPhoneBound === "true") return;
     input.dataset.pjAccountPhoneBound = "true";
 
-    if (input.value.trim() !== "") input.value = formatRussianPhone(input.value);
+    if (input.value.trim() !== "") input.value = normalizeRussianPhonePrefix(input.value);
+
+    input.addEventListener("focus", () => {
+      if (input.value.trim() === "") {
+        input.value = "+7 ";
+        input.setSelectionRange(input.value.length, input.value.length);
+      }
+    });
 
     input.addEventListener("input", () => {
-      input.value = formatRussianPhone(input.value);
+      const value = input.value;
+      if (value === "" || value.startsWith("+7")) return;
+
+      input.value = normalizeRussianPhonePrefix(value);
+      input.setSelectionRange(input.value.length, input.value.length);
+    });
+
+    input.addEventListener("blur", () => {
+      if (/^\+7\s*$/.test(input.value)) input.value = "";
     });
   });
 }
