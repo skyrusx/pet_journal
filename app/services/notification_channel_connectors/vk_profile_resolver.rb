@@ -5,7 +5,7 @@ module NotificationChannelConnectors
   class VkProfileResolver
     ENDPOINT = "https://api.vk.com/method/users.get".freeze
 
-    Result = Data.define(:user_id, :screen_name, :display_name)
+    Result = Struct.new(:user_id, :screen_name, :display_name, keyword_init: true)
     class Error < StandardError; end
 
     def self.call(value)
