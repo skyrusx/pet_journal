@@ -5,6 +5,7 @@
     <%= link_to pet_pet_documents_path(@pet), class: "pj-workspace-back" do %>
       <%= pj_icon(:chevron) %><span>Назад к документам</span>
     <% end %>
+    <%= render "shared/workspace_notification_link" %>
   </header>
 
   <div class="pj-documents-content pj-document-form-content">
