@@ -2,6 +2,7 @@
 <% workspace_journal_path = workspace_pet ? pet_pet_events_path(workspace_pet) : pets_path %>
 <% workspace_reminders_path = workspace_pet ? pet_reminders_path(workspace_pet) : pets_path %>
 <% workspace_documents_path = workspace_pet ? pet_pet_documents_path(workspace_pet) : pets_path %>
+<% workspace_reminders_badge = mobile_reminders_badge %>
 <% display_name = current_user.name.presence || current_user.email.to_s.split("@").first.presence || "Аккаунт" %>
 <% avatar_letter = display_name.to_s.first.to_s.upcase.presence || current_user.email.to_s.first.to_s.upcase %>
 
@@ -33,6 +34,9 @@
     <% end %>
     <%= link_to workspace_reminders_path, class: class_names("pj-dash-nav__item", active: controller_name == "reminders"), aria: { label: "Напоминания" }, title: "Напоминания" do %>
       <%= pj_icon(:alarm) %><span>Напоминания</span>
+      <% if workspace_reminders_badge.present? %>
+        <strong class="pj-dash-nav__badge" aria-label="Активных напоминаний: <%= workspace_reminders_badge %>"><%= workspace_reminders_badge %></strong>
+      <% end %>
     <% end %>
     <%= link_to workspace_documents_path, class: class_names("pj-dash-nav__item", active: controller_name == "pet_documents"), aria: { label: "Документы" }, title: "Документы" do %>
       <%= pj_icon(:file) %><span>Документы</span>
