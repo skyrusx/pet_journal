@@ -49,6 +49,21 @@ class WorkspaceSectionsController < ApplicationController
     render :empty
   end
 
+  def public_access
+    return redirect_to pet_profile_shares_path(@primary_pet) if @primary_pet
+
+    configure_empty_section(
+      key: "public_access",
+      title: "Публичный доступ",
+      subtitle: "Безопасно делитесь выбранными данными питомца по отдельной ссылке",
+      empty_title: "Сначала добавьте питомца",
+      empty_text: "После создания профиля питомца вы сможете сформировать отдельную публичную ссылку и выбрать, какие данные по ней будут видны.",
+      illustration: "petjournal/new_design/empty-public-access.svg"
+    )
+
+    render :empty
+  end
+
   private
 
   def set_primary_pet
