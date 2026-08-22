@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   AVATAR_CONTENT_TYPES = %w[image/jpeg image/png image/webp].freeze
   AVATAR_MAX_SIZE = 5.megabytes
-  INTERFACE_TEXT_SIZES = %w[standard comfortable large].freeze
+  INTERFACE_TEXT_SIZES = %w[compact standard comfortable large].freeze
 
   has_one_attached :avatar
 
