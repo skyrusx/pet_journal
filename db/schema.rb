@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_24_120100) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_22_144500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -155,8 +155,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_24_120100) do
     t.datetime "last_viewed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["expires_at"], name: "index_pet_profile_shares_on_expires_at"
-    t.index ["pet_id", "enabled"], name: "index_pet_profile_shares_on_pet_id_and_enabled"
+    t.index ["expires_at"], name: "index_profile_shares_on_expires_at"
+    t.index ["pet_id", "enabled"], name: "index_profile_shares_on_pet_id_and_enabled"
     t.index ["pet_id"], name: "index_pet_profile_shares_on_pet_id"
     t.index ["public_token"], name: "index_pet_profile_shares_on_public_token", unique: true
   end
@@ -292,6 +292,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_24_120100) do
     t.time "notifications_quiet_hours_start", default: "2000-01-01 22:00:00", null: false
     t.time "notifications_quiet_hours_end", default: "2000-01-01 08:00:00", null: false
     t.string "notifications_time_zone", default: "UTC", null: false
+    t.string "name"
+    t.string "phone"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
