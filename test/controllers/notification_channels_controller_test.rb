@@ -37,6 +37,34 @@ class NotificationChannelsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to notification_channels_url
   end
 
+  test "should resolve friendly VK profile when creating channel" do
+    result = NotificationChannelConnectors::VkProfileResolver::Result.new(
+      user_id: "123456",
+      screen_name: "skyrusx",
+      display_name: "Руслан Федотов"
+    )
+
+    NotificationChannelConnectors::VkProfileResolver.stub(:call, result) do
+      assert_difference("NotificationChannel.count") do
+        post notification_channels_url, params: {
+          notification_channel: {
+            channel_type: "vk",
+            name: "VK",
+            address: "https://vk.ru/skyrusx",
+            enabled: "1"
+          }
+        }
+      end
+    end
+
+    assert_redirected_to notification_channels_url
+    channel = @user.notification_channels.order(:created_at).last
+    assert channel.channel_vk?
+    assert_equal "123456", channel.address
+    assert_equal "skyrusx", channel.settings["screen_name"]
+    assert_equal "Руслан Федотов", channel.settings["display_name"]
+  end
+
   test "should run test delivery immediately" do
     assert_difference("NotificationDelivery.count") do
       post test_notification_channel_url(@channel)
