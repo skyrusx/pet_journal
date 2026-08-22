@@ -1,4 +1,47 @@
+const TELEGRAM_CONNECT_STORAGE_KEY = "pjTelegramConnectReturn";
+let telegramReturnListenerBound = false;
+
+function initTelegramReturnListener() {
+  if (telegramReturnListenerBound) return;
+  telegramReturnListenerBound = true;
+
+  const returnToChannels = () => {
+    const raw = sessionStorage.getItem(TELEGRAM_CONNECT_STORAGE_KEY);
+    if (!raw) return;
+
+    try {
+      const state = JSON.parse(raw);
+      const elapsed = Date.now() - Number(state.startedAt || 0);
+      if (elapsed < 1200) return;
+
+      sessionStorage.removeItem(TELEGRAM_CONNECT_STORAGE_KEY);
+      window.location.assign(state.returnUrl || "/notification_channels");
+    } catch (_error) {
+      sessionStorage.removeItem(TELEGRAM_CONNECT_STORAGE_KEY);
+    }
+  };
+
+  window.addEventListener("focus", returnToChannels);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") returnToChannels();
+  });
+}
+
 function initNotificationChannelForms() {
+  initTelegramReturnListener();
+
+  document.querySelectorAll("[data-telegram-connect-link]").forEach((link) => {
+    if (link.dataset.pjTelegramBound === "true") return;
+    link.dataset.pjTelegramBound = "true";
+
+    link.addEventListener("click", () => {
+      sessionStorage.setItem(TELEGRAM_CONNECT_STORAGE_KEY, JSON.stringify({
+        startedAt: Date.now(),
+        returnUrl: link.dataset.returnUrl || "/notification_channels"
+      }));
+    });
+  });
+
   document.querySelectorAll("[data-notification-channel-form]").forEach((form) => {
     const select = form.querySelector("[data-channel-type-select]");
     if (!select || select.dataset.pjNotificationBound === "true") return;
