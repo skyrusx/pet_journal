@@ -14,8 +14,11 @@ class NotificationChannelsController < ApplicationController
   end
 
   def new
-    requested_type = params[:type].presence_in(%w[email telegram vk]) || :email
-    @channel = current_user.notification_channels.new(channel_type: requested_type)
+    requested_type = params[:type].presence_in(%w[email telegram vk]) || "email"
+    @channel = current_user.notification_channels.new(
+      channel_type: requested_type,
+      name: default_channel_name(requested_type)
+    )
   end
 
   def create
@@ -23,7 +26,7 @@ class NotificationChannelsController < ApplicationController
     apply_web_push_settings
     mark_verification
 
-    if @channel.save
+    if prepare_channel_for_save && @channel.save
       redirect_to notification_channels_path, notice: "Канал уведомлений добавлен."
     else
       render :new, status: :unprocessable_entity
@@ -37,7 +40,7 @@ class NotificationChannelsController < ApplicationController
     apply_web_push_settings
     mark_verification
 
-    if @channel.save
+    if prepare_channel_for_save && @channel.save
       redirect_to notification_channels_path, notice: "Канал уведомлений обновлен."
     else
       render :edit, status: :unprocessable_entity
@@ -120,8 +123,31 @@ class NotificationChannelsController < ApplicationController
     }
   end
 
+  def prepare_channel_for_save
+    return true unless @channel.channel_vk?
+
+    resolved = NotificationChannelConnectors::VkProfileResolver.call(@channel.address)
+    @channel.address = resolved.user_id
+    @channel.settings = @channel.settings.merge(
+      "screen_name" => resolved.screen_name,
+      "display_name" => resolved.display_name
+    ).compact
+    true
+  rescue NotificationChannelConnectors::VkProfileResolver::Error => e
+    @channel.errors.add(:address, e.message)
+    false
+  end
+
   def mark_verification
     @channel.verified_at ||= Time.current if @channel.channel_email?
+  end
+
+  def default_channel_name(channel_type)
+    {
+      "email" => "Email",
+      "telegram" => "Telegram",
+      "vk" => "VK"
+    }.fetch(channel_type, "Канал")
   end
 
   def filtered_deliveries
