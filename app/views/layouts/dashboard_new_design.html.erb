@@ -18,7 +18,7 @@
     <%= javascript_import_module_tag "dashboard_sidebar" %>
   </head>
 
-  <body class="pj-dashboard-body">
+  <body class="<%= class_names('pj-dashboard-body', current_user&.interface_text_size_css_class) %>">
     <%= yield %>
     <%= render "shared/dashboard_mobile_chrome" if user_signed_in? %>
 
