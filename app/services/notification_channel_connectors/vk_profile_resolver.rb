@@ -18,7 +18,6 @@ module NotificationChannelConnectors
       response = Net::HTTP.post_form(URI(ENDPOINT), {
         access_token: token,
         user_ids: identifier,
-        fields: "screen_name",
         v: ENV.fetch("VK_API_VERSION", "5.199")
       })
       body = JSON.parse(response.body)
@@ -33,7 +32,7 @@ module NotificationChannelConnectors
 
       Result.new(
         user_id: user.fetch("id").to_s,
-        screen_name: user["screen_name"].presence || screen_name_from(identifier, user.fetch("id")),
+        screen_name: screen_name_from(identifier, user.fetch("id")),
         display_name: [user["first_name"], user["last_name"]].compact.join(" ").presence
       )
     rescue JSON::ParserError, KeyError => e
@@ -50,7 +49,7 @@ module NotificationChannelConnectors
       value = value.split(/[?#]/, 2).first.to_s
       value = value.split("/", 2).first.to_s
       value = value.delete_prefix("@")
-      value = value.delete_prefix("id") if value.match?(/\Aid\d+\z/i)
+      value = value.sub(/\Aid(?=\d+\z)/i, "")
       value.presence
     end
 
