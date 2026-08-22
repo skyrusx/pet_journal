@@ -4,9 +4,7 @@
   <header class="pj-workspace-topbar">
     <h1>Питомцы</h1>
     <div class="pj-workspace-topbar__actions">
-      <%= link_to(@pets.first ? pet_reminders_path(@pets.first) : pets_path, class: "pj-workspace-icon", aria: { label: "Напоминания" }) do %>
-        <%= pj_icon(:bell) %>
-      <% end %>
+      <%= render "shared/workspace_notification_link" %>
     </div>
   </header>
 
