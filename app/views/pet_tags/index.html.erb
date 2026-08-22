@@ -1,6 +1,6 @@
 <% content_for :title, "PetTag — PetJournal" %>
 
-<div class="pj-pettag-page pj-pettag-overview-page">
+<div class="pj-pettag-page <%= @pets.empty? ? "pj-section-empty-page pj-section-empty-page--pettag" : "pj-pettag-overview-page" %>">
   <header class="pj-workspace-topbar">
     <h1>PetTag</h1>
     <%= link_to notification_channels_path,
@@ -11,15 +11,15 @@
     <% end %>
   </header>
 
-  <div class="pj-pettag-content pj-pettag-overview-content">
-    <div class="pj-pettag-overview-heading">
-      <div>
-        <h1>PetTag питомцев</h1>
-        <p>Выберите питомца, чтобы открыть его QR-профиль, статус безопасности и историю сканирований.</p>
+  <% if @pets.any? %>
+    <div class="pj-pettag-content pj-pettag-overview-content">
+      <div class="pj-pettag-overview-heading">
+        <div>
+          <h1>PetTag питомцев</h1>
+          <p>Выберите питомца, чтобы открыть его QR-профиль, статус безопасности и историю сканирований.</p>
+        </div>
       </div>
-    </div>
 
-    <% if @pets.any? %>
       <div class="pj-pettag-pet-grid">
         <% @pets.each do |pet| %>
           <% pet_tag = pet.pet_tag %>
@@ -76,13 +76,21 @@
           <% end %>
         <% end %>
       </div>
-    <% else %>
-      <section class="pj-pettag-empty-state">
-        <span class="pj-pettag-empty-state__icon"><%= pj_icon(:paw) %></span>
-        <h1>Сначала добавьте питомца</h1>
+    </div>
+  <% else %>
+    <div class="pj-section-empty-content">
+      <div class="pj-section-empty-heading">
+        <h1>PetTag</h1>
+        <p>Цифровой QR-профиль питомца, который помогает быстро связаться с владельцем.</p>
+      </div>
+
+      <section class="pj-section-empty-card" aria-labelledby="pj-pettag-empty-title">
+        <%= image_tag "petjournal/new_design/empty-pettag.svg", alt: "", class: "pj-section-empty-card__illustration" %>
+        <h2 id="pj-pettag-empty-title">Сначала добавьте питомца</h2>
         <p>PetTag создаётся отдельно для каждого питомца и использует его профиль.</p>
-        <%= link_to "Добавить питомца", new_pet_path, class: "pj-pettag-primary-button" %>
+        <%= link_to "Добавить питомца", new_pet_path, class: "pj-section-empty-card__button" %>
+        <span class="pj-section-empty-card__hint">Сначала создайте профиль питомца</span>
       </section>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 </div>
