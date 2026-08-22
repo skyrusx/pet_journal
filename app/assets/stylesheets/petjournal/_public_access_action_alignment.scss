@@ -1,0 +1,58 @@
+/* Keep public-access action groups visually consistent: equal height and equal width per row. */
+
+.pj-public-access-primary,
+.pj-public-access-secondary,
+.pj-public-access-quiet,
+.pj-public-access-danger-outline {
+  min-height: 44px;
+}
+
+.pj-public-access-intro__actions > .pj-public-access-primary,
+.pj-public-access-intro__actions > .pj-public-access-secondary,
+.pj-public-access-intro__actions > .pj-public-access-quiet {
+  width: 138px;
+  min-width: 138px;
+}
+
+.pj-public-access-link-card__actions > .pj-public-access-primary,
+.pj-public-access-link-card__actions > .pj-public-access-secondary,
+.pj-public-access-link-card__actions > .pj-public-access-quiet {
+  width: 148px;
+  min-width: 148px;
+}
+
+.pj-public-access-downloads > .pj-public-access-primary,
+.pj-public-access-downloads > .pj-public-access-secondary,
+.pj-public-access-downloads > .pj-public-access-quiet {
+  width: 126px;
+  min-width: 126px;
+}
+
+.pj-public-access-danger-panel__actions > form {
+  margin: 0;
+}
+
+.pj-public-access-danger-panel__actions > form > .pj-public-access-danger-outline,
+.pj-public-access-danger-panel__actions > form > .pj-public-access-secondary,
+.pj-public-access-danger-panel__actions > form > .pj-public-access-primary {
+  width: 154px;
+  min-width: 154px;
+}
+
+@media (max-width: 820px) {
+  .pj-public-access-intro__actions,
+  .pj-public-access-link-card__actions,
+  .pj-public-access-downloads,
+  .pj-public-access-danger-panel__actions {
+    width: 100%;
+  }
+
+  .pj-public-access-intro__actions > *,
+  .pj-public-access-link-card__actions > *,
+  .pj-public-access-downloads > *,
+  .pj-public-access-danger-panel__actions > form,
+  .pj-public-access-danger-panel__actions > form > * {
+    width: 100%;
+    min-width: 0;
+  }
+}
