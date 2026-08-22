@@ -1,0 +1,11 @@
+/* Keep notification channel forms aligned with the standard PetJournal form width. */
+
+@media (min-width: 821px) {
+  .pj-notifications-form-content {
+    width: min(930px, calc(100% - 72px));
+  }
+
+  .pj-notifications-form-card {
+    width: 100%;
+  }
+}
