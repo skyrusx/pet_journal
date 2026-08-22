@@ -13,6 +13,31 @@
   column-gap: 16px;
 }
 
+.pj-notifications-channel-card__heading {
+  min-width: 0;
+}
+
+.pj-notifications-channel-card__heading > span {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.pj-notifications-channel-card__name-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pj-notifications-channel-card__name-row h3 {
+  min-width: 0;
+  margin: 0;
+}
+
+.pj-notifications-channel-card__name-row .pj-notifications-status {
+  flex: 0 0 auto;
+}
+
 .pj-notifications-channel-action-buttons {
   display: flex;
   align-items: center;
