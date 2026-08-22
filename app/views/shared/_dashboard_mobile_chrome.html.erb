@@ -67,6 +67,11 @@
       <% else %>
         <p class="pj-mobile-sheet__hint">После добавления питомца здесь появятся запись в журнал, напоминание и документ.</p>
       <% end %>
+
+      <%= link_to new_notification_channel_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:bell) %></span>
+        <span><strong>Канал уведомлений</strong><small>Email, Telegram, VK или Push</small></span>
+      <% end %>
     </div>
   </section>
 
