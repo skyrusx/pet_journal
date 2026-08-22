@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     post "deliveries/:delivery_id/retry", action: :retry_delivery, on: :collection, as: :retry_delivery
     patch :settings, on: :collection, action: :update_settings
   end
+  post "telegram/webhook" => "telegram_webhooks#create", as: :telegram_webhook
   resource :web_push_subscription, only: %i[create destroy]
   resources :pet_tags, path: "pet-tags", only: :index
   get "p/:token" => "public_pet_tags#show", as: :public_pet_tag
