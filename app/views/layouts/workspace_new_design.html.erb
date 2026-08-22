@@ -23,7 +23,7 @@
     <%= javascript_import_module_tag "account_profile" %>
   </head>
 
-  <body class="pj-dashboard-body">
+  <body class="<%= class_names('pj-dashboard-body', current_user&.interface_text_size_css_class) %>">
     <div class="pj-dash" data-dashboard-root>
       <div class="pj-dash-shell">
         <%= render "shared/workspace_sidebar" %>
