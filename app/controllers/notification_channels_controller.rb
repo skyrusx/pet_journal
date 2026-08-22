@@ -1,4 +1,6 @@
 class NotificationChannelsController < ApplicationController
+  layout "workspace_new_design"
+
   before_action :authenticate_user!
   before_action :set_channel, only: %i[edit update destroy test]
   before_action :set_delivery, only: %i[retry_delivery]
