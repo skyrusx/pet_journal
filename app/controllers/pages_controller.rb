@@ -10,6 +10,8 @@ class PagesController < ApplicationController
     pet_ids = @pets.map(&:id)
 
     @latest_events_by_pet_id = latest_events_by_pet_id(@pets)
+    @has_any_events = PetEvent.where(pet_id: pet_ids).exists?
+    @has_any_reminders = current_user.reminders.exists?
     @next_reminders = current_user.reminders.status_active.includes(:pet).order(:next_run_at).limit(5)
     @overdue_reminders_count = current_user.reminders.overdue.count
     @today_reminders_count = current_user.reminders.status_active.where(next_run_at: Time.current.beginning_of_day..Time.current.end_of_day).count
