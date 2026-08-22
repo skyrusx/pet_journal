@@ -20,8 +20,10 @@
       <div>
         <p>Все ваши питомцы в одном месте</p>
       </div>
-      <%= link_to new_pet_path, class: "pj-pets-primary-button" do %>
-        <%= pj_icon(:plus) %><span>Добавить питомца</span>
+      <% if @pets.any? %>
+        <%= link_to new_pet_path, class: "pj-pets-primary-button" do %>
+          <%= pj_icon(:plus) %><span>Добавить питомца</span>
+        <% end %>
       <% end %>
     </div>
 
@@ -74,11 +76,14 @@
         <% end %>
       </div>
     <% else %>
-      <section class="pj-pets-empty">
-        <span class="pj-pets-empty__icon"><%= pj_icon(:paw) %></span>
-        <h2>Добавьте первого питомца</h2>
-        <p>Начните с имени и фото. Остальные данные можно заполнить позже.</p>
-        <%= link_to "Добавить питомца", new_pet_path, class: "pj-pets-primary-button" %>
+      <section class="pj-pets-empty pj-pets-empty--reference" aria-labelledby="pj-pets-empty-title">
+        <%= image_tag "petjournal/new_design/dashboard-empty-pets.svg",
+                      alt: "Собака и кошка рядом со знаком добавления",
+                      class: "pj-pets-empty__artwork" %>
+        <h2 id="pj-pets-empty-title">У вас пока нет питомцев</h2>
+        <p>Добавьте питомца, чтобы вести журнал его здоровья и заботы.</p>
+        <%= link_to "Добавить питомца", new_pet_path, class: "pj-pets-primary-button pj-pets-empty__button" %>
+        <span class="pj-pets-empty__hint">Начните с имени и фото — остальное можно заполнить позже</span>
       </section>
     <% end %>
   </div>
