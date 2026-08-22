@@ -81,8 +81,11 @@
                         class: "pj-notifications-primary-button",
                         target: "_blank",
                         rel: "noopener",
-                        data: { telegram_connect_link: true } %>
-            <small>После Start вернитесь в PetJournal и обновите страницу — канал появится автоматически.</small>
+                        data: {
+                          telegram_connect_link: true,
+                          return_url: notification_channels_path
+                        } %>
+            <small>После Start просто вернитесь в PetJournal — список каналов обновится автоматически.</small>
           <% else %>
             <strong>Telegram пока не настроен</strong>
             <p>Подключение через бота станет доступно после настройки Telegram-бота PetJournal.</p>
