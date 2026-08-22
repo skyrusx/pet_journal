@@ -5,9 +5,7 @@
     <%= link_to pets_path, class: "pj-workspace-back" do %>
       <%= pj_icon(:chevron) %><span>К списку питомцев</span>
     <% end %>
-    <%= link_to(@pet.persisted? ? pet_path(@pet) : pets_path, class: "pj-workspace-avatar", aria: { label: "Питомцы" }) do %>
-      <%= pj_icon(:paw) %>
-    <% end %>
+    <%= render "shared/workspace_notification_link" %>
   </header>
 
   <div class="pj-pets-content pj-pet-form-content">
