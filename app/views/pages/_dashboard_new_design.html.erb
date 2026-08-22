@@ -173,36 +173,46 @@
             </aside>
           </div>
         <% else %>
-          <section class="pj-first-run" aria-labelledby="pj-first-run-title">
-            <div class="pj-first-run__progress">
-              <span>Первый запуск</span>
-              <strong>Шаг 1 из 3</strong>
+          <section class="pj-empty-dashboard" aria-labelledby="pj-empty-dashboard-title">
+            <div class="pj-empty-dashboard__hero">
+              <%= image_tag "petjournal/new_design/dashboard-empty-pets.png",
+                            alt: "Собака и кошка рядом со знаком добавления",
+                            class: "pj-empty-dashboard__hero-image" %>
+
+              <h1 id="pj-empty-dashboard-title">Добавьте первого питомца</h1>
+              <p>Создайте профиль питомца — и PetJournal соберёт его здоровье, события, документы и важные дела в одном месте.</p>
+              <%= link_to "Добавить питомца", new_pet_path, class: "pj-empty-dashboard__button" %>
+              <span class="pj-empty-dashboard__hint">Это займёт всего пару минут</span>
             </div>
 
-            <div class="pj-first-run__steps" aria-label="Первые шаги в PetJournal">
-              <div class="pj-first-run__step is-active" aria-current="step">
-                <span class="pj-first-run__step-number">1</span>
-                <span>Добавить питомца</span>
-              </div>
-              <div class="pj-first-run__step">
-                <span class="pj-first-run__step-number">2</span>
-                <span>Первая запись</span>
-              </div>
-              <div class="pj-first-run__step">
-                <span class="pj-first-run__step-number">3</span>
-                <span>Напоминание</span>
-              </div>
-            </div>
+            <div class="pj-empty-dashboard__preview-grid" aria-label="Что появится после добавления питомца">
+              <article class="pj-empty-dashboard__preview-card">
+                <span class="pj-empty-dashboard__preview-icon"><%= pj_icon(:bell) %></span>
+                <div class="pj-empty-dashboard__preview-copy">
+                  <h2>Ближайшее</h2>
+                  <p>Здесь появятся ваши напоминания о заботе.</p>
+                  <span>Появится после добавления питомца</span>
+                </div>
+              </article>
 
-            <div class="pj-first-run__visual" aria-hidden="true">
-              <span class="pj-first-run__visual-main"><%= pj_icon(:paw) %></span>
-              <span class="pj-first-run__visual-plus">+</span>
-            </div>
+              <article class="pj-empty-dashboard__preview-card">
+                <span class="pj-empty-dashboard__preview-icon"><%= pj_icon(:journal) %></span>
+                <div class="pj-empty-dashboard__preview-copy">
+                  <h2>Последние события</h2>
+                  <p>Здесь будет история здоровья и заботы о вашем питомце.</p>
+                  <span>Появится после добавления питомца</span>
+                </div>
+              </article>
 
-            <h1 id="pj-first-run-title">Добавьте первого питомца</h1>
-            <p>Создайте профиль питомца — после этого PetJournal поможет вести журнал, хранить документы и ничего важного не забывать.</p>
-            <%= link_to "Добавить питомца", new_pet_path, class: "pj-first-run__button" %>
-            <span class="pj-first-run__next">Дальше — первая запись и первое напоминание.</span>
+              <article class="pj-empty-dashboard__preview-card">
+                <span class="pj-empty-dashboard__preview-icon"><%= pj_icon(:tag) %></span>
+                <div class="pj-empty-dashboard__preview-copy">
+                  <h2>PetTag</h2>
+                  <p>Цифровой профиль питомца всегда под рукой.</p>
+                  <span>Появится после добавления питомца</span>
+                </div>
+              </article>
+            </div>
           </section>
         <% end %>
       </div>
