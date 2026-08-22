@@ -7,29 +7,65 @@ module NotificationChannelsHelper
   end
 
   def notification_channel_hint(channel_type)
-    I18n.t("notification_channels.hints.#{channel_type}", default: "Укажите данные канала.")
+    {
+      "email" => "Укажите адрес электронной почты, на который будут приходить уведомления.",
+      "telegram" => "Telegram подключается через бота PetJournal — никаких chat_id вводить не нужно.",
+      "vk" => "Можно вставить ссылку на профиль, короткое имя или числовой ID. Остальное PetJournal определит сам."
+    }.fetch(channel_type.to_s, "Укажите данные канала.")
   end
 
   def notification_channel_address_label(channel_type)
     {
       "email" => "Email",
-      "telegram" => "Chat ID Telegram",
-      "vk" => "Peer ID VK"
+      "telegram" => "Telegram",
+      "vk" => "Ваш профиль VK"
     }.fetch(channel_type.to_s, "Адрес")
   end
 
   def notification_channel_address_placeholder(channel_type)
     {
       "email" => "name@example.ru",
-      "telegram" => "Например, 123456789",
-      "vk" => "Например, 2000000001"
+      "telegram" => "Подключается через бота",
+      "vk" => "Например, vk.ru/skyrusx или @skyrusx"
     }.fetch(channel_type.to_s, "Укажите адрес канала")
+  end
+
+  def notification_channel_form_address(channel)
+    return channel.address unless channel.channel_vk?
+
+    screen_name = channel.settings["screen_name"].presence
+    screen_name.present? ? "https://vk.ru/#{screen_name}" : channel.address
   end
 
   def notification_channel_display_address(channel)
     return "Уведомления в этом браузере" if channel.channel_web_push?
 
+    if channel.channel_telegram?
+      username = channel.settings["username"].presence
+      display_name = channel.settings["display_name"].presence
+      return [display_name, username.present? ? "@#{username}" : nil].compact.join(" · ").presence || "Telegram подключён"
+    end
+
+    if channel.channel_vk?
+      screen_name = channel.settings["screen_name"].presence
+      display_name = channel.settings["display_name"].presence
+      return [display_name, screen_name.present? ? "@#{screen_name}" : nil].compact.join(" · ").presence || channel.address
+    end
+
     channel.address.presence || "Адрес не указан"
+  end
+
+  def telegram_connection_url
+    username = ENV["TELEGRAM_BOT_USERNAME"].to_s.delete_prefix("@").presence
+    return if username.blank? || ENV["TELEGRAM_BOT_TOKEN"].blank? || current_user.blank?
+
+    token = TelegramConnectionToken.generate(current_user)
+    "https://t.me/#{username}?start=#{token}"
+  end
+
+  def telegram_bot_label
+    username = ENV["TELEGRAM_BOT_USERNAME"].to_s.delete_prefix("@").presence
+    username.present? ? "@#{username}" : "бот PetJournal"
   end
 
   def notification_channel_icon(channel_or_type, class_name: nil)
@@ -100,10 +136,10 @@ module NotificationChannelsHelper
 
   def notification_channel_onboarding_steps
     [
-      ["Email", "Основной канал для системных уведомлений и напоминаний."],
-      ["Telegram", "Подключите чат, если удобнее получать напоминания в мессенджере."],
-      ["VK", "Подключите диалог VK, чтобы получать напоминания там, где вы чаще отвечаете."],
-      ["Push", "Включите уведомления в текущем браузере, если хотите получать быстрые сигналы на этом устройстве."]
+      ["Email", "Укажите почту — PetJournal будет отправлять туда напоминания."],
+      ["Telegram", "Нажмите «Подключить Telegram» и Start в боте. Никаких ID искать не нужно."],
+      ["VK", "Вставьте ссылку на свой профиль VK или короткое имя — PetJournal определит ID сам."],
+      ["Push", "Включите уведомления в браузере, чтобы получать быстрые сигналы на этом устройстве."]
     ]
   end
 end
