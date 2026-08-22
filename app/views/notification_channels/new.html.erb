@@ -1,11 +1,20 @@
-<div class="py-4">
-  <div class="page-heading mb-4">
-    <div>
-      <div class="text-muted small mb-1">Уведомления</div>
-      <h1 class="h3 mb-1">Добавить канал</h1>
-      <p class="text-muted mb-0">Подключите способ доставки напоминаний.</p>
-    </div>
-  </div>
+<% content_for :title, "Добавить канал — PetJournal" %>
 
-  <%= render "form", channel: @channel %>
+<div class="pj-notifications-page pj-notifications-form-page">
+  <header class="pj-workspace-topbar">
+    <%= link_to notification_channels_path, class: "pj-workspace-icon pj-notifications-back", aria: { label: "Назад к уведомлениям" }, title: "Назад" do %>
+      <span aria-hidden="true">←</span>
+    <% end %>
+    <h1>Добавить канал</h1>
+  </header>
+
+  <div class="pj-notifications-form-content">
+    <div class="pj-notifications-form-heading">
+      <span class="pj-notifications-eyebrow">Уведомления</span>
+      <h1>Добавление канала</h1>
+      <p>Подключите Email, Telegram или VK. Push для текущего устройства включается на странице уведомлений.</p>
+    </div>
+
+    <%= render "form", channel: @channel %>
+  </div>
 </div>
