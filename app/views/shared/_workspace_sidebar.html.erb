@@ -49,7 +49,13 @@
   <div class="pj-dash-sidebar__footer">
     <details class="pj-dash-profile-menu" data-dashboard-profile-menu>
       <summary class="pj-dash-account" title="Меню профиля">
-        <span class="pj-dash-account__avatar"><%= avatar_letter %></span>
+        <span class="pj-dash-account__avatar">
+          <% if current_user.avatar.attached? %>
+            <%= image_tag current_user.avatar, alt: "" %>
+          <% else %>
+            <%= avatar_letter %>
+          <% end %>
+        </span>
         <span class="pj-dash-account__copy">
           <strong><%= display_name %></strong>
           <small><%= current_user.email %></small>
