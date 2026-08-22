@@ -83,7 +83,12 @@ module ApplicationHelper
 
   def mobile_add_actions
     pet = mobile_nav_pet
-    return [{ label: "Питомца", path: new_pet_path, icon: :paw }] unless pet.present?
+    notification_channel_action = { label: "Канал уведомлений", path: new_notification_channel_path, icon: :bell }
+
+    return [
+      { label: "Питомца", path: new_pet_path, icon: :paw },
+      notification_channel_action
+    ] unless pet.present?
 
     [
       { label: "Событие в журнал", path: new_pet_pet_event_path(pet), icon: :journal },
@@ -92,7 +97,8 @@ module ApplicationHelper
       { label: "Лекарство", path: new_pet_pet_event_path(pet, type: :treatment), icon: :plus },
       { label: "Обработка от паразитов", path: new_pet_pet_event_path(pet, type: :parasite_treatment), icon: :plus },
       { label: "Вакцинация", path: new_pet_pet_event_path(pet, type: :vaccination), icon: :plus },
-      { label: "Документ", path: new_pet_pet_document_path(pet), icon: :file }
+      { label: "Документ", path: new_pet_pet_document_path(pet), icon: :file },
+      notification_channel_action
     ]
   end
 
