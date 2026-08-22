@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   AVATAR_CONTENT_TYPES = %w[image/jpeg image/png image/webp].freeze
   AVATAR_MAX_SIZE = 5.megabytes
+  INTERFACE_TEXT_SIZES = %w[standard comfortable large].freeze
 
   has_one_attached :avatar
 
@@ -12,6 +13,8 @@ class User < ApplicationRecord
 
   validates :name, length: { maximum: 80 }, allow_blank: true
   validates :phone, length: { maximum: 32 }, allow_blank: true
+  validates :interface_text_size, inclusion: { in: INTERFACE_TEXT_SIZES }
+  validates :notifications_time_zone, inclusion: { in: ->(_) { ActiveSupport::TimeZone.all.map(&:name) } }
   validate :acceptable_avatar
 
   # Include default devise modules. Others available are:
@@ -21,6 +24,14 @@ class User < ApplicationRecord
 
   def notifications_time_zone_name
     notifications_time_zone.presence || Time.zone.name
+  end
+
+  def interface_text_size_name
+    interface_text_size.presence_in(INTERFACE_TEXT_SIZES) || "standard"
+  end
+
+  def interface_text_size_css_class
+    "pj-text-size-#{interface_text_size_name}"
   end
 
   def quiet_hours_now?(time = Time.current)
