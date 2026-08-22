@@ -11,14 +11,15 @@ class NotificationChannelsControllerTest < ActionDispatch::IntegrationTest
     get notification_channels_url
 
     assert_response :success
-    assert_select ".filter-chip", text: /Все/
+    assert_select ".pj-notifications-section", text: /Подключённые каналы/
+    assert_select "select[name='delivery_status'] option[value='all'][selected]"
   end
 
   test "should filter deliveries by status" do
     get notification_channels_url(delivery_status: "pending")
 
     assert_response :success
-    assert_select ".filter-chip.active", text: /В очереди/
+    assert_select "select[name='delivery_status'] option[value='pending'][selected]"
   end
 
   test "should create telegram channel" do
