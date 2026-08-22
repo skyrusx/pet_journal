@@ -168,6 +168,7 @@
   font-family: "Prata", Georgia, serif;
 }
 
+.pj-settings-text-option__sample--compact { font-size: 15px; }
 .pj-settings-text-option__sample--standard { font-size: 18px; }
 .pj-settings-text-option__sample--comfortable { font-size: 21px; }
 .pj-settings-text-option__sample--large { font-size: 24px; }
@@ -313,7 +314,12 @@
 }
 
 /* Accessibility preference: scale the signed-in workspace as one coordinated UI,
-   letting layout reflow at the effective viewport size instead of enlarging isolated labels. */
+   letting layout reflow at the effective viewport size instead of resizing isolated labels. */
+body.pj-text-size-compact .pj-dash,
+body.pj-text-size-compact .pj-mobile-chrome {
+  zoom: .94;
+}
+
 body.pj-text-size-comfortable .pj-dash,
 body.pj-text-size-comfortable .pj-mobile-chrome {
   zoom: 1.06;
