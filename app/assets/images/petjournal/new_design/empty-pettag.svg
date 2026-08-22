@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 220" role="img" aria-hidden="true">
+  <defs>
+    <filter id="s" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#6f806f" flood-opacity=".12"/>
+    </filter>
+  </defs>
+  <path d="M48 55c34-38 117-42 162-1 39 35 36 91-1 123-42 36-120 34-156-4-33-34-35-82-5-118Z" fill="#f2f4e5"/>
+  <g filter="url(#s)">
+    <path d="M112 47h56c10 0 18 8 18 18v21c0 7 3 14 8 19l10 10c5 5 8 12 8 19v42c0 10-8 18-18 18h-82c-10 0-18-8-18-18V65c0-10 8-18 18-18Z" fill="#5d815d"/>
+    <circle cx="141" cy="70" r="10" fill="#fffdf7" opacity=".96"/>
+    <circle cx="141" cy="70" r="4" fill="#5d815d"/>
+    <rect x="112" y="105" width="69" height="60" rx="10" fill="#fffdf7"/>
+    <g fill="#5d815d">
+      <rect x="121" y="114" width="15" height="15" rx="2"/>
+      <rect x="157" y="114" width="15" height="15" rx="2"/>
+      <rect x="121" y="141" width="15" height="15" rx="2"/>
+      <rect x="143" y="114" width="7" height="7" rx="1"/>
+      <rect x="143" y="127" width="7" height="7" rx="1"/>
+      <rect x="157" y="136" width="7" height="7" rx="1"/>
+      <rect x="166" y="145" width="7" height="7" rx="1"/>
+      <rect x="145" y="145" width="7" height="7" rx="1"/>
+      <rect x="143" y="156" width="7" height="7" rx="1"/>
+    </g>
+  </g>
+  <path d="M72 84c9-13 18-17 28-12" fill="none" stroke="#b7c99c" stroke-width="4" stroke-linecap="round"/>
+  <path d="M208 64l4 8 8 4-8 4-4 8-4-8-8-4 8-4 4-8Z" fill="#b6cb9a"/>
+  <path d="M70 157c12 8 22 9 34 3" fill="none" stroke="#cad8b4" stroke-width="3" stroke-linecap="round" stroke-dasharray="4 7"/>
+</svg>
