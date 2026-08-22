@@ -1,121 +1,133 @@
+<% selected_expiration = @share.new_record? ? "seven_days" : (@share.expires_at.present? ? "custom" : "never") %>
+
 <%= form_with model: @share,
               url: @share.persisted? ? pet_profile_share_path(@pet, @share) : pet_profile_shares_path(@pet),
-              class: "structured-form" do |form| %>
+              class: "pj-public-access-form" do |form| %>
   <% if @share.errors.any? %>
-    <div class="flash-stack inline">
-      <div class="flash-toast alert" role="alert">
-        <div>
-          <strong>Проверьте форму</strong>
-          <p><%= @share.errors.full_messages.to_sentence %></p>
-        </div>
-      </div>
+    <div class="pj-public-access-form__errors" role="alert">
+      <strong>Проверьте настройки доступа</strong>
+      <p><%= @share.errors.full_messages.to_sentence %></p>
     </div>
   <% end %>
 
-  <section class="form-section">
-    <div>
-      <h2 class="h5 mb-1">Основное</h2>
-      <p class="text-muted mb-0">Название, срок действия и общий статус ссылки.</p>
+  <section class="pj-public-access-form-section">
+    <div class="pj-public-access-form-section__head">
+      <span>01</span>
+      <div>
+        <h2>Основное</h2>
+        <p>Название, детализация и срок действия ссылки.</p>
+      </div>
     </div>
 
-    <div class="row g-3">
-      <div class="col-md-8">
-        <%= form.label :title, "Название доступа", class: "form-label" %>
-        <%= form.text_field :title, class: "form-control", placeholder: "Например: Для грумера, передержки или семьи" %>
-      </div>
+    <div class="pj-public-access-form-grid">
+      <label class="pj-public-access-field pj-public-access-field--wide">
+        <span>Название доступа</span>
+        <%= form.text_field :title, placeholder: "Например: Для семьи или передержки", autocomplete: "off" %>
+      </label>
 
-      <div class="col-md-4">
-        <%= form.label :detail_level, "Детализация", class: "form-label" %>
-        <%= form.select :detail_level, profile_share_detail_options, {}, class: "form-select" %>
-      </div>
+      <label class="pj-public-access-field">
+        <span>Детализация</span>
+        <%= form.select :detail_level, profile_share_detail_options %>
+        <small>Краткая показывает последние записи, полная — расширенную историю.</small>
+      </label>
 
-      <div class="col-md-6">
-        <label class="form-label" for="expires_preset">Срок действия</label>
+      <label class="pj-public-access-field">
+        <span>Срок действия</span>
         <%= select_tag :expires_preset,
-                       options_for_select(profile_share_expiration_options, @share.expires_at.present? ? "custom" : "never"),
-                       class: "form-select" %>
-      </div>
+                       options_for_select(profile_share_expiration_options, selected_expiration) %>
+        <small>После окончания срока ссылка перестанет открываться.</small>
+      </label>
 
-      <div class="col-md-6">
-        <%= form.label :expires_at, "Своя дата окончания", class: "form-label" %>
-        <%= form.datetime_field :expires_at, class: "form-control" %>
-      </div>
-
-      <div class="col-12">
-        <div class="form-check form-switch">
-          <%= form.check_box :enabled, class: "form-check-input" %>
-          <%= form.label :enabled, "Ссылка активна", class: "form-check-label" %>
-        </div>
-      </div>
+      <label class="pj-public-access-field pj-public-access-field--wide">
+        <span>Своя дата окончания</span>
+        <%= form.datetime_field :expires_at %>
+        <small>Используется при выборе «Своя дата». Для доступа без срока оставьте управление пресетом выше.</small>
+      </label>
     </div>
+
+    <label class="pj-public-access-master-toggle">
+      <%= form.check_box :enabled %>
+      <span class="pj-public-access-toggle-mark" aria-hidden="true"></span>
+      <span>
+        <strong>Ссылка активна</strong>
+        <small>Её можно отключить в любой момент без удаления настроек.</small>
+      </span>
+    </label>
   </section>
 
-  <section class="form-section">
-    <div>
-      <h2 class="h5 mb-1">Разделы профиля</h2>
-      <p class="text-muted mb-0">Откройте только то, что действительно нужно показать по этой ссылке.</p>
+  <section class="pj-public-access-form-section">
+    <div class="pj-public-access-form-section__head">
+      <span>02</span>
+      <div>
+        <h2>Что будет видно</h2>
+        <p>Откройте только те разделы, которые нужны получателю.</p>
+      </div>
     </div>
 
-    <div class="share-checkbox-grid">
-      <label class="share-check">
+    <div class="pj-public-access-toggle-grid">
+      <label class="pj-public-access-toggle-card">
         <%= form.check_box :show_profile %>
-        <span>Профиль</span>
-        <small>Фото, имя, возраст, порода, чип и базовые данные.</small>
+        <span class="pj-public-access-toggle-mark" aria-hidden="true"></span>
+        <span><strong>Профиль</strong><small>Фото, имя, возраст, порода, чип и основные данные.</small></span>
       </label>
 
-      <label class="share-check">
+      <label class="pj-public-access-toggle-card">
         <%= form.check_box :show_journal %>
-        <span>Журнал</span>
-        <small>Последние или все события ухода и здоровья.</small>
+        <span class="pj-public-access-toggle-mark" aria-hidden="true"></span>
+        <span><strong>Журнал</strong><small>Последние или расширенные записи о здоровье и уходе.</small></span>
       </label>
 
-      <label class="share-check">
+      <label class="pj-public-access-toggle-card">
         <%= form.check_box :show_documents %>
-        <span>Документы</span>
-        <small>Ветпаспорт, справки, анализы и прикрепленные файлы.</small>
+        <span class="pj-public-access-toggle-mark" aria-hidden="true"></span>
+        <span><strong>Документы</strong><small>Паспорт, справки, анализы и прикреплённые файлы.</small></span>
       </label>
 
-      <label class="share-check">
+      <label class="pj-public-access-toggle-card">
         <%= form.check_box :show_reminders %>
-        <span>Напоминания</span>
-        <small>Активные предстоящие задачи по уходу. Может раскрывать лечение и расписание.</small>
+        <span class="pj-public-access-toggle-mark" aria-hidden="true"></span>
+        <span><strong>Напоминания</strong><small>Активные задачи по уходу, лечению и расписанию.</small></span>
       </label>
 
-      <label class="share-check">
+      <label class="pj-public-access-toggle-card">
         <%= form.check_box :show_pet_tag %>
-        <span>PetTag</span>
-        <small>Публичные заметки жетона и статус безопасности.</small>
+        <span class="pj-public-access-toggle-mark" aria-hidden="true"></span>
+        <span><strong>PetTag</strong><small>Статус безопасности и публичные заметки жетона.</small></span>
       </label>
     </div>
   </section>
 
-  <section class="form-section">
-    <div>
-      <h2 class="h5 mb-1">Приватность</h2>
-      <p class="text-muted mb-0">Контакты и файлы закрыты по умолчанию.</p>
+  <section class="pj-public-access-form-section">
+    <div class="pj-public-access-form-section__head">
+      <span>03</span>
+      <div>
+        <h2>Приватность</h2>
+        <p>Чувствительные данные остаются закрытыми, пока вы явно их не разрешите.</p>
+      </div>
     </div>
 
-    <div class="share-checkbox-grid compact">
-      <label class="share-check">
+    <div class="pj-public-access-toggle-grid pj-public-access-toggle-grid--privacy">
+      <label class="pj-public-access-toggle-card pj-public-access-toggle-card--sensitive">
         <%= form.check_box :show_owner_contact %>
-        <span>Показывать контакт владельца</span>
-        <small>На публичной странице будет видна эл. почта аккаунта.</small>
+        <span class="pj-public-access-toggle-mark" aria-hidden="true"></span>
+        <span><strong>Контакт владельца</strong><small>На публичной странице будет доступна электронная почта аккаунта.</small></span>
       </label>
 
-      <label class="share-check">
+      <label class="pj-public-access-toggle-card pj-public-access-toggle-card--sensitive">
         <%= form.check_box :allow_file_downloads %>
-        <span>Разрешить скачивание файлов</span>
-        <small>Иначе файлы будут показаны только как список названий.</small>
+        <span class="pj-public-access-toggle-mark" aria-hidden="true"></span>
+        <span><strong>Скачивание файлов</strong><small>Если выключено, получатель увидит только названия вложений.</small></span>
       </label>
     </div>
 
-    <div class="form-hint mt-3">
-      Публичные ссылки не индексируются поисковиками. Просмотры считаются с маскированным IP, чтобы не хранить точный адрес посетителя.
+    <div class="pj-public-access-privacy-note">
+      <%= pj_icon(:share) %>
+      <p>Публичные ссылки не индексируются поисковиками. Просмотры учитываются с маскированным IP — точный адрес посетителя не сохраняется.</p>
     </div>
   </section>
 
-  <div class="d-flex flex-wrap gap-2">
-    <%= form.submit "Сохранить доступ", class: "btn btn-primary" %>
-    <%= link_to "Отмена", @share.persisted? ? pet_profile_share_path(@pet, @share) : pet_profile_shares_path(@pet), class: "btn btn-outline-secondary" %>
+  <div class="pj-public-access-form-actions">
+    <%= form.submit @share.persisted? ? "Сохранить изменения" : "Создать публичный доступ", class: "pj-public-access-primary" %>
+    <%= link_to "Отмена", @share.persisted? ? pet_profile_share_path(@pet, @share) : pet_profile_shares_path(@pet), class: "pj-public-access-quiet" %>
   </div>
 <% end %>
