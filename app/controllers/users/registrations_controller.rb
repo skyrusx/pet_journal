@@ -8,8 +8,11 @@ module Users
       if sensitive_account_update?(resource, params)
         resource.update_with_password(params)
       else
-        profile_params = params.except(:email, :password, :password_confirmation, :current_password)
-        resource.update(profile_params)
+        remove_avatar = ActiveModel::Type::Boolean.new.cast(params[:remove_avatar])
+        profile_params = params.except(:email, :password, :password_confirmation, :current_password, :remove_avatar)
+        updated = resource.update(profile_params)
+        resource.avatar.purge_later if updated && remove_avatar && resource.avatar.attached?
+        updated
       end
     end
 
