@@ -5,6 +5,7 @@
     <%= link_to pet_pet_events_path(@pet), class: "pj-workspace-back" do %>
       <%= pj_icon(:chevron) %><span>Назад к журналу</span>
     <% end %>
+    <%= render "shared/workspace_notification_link" %>
   </header>
 
   <div class="pj-journal-form-content">
