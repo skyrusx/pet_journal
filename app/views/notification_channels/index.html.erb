@@ -38,13 +38,15 @@
 
               <div class="pj-notifications-channel-card__body">
                 <div class="pj-notifications-channel-card__title-row">
-                  <div>
+                  <div class="pj-notifications-channel-card__heading">
                     <span><%= channel.channel_type_label %></span>
-                    <h3><%= channel.name %></h3>
+                    <div class="pj-notifications-channel-card__name-row">
+                      <h3><%= channel.name %></h3>
+                      <span class="pj-notifications-status <%= channel.enabled? && channel.ready_for_delivery? ? "is-success" : channel.enabled? ? "is-warning" : "is-muted" %>">
+                        <%= notification_channel_status_label(channel) %>
+                      </span>
+                    </div>
                   </div>
-                  <span class="pj-notifications-status <%= channel.enabled? && channel.ready_for_delivery? ? "is-success" : channel.enabled? ? "is-warning" : "is-muted" %>">
-                    <%= notification_channel_status_label(channel) %>
-                  </span>
                 </div>
 
                 <p class="pj-notifications-channel-card__address"><%= notification_channel_display_address(channel) %></p>
