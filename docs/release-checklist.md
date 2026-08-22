@@ -21,10 +21,15 @@
 - Set `DATABASE_URL` or `PET_JOURNAL_DATABASE_PASSWORD`.
 - Set `MAIL_FROM`.
 - Configure SMTP for email reminders.
-- Set `TELEGRAM_BOT_TOKEN` if Telegram delivery is enabled.
+- Set `TELEGRAM_BOT_TOKEN`, `TELEGRAM_BOT_USERNAME`, and `TELEGRAM_WEBHOOK_SECRET` if Telegram delivery is enabled.
+- Optionally set a separate `TELEGRAM_CONNECTION_SECRET`; otherwise `SECRET_KEY_BASE` is used for account-link tokens.
+- Run `bundle exec rails notifications:setup_telegram_webhook` after Telegram bot configuration or host changes.
 - Set `VK_GROUP_TOKEN` and `VK_API_VERSION` if VK delivery is enabled.
+- Verify the PetJournal VK community allows users to start a dialog and receive messages.
 - Set `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, and `VAPID_SUBJECT` for browser push.
 - Run `bin/rails reminders:dispatch_loop` as a worker process, or run `bin/rails reminders:dispatch` every minute.
+
+See `docs/notifications-setup.md` for the Telegram and VK connection flows.
 
 ## Processes
 
