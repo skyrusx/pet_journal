@@ -1,5 +1,26 @@
 /* Small navigation refinements after visual review of the dashboard. */
 
+.pj-dash-nav__item {
+  position: relative;
+}
+
+.pj-dash-nav__badge {
+  min-width: 20px;
+  height: 20px;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  border-radius: 999px;
+  color: #174f34;
+  background: #c7f43a;
+  box-shadow: 0 2px 7px rgba(86, 116, 35, .14);
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+}
+
 .pj-dash-sidebar__footer {
   position: relative;
   margin-top: auto;
@@ -149,6 +170,17 @@
     width: 28px;
     height: 28px;
     flex: 0 0 28px;
+  }
+
+  .pj-dash.is-sidebar-collapsed .pj-dash-nav__badge {
+    position: absolute;
+    top: 2px;
+    right: 1px;
+    min-width: 17px;
+    height: 17px;
+    margin: 0;
+    padding: 0 4px;
+    font-size: 9px;
   }
 
   .pj-dash.is-sidebar-collapsed .pj-dash-sidebar__footer {
