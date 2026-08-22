@@ -1,14 +1,19 @@
 <% content_for :title, "Добавить канал — PetJournal" %>
 
 <div class="pj-notifications-page pj-notifications-form-page">
-  <header class="pj-workspace-topbar">
-    <%= link_to notification_channels_path, class: "pj-workspace-icon pj-notifications-back", aria: { label: "Назад к уведомлениям" }, title: "Назад" do %>
-      <span aria-hidden="true">←</span>
+  <header class="pj-workspace-topbar pj-workspace-topbar--form">
+    <%= link_to notification_channels_path, class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>Назад к уведомлениям</span>
     <% end %>
-    <h1>Добавить канал</h1>
   </header>
 
   <div class="pj-notifications-form-content">
+    <div class="pj-mobile-detail-nav pj-mobile-form-nav">
+      <%= link_to notification_channels_path, class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К уведомлениям</span>
+      <% end %>
+    </div>
+
     <div class="pj-notifications-form-heading">
       <span class="pj-notifications-eyebrow">Уведомления</span>
       <h1>Добавление канала</h1>
