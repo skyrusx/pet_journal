@@ -3,20 +3,6 @@ class SettingsController < ApplicationController
 
   before_action :authenticate_user!
 
-  RUSSIAN_TIME_ZONES = {
-    "Kaliningrad" => "Калининград",
-    "Moscow" => "Москва",
-    "Samara" => "Самара",
-    "Ekaterinburg" => "Екатеринбург",
-    "Omsk" => "Омск",
-    "Krasnoyarsk" => "Красноярск",
-    "Irkutsk" => "Иркутск",
-    "Yakutsk" => "Якутск",
-    "Vladivostok" => "Владивосток",
-    "Magadan" => "Магадан",
-    "Kamchatka" => "Камчатка"
-  }.freeze
-
   def edit
     prepare_time_zone_options
   end
@@ -38,13 +24,6 @@ class SettingsController < ApplicationController
   end
 
   def prepare_time_zone_options
-    @time_zone_options = [["(UTC+00:00) Всемирное координированное время", "UTC"]]
-
-    RUSSIAN_TIME_ZONES.each do |zone_name, russian_name|
-      zone = ActiveSupport::TimeZone[zone_name]
-      next unless zone
-
-      @time_zone_options << ["(UTC#{zone.formatted_offset}) #{russian_name}", zone.name]
-    end
+    @time_zone_options = Settings::TimeZoneOptions.call
   end
 end
