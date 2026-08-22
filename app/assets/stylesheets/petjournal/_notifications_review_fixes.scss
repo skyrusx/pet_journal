@@ -1,0 +1,120 @@
+/* Review fixes for notification settings: align form controls and use the shared explicit action-button pattern. */
+
+.pj-notifications-form-grid {
+  align-items: start;
+}
+
+.pj-notifications-field {
+  align-content: start;
+}
+
+.pj-notifications-channel-card {
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  column-gap: 16px;
+}
+
+.pj-notifications-channel-action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  align-self: start;
+}
+
+.pj-notifications-channel-action-form {
+  display: contents;
+  margin: 0;
+}
+
+.pj-notifications-channel-action-button {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #dde3da;
+  border-radius: 11px;
+  color: #315f47;
+  background: #f2f5ed;
+  text-decoration: none;
+  box-shadow: none;
+  cursor: pointer;
+  transition: color 140ms ease, background 140ms ease, border-color 140ms ease, transform 120ms ease, box-shadow 140ms ease;
+}
+
+.pj-notifications-channel-action-button:hover,
+.pj-notifications-channel-action-button:focus-visible {
+  color: #25563d;
+  border-color: #cbd6c8;
+  background: #eaf0e4;
+  box-shadow: 0 5px 14px rgba(43, 73, 54, .08);
+  transform: translateY(-1px);
+}
+
+.pj-notifications-channel-action-button:active {
+  transform: translateY(0) scale(.97);
+  box-shadow: none;
+}
+
+.pj-notifications-channel-action-button svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pj-notifications-channel-action-button--danger {
+  color: #a35850;
+  border-color: #ecdcd7;
+  background: #fbf1ee;
+}
+
+.pj-notifications-channel-action-button--danger:hover,
+.pj-notifications-channel-action-button--danger:focus-visible {
+  color: #93483f;
+  border-color: #e2cbc5;
+  background: #f9e8e4;
+  box-shadow: 0 5px 14px rgba(147, 72, 63, .08);
+}
+
+@media (max-width: 820px) {
+  .pj-notifications-channel-card {
+    grid-template-columns: 48px minmax(0, 1fr);
+    column-gap: 12px;
+  }
+
+  .pj-notifications-channel-card__icon {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .pj-notifications-channel-card__body {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .pj-notifications-channel-action-buttons {
+    grid-column: 2;
+    grid-row: 2;
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
+
+  .pj-notifications-channel-action-button {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 12px;
+  }
+
+  .pj-notifications-channel-action-button svg {
+    width: 19px;
+    height: 19px;
+  }
+}
