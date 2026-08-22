@@ -40,19 +40,11 @@ module NotificationAdapters
   end
 
   class Telegram < Base
-    TELEGRAM_ENDPOINT = "https://api.telegram.org/bot".freeze
-
     def deliver(delivery)
-      token = ENV.fetch("TELEGRAM_BOT_TOKEN")
-      uri = URI("#{TELEGRAM_ENDPOINT}#{token}/sendMessage")
-      post_json(uri, chat_id: channel.address, text: reminder_text(delivery.reminder))
-    end
-
-    private
-
-    def post_json(uri, payload)
-      response = Net::HTTP.post(uri, payload.to_json, "Content-Type" => "application/json")
-      raise response.body unless response.is_a?(Net::HTTPSuccess)
+      NotificationChannelConnectors::TelegramBot.send_message(
+        chat_id: channel.address,
+        text: reminder_text(delivery.reminder)
+      )
     end
   end
 
