@@ -43,7 +43,7 @@ class TelegramWebhooksController < ApplicationController
 
     channel = user.notification_channels.find_or_initialize_by(channel_type: :telegram, address: chat_id.to_s)
     channel.name = "Telegram" if channel.name.blank?
-    channel.enabled = true if channel.new_record?
+    channel.enabled = true
     channel.verified_at = Time.current
     channel.settings = channel.settings.merge(
       "username" => username,
