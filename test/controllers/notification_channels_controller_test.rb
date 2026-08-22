@@ -57,7 +57,7 @@ class NotificationChannelsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to notification_channels_url
     delivery = NotificationDelivery.order(:created_at).last
     assert delivery.status_skipped?
-    assert_match "TELEGRAM_BOT_TOKEN", delivery.error_message
+    assert_match "Telegram временно недоступен", delivery.error_message
   end
 
   test "should retry failed delivery immediately" do
