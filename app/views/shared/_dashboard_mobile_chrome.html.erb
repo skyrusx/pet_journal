@@ -80,7 +80,7 @@
     <div class="pj-mobile-sheet__head">
       <div>
         <h2 id="pj-mobile-account-title">Аккаунт</h2>
-        <small>Профиль и управление сессией</small>
+        <small>Профиль, настройки и управление сессией</small>
       </div>
       <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
     </div>
@@ -89,6 +89,11 @@
       <%= link_to edit_user_registration_path, class: "pj-mobile-sheet__action" do %>
         <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:user) %></span>
         <span><strong>Профиль</strong><small>Аккаунт и персональные данные</small></span>
+      <% end %>
+
+      <%= link_to settings_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:settings) %></span>
+        <span><strong>Настройки</strong><small>Интерфейс, регион и уведомления</small></span>
       <% end %>
 
       <%= button_to destroy_user_session_path,
