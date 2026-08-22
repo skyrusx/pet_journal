@@ -4,6 +4,39 @@
 <% documents_path = primary_pet ? pet_pet_documents_path(primary_pet) : pets_path %>
 <% pettag_path = primary_pet ? pet_pet_tag_path(primary_pet) : pets_path %>
 <% add_path = primary_pet ? new_pet_pet_event_path(primary_pet) : new_pet_path %>
+<% onboarding_step = if @pets.empty?
+                       1
+                     elsif !@has_any_events
+                       2
+                     elsif !@has_any_reminders
+                       3
+                     end %>
+<% onboarding = case onboarding_step
+                when 1
+                  {
+                    key: "pet",
+                    title: "Добавьте питомца",
+                    description: "Создайте профиль, добавьте фото и основную информацию.",
+                    action: "Добавить питомца",
+                    path: new_pet_path
+                  }
+                when 2
+                  {
+                    key: "journal",
+                    title: "Первая запись",
+                    description: "Запишите важное событие: прививку, приём у врача или прогулку.",
+                    action: "Создать запись",
+                    path: new_pet_pet_event_path(primary_pet)
+                  }
+                when 3
+                  {
+                    key: "reminder",
+                    title: "Первое напоминание",
+                    description: "Настройте напоминание о заботе, чтобы ничего не забыть.",
+                    action: "Настроить напоминание",
+                    path: new_pet_reminder_path(primary_pet)
+                  }
+                end %>
 
 <div class="pj-dash" data-dashboard-root>
   <div class="pj-dash-shell">
@@ -47,7 +80,30 @@
         </div>
       </div>
 
-      <div class="pj-dash-content">
+      <div class="<%= class_names("pj-dash-content", "pj-dash-content--onboarding-only": @pets.empty?) %>">
+        <% if onboarding %>
+          <section class="pj-onboarding-card pj-onboarding-card--<%= onboarding[:key] %>" aria-labelledby="pj-onboarding-title">
+            <div class="pj-onboarding-card__meta">
+              <span>Первый запуск</span>
+              <strong>Шаг <%= onboarding_step %> из 3</strong>
+            </div>
+
+            <div class="pj-onboarding-card__visual pj-onboarding-card__visual--<%= onboarding[:key] %>"
+                 style="--pj-onboarding-sprite: url('<%= asset_path("petjournal/new_design/onboarding-sprite.svg") %>')"
+                 aria-hidden="true"></div>
+
+            <h1 id="pj-onboarding-title"><%= onboarding[:title] %></h1>
+            <p><%= onboarding[:description] %></p>
+            <%= link_to onboarding[:action], onboarding[:path], class: "pj-onboarding-card__button" %>
+
+            <div class="pj-onboarding-card__dots" aria-label="Прогресс первого запуска">
+              <% 1.upto(3) do |step| %>
+                <span class="<%= class_names("is-active": step == onboarding_step, "is-complete": step < onboarding_step) %>"></span>
+              <% end %>
+            </div>
+          </section>
+        <% end %>
+
         <% if @pets.any? %>
           <section class="pj-dash-section pj-dash-upcoming">
             <div class="pj-dash-section__head">
@@ -172,38 +228,6 @@
               <% end %>
             </aside>
           </div>
-        <% else %>
-          <section class="pj-first-run" aria-labelledby="pj-first-run-title">
-            <div class="pj-first-run__progress">
-              <span>Первый запуск</span>
-              <strong>Шаг 1 из 3</strong>
-            </div>
-
-            <div class="pj-first-run__steps" aria-label="Первые шаги в PetJournal">
-              <div class="pj-first-run__step is-active" aria-current="step">
-                <span class="pj-first-run__step-number">1</span>
-                <span>Добавить питомца</span>
-              </div>
-              <div class="pj-first-run__step">
-                <span class="pj-first-run__step-number">2</span>
-                <span>Первая запись</span>
-              </div>
-              <div class="pj-first-run__step">
-                <span class="pj-first-run__step-number">3</span>
-                <span>Напоминание</span>
-              </div>
-            </div>
-
-            <div class="pj-first-run__visual" aria-hidden="true">
-              <span class="pj-first-run__visual-main"><%= pj_icon(:paw) %></span>
-              <span class="pj-first-run__visual-plus">+</span>
-            </div>
-
-            <h1 id="pj-first-run-title">Добавьте первого питомца</h1>
-            <p>Создайте профиль питомца — после этого PetJournal поможет вести журнал, хранить документы и ничего важного не забывать.</p>
-            <%= link_to "Добавить питомца", new_pet_path, class: "pj-first-run__button" %>
-            <span class="pj-first-run__next">Дальше — первая запись и первое напоминание.</span>
-          </section>
         <% end %>
       </div>
 
