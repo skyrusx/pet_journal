@@ -5,15 +5,18 @@ module Users
     protected
 
     def update_resource(resource, params)
-      if sensitive_account_update?(resource, params)
-        resource.update_with_password(params)
+      remove_avatar = ActiveModel::Type::Boolean.new.cast(params[:remove_avatar])
+      account_params = params.except(:remove_avatar)
+
+      updated = if sensitive_account_update?(resource, account_params)
+        resource.update_with_password(account_params)
       else
-        remove_avatar = ActiveModel::Type::Boolean.new.cast(params[:remove_avatar])
-        profile_params = params.except(:email, :password, :password_confirmation, :current_password, :remove_avatar)
-        updated = resource.update(profile_params)
-        resource.avatar.purge_later if updated && remove_avatar && resource.avatar.attached?
-        updated
+        profile_params = account_params.except(:email, :password, :password_confirmation, :current_password)
+        resource.update(profile_params)
       end
+
+      resource.avatar.purge_later if updated && remove_avatar && resource.avatar.attached?
+      updated
     end
 
     def after_update_path_for(_resource)
