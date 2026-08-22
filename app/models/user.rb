@@ -14,8 +14,6 @@ class User < ApplicationRecord
   validates :phone, length: { maximum: 32 }, allow_blank: true
   validate :acceptable_avatar
 
-  after_commit :purge_avatar_if_requested, on: :update
-
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -50,12 +48,5 @@ class User < ApplicationRecord
     end
 
     errors.add(:avatar, "должен быть меньше 5 МБ") if avatar.blob.byte_size > AVATAR_MAX_SIZE
-  end
-
-  def purge_avatar_if_requested
-    return unless ActiveModel::Type::Boolean.new.cast(remove_avatar)
-    return unless avatar.attached?
-
-    avatar.purge_later
   end
 end
