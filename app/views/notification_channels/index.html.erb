@@ -53,24 +53,41 @@
                 </p>
               </div>
 
-              <details class="pj-notifications-channel-actions">
-                <summary aria-label="Действия с каналом <%= channel.name %>" title="Действия">•••</summary>
-                <div class="pj-notifications-channel-actions__menu">
-                  <%= link_to edit_notification_channel_path(channel) do %>
-                    <span>Изменить</span>
-                  <% end %>
-                  <%= button_to test_notification_channel_path(channel), method: :post do %>
-                    <span>Тестовая отправка</span>
-                  <% end %>
-                  <div class="pj-notifications-channel-actions__separator" aria-hidden="true"></div>
-                  <%= button_to notification_channel_path(channel),
-                                method: :delete,
-                                class: "is-danger",
-                                form: { data: { turbo_confirm: "Удалить канал уведомлений?" } } do %>
-                    <span>Удалить</span>
-                  <% end %>
-                </div>
-              </details>
+              <div class="pj-notifications-channel-action-buttons" aria-label="Действия с каналом <%= channel.name %>">
+                <%= link_to edit_notification_channel_path(channel),
+                            class: "pj-notifications-channel-action-button",
+                            aria: { label: "Изменить канал #{channel.name}" },
+                            title: "Изменить" do %>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 20h4l11-11-4-4L4 16v4Z"/>
+                    <path d="m13.5 6.5 4 4"/>
+                  </svg>
+                <% end %>
+
+                <%= button_to test_notification_channel_path(channel),
+                              method: :post,
+                              class: "pj-notifications-channel-action-button",
+                              form_class: "pj-notifications-channel-action-form",
+                              aria: { label: "Тестовая отправка через #{channel.name}" },
+                              title: "Тестовая отправка" do %>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3.5 11.5 20.5 4l-6.4 16-3.1-6-7.5-2.5Z"/>
+                    <path d="m11 14 9.5-10"/>
+                  </svg>
+                <% end %>
+
+                <%= button_to notification_channel_path(channel),
+                              method: :delete,
+                              class: "pj-notifications-channel-action-button pj-notifications-channel-action-button--danger",
+                              form_class: "pj-notifications-channel-action-form",
+                              form: { data: { turbo_confirm: "Удалить канал уведомлений?" } },
+                              aria: { label: "Удалить канал #{channel.name}" },
+                              title: "Удалить" do %>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+                  </svg>
+                <% end %>
+              </div>
             </article>
           <% end %>
         </div>
