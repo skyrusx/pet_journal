@@ -26,6 +26,12 @@ Rails.application.routes.draw do
   get "settings" => "settings#edit", as: :settings
   patch "settings" => "settings#update"
 
+  # Stable workspace entry points. When a pet exists they forward to its section;
+  # for a brand-new account they render a useful empty state instead of /pets.
+  get "journal" => "workspace_sections#journal", as: :journal_overview
+  get "reminders" => "workspace_sections#reminders", as: :reminders_overview
+  get "documents" => "workspace_sections#documents", as: :documents_overview
+
   resources :notification_channels, except: %i[show] do
     post :test, on: :member
     post "deliveries/:delivery_id/retry", action: :retry_delivery, on: :collection, as: :retry_delivery
