@@ -10,10 +10,10 @@ Rails.application.routes.draw do
 
     get "register" => "devise/registrations#new", as: :new_user_registration
     post "register" => "devise/registrations#create", as: :user_registration
-    get "account" => "devise/registrations#edit", as: :edit_user_registration
-    patch "account" => "devise/registrations#update"
-    put "account" => "devise/registrations#update"
-    delete "account" => "devise/registrations#destroy"
+    get "account" => "users/registrations#edit", as: :edit_user_registration
+    patch "account" => "users/registrations#update"
+    put "account" => "users/registrations#update"
+    delete "account" => "users/registrations#destroy"
     get "account/cancel" => "devise/registrations#cancel", as: :cancel_user_registration
 
     get "password/new" => "devise/passwords#new", as: :new_user_password
