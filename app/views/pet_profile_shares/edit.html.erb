@@ -1,12 +1,24 @@
-<div class="profile-shares-page py-4">
-  <div class="page-heading mb-4">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1">Настройки доступа</h1>
-      <p class="text-muted mb-0"><%= @share.title %></p>
-    </div>
-  </div>
+<% content_for :title, "Настройки публичного доступа — PetJournal" %>
 
-  <%= render "tabs", pet: @pet %>
-  <%= render "form" %>
+<div class="pj-public-access-page">
+  <header class="pj-workspace-topbar">
+    <h1>Публичный доступ</h1>
+    <%= link_to notification_channels_path,
+                class: "pj-workspace-icon",
+                aria: { label: "Настройки уведомлений" },
+                title: "Настройки уведомлений" do %>
+      <%= pj_icon(:bell) %>
+    <% end %>
+  </header>
+
+  <div class="pj-public-access-content">
+    <div class="pj-public-access-form-title">
+      <div>
+        <p>Измените состав, срок действия и приватность ссылки «<%= @share.title %>» для <%= @pet.name %>.</p>
+      </div>
+      <%= link_to "Назад к ссылке", pet_profile_share_path(@pet, @share), class: "pj-public-access-quiet" %>
+    </div>
+
+    <%= render "form" %>
+  </div>
 </div>
