@@ -53,26 +53,27 @@ class TelegramWebhooksController < ApplicationController
     channel.save!
 
     account_label = username.present? ? "@#{username}" : display_name
-    text = [
-      "Готово! Telegram подключён к PetJournal.",
-      account_label.present? ? "Аккаунт: #{account_label}" : nil,
-      "Теперь сюда можно получать напоминания о питомцах."
-    ].compact.join("\n")
-
-    NotificationChannelConnectors::TelegramBot.send_message(chat_id: chat_id, text: text)
+    safe_send_message(
+      chat_id,
+      [
+        "Готово! Telegram подключён к PetJournal.",
+        account_label.present? ? "Аккаунт: #{account_label}" : nil,
+        "Теперь сюда можно получать напоминания о питомцах."
+      ].compact.join("\n")
+    )
   rescue TelegramConnectionToken::InvalidToken
-    NotificationChannelConnectors::TelegramBot.send_message(
-      chat_id: chat_id,
-      text: "Ссылка подключения устарела. Вернитесь в PetJournal и нажмите «Подключить Telegram» ещё раз."
+    safe_send_message(
+      chat_id,
+      "Ссылка подключения устарела. Вернитесь в PetJournal и нажмите «Подключить Telegram» ещё раз."
     )
   rescue StandardError => e
     Rails.logger.error("Telegram account linking failed: #{e.class}: #{e.message}")
+    safe_send_message(chat_id, "Не удалось подключить Telegram. Попробуйте ещё раз из настроек PetJournal.")
+  end
 
-    NotificationChannelConnectors::TelegramBot.send_message(
-      chat_id: chat_id,
-      text: "Не удалось подключить Telegram. Попробуйте ещё раз из настроек PetJournal."
-    )
-  rescue NotificationChannelConnectors::TelegramBot::Error => e
-    Rails.logger.error("Telegram confirmation failed: #{e.message}")
+  def safe_send_message(chat_id, text)
+    NotificationChannelConnectors::TelegramBot.send_message(chat_id: chat_id, text: text)
+  rescue NotificationChannelConnectors::TelegramBot::Error, KeyError => e
+    Rails.logger.error("Telegram bot reply failed: #{e.class}: #{e.message}")
   end
 end
