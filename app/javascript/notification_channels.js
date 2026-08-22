@@ -73,7 +73,7 @@ function initNotificationChannelForms() {
       vk: {
         name: "VK",
         label: "Ваш профиль VK",
-        placeholder: "Например, vk.ru/skyrusx или @skyrusx",
+        placeholder: "Например, vk.ru/username или @username",
         hint: "Можно вставить ссылку на профиль, короткое имя или числовой ID. Остальное PetJournal определит сам."
       }
     };
