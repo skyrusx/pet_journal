@@ -51,16 +51,6 @@ class NotificationChannelsController < ApplicationController
   end
 
   def test
-    unless @channel.enabled?
-      redirect_to notification_channels_path, alert: "Сначала включите канал, затем повторите тест."
-      return
-    end
-
-    unless @channel.configuration_issues.empty?
-      redirect_to notification_channels_path, alert: "Канал пока не готов к отправке. Проверьте настройки подключения."
-      return
-    end
-
     reminder = current_user.pets.first&.reminders&.first
 
     if reminder.blank?
