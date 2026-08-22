@@ -1,0 +1,157 @@
+/* Mobile polish for notification channels after real-device review. */
+
+@media (max-width: 820px) {
+  /* Channel card: actions stay in the top-right, aligned with the main channel icon. */
+  .pj-notifications-channel-card {
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    grid-template-rows: auto;
+    column-gap: 12px;
+    row-gap: 0;
+    align-items: start;
+  }
+
+  .pj-notifications-channel-card__icon {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .pj-notifications-channel-card__body {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  /* Keep the status visually attached to the channel name instead of on a separate line. */
+  .pj-notifications-channel-card__title-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .pj-notifications-channel-card__title-row > div {
+    min-width: 0;
+  }
+
+  .pj-notifications-channel-card__title-row .pj-notifications-status {
+    flex: 0 0 auto;
+    margin-bottom: 1px;
+  }
+
+  .pj-notifications-channel-action-buttons {
+    grid-column: 3;
+    grid-row: 1;
+    align-self: start;
+    justify-self: end;
+    justify-content: flex-end;
+    gap: 6px;
+    margin: 0;
+  }
+
+  .pj-notifications-channel-action-button {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 11px;
+  }
+
+  .pj-notifications-channel-action-button svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* The explanatory block must be a normal vertical mobile section, not a desktop two-column rail. */
+  .pj-notifications-help {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    box-sizing: border-box;
+  }
+
+  .pj-notifications-help > div:first-child {
+    min-width: 0;
+  }
+
+  .pj-notifications-help__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .pj-notifications-help__grid > div {
+    display: grid;
+    gap: 4px;
+    padding: 13px 14px;
+    border: 1px solid #e5e1d8;
+    border-radius: 11px;
+    background: #f8f8f3;
+  }
+
+  .pj-notifications-help__grid strong {
+    color: #405047;
+    font-size: 14.5px;
+    line-height: 1.35;
+  }
+
+  .pj-notifications-help__grid span {
+    color: #858e87;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  /* Add/edit forms use the full available mobile workspace width. */
+  .pj-notifications-form-page .pj-notifications-form-content {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding-left: 14px;
+    padding-right: 14px;
+    box-sizing: border-box;
+  }
+
+  .pj-notifications-form-page .pj-notifications-form-card,
+  .pj-notifications-form-page .pj-notifications-form-errors {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 390px) {
+  /* Preserve the same hierarchy on narrow phones without forcing title/actions to collide. */
+  .pj-notifications-channel-card {
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+    column-gap: 10px;
+    padding: 14px;
+  }
+
+  .pj-notifications-channel-card__icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .pj-notifications-channel-action-buttons {
+    gap: 5px;
+  }
+
+  .pj-notifications-channel-action-button {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    border-radius: 10px;
+  }
+
+  .pj-notifications-channel-action-button svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .pj-notifications-channel-card__title-row {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+}
