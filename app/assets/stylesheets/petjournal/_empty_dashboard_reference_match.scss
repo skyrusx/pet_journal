@@ -98,6 +98,12 @@
   line-height: 1.3;
 }
 
+/* Latin PetTag renders visually heavier than the Cyrillic card headings at the
+   same inherited weight. Keep it optically aligned with the other two cards. */
+.pj-empty-dashboard__preview-card:nth-child(3) .pj-empty-dashboard__preview-copy h2 {
+  font-weight: 600;
+}
+
 .pj-empty-dashboard__preview-copy p {
   min-height: 68px;
   margin: 0 0 15px;
