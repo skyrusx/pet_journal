@@ -14,7 +14,10 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     assert_select "input[name='user[interface_text_size]']", count: 4
     assert_select "input[name='user[interface_text_size]'][value='compact']", count: 1
     assert_select "select[name='user[notifications_time_zone]']"
+    assert_select "select[name='user[notifications_time_zone]'] option", minimum: 100
     assert_select "select[name='user[notifications_time_zone]'] option", text: /Москва/
+    assert_select "select[name='user[notifications_time_zone]'] option", text: /Лондон/
+    assert_select "select[name='user[notifications_time_zone]'] option", text: /Токио/
   end
 
   test "should update interface and time zone settings" do
