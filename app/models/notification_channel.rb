@@ -54,25 +54,22 @@ class NotificationChannel < ApplicationRecord
 
   def telegram_configuration_issues
     issues = []
-    issues << "Укажите chat_id Telegram" if address.blank?
-    issues << "Задайте TELEGRAM_BOT_TOKEN в окружении" if ENV["TELEGRAM_BOT_TOKEN"].blank?
+    issues << "Подключите Telegram через бота PetJournal" if address.blank?
+    issues << "Telegram временно недоступен. Попробуйте позже." if ENV["TELEGRAM_BOT_TOKEN"].blank?
     issues
   end
 
   def vk_configuration_issues
     issues = []
-    issues << "Укажите peer_id VK" if address.blank?
-    issues << "Задайте VK_GROUP_TOKEN в окружении" if ENV["VK_GROUP_TOKEN"].blank?
+    issues << "Подключите профиль VK" if address.blank?
+    issues << "VK временно недоступен. Попробуйте позже." if ENV["VK_GROUP_TOKEN"].blank?
     issues
   end
 
   def web_push_configuration_issues
     issues = []
-    issues << "Нет endpoint push-подписки" if settings["endpoint"].blank?
-    issues << "Нет ключа p256dh push-подписки" if settings["p256dh"].blank?
-    issues << "Нет ключа auth push-подписки" if settings["auth"].blank?
-    issues << "Задайте VAPID_PUBLIC_KEY в окружении" if ENV["VAPID_PUBLIC_KEY"].blank?
-    issues << "Задайте VAPID_PRIVATE_KEY в окружении" if ENV["VAPID_PRIVATE_KEY"].blank?
-    issues
+    issues << "Push для этого браузера нужно подключить заново" if settings["endpoint"].blank? || settings["p256dh"].blank? || settings["auth"].blank?
+    issues << "Push временно недоступен. Попробуйте позже." if ENV["VAPID_PUBLIC_KEY"].blank? || ENV["VAPID_PRIVATE_KEY"].blank?
+    issues.uniq
   end
 end
