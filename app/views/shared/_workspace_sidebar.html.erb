@@ -74,6 +74,11 @@
           <span>Профиль</span>
         <% end %>
 
+        <%= link_to settings_path, class: "pj-dash-profile-popover__item" do %>
+          <%= pj_icon(:settings) %>
+          <span>Настройки</span>
+        <% end %>
+
         <div class="pj-dash-profile-popover__separator" aria-hidden="true"></div>
 
         <%= button_to destroy_user_session_path,
