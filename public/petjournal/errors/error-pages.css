@@ -101,7 +101,9 @@ body.pj-error-page {
 }
 
 .pj-error-page--500 .pj-error-illustration {
-  width: min(510px, 54vw);
+  width: min(640px, 58vw);
+  max-height: 330px;
+  margin: 0 auto 8px;
 }
 
 .pj-error-page--422 .pj-error-illustration,
