@@ -1,4 +1,6 @@
-<% primary_pet = ((defined?(@pet) && @pet&.persisted?) ? @pet : Array(@pets).first) || current_user.pets.order(created_at: :desc).first %>
+<% mobile_pets = current_user.pets.order(created_at: :desc).to_a %>
+<% context_pet = (defined?(@pet) && @pet&.persisted?) ? @pet : nil %>
+<% primary_pet = context_pet || Array(@pets).first || mobile_pets.first %>
 <% journal_path = primary_pet ? pet_pet_events_path(primary_pet) : journal_overview_path %>
 <% reminders_path = primary_pet ? pet_reminders_path(primary_pet) : reminders_overview_path %>
 <% documents_path = primary_pet ? pet_pet_documents_path(primary_pet) : documents_overview_path %>
@@ -68,9 +70,19 @@
           <span><strong>Документ</strong><small>Файл, справка или паспорт</small></span>
         <% end %>
 
-        <%= link_to new_pet_profile_share_path(primary_pet), class: "pj-mobile-sheet__action" do %>
-          <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:share) %></span>
-          <span><strong>Публичный доступ</strong><small>Создать ссылку на выбранные данные питомца</small></span>
+        <% if mobile_pets.many? && context_pet.blank? %>
+          <button type="button"
+                  class="pj-mobile-sheet__action"
+                  aria-expanded="false"
+                  data-dashboard-sheet-toggle="public-access-pet">
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:share) %></span>
+            <span><strong>Публичный доступ</strong><small>Выбрать питомца и создать ссылку</small></span>
+          </button>
+        <% else %>
+          <%= link_to new_pet_profile_share_path(primary_pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:share) %></span>
+            <span><strong>Публичный доступ</strong><small>Создать ссылку на выбранные данные питомца</small></span>
+          <% end %>
         <% end %>
       <% else %>
         <p class="pj-mobile-sheet__hint">После добавления питомца здесь появятся запись в журнал, напоминание, документ и публичный доступ.</p>
@@ -82,6 +94,31 @@
       <% end %>
     </div>
   </section>
+
+  <% if mobile_pets.many? && context_pet.blank? %>
+    <section class="pj-mobile-sheet" data-dashboard-sheet="public-access-pet" aria-hidden="true" aria-labelledby="pj-mobile-public-access-pet-title">
+      <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+      <div class="pj-mobile-sheet__head">
+        <div>
+          <small>Публичный доступ</small>
+          <h2 id="pj-mobile-public-access-pet-title">Для какого питомца?</h2>
+        </div>
+        <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+      </div>
+
+      <div class="pj-mobile-sheet__actions">
+        <% mobile_pets.each do |pet| %>
+          <%= link_to new_pet_profile_share_path(pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:paw) %></span>
+            <span>
+              <strong><%= pet.name %></strong>
+              <small><%= [pet.breed.presence || pet.species.presence, pet_age(pet)].compact.join(" · ") %></small>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
 
   <section class="pj-mobile-sheet" data-dashboard-sheet="more" aria-hidden="true" aria-labelledby="pj-mobile-account-title">
     <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
