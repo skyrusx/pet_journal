@@ -67,8 +67,13 @@
           <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:file) %></span>
           <span><strong>Документ</strong><small>Файл, справка или паспорт</small></span>
         <% end %>
+
+        <%= link_to new_pet_profile_share_path(primary_pet), class: "pj-mobile-sheet__action" do %>
+          <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:share) %></span>
+          <span><strong>Публичный доступ</strong><small>Создать ссылку на выбранные данные питомца</small></span>
+        <% end %>
       <% else %>
-        <p class="pj-mobile-sheet__hint">После добавления питомца здесь появятся запись в журнал, напоминание и документ.</p>
+        <p class="pj-mobile-sheet__hint">После добавления питомца здесь появятся запись в журнал, напоминание, документ и публичный доступ.</p>
       <% end %>
 
       <%= link_to new_notification_channel_path, class: "pj-mobile-sheet__action" do %>
