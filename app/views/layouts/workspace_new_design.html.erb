@@ -21,6 +21,7 @@
     <%= javascript_import_module_tag "document_file_preview" %>
     <%= javascript_import_module_tag "notification_channels" %>
     <%= javascript_import_module_tag "account_profile" %>
+    <%= javascript_include_tag "public_access_copy", defer: true %>
   </head>
 
   <body class="<%= class_names('pj-dashboard-body', current_user&.interface_text_size_css_class) %>">
