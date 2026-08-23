@@ -107,9 +107,6 @@ const setupPublicProfileShare = () => {
       button.disabled = true
 
       try {
-        // Native Web Share is reliable on mobile browsers. On desktop browsers
-        // support is inconsistent, so copying the link gives an immediate,
-        // predictable result instead of a click that appears to do nothing.
         if (nativeShareIsUseful()) {
           try {
             await navigator.share({ title, url })
@@ -131,11 +128,64 @@ const setupPublicProfileShare = () => {
   })
 }
 
+const setupPublicShareCopy = () => {
+  document.querySelectorAll(".pj-public-share-sheet__link").forEach((field) => {
+    if (field.dataset.copyControlReady === "true") return
+
+    const input = field.querySelector("input")
+    if (!input) return
+
+    field.dataset.copyControlReady = "true"
+
+    const row = document.createElement("div")
+    row.className = "pj-public-share-sheet__link-row"
+    input.parentNode.insertBefore(row, input)
+    row.appendChild(input)
+
+    const button = document.createElement("button")
+    button.type = "button"
+    button.className = "pj-public-share-sheet__copy"
+    button.setAttribute("aria-label", "Скопировать ссылку на профиль")
+    button.title = "Скопировать ссылку"
+    button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>'
+    row.appendChild(button)
+
+    const feedback = document.createElement("p")
+    feedback.className = "pj-public-share-sheet__copy-feedback"
+    feedback.setAttribute("aria-live", "polite")
+    field.appendChild(feedback)
+
+    let resetTimer
+    button.addEventListener("click", async () => {
+      window.clearTimeout(resetTimer)
+
+      try {
+        await copyPublicShareUrl(input.value)
+        feedback.textContent = "Ссылка скопирована"
+        button.setAttribute("aria-label", "Ссылка скопирована")
+      } catch (_error) {
+        input.focus()
+        input.select()
+        feedback.textContent = "Не удалось скопировать автоматически"
+      }
+
+      resetTimer = window.setTimeout(() => {
+        feedback.textContent = ""
+        button.setAttribute("aria-label", "Скопировать ссылку на профиль")
+      }, 2200)
+    })
+  })
+}
+
 const setupPublicInteractions = () => {
   setupPublicPetTagLocation()
   setupPublicProfileShare()
+  setupPublicShareCopy()
 }
 
+// The public script is loaded with defer, so the DOM is normally ready here.
+// Calling once immediately also avoids depending only on lifecycle events.
+setupPublicInteractions()
 document.addEventListener("DOMContentLoaded", setupPublicInteractions)
 document.addEventListener("turbo:load", setupPublicInteractions)
 document.addEventListener("turbo:render", setupPublicInteractions)
