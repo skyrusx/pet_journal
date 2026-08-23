@@ -78,7 +78,20 @@
               <% end %>
             </div>
 
-            <div class="pj-public-access-card__url"><%= profile_share_public_url(share) %></div>
+            <div class="pj-public-access-card__url-control">
+              <input type="text" value="<%= profile_share_public_url(share) %>" readonly aria-label="Публичная ссылка <%= share.title %>">
+              <button type="button"
+                      class="pj-public-access-copy-icon"
+                      data-copy-url="<%= profile_share_public_url(share) %>"
+                      data-copy-icon="true"
+                      aria-label="Скопировать ссылку <%= share.title %>"
+                      title="Скопировать ссылку">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="8" y="8" width="11" height="11" rx="2"></rect>
+                  <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
+                </svg>
+              </button>
+            </div>
 
             <div class="pj-public-access-card__chips" aria-label="Открытые разделы">
               <% profile_share_section_rows(share).select { |_label, enabled| enabled }.first(5).each do |label, _enabled| %>
@@ -98,7 +111,6 @@
             <div class="pj-public-access-card__actions">
               <%= link_to "Управлять", pet_profile_share_path(@pet, share), class: "pj-public-access-secondary" %>
               <%= link_to "Открыть публично", public_pet_profile_share_path(share.public_token), class: "pj-public-access-quiet", target: "_blank", rel: "noopener" %>
-              <button type="button" class="pj-public-access-quiet" data-copy-url="<%= profile_share_public_url(share) %>">Копировать ссылку</button>
             </div>
           </article>
         <% end %>
