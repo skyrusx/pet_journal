@@ -1,12 +1,12 @@
 /* Pixel-alignment layer measured against approved 1672×941 PetJournal error mockups. */
-.pj-error-page--404 .pj-error-card { background: #fefaf7; }
-.pj-error-page--422 .pj-error-card { background: #fcf8f5; }
-.pj-error-page--500 .pj-error-card { background: #fdf9f6; }
-.pj-error-page--406 .pj-error-card { background: #fcf9f4; }
+.pj-error-page--404 .pj-error-card { background: #fdfaf7; }
+.pj-error-page--422 .pj-error-card { background: #fcf9f6; }
+.pj-error-page--500 .pj-error-card { background: #fcf9f7; }
+.pj-error-page--406 .pj-error-card { background: #fcf9f6; }
 
 @media (min-width: 821px) {
-  /* Keep the approved desktop geometry even on shorter browser viewports.
-     The page may scroll vertically instead of compressing the mockup. */
+  /* Reference geometry. Keep the composition intact on short viewports;
+     the document may scroll instead of squeezing the approved layout. */
   .pj-error-main {
     margin-top: 47px;
   }
