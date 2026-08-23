@@ -87,6 +87,13 @@ const setPublicShareLabel = (button, text) => {
   if (label) label.textContent = text
 }
 
+const nativeShareIsUseful = () => {
+  if (typeof navigator.share !== "function") return false
+
+  const coarsePointer = window.matchMedia?.("(pointer: coarse)")?.matches
+  return navigator.maxTouchPoints > 0 || coarsePointer
+}
+
 const setupPublicProfileShare = () => {
   document.querySelectorAll("[data-public-share]").forEach((button) => {
     if (button.dataset.publicShareReady === "true") return
@@ -100,7 +107,10 @@ const setupPublicProfileShare = () => {
       button.disabled = true
 
       try {
-        if (typeof navigator.share === "function") {
+        // Native Web Share is reliable on mobile browsers. On desktop browsers
+        // support is inconsistent, so copying the link gives an immediate,
+        // predictable result instead of a click that appears to do nothing.
+        if (nativeShareIsUseful()) {
           try {
             await navigator.share({ title, url })
             return
@@ -115,7 +125,7 @@ const setupPublicProfileShare = () => {
         setPublicShareLabel(button, "Не удалось скопировать")
       } finally {
         button.disabled = false
-        window.setTimeout(() => setPublicShareLabel(button, originalLabel), 1800)
+        window.setTimeout(() => setPublicShareLabel(button, originalLabel), 2200)
       }
     })
   })
