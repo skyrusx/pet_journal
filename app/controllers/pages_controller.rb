@@ -1,6 +1,9 @@
 class PagesController < ApplicationController
   def index
-    return unless user_signed_in?
+    unless user_signed_in?
+      render :new_design, layout: "new_design"
+      return
+    end
 
     @pets = current_user.pets
                         .with_attached_photo
@@ -27,7 +30,7 @@ class PagesController < ApplicationController
   end
 
   def new_design
-    render layout: "new_design"
+    redirect_to root_path, status: :moved_permanently
   end
 
   private
