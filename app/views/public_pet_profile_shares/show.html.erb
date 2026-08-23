@@ -1,4 +1,8 @@
 <% content_for :title, "#{@pet.name} · PetJournal" %>
+<% share_url = request.original_url %>
+<% share_title = "#{@pet.name} · PetJournal" %>
+<% encoded_share_url = ERB::Util.url_encode(share_url) %>
+<% encoded_share_title = ERB::Util.url_encode(share_title) %>
 
 <div class="pj-public-profile-page">
   <header class="pj-public-profile-topbar">
@@ -7,18 +11,49 @@
         <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
       <% end %>
 
-      <button type="button",
-              class="pj-public-profile-share-button",
-              data: {
-                public_share: true,
-                public_share_url: request.original_url,
-                public_share_title: "#{@pet.name} · PetJournal"
-              }>
+      <a href="#public-share-sheet" class="pj-public-profile-share-button" aria-controls="public-share-sheet">
         <%= pj_icon(:share) %>
         <span>Поделиться</span>
-      </button>
+      </a>
     </div>
   </header>
+
+  <div id="public-share-sheet" class="pj-public-share-sheet" role="dialog" aria-modal="true" aria-labelledby="public-share-sheet-title">
+    <a href="#" class="pj-public-share-sheet__backdrop" aria-label="Закрыть окно поделиться"></a>
+    <section class="pj-public-share-sheet__panel">
+      <div class="pj-public-share-sheet__head">
+        <div>
+          <small>Публичный профиль</small>
+          <h2 id="public-share-sheet-title">Поделиться профилем</h2>
+        </div>
+        <a href="#" class="pj-public-share-sheet__close" aria-label="Закрыть">×</a>
+      </div>
+
+      <p class="pj-public-share-sheet__lead">Выберите, куда отправить ссылку на профиль <%= @pet.name %>.</p>
+
+      <div class="pj-public-share-sheet__actions">
+        <%= link_to "Telegram",
+                    "https://t.me/share/url?url=#{encoded_share_url}&text=#{encoded_share_title}",
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    class: "pj-public-share-sheet__action" %>
+        <%= link_to "ВКонтакте",
+                    "https://vk.com/share.php?url=#{encoded_share_url}&title=#{encoded_share_title}",
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    class: "pj-public-share-sheet__action" %>
+        <%= link_to "Почта",
+                    "mailto:?subject=#{encoded_share_title}&body=#{encoded_share_url}",
+                    class: "pj-public-share-sheet__action" %>
+      </div>
+
+      <label class="pj-public-share-sheet__link">
+        <span>Ссылка на профиль</span>
+        <input type="text" value="<%= share_url %>" readonly aria-label="Публичная ссылка на профиль">
+      </label>
+      <p class="pj-public-share-sheet__hint">Ссылку можно выделить и скопировать вручную — этот вариант работает даже без JavaScript.</p>
+    </section>
+  </div>
 
   <main class="pj-public-profile-shell">
     <div class="pj-public-profile-layout">
