@@ -11,6 +11,14 @@ class PublicPetProfileSharesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1", text: share.pet.name
     assert_select ".public-share-section", minimum: 1
+    assert_select 'a.pj-public-profile-share-button[href="#public-share-sheet"]', text: /Поделиться/
+    assert_select '#public-share-sheet.pj-public-share-sheet' do
+      assert_select "h2", text: "Поделиться профилем"
+      assert_select 'a[href^="https://t.me/share/url?"]', text: "Telegram"
+      assert_select 'a[href^="https://vk.com/share.php?"]', text: "ВКонтакте"
+      assert_select 'a[href^="mailto:?"]', text: "Почта"
+      assert_select 'input[readonly][value=?]', public_pet_profile_share_url(share.public_token)
+    end
     assert share.reload.last_viewed_at.present?
     assert_equal "noindex, nofollow", response.headers["X-Robots-Tag"]
   end
