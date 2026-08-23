@@ -3,7 +3,7 @@
     <div class="pj-nd-footer__panel">
       <div class="pj-nd-footer__top">
         <div class="pj-nd-footer__brand">
-          <%= link_to new_design_path, class: "pj-nd-footer__brand-link", aria: { label: "PetJournal" } do %>
+          <%= link_to root_path, class: "pj-nd-footer__brand-link", aria: { label: "PetJournal" } do %>
             <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", class: "pj-nd-footer__logo" %>
           <% end %>
           <p class="pj-nd-footer__tagline">Забота. Память. Спокойствие.</p>
@@ -11,8 +11,8 @@
 
         <nav class="pj-nd-footer__column pj-nd-footer__nav" aria-label="Разделы сайта">
           <h3>Разделы</h3>
-          <a href="#features">Возможности</a>
-          <a href="#how-it-works">Как это работает</a>
+          <%= link_to "Возможности", root_path(anchor: "features") %>
+          <%= link_to "Как это работает", root_path(anchor: "how-it-works") %>
           <%= link_to "Войти", new_user_session_path %>
           <%= link_to "Создать журнал", new_user_registration_path %>
         </nav>
