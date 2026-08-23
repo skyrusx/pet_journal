@@ -1,0 +1,183 @@
+/* Final visual pass for Public Access after desktop review. */
+
+.pj-public-access-primary,
+.pj-public-access-secondary,
+.pj-public-access-quiet,
+.pj-public-access-danger-outline {
+  white-space: nowrap;
+}
+
+/* The manager header follows the same pattern as other detail pages: text back action + icon edit action. */
+.pj-public-access-intro__actions > .pj-public-access-quiet {
+  width: auto;
+  min-width: 0;
+  padding-inline: 18px;
+}
+
+.pj-public-access-intro__actions > .pj-public-access-edit-icon {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 10px;
+}
+
+.pj-public-access-edit-icon .pj-nav-icon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.7;
+}
+
+/* Keep the two public-link actions equal and on one line. */
+.pj-public-access-link-card__actions > .pj-public-access-primary,
+.pj-public-access-link-card__actions > .pj-public-access-secondary,
+.pj-public-access-link-card__actions > .pj-public-access-quiet {
+  width: 166px;
+  min-width: 166px;
+}
+
+/* Destructive/status actions form one deliberate row instead of a broken 2 + 1 layout. */
+.pj-public-access-danger-panel > div:first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.pj-public-access-danger-panel__actions {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 164px);
+  gap: 10px;
+  align-items: center;
+}
+
+.pj-public-access-danger-panel__actions > form {
+  width: 164px;
+  margin: 0;
+}
+
+.pj-public-access-danger-panel__actions > form > .pj-public-access-danger-outline,
+.pj-public-access-danger-panel__actions > form > .pj-public-access-secondary,
+.pj-public-access-danger-panel__actions > form > .pj-public-access-primary {
+  width: 164px;
+  min-width: 164px;
+  height: 44px;
+  padding-inline: 14px;
+}
+
+/* Share sheet: the URL is a real control group with an icon-only copy action. */
+.pj-public-share-sheet__link-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 46px;
+  gap: 8px;
+  align-items: center;
+}
+
+.pj-public-share-sheet__link-row input {
+  min-width: 0;
+}
+
+.pj-public-share-sheet__copy {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #dce2d4;
+  border-radius: 10px;
+  color: #28533d;
+  background: #f7f9ef;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.pj-public-share-sheet__copy:hover,
+.pj-public-share-sheet__copy:focus-visible {
+  color: #174d32;
+  border-color: #b8c8ad;
+  background: #eef4df;
+}
+
+.pj-public-share-sheet__copy svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+}
+
+.pj-public-share-sheet__copy-feedback {
+  min-height: 18px;
+  margin: 7px 0 0;
+  color: #5d815d;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Public profiles use the exact landing footer component. */
+.pj-public-profile-page > .pj-nd-footer {
+  flex: 0 0 auto;
+  margin-top: auto;
+  padding-top: 30px;
+  background: #fdfcf8;
+}
+
+.pj-public-profile-page > .pj-nd-footer .pj-nd-shell {
+  width: min(1240px, calc(100% - 96px));
+  margin-inline: auto;
+}
+
+@media (max-width: 1120px) and (min-width: 821px) {
+  .pj-public-access-danger-panel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .pj-public-access-danger-panel__actions {
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .pj-public-access-danger-panel__actions > form,
+  .pj-public-access-danger-panel__actions > form > .pj-public-access-danger-outline,
+  .pj-public-access-danger-panel__actions > form > .pj-public-access-secondary,
+  .pj-public-access-danger-panel__actions > form > .pj-public-access-primary {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 820px) {
+  .pj-public-access-intro__actions > .pj-public-access-quiet {
+    width: calc(100% - 54px);
+  }
+
+  .pj-public-access-intro__actions > .pj-public-access-edit-icon {
+    width: 44px;
+    min-width: 44px;
+  }
+
+  .pj-public-access-link-card__actions > .pj-public-access-primary,
+  .pj-public-access-link-card__actions > .pj-public-access-secondary,
+  .pj-public-access-link-card__actions > .pj-public-access-quiet {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .pj-public-access-danger-panel__actions {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .pj-public-access-danger-panel__actions > form,
+  .pj-public-access-danger-panel__actions > form > .pj-public-access-danger-outline,
+  .pj-public-access-danger-panel__actions > form > .pj-public-access-secondary,
+  .pj-public-access-danger-panel__actions > form > .pj-public-access-primary {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .pj-public-profile-page > .pj-nd-footer .pj-nd-shell {
+    width: calc(100% - 32px);
+  }
+}
