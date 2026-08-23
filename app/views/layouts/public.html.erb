@@ -12,7 +12,7 @@
 
     <%= stylesheet_link_tag "application" %>
     <%= javascript_importmap_tags %>
-    <%= javascript_import_module_tag "public_pettag_location" %>
+    <%= javascript_include_tag "public_pettag_location", defer: true %>
   </head>
 
   <body class="app-body public-body">
