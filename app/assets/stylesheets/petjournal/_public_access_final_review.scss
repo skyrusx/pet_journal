@@ -122,13 +122,25 @@
   display: none !important;
 }
 
-.public-body > .pj-nd-footer {
-  margin-top: 0;
+.public-profile-layout-body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.public-profile-layout-body > .pj-public-profile-page {
+  min-height: 0;
+  flex: 1 0 auto;
+}
+
+.public-profile-layout-body > .pj-nd-footer {
+  flex: 0 0 auto;
+  margin-top: auto;
   padding-top: 30px;
   background: #fdfcf8;
 }
 
-.public-body > .pj-nd-footer .pj-nd-shell {
+.public-profile-layout-body > .pj-nd-footer .pj-nd-shell {
   width: min(1240px, calc(100% - 96px));
   margin-inline: auto;
 }
@@ -183,7 +195,7 @@
     min-width: 0;
   }
 
-  .public-body > .pj-nd-footer .pj-nd-shell {
+  .public-profile-layout-body > .pj-nd-footer .pj-nd-shell {
     width: calc(100% - 32px);
   }
 }
