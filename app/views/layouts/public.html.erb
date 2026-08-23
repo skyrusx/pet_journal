@@ -18,6 +18,7 @@
 
   <body class="app-body public-body">
     <%= yield %>
+    <%= render "pages/new_design_footer" if controller_name == "public_pet_profile_shares" %>
 
     <% if notice.present? || alert.present? %>
       <div class="flash-stack" aria-live="polite" aria-atomic="true">
