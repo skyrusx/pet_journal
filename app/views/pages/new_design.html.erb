@@ -1,12 +1,13 @@
-<% content_for :title, "PetJournal — новый дизайн" %>
+<% content_for :title, "PetJournal — здоровье, уход и безопасность питомца" %>
 <% content_for :head do %>
-  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Журнал здоровья питомца, документы, напоминания, PetTag и безопасный публичный доступ — всё важное о питомце в одном месте.">
+  <link rel="canonical" href="<%= root_url %>">
 <% end %>
 
 <div class="pj-new-design">
   <%= render "new_design_navbar" %>
 
-  <main class="pj-new-design__canvas" aria-label="Предпросмотр нового дизайна PetJournal">
+  <main class="pj-new-design__canvas" aria-label="PetJournal">
     <%= render "new_design_hero" %>
     <%= render "new_design_showcase" %>
     <%= render "new_design_steps" %>
