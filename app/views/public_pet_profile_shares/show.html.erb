@@ -7,7 +7,13 @@
         <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
       <% end %>
 
-      <button type="button" class="pj-public-profile-share-button" data-copy-url="<%= request.original_url %>">
+      <button type="button",
+              class="pj-public-profile-share-button",
+              data: {
+                public_share: true,
+                public_share_url: request.original_url,
+                public_share_title: "#{@pet.name} · PetJournal"
+              }>
         <%= pj_icon(:share) %>
         <span>Поделиться</span>
       </button>
@@ -238,10 +244,10 @@
         <% end %>
       </aside>
     </div>
-  </main>
 
-  <footer class="pj-dash-footer pj-public-profile-standard-footer">
-    <span>© <%= Date.current.year %> PetJournal. Все права защищены.</span>
-    <span>Сделано с заботой о тех, кто рядом ♡</span>
-  </footer>
+    <footer class="pj-public-profile-footer pj-public-profile-standard-footer pj-workspace-footer">
+      <span>© <%= Date.current.year %> PetJournal. Все права защищены.</span>
+      <span>Сделано с заботой о тех, кто рядом ♡</span>
+    </footer>
+  </main>
 </div>
