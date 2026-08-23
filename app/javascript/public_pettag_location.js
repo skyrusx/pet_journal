@@ -62,5 +62,70 @@ const setupPublicPetTagLocation = () => {
   })
 }
 
-document.addEventListener("DOMContentLoaded", setupPublicPetTagLocation)
-document.addEventListener("turbo:load", setupPublicPetTagLocation)
+const copyPublicShareUrl = async (url) => {
+  if (navigator.clipboard?.writeText && window.isSecureContext) {
+    await navigator.clipboard.writeText(url)
+    return
+  }
+
+  const textarea = document.createElement("textarea")
+  textarea.value = url
+  textarea.setAttribute("readonly", "")
+  textarea.style.position = "fixed"
+  textarea.style.left = "-9999px"
+  document.body.appendChild(textarea)
+  textarea.select()
+
+  const copied = document.execCommand("copy")
+  textarea.remove()
+
+  if (!copied) throw new Error("copy failed")
+}
+
+const setPublicShareLabel = (button, text) => {
+  const label = button.querySelector("span")
+  if (label) label.textContent = text
+}
+
+const setupPublicProfileShare = () => {
+  document.querySelectorAll("[data-public-share]").forEach((button) => {
+    if (button.dataset.publicShareReady === "true") return
+
+    button.dataset.publicShareReady = "true"
+    button.addEventListener("click", async () => {
+      const url = button.dataset.publicShareUrl || window.location.href
+      const title = button.dataset.publicShareTitle || document.title
+      const originalLabel = "Поделиться"
+
+      button.disabled = true
+
+      try {
+        if (typeof navigator.share === "function") {
+          try {
+            await navigator.share({ title, url })
+            return
+          } catch (error) {
+            if (error?.name === "AbortError") return
+          }
+        }
+
+        await copyPublicShareUrl(url)
+        setPublicShareLabel(button, "Ссылка скопирована")
+      } catch (_error) {
+        setPublicShareLabel(button, "Не удалось скопировать")
+      } finally {
+        button.disabled = false
+        window.setTimeout(() => setPublicShareLabel(button, originalLabel), 1800)
+      }
+    })
+  })
+}
+
+const setupPublicInteractions = () => {
+  setupPublicPetTagLocation()
+  setupPublicProfileShare()
+}
+
+document.addEventListener("DOMContentLoaded", setupPublicInteractions)
+document.addEventListener("turbo:load", setupPublicInteractions)
+document.addEventListener("turbo:render", setupPublicInteractions)
