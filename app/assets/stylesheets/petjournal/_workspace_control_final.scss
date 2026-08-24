@@ -18,28 +18,22 @@
   appearance: none;
 }
 
-/* Chrome/Android places its native date/time indicator almost against the
-   border and does not consistently respect margins. Keep the native hit area
-   available, but make it visually transparent and render the same chevron as
-   every other workspace selector. */
-.pj-dashboard-body input[type="date"],
-.pj-dashboard-body input[type="time"],
-.pj-dashboard-body input[type="datetime-local"] {
-  position: relative;
-}
-
+/* Android Chrome can keep drawing the native date/time chevron even when the
+   picker indicator is transparent. Remove that visual indicator completely;
+   tapping the date/time field itself still opens the native picker. */
 .pj-dashboard-body input[type="date"]::-webkit-calendar-picker-indicator,
 .pj-dashboard-body input[type="time"]::-webkit-calendar-picker-indicator,
 .pj-dashboard-body input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 48px;
-  height: 100%;
-  margin: 0 !important;
-  padding: 0;
-  opacity: 0;
-  cursor: pointer;
+  display: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+.pj-dashboard-body input[type="date"]::-webkit-inner-spin-button,
+.pj-dashboard-body input[type="time"]::-webkit-inner-spin-button,
+.pj-dashboard-body input[type="datetime-local"]::-webkit-inner-spin-button {
+  display: none !important;
+  -webkit-appearance: none !important;
 }
 
 @media (max-width: 820px) {
@@ -49,11 +43,5 @@
   .pj-dashboard-body input[type="datetime-local"] {
     padding-right: 52px !important;
     background-position: right 18px center !important;
-  }
-
-  .pj-dashboard-body input[type="date"]::-webkit-calendar-picker-indicator,
-  .pj-dashboard-body input[type="time"]::-webkit-calendar-picker-indicator,
-  .pj-dashboard-body input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-    width: 52px;
   }
 }
