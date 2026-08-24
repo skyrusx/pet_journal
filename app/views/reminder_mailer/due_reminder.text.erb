@@ -1,10 +1,16 @@
-Напоминание
+PETJOURNAL — НАПОМИНАНИЕ
 
+<%= @reminder.title %>
 Питомец: <%= @pet.name %>
-Напоминание: <%= @reminder.title %>
+Когда: <%= l(@scheduled_at, format: :default) %>
 Тип: <%= @reminder.reminder_type_label %>
-Время: <%= l(@reminder.next_run_at) %>
-
 <% if @reminder.note.present? %>
-<%= @reminder.note %>
+Заметка: <%= @reminder.note %>
 <% end %>
+
+Открыть напоминание:
+<%= @reminder_url %>
+
+—
+PetJournal помогает держать важное о питомце рядом.
+Это автоматическое уведомление — отвечать на него не нужно.
