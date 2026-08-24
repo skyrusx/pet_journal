@@ -28,7 +28,7 @@ module NotificationChannelsHelper
     {
       "email" => "Email",
       "telegram" => "Telegram",
-      "vk" => "Ваш профиль VK"
+      "vk" => "Ваш профиль ВКонтакте"
     }.fetch(channel_type.to_s, "Адрес")
   end
 
@@ -130,7 +130,7 @@ module NotificationChannelsHelper
 
   def notification_channel_configuration_label(channel)
     if channel.channel_vk? && channel.ready_for_delivery? && !channel.verified?
-      return "Перед первой отправкой напишите сообществу PetJournal в VK со своего профиля, затем запустите тест."
+      return "Перед первой отправкой напишите сообществу PetJournal во ВКонтакте со своего профиля, затем запустите тест."
     end
 
     return "Канал готов к отправке." if channel.ready_for_delivery?
@@ -158,7 +158,7 @@ module NotificationChannelsHelper
     [
       ["Email", "Укажите почту — PetJournal будет отправлять туда напоминания."],
       telegram_step,
-      ["VK", "Сначала напишите сообществу PetJournal со своего профиля, затем добавьте ссылку на профиль — ID определится автоматически."],
+      ["ВКонтакте", "Сначала напишите сообществу PetJournal со своего профиля, затем добавьте ссылку на профиль — ID определится автоматически."],
       ["Push", "Включите уведомления в браузере, чтобы получать быстрые сигналы на этом устройстве."]
     ]
   end
