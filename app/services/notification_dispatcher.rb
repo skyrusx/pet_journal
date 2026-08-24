@@ -27,7 +27,7 @@ class NotificationDispatcher
   end
 
   def dispatch_reminder(reminder)
-    InAppNotification.for_reminder!(reminder)
+    create_in_app_notification(reminder)
     return if reminder.user.quiet_hours_now?(now)
 
     channels = channels_for(reminder)
@@ -56,6 +56,12 @@ class NotificationDispatcher
   private
 
   attr_reader :now
+
+  def create_in_app_notification(reminder)
+    InAppNotification.for_reminder!(reminder)
+  rescue StandardError => error
+    Rails.logger.error("in-app reminder notification failed for reminder #{reminder.id}: #{error.class}: #{error.message}")
+  end
 
   def channels_for(reminder)
     channels = reminder.notification_channels.enabled.to_a
