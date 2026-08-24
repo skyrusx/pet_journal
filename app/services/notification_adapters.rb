@@ -86,7 +86,7 @@ module NotificationAdapters
         urgency: "high",
         vapid: WebPushConfiguration.vapid_options
       )
-    rescue ::Webpush::InvalidSubscription
+    rescue ::Webpush::ExpiredSubscription, ::Webpush::InvalidSubscription
       invalidate_subscription!
       raise
     end
