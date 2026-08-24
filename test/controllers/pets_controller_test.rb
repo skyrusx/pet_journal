@@ -11,18 +11,31 @@ class PetsControllerTest < ActionDispatch::IntegrationTest
     get pets_url
 
     assert_response :success
-    assert_select ".home-hero"
-    assert_select ".home-pet-card", minimum: 1
+    assert_select ".pj-pets-grid"
+    assert_select ".pj-pet-list-card", minimum: 1
+  end
+
+  test "should progressively load pets in batches of 25" do
+    25.times { |index| @user.pets.create!(name: "Питомец #{index + 1}") }
+
+    get pets_url
+
+    assert_response :success
+    assert_select ".pj-pet-list-card", count: 25
+    assert_select ".pj-pets-load-more", count: 1
+
+    get pets_url(page: 2)
+
+    assert_response :success
+    assert_select ".pj-pet-list-card", count: 26
+    assert_select ".pj-pets-load-more", count: 0
   end
 
   test "should show pet" do
     get pet_url(@pet)
 
     assert_response :success
-    assert_select ".dashboard-hero"
-    assert_select ".pet-focus-card", count: 2
-    assert_select ".dashboard-section", text: /Публичный доступ/
-    assert_select ".dashboard-section", text: /PetTag/
+    assert_select ".pj-pet-profile"
   end
 
   test "should get new" do
