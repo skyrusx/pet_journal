@@ -129,13 +129,13 @@ class NotificationChannelsControllerTest < ActionDispatch::IntegrationTest
         notifications_quiet_hours_enabled: "1",
         notifications_quiet_hours_start: "21:30",
         notifications_quiet_hours_end: "07:15",
-        notifications_time_zone: "Asia/Novokuznetsk"
+        notifications_time_zone: "Novosibirsk"
       }
     }
 
     assert_redirected_to notification_channels_url
     @user.reload
     assert @user.notifications_quiet_hours_enabled?
-    assert_equal "Asia/Novokuznetsk", @user.notifications_time_zone
+    assert_equal "Novosibirsk", @user.notifications_time_zone
   end
 end
