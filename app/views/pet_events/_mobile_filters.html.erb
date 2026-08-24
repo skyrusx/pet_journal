@@ -4,13 +4,14 @@
               method: :get,
               class: "pj-journal-mobile-filters",
               data: { mobile_sheet_root: true } do |form| %>
-  <%= hidden_field_tag :pet_id, @selected_pet.id if @selected_pet.present? %>
+  <%= hidden_field_tag :pet_id, @selected_pet.id, id: "journal_mobile_pet_id" if @selected_pet.present? %>
 
   <div class="pj-journal-mobile-filters__search">
     <span aria-hidden="true">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
     </span>
     <%= form.search_field :q,
+                          id: "journal_mobile_q",
                           value: @query,
                           placeholder: "Поиск по событиям",
                           aria: { label: "Поиск по журналу" } %>
@@ -65,31 +66,35 @@
     </header>
 
     <div class="pj-journal-mobile-filter-sheet__fields">
-      <label class="pj-journal-mobile-filter-field">
+      <label class="pj-journal-mobile-filter-field" for="journal_mobile_type">
         <span>Тип события</span>
         <%= select_tag :type,
                        options_for_select([["Все типы", ""]] + @event_type_filters.map { |key, label| [label, key] }, @selected_event_type),
+                       id: "journal_mobile_type",
                        aria: { label: "Тип события" } %>
       </label>
 
-      <label class="pj-journal-mobile-filter-field">
+      <label class="pj-journal-mobile-filter-field" for="journal_mobile_period">
         <span>Период</span>
         <%= select_tag :period,
                        options_for_select([["Все время", ""], ["Месяц", "month"], ["3 месяца", "quarter"], ["Год", "year"]], @selected_period),
+                       id: "journal_mobile_period",
                        aria: { label: "Период" } %>
       </label>
 
-      <label class="pj-journal-mobile-filter-field">
+      <label class="pj-journal-mobile-filter-field" for="journal_mobile_status">
         <span>Состояние</span>
         <%= select_tag :status,
                        options_for_select([["Все состояния", ""]] + PetEvent::STATUS_LABELS.map { |key, label| [label, key] }, @selected_status),
+                       id: "journal_mobile_status",
                        aria: { label: "Состояние" } %>
       </label>
 
-      <label class="pj-journal-mobile-filter-field">
+      <label class="pj-journal-mobile-filter-field" for="journal_mobile_marker">
         <span>Дополнительно</span>
         <%= select_tag :marker,
                        options_for_select([["Все записи", ""], ["С файлами", "with_files"], ["С будущим действием", "follow_up"]], @selected_marker),
+                       id: "journal_mobile_marker",
                        aria: { label: "Дополнительный фильтр" } %>
       </label>
     </div>
