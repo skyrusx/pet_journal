@@ -12,13 +12,13 @@ module NotificationChannelConnectors
       identifier = normalize(value)
       raise Error, "Укажите ссылку на профиль VK, короткое имя или ID." if identifier.blank?
 
-      token = ENV["VK_GROUP_TOKEN"].presence
+      token = VkConfiguration.group_token
       raise Error, "Подключение VK пока недоступно. Попробуйте позже." if token.blank?
 
       response = Net::HTTP.post_form(URI(ENDPOINT), {
         access_token: token,
         user_ids: identifier,
-        v: ENV.fetch("VK_API_VERSION", "5.199")
+        v: VkConfiguration.api_version
       })
       body = JSON.parse(response.body)
 
