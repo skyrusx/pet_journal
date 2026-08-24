@@ -6,6 +6,8 @@ Rails.application.routes.draw do
     get "error-preview/:status" => "errors#show",
         as: :error_preview,
         constraints: { status: /404|406|422|500/ }
+
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
 
   devise_for :users, skip: %i[sessions registrations passwords]
