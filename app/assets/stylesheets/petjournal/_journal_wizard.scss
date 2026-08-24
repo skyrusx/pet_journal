@@ -100,6 +100,11 @@
   display: none;
 }
 
+/* Reuse the Documents uploader literally, with only local spacing adapted to the wizard. */
+.pj-journal-upload-card {
+  margin-top: var(--pj-space-3);
+}
+
 .pj-journal-form-actions--wizard {
   margin-top: auto;
   padding-top: 22px;
