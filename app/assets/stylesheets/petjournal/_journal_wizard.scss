@@ -155,21 +155,36 @@
     min-height: 0;
   }
 
+  /* Match the approved Pets mobile action bar: compact sticky surface,
+     secondary action narrower than the primary action. */
   .pj-journal-form-actions--wizard {
     position: sticky;
     z-index: 8;
-    bottom: 76px;
-    gap: 8px;
-    margin: 22px -14px -14px;
-    padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
-    border-top: 1px solid #e8e3d9;
-    background: rgba(255, 254, 250, .96);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    bottom: 75px;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 10px;
+    margin: 15px -4px 0;
+    padding: 8px 4px;
+    border-top: 0;
+    background: rgba(251, 250, 246, .94);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   .pj-journal-form-actions--wizard > * {
-    flex: 1 1 0;
+    width: 100%;
     min-width: 0;
+  }
+
+  /* Save may be either a button or an input[type=submit]. Keep its computed
+     typography identical to Cancel despite the global 16px mobile input rule. */
+  .pj-journal-form-actions--wizard .pj-journal-form-cancel,
+  .pj-journal-form-actions--wizard .pj-journal-form-save {
+    min-height: var(--pj-size-touch-target) !important;
+    font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+    font-size: var(--pj-font-body) !important;
+    font-weight: 700;
+    line-height: 1;
   }
 }
