@@ -98,7 +98,7 @@
           <span class="pj-notifications-empty__icon"><%= pj_icon(:bell) %></span>
           <div>
             <h3>Каналы ещё не настроены</h3>
-            <p>Без дополнительных настроек PetJournal использует эл. почту аккаунта. Telegram, VK и push можно подключить в любой момент.</p>
+            <p>Без дополнительных настроек PetJournal использует эл. почту аккаунта. Telegram, ВКонтакте и Push можно подключить в любой момент.</p>
           </div>
           <%= link_to "Добавить канал", new_notification_channel_path, class: "pj-notifications-secondary-button" %>
         </div>
@@ -158,7 +158,7 @@
           <span class="pj-notifications-panel__icon"><%= notification_channel_icon(:web_push) %></span>
           <div>
             <span class="pj-notifications-eyebrow">Этот браузер</span>
-            <h2 id="web-push-title">Web Push</h2>
+            <h2 id="web-push-title">Push</h2>
             <p>Получайте быстрые уведомления прямо на этом устройстве.</p>
           </div>
         </div>
@@ -171,7 +171,7 @@
           <p class="pj-notifications-push-status" data-web-push-status>Браузер запросит разрешение только после нажатия «Включить push».</p>
         <% else %>
           <div class="pj-notifications-inline-note is-warning">
-            Push пока недоступен: на сервере не настроены VAPID-ключи. Email, Telegram и VK продолжают работать.
+            Push пока недоступен: на сервере не настроены VAPID-ключи. Email, Telegram и ВКонтакте продолжают работать.
           </div>
         <% end %>
       </section>
