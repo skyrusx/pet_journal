@@ -1,6 +1,60 @@
-<%= link_to notification_channels_path,
-            class: "pj-workspace-icon",
-            aria: { label: "Настройки уведомлений" },
-            title: "Настройки уведомлений" do %>
-  <%= pj_icon(:bell) %>
-<% end %>
+<% notification_scope = current_user.in_app_notifications.recent %>
+<% recent_notifications = notification_scope.limit(6) %>
+<% unread_notifications_count = current_user.in_app_notifications.unread.count %>
+
+<details class="pj-notification-center">
+  <summary class="pj-workspace-icon pj-notification-center__trigger"
+           aria-label="Уведомления<%= ": #{unread_notifications_count} непрочитанных" if unread_notifications_count.positive? %>"
+           title="Уведомления">
+    <%= pj_icon(:bell) %>
+    <% if unread_notifications_count.positive? %>
+      <span class="pj-notification-center__badge"><%= [unread_notifications_count, 9].min %></span>
+    <% end %>
+  </summary>
+
+  <div class="pj-notification-center__popover">
+    <div class="pj-notification-center__head">
+      <div>
+        <strong>Уведомления</strong>
+        <small><%= unread_notifications_count.positive? ? "#{unread_notifications_count} непрочитанных" : "Всё прочитано" %></small>
+      </div>
+      <% if unread_notifications_count.positive? %>
+        <%= button_to "Прочитать все", mark_all_read_notifications_path,
+                      method: :patch,
+                      class: "pj-notification-center__mark-all" %>
+      <% end %>
+    </div>
+
+    <div class="pj-notification-center__list">
+      <% if recent_notifications.any? %>
+        <% recent_notifications.each do |notification| %>
+          <%= link_to notification_path(notification),
+                      class: class_names("pj-notification-center__item", unread: !notification.read?) do %>
+            <span class="pj-notification-center__item-icon">
+              <%= notification.kind.start_with?("pet_tag") ? pj_icon(:tag) : pj_icon(:alarm) %>
+            </span>
+            <span class="pj-notification-center__item-copy">
+              <strong><%= notification.title %></strong>
+              <% if notification.body.present? %><small><%= notification.body %></small><% end %>
+              <time datetime="<%= notification.occurred_at.iso8601 %>"><%= in_app_notification_time_label(notification) %></time>
+            </span>
+            <% unless notification.read? %><i aria-label="Непрочитано"></i><% end %>
+          <% end %>
+        <% end %>
+      <% else %>
+        <div class="pj-notification-center__empty">
+          <%= pj_icon(:bell) %>
+          <strong>Пока всё спокойно</strong>
+          <span>Новые события появятся здесь.</span>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="pj-notification-center__footer">
+      <%= link_to "Все уведомления", notifications_path %>
+      <%= link_to notification_channels_path, title: "Настройки уведомлений", aria: { label: "Настройки уведомлений" } do %>
+        <%= pj_icon(:settings) %>
+      <% end %>
+    </div>
+  </div>
+</details>
