@@ -9,7 +9,7 @@
   <div class="pj-dash-shell">
     <%= render "shared/workspace_sidebar" %>
 
-    <main class="pj-dash-main">
+    <main class="pj-dash-main pj-workspace-main">
       <header class="pj-dash-mobile-header">
         <details class="pj-dash-mobile-menu">
           <summary aria-label="Открыть меню"><span></span><span></span><span></span></summary>
@@ -39,13 +39,12 @@
         <% end %>
       </header>
 
-      <div class="pj-dash-desktop-actions">
-        <div class="pj-dash-desktop-actions__inner">
-          <%= link_to notification_channels_path, class: "pj-dash-bell", aria: { label: "Уведомления" } do %>
-            <%= pj_icon(:bell) %>
-          <% end %>
+      <header class="pj-workspace-topbar pj-dashboard-topbar">
+        <h1>Dashboard</h1>
+        <div class="pj-workspace-topbar__actions">
+          <%= render "shared/workspace_notification_link" %>
         </div>
-      </div>
+      </header>
 
       <div class="pj-dash-content">
         <% if @pets.any? %>
