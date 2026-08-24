@@ -46,9 +46,9 @@
     margin-bottom: var(--pj-space-3);
   }
 
-  /* Create/edit actions mirror the Journal event wizard: two-button sticky bar
+  /* Edit actions mirror the Journal event wizard: two-button sticky bar
      directly above the mobile navigation. */
-  .pj-dashboard-body .pj-reminder-form-actions {
+  .pj-dashboard-body .pj-reminder-form-page--edit .pj-reminder-form-actions {
     position: sticky;
     z-index: 8;
     bottom: 75px;
@@ -63,14 +63,14 @@
     -webkit-backdrop-filter: blur(8px);
   }
 
-  .pj-dashboard-body .pj-reminder-form-actions > * {
+  .pj-dashboard-body .pj-reminder-form-page--edit .pj-reminder-form-actions > * {
     width: 100%;
     min-width: 0;
   }
 
-  .pj-dashboard-body .pj-reminder-form-actions .pj-reminder-form-cancel,
-  .pj-dashboard-body .pj-reminder-form-actions input.pj-reminders-primary-button[type="submit"],
-  .pj-dashboard-body .pj-reminder-form-actions button.pj-reminders-primary-button {
+  .pj-dashboard-body .pj-reminder-form-page--edit .pj-reminder-form-actions .pj-reminder-form-cancel,
+  .pj-dashboard-body .pj-reminder-form-page--edit .pj-reminder-form-actions input.pj-reminders-primary-button[type="submit"],
+  .pj-dashboard-body .pj-reminder-form-page--edit .pj-reminder-form-actions button.pj-reminders-primary-button {
     width: 100%;
     min-height: var(--pj-size-touch-target) !important;
     border-radius: var(--pj-radius-control);
