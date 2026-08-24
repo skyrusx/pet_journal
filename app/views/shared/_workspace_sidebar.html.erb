@@ -79,16 +79,20 @@
           <strong><%= display_name %></strong>
           <small><%= current_user.email %></small>
         </div>
+
         <%= link_to edit_user_registration_path, class: "pj-dash-profile-popover__item" do %>
-          <%= pj_icon(:user) %><span>Профиль</span>
+          <%= pj_icon(:user) %>
+          <span>Профиль</span>
         <% end %>
-        <%= link_to settings_path, class: "pj-dash-profile-popover__item" do %>
-          <%= pj_icon(:settings) %><span>Настройки</span>
-        <% end %>
+
+        <div class="pj-dash-profile-popover__separator" aria-hidden="true"></div>
+
         <%= button_to destroy_user_session_path,
                       method: :delete,
-                      class: "pj-dash-profile-popover__item pj-dash-profile-popover__item--danger" do %>
-          <%= pj_icon(:logout) %><span>Выйти</span>
+                      class: "pj-dash-profile-popover__item pj-dash-profile-popover__logout",
+                      form_class: "pj-dash-profile-popover__form" do %>
+          <%= pj_icon(:logout) %>
+          <span>Выйти</span>
         <% end %>
       </div>
     </details>
