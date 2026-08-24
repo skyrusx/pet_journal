@@ -69,24 +69,35 @@ module NotificationAdapters
     def deliver(delivery)
       require "webpush"
 
-      vapid_public_key = ENV.fetch("VAPID_PUBLIC_KEY")
-      vapid_private_key = ENV.fetch("VAPID_PRIVATE_KEY")
+      reminder = delivery.reminder
       payload = {
         title: "PetJournal",
-        body: "#{delivery.reminder.pet.name}: #{delivery.reminder.title}",
-        path: Rails.application.routes.url_helpers.pet_reminders_path(delivery.reminder.pet)
+        body: "#{reminder.pet.name}: #{reminder.title}",
+        path: Rails.application.routes.url_helpers.reminders_overview_path(pet_id: reminder.pet_id),
+        tag: "reminder-#{reminder.id}"
       }
 
-      ::WebPush.payload_send(
+      ::Webpush.payload_send(
         message: payload.to_json,
         endpoint: channel.settings.fetch("endpoint"),
         p256dh: channel.settings.fetch("p256dh"),
         auth: channel.settings.fetch("auth"),
-        vapid: {
-          subject: ENV.fetch("VAPID_SUBJECT", "mailto:#{delivery.reminder.user.email}"),
-          public_key: vapid_public_key,
-          private_key: vapid_private_key
-        }
+        ttl: 3_600,
+        urgency: "high",
+        vapid: WebPushConfiguration.vapid_options
+      )
+    rescue ::Webpush::InvalidSubscription
+      invalidate_subscription!
+      raise
+    end
+
+    private
+
+    def invalidate_subscription!
+      channel.update!(
+        enabled: false,
+        verified_at: nil,
+        settings: channel.settings.merge("invalidated_at" => Time.current.iso8601)
       )
     end
   end
