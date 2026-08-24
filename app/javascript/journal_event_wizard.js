@@ -3,6 +3,12 @@ function initJournalEventWizard() {
     if (form.dataset.journalWizardBound === "true") return;
     form.dataset.journalWizardBound = "true";
 
+    const eventTimeInput = form.querySelector('input[type="time"][name$="[event_time]"]');
+    if (eventTimeInput?.value) {
+      const minuteValue = eventTimeInput.value.match(/^\d{2}:\d{2}/)?.[0];
+      if (minuteValue) eventTimeInput.value = minuteValue;
+    }
+
     const steps = [...form.querySelectorAll("[data-journal-wizard-step]")];
     const navButtons = [...form.querySelectorAll("[data-journal-wizard-nav]")];
     const typeInputs = [...form.querySelectorAll("[data-journal-wizard-type]")];
