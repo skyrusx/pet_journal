@@ -34,6 +34,10 @@ Rails.application.routes.draw do
   get "settings" => "settings#edit", as: :settings
   patch "settings" => "settings#update"
 
+  resources :notifications, controller: :in_app_notifications, only: %i[index show] do
+    patch :mark_all_read, on: :collection
+  end
+
   # Stable cross-pet workspace entry points. A specific pet is selected via a
   # query parameter while nested routes remain available for CRUD operations.
   get "journal" => "pet_events#index", as: :journal_overview
@@ -55,7 +59,7 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Can be used by load balancers and uptime monitors to verify the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Render dynamic PWA files from app/views/pwa/*
