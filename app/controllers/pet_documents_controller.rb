@@ -1,8 +1,10 @@
 class PetDocumentsController < ApplicationController
+  PAGE_SIZE = 25
+
   before_action :authenticate_user!
-  before_action :set_pet
+  before_action :set_pet, except: :index
   before_action :set_document, only: %i[show edit update destroy destroy_file sync_journal_event sync_expiry_reminder]
-  before_action :set_document_pets, only: %i[index new create edit update]
+  before_action :set_document_pets
 
   layout "workspace_new_design"
 
@@ -11,18 +13,32 @@ class PetDocumentsController < ApplicationController
     @selected_status = params[:status].presence_in(%w[all active expiring expired no_expiry]) || "all"
     @selected_scope = params[:scope].presence_in(%w[all with_files with_reminder]) || "all"
     @query = params[:q].to_s.strip
-    @documents = filtered_documents.with_attached_files
-    @event_file_events = legacy_event_file_events
+    @selected_pet = selected_document_pet
+    @pet = @selected_pet
+
+    filtered_scope = filtered_documents
+    @page = [params[:page].to_i, 1].max
+    @documents_limit = PAGE_SIZE * @page
+    @matching_documents_count = filtered_scope.distinct.count(:id)
+    @has_more_documents = @matching_documents_count > @documents_limit
+    @documents = filtered_scope
+                 .includes(:pet)
+                 .with_attached_files
+                 .limit(@documents_limit)
+
+    base_scope = documents_scope
     @document_counts = {
-      total: @pet.pet_documents.count,
-      expiring: @pet.pet_documents.expires_soon.count,
-      expired: @pet.pet_documents.expired.count,
-      no_expiry: @pet.pet_documents.where(expires_on: nil).count,
-      with_files: @pet.pet_documents.joins(:files_attachments).distinct.count,
-      with_reminder: @pet.pet_documents.where.not(reminder_id: nil).count,
-      legacy_files: @event_file_events.sum { |event| event.files.count }
+      total: base_scope.count,
+      expiring: base_scope.expires_soon.count,
+      expired: base_scope.expired.count,
+      no_expiry: base_scope.where(expires_on: nil).count,
+      with_files: base_scope.joins(:files_attachments).distinct.count,
+      with_reminder: base_scope.where.not(reminder_id: nil).count
     }
-    @highlight_documents = @pet.pet_documents.expired.limit(3).to_a + @pet.pet_documents.expires_soon.limit(3).to_a
+
+    @event_file_events = legacy_event_file_events
+    @document_counts[:legacy_files] = @event_file_events.sum { |event| event.files.count }
+    @highlight_documents = base_scope.expired.limit(3).to_a + base_scope.expires_soon.limit(3).to_a
   end
 
   def show; end
@@ -71,7 +87,7 @@ class PetDocumentsController < ApplicationController
   def destroy
     @document.destroy
 
-    redirect_to pet_pet_documents_path(@pet), notice: "Документ удален."
+    redirect_to documents_overview_path(pet_id: @pet.id), notice: "Документ удален."
   end
 
   def destroy_file
@@ -109,7 +125,13 @@ class PetDocumentsController < ApplicationController
   end
 
   def set_document_pets
-    @document_pets = current_user.pets.order(:name)
+    @document_pets = current_user.pets.with_attached_photo.order(:name).to_a
+  end
+
+  def selected_document_pet
+    return if params[:pet_id].blank?
+
+    current_user.pets.find(params[:pet_id])
   end
 
   def selected_pet
@@ -156,8 +178,13 @@ class PetDocumentsController < ApplicationController
     @document.reminder&.update!(pet: pet)
   end
 
+  def documents_scope
+    scope = PetDocument.where(pet_id: @document_pets.map(&:id))
+    @selected_pet.present? ? scope.where(pet_id: @selected_pet.id) : scope
+  end
+
   def filtered_documents
-    scope = @pet.pet_documents.order(created_at: :desc)
+    scope = documents_scope.order(created_at: :desc)
     scope = scope.where(document_type: @selected_type) if @selected_type.present?
     scope = apply_status(scope)
     scope = apply_scope(scope)
@@ -194,7 +221,9 @@ class PetDocumentsController < ApplicationController
   end
 
   def legacy_event_file_events
-    scope = @pet.pet_events.joins(:files_attachments).with_attached_files.distinct.order(event_date: :desc, created_at: :desc)
+    scope = PetEvent.where(pet_id: @document_pets.map(&:id))
+    scope = scope.where(pet_id: @selected_pet.id) if @selected_pet.present?
+    scope = scope.joins(:files_attachments).with_attached_files.includes(:pet).distinct.order(event_date: :desc, created_at: :desc)
     return scope.limit(20).to_a if @query.blank?
 
     pattern = "%#{ActiveRecord::Base.sanitize_sql_like(@query)}%"
