@@ -12,6 +12,14 @@
   stroke-width: 1.7;
 }
 
+/* The legacy switcher rule rotates every nav icon inside summary. Keep the
+   all-pets paw upright and reserve rotation for the trailing chevron only. */
+.pj-journal-pet-switcher > summary .pj-journal-pet-avatar.is-all .pj-nav-icon,
+.pj-journal-pet-switcher[open] > summary .pj-journal-pet-avatar.is-all .pj-nav-icon {
+  margin-left: 0;
+  transform: none;
+}
+
 .pj-journal-add-picker {
   position: relative;
 }
