@@ -24,7 +24,7 @@
     </div>
 
     <div class="pj-inbox-toolbar">
-      <span><strong><%= @unread_count %></strong> непрочитанных</span>
+      <span><strong><%= @unread_count %></strong> <%= russian_plural(@unread_count, "непрочитанное", "непрочитанных", "непрочитанных") %></span>
       <%= link_to notification_channels_path do %>
         <%= pj_icon(:settings) %>
         <span>Настройки уведомлений</span>
