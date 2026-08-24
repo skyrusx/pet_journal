@@ -42,11 +42,13 @@ class NotificationAdaptersTest < ActiveSupport::TestCase
     payload = JSON.parse(sent_options[:message])
     assert_equal "PetJournal", payload["title"]
     assert_includes payload["body"], reminder.pet.name
-    assert_equal Rails.application.routes.url_helpers.reminders_overview_path(pet_id: reminder.pet_id), payload["path"]
+    assert_equal Rails.application.routes.url_helpers.pet_reminder_path(reminder.pet, reminder), payload["path"]
     assert_equal "reminder-#{reminder.id}", payload["tag"]
+    assert_equal reminder.next_run_at.to_i * 1000, payload["timestamp"]
+    assert_equal true, payload["require_interaction"]
   end
 
-  test "VK adapter sends polished reminder with inline open button" do
+  test "VK adapter sends polished reminder with inline open button for public host" do
     user = users(:one)
     reminder = reminders(:one)
     channel = user.notification_channels.create!(
@@ -84,6 +86,34 @@ class NotificationAdaptersTest < ActiveSupport::TestCase
     assert_equal "open_link", action["type"]
     assert_equal "Открыть напоминание", action["label"]
     assert_includes action["link"], "/pets/#{reminder.pet_id}/reminders/#{reminder.id}"
+  end
+
+  test "VK adapter omits open button for localhost but still sends reminder" do
+    user = users(:one)
+    reminder = reminders(:one)
+    channel = user.notification_channels.create!(
+      channel_type: :vk,
+      name: "ВКонтакте localhost",
+      address: "654321",
+      enabled: true
+    )
+    delivery = reminder.notification_deliveries.create!(notification_channel: channel)
+    submitted = nil
+    response = Struct.new(:body).new({ response: 1 }.to_json)
+    original_options = Rails.application.config.action_mailer.default_url_options
+
+    Rails.application.config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+
+    VkConfiguration.stub(:group_token, "credential-token") do
+      Net::HTTP.stub(:post_form, ->(_uri, params) { submitted = params; response }) do
+        NotificationAdapters.for(channel).deliver(delivery)
+      end
+    end
+
+    assert_includes submitted[:message], "🐾 PetJournal"
+    assert_nil submitted[:keyboard]
+  ensure
+    Rails.application.config.action_mailer.default_url_options = original_options
   end
 
   test "VK adapter sends a dedicated test message without old reminder data" do
