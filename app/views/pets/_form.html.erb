@@ -128,6 +128,6 @@
 
   <div class="pj-pet-form__actions">
     <%= link_to(@pet.persisted? ? pet_path(@pet) : pets_path, class: "pj-pet-secondary-button") do %>Отмена<% end %>
-    <%= f.submit(@pet.persisted? ? "Сохранить изменения" : "Сохранить", class: "pj-pets-primary-button") %>
+    <%= f.submit "Сохранить", class: "pj-pets-primary-button" %>
   </div>
 <% end %>
