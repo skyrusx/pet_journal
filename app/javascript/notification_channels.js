@@ -252,6 +252,7 @@ function initNotificationChannelForms() {
     const hint = form.querySelector("[data-channel-hint]");
     const nameInput = form.querySelector("[data-channel-name-input]");
     const telegramPanel = form.querySelector("[data-telegram-connect-panel]");
+    const vkPanel = form.querySelector("[data-vk-connect-panel]");
     const standardFields = form.querySelectorAll("[data-standard-channel-field]");
     const standardActions = form.querySelector("[data-standard-channel-actions]");
     const telegramActions = form.querySelector("[data-telegram-only-actions]");
@@ -275,7 +276,7 @@ function initNotificationChannelForms() {
         name: "VK",
         label: "Ваш профиль VK",
         placeholder: "Например, vk.ru/username или @username",
-        hint: "Можно вставить ссылку на профиль, короткое имя или числовой ID. Остальное PetJournal определит сам."
+        hint: "Вставьте ссылку на профиль, короткое имя или ID — PetJournal сам определит получателя."
       }
     };
 
@@ -285,6 +286,7 @@ function initNotificationChannelForms() {
       const currentType = select.value;
       const current = copy[currentType] || copy.email;
       const telegram = currentType === "telegram";
+      const vk = currentType === "vk";
 
       if (label) label.textContent = current.label;
       if (input) {
@@ -299,6 +301,7 @@ function initNotificationChannelForms() {
 
       standardFields.forEach((field) => { field.hidden = telegram; });
       if (telegramPanel) telegramPanel.hidden = !telegram;
+      if (vkPanel) vkPanel.hidden = !vk;
       if (standardActions) standardActions.hidden = telegram;
       if (telegramActions) telegramActions.hidden = !telegram;
     };
