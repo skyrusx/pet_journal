@@ -42,7 +42,6 @@ class PetEventsController < ApplicationController
   def new
     @pet_event = @pet.pet_events.new(
       event_date: Date.current,
-      event_time: Time.current,
       status: :completed,
       event_type: params[:type].presence_in(PetEvent.event_types.keys) || :note
     )
