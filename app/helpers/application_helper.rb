@@ -106,7 +106,8 @@ module ApplicationHelper
     pet = mobile_nav_pet
     items = [
       { label: "Мои питомцы", path: pets_path, icon: :paw, active: controller_name == "pets" },
-      { label: "Настройки уведомлений", path: notification_channels_path, icon: :bell, active: controller_name == "notification_channels" },
+      { label: "Уведомления", path: notifications_path, icon: :bell, active: controller_name == "in_app_notifications" },
+      { label: "Настройки уведомлений", path: notification_channels_path, icon: :settings, active: controller_name == "notification_channels" },
       { label: "Аккаунт", path: edit_user_registration_path, icon: :user, active: devise_controller? }
     ]
 
@@ -128,7 +129,7 @@ module ApplicationHelper
     when :reminders
       controller_name == "reminders"
     when :more
-      %w[pets pet_tags pet_documents pet_profile_shares notification_channels].include?(controller_name) || devise_controller?
+      %w[pets pet_tags pet_documents pet_profile_shares notification_channels in_app_notifications].include?(controller_name) || devise_controller?
     else
       false
     end
@@ -141,10 +142,25 @@ module ApplicationHelper
     count.positive? ? [count, 9].min : nil
   end
 
-  # The bell opens notification settings/history, not a notification inbox.
-  # Reminder urgency is shown only on the dedicated Reminders navigation item.
   def mobile_notifications_badge
-    nil
+    return unless user_signed_in?
+
+    count = current_user.in_app_notifications.unread.count
+    count.positive? ? [count, 9].min : nil
+  end
+
+  def in_app_notification_time_label(notification)
+    time = notification.occurred_at.in_time_zone(current_user.notifications_time_zone_name)
+    today = Time.current.in_time_zone(current_user.notifications_time_zone_name).to_date
+
+    case time.to_date
+    when today
+      "Сегодня, #{time.strftime('%H:%M')}"
+    when today - 1.day
+      "Вчера, #{time.strftime('%H:%M')}"
+    else
+      time.strftime("%d.%m.%Y, %H:%M")
+    end
   end
 
   def pet_nav_items(pet)
