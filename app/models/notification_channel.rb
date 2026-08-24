@@ -55,7 +55,7 @@ class NotificationChannel < ApplicationRecord
   def telegram_configuration_issues
     issues = []
     issues << "Подключите Telegram через бота PetJournal" if address.blank?
-    issues << "Telegram временно недоступен. Попробуйте позже." if ENV["TELEGRAM_BOT_TOKEN"].blank?
+    issues << "Telegram пока в разработке и недоступен для подключения." unless TelegramConfiguration.configured?
     issues
   end
 
