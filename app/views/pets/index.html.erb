@@ -73,6 +73,16 @@
           <span>Добавить <br>питомца</span>
         <% end %>
       </div>
+
+      <% if @has_more_pets %>
+        <div class="pj-journal-load-more pj-pets-load-more">
+          <%= link_to pets_path(page: @page + 1), class: "pj-journal-load-more__button" do %>
+            <span>Показать ещё</span>
+            <% remaining = [@matching_pets_count - @pets_limit, PetsController::PAGE_SIZE].min %>
+            <small><%= remaining %> <%= russian_plural(remaining, "питомец", "питомца", "питомцев") %></small>
+          <% end %>
+        </div>
+      <% end %>
     <% else %>
       <section class="pj-pets-empty pj-pets-empty--reference" aria-labelledby="pj-pets-empty-title">
         <%= image_tag "petjournal/new_design/dashboard-empty-pets.svg",
