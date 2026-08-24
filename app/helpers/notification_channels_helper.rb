@@ -10,7 +10,7 @@ module NotificationChannelsHelper
     {
       "email" => "Укажите адрес электронной почты, на который будут приходить уведомления.",
       "telegram" => "Telegram подключается через бота PetJournal — никаких chat_id вводить не нужно.",
-      "vk" => "Можно вставить ссылку на профиль, короткое имя или числовой ID. Остальное PetJournal определит сам."
+      "vk" => "Вставьте ссылку на профиль, короткое имя или ID — PetJournal сам определит получателя."
     }.fetch(channel_type.to_s, "Укажите данные канала.")
   end
 
@@ -119,6 +119,10 @@ module NotificationChannelsHelper
   end
 
   def notification_channel_configuration_label(channel)
+    if channel.channel_vk? && channel.ready_for_delivery? && !channel.verified?
+      return "Перед первой отправкой напишите сообществу PetJournal в VK со своего профиля, затем запустите тест."
+    end
+
     return "Канал готов к отправке." if channel.ready_for_delivery?
 
     channel.configuration_issues.to_sentence.presence || "Проверьте настройки подключения."
@@ -138,7 +142,7 @@ module NotificationChannelsHelper
     [
       ["Email", "Укажите почту — PetJournal будет отправлять туда напоминания."],
       ["Telegram", "Нажмите «Подключить Telegram» и Start в боте. Никаких ID искать не нужно."],
-      ["VK", "Вставьте ссылку на свой профиль VK или короткое имя — PetJournal определит ID сам."],
+      ["VK", "Сначала напишите сообществу PetJournal со своего профиля, затем добавьте ссылку на профиль — ID определится автоматически."],
       ["Push", "Включите уведомления в браузере, чтобы получать быстрые сигналы на этом устройстве."]
     ]
   end
