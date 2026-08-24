@@ -273,14 +273,14 @@ function initNotificationChannelForms() {
         hint: "Telegram подключается через бота PetJournal — никаких chat_id вводить не нужно."
       },
       vk: {
-        name: "VK",
-        label: "Ваш профиль VK",
+        name: "ВКонтакте",
+        label: "Ваш профиль ВКонтакте",
         placeholder: "Например, vk.ru/username или @username",
         hint: "Вставьте ссылку на профиль, короткое имя или ID — PetJournal сам определит получателя."
       }
     };
 
-    const defaultNames = Object.values(copy).map((item) => item.name);
+    const defaultNames = ["VK", ...Object.values(copy).map((item) => item.name)];
 
     const refresh = () => {
       const currentType = select.value;
