@@ -100,7 +100,7 @@
       <section class="pj-document-form-card pj-document-related-settings">
         <div class="pj-document-form-card__heading">
           <h2>Связанные действия</h2>
-          <p>Сохраняем текущие возможности автоматизации документа.</p>
+          <p>Можно автоматически поддерживать запись в журнале и напоминание о сроке действия.</p>
         </div>
 
         <div class="pj-document-field">
@@ -125,7 +125,9 @@
   </div>
 
   <div class="pj-document-form-actions">
-    <%= link_to "Отмена", document.persisted? ? pet_pet_document_path(document.pet, document) : pet_pet_documents_path(pet), class: "pj-document-form-cancel" %>
-    <%= form.submit document.persisted? ? "Сохранить изменения" : "Сохранить", class: "pj-documents-primary-button" %>
+    <%= link_to "Отмена",
+                document.persisted? ? pet_pet_document_path(document.pet, document) : documents_overview_path(pet_id: pet.id),
+                class: "pj-document-form-cancel" %>
+    <%= form.submit "Сохранить", class: "pj-documents-primary-button" %>
   </div>
 <% end %>
