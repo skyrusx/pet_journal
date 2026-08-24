@@ -216,7 +216,7 @@
 
         <div class="pj-journal-form-actions pj-journal-form-actions--wizard">
           <button type="button" class="pj-journal-form-cancel" data-journal-wizard-back>Назад</button>
-          <%= f.submit(@pet_event.persisted? ? "Сохранить изменения" : "Сохранить событие", class: "pj-journal-form-save") %>
+          <%= f.submit "Сохранить", class: "pj-journal-form-save" %>
         </div>
       </section>
     </div>
