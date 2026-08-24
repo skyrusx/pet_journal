@@ -7,6 +7,11 @@ function initJournalEventWizard() {
     if (eventTimeInput?.value) {
       const minuteValue = eventTimeInput.value.match(/^\d{2}:\d{2}/)?.[0];
       if (minuteValue) eventTimeInput.value = minuteValue;
+    } else if (eventTimeInput && form.dataset.initialStep === "1") {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      eventTimeInput.value = `${hours}:${minutes}`;
     }
 
     const steps = [...form.querySelectorAll("[data-journal-wizard-step]")];
