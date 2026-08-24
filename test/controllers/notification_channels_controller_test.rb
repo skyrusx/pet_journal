@@ -47,19 +47,31 @@ class NotificationChannelsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".pj-notifications-load-more__button", count: 0
   end
 
-  test "should create telegram channel" do
-    assert_difference("NotificationChannel.count") do
-      post notification_channels_url, params: {
-        notification_channel: {
-          channel_type: "telegram",
-          name: "Telegram",
-          address: "123456",
-          enabled: "1"
-        }
-      }
+  test "should show Telegram as disabled while bot is not configured" do
+    TelegramConfiguration.stub(:configured?, false) do
+      get new_notification_channel_url
     end
 
-    assert_redirected_to notification_channels_url
+    assert_response :success
+    assert_select "select[name='notification_channel[channel_type]'] option[value='telegram'][disabled]", text: /Telegram — в разработке/
+  end
+
+  test "should not create Telegram channel while bot is not configured" do
+    TelegramConfiguration.stub(:configured?, false) do
+      assert_no_difference("NotificationChannel.count") do
+        post notification_channels_url, params: {
+          notification_channel: {
+            channel_type: "telegram",
+            name: "Telegram",
+            address: "123456",
+            enabled: "1"
+          }
+        }
+      end
+    end
+
+    assert_response :unprocessable_entity
+    assert_select ".pj-notifications-form-errors", text: /Telegram пока в разработке/
   end
 
   test "should resolve friendly VK profile when creating channel" do
@@ -103,14 +115,16 @@ class NotificationChannelsControllerTest < ActionDispatch::IntegrationTest
     channel = notification_channels(:telegram)
     channel.update!(enabled: true)
 
-    assert_difference("NotificationDelivery.count") do
-      post test_notification_channel_url(channel)
+    TelegramConfiguration.stub(:configured?, false) do
+      assert_difference("NotificationDelivery.count") do
+        post test_notification_channel_url(channel)
+      end
     end
 
     assert_redirected_to notification_channels_url
     delivery = NotificationDelivery.order(:created_at).last
     assert delivery.status_skipped?
-    assert_match "Telegram временно недоступен", delivery.error_message
+    assert_match "Telegram пока в разработке", delivery.error_message
   end
 
   test "should retry failed delivery immediately" do
