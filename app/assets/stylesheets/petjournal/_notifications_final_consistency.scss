@@ -1,0 +1,30 @@
+/* Final notification control polish. Imported after the generic workspace layers so
+   notification buttons have one unambiguous typography and disabled state. */
+
+.pj-dashboard-body .pj-notifications-primary-button,
+.pj-dashboard-body .pj-notifications-secondary-button {
+  font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif !important;
+  font-size: var(--pj-font-meta) !important;
+  font-weight: 700 !important;
+  font-variation-settings: "wght" 700;
+  line-height: 1 !important;
+}
+
+.pj-dashboard-body .pj-notifications-primary-button > *,
+.pj-dashboard-body .pj-notifications-secondary-button > * {
+  font: inherit;
+  font-weight: inherit;
+}
+
+.pj-dashboard-body .pj-notifications-primary-button:disabled,
+.pj-dashboard-body .pj-notifications-secondary-button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.pj-dashboard-body .pj-notifications-primary-button:disabled:hover,
+.pj-dashboard-body .pj-notifications-secondary-button:disabled:hover {
+  transform: none;
+}
