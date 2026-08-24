@@ -6,6 +6,10 @@
   flex: 0 0 auto;
   border-bottom: 0;
   background: rgba(253, 252, 248, 0.98);
+  color: #202a23;
+  font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 .pj-error-page--404 .pj-error-shell {
@@ -50,6 +54,7 @@
 .pj-error-navbar__nav a,
 .pj-error-navbar__login {
   color: #222a24;
+  font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
   font-size: 14px;
   font-weight: 600;
   line-height: 1;
@@ -88,6 +93,7 @@
   border-radius: 10px;
   background: #17492e;
   color: #ffffff;
+  font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
@@ -259,6 +265,7 @@
     padding: 0 14px;
     border-radius: 12px;
     color: #263129;
+    font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
     font-size: 15px;
     font-weight: 600;
     text-decoration: none;
@@ -290,6 +297,7 @@
     border-radius: 12px;
     background: #17492e;
     color: #fff;
+    font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
     font-size: 15px;
     font-weight: 700;
     text-decoration: none;
