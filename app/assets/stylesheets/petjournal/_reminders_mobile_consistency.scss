@@ -12,6 +12,23 @@
     box-sizing: border-box;
   }
 
+  /* Pet selector must occupy the same full content row as Journal. */
+  .pj-dashboard-body .pj-reminders-index .pj-reminders-toolbar {
+    width: 100%;
+    display: block;
+  }
+
+  .pj-dashboard-body .pj-reminders-index .pj-reminders-pet-switcher,
+  .pj-dashboard-body .pj-reminders-index .pj-reminders-pet-switcher > summary {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box;
+  }
+
+  .pj-dashboard-body .pj-reminders-index .pj-reminders-pet-switcher {
+    display: block;
+  }
+
   /* The global quick-add sheet is the single mobile creation entry point. */
   .pj-reminders-index .pj-reminders-toolbar > .pj-reminders-primary-button,
   .pj-reminders-index .pj-reminders-toolbar > .pj-reminders-add-picker,
@@ -27,5 +44,39 @@
 
   .pj-reminders-mobile-filters {
     margin-bottom: var(--pj-space-3);
+  }
+
+  /* Create/edit actions mirror the Journal event wizard: two-button sticky bar
+     directly above the mobile navigation. */
+  .pj-dashboard-body .pj-reminder-form-actions {
+    position: sticky;
+    z-index: 8;
+    bottom: 75px;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr !important;
+    gap: 10px;
+    margin: 15px -4px 0;
+    padding: 8px 4px;
+    border-top: 0;
+    background: rgba(251, 250, 246, .94);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .pj-dashboard-body .pj-reminder-form-actions > * {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .pj-dashboard-body .pj-reminder-form-actions .pj-reminder-form-cancel,
+  .pj-dashboard-body .pj-reminder-form-actions input.pj-reminders-primary-button[type="submit"],
+  .pj-dashboard-body .pj-reminder-form-actions button.pj-reminders-primary-button {
+    width: 100%;
+    min-height: var(--pj-size-touch-target) !important;
+    border-radius: var(--pj-radius-control);
+    font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif !important;
+    font-size: var(--pj-font-body) !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
   }
 }
