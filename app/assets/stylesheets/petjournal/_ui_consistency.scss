@@ -1,0 +1,56 @@
+/*
+ * Canonical product sizing layer.
+ *
+ * Typography uses rem tokens; exact interface geometry uses px tokens.
+ * This file intentionally changes shared primitives only. Page-specific values
+ * are migrated to the same scale during the final page-by-page polish pass.
+ */
+
+/* Standard workspace topbar used by Dashboard and all signed-in sections. */
+.pj-workspace-topbar {
+  min-height: var(--pj-size-topbar);
+  gap: var(--pj-space-5);
+  padding-inline: var(--pj-workspace-gutter);
+}
+
+.pj-workspace-topbar h1 {
+  font-size: var(--pj-font-topbar-title);
+  line-height: 1.2;
+}
+
+.pj-workspace-topbar__actions {
+  gap: var(--pj-space-3);
+}
+
+.pj-workspace-icon {
+  width: var(--pj-size-icon-button);
+  height: var(--pj-size-icon-button);
+}
+
+.pj-workspace-icon .pj-nav-icon {
+  width: var(--pj-size-icon);
+  height: var(--pj-size-icon);
+}
+
+/* Shared readable text scale for the signed-in application. */
+.pj-dashboard-body {
+  font-size: var(--pj-font-body);
+  line-height: 1.5;
+}
+
+/* Canonical control geometry. Individual components may intentionally use
+   small/large variants, but should no longer invent one-off heights. */
+.pj-workspace-main input:not([type="checkbox"]):not([type="radio"]),
+.pj-workspace-main select,
+.pj-workspace-main textarea,
+.pj-workspace-main button {
+  font-size: var(--pj-font-control);
+}
+
+@media (max-width: 820px) {
+  .pj-workspace-main input:not([type="checkbox"]):not([type="radio"]),
+  .pj-workspace-main select,
+  .pj-workspace-main textarea {
+    font-size: var(--pj-font-mobile-control);
+  }
+}
