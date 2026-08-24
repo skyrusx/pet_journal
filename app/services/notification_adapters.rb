@@ -52,13 +52,15 @@ module NotificationAdapters
     VK_ENDPOINT = "https://api.vk.com/method/messages.send".freeze
 
     def deliver(delivery)
-      token = ENV.fetch("VK_GROUP_TOKEN")
+      token = VkConfiguration.group_token
+      raise "VK не настроен: добавьте токен сообщества в Rails credentials или VK_GROUP_TOKEN" if token.blank?
+
       response = Net::HTTP.post_form(URI(VK_ENDPOINT), {
         access_token: token,
         peer_id: channel.address,
         random_id: SecureRandom.random_number(2_147_483_647),
         message: reminder_text(delivery.reminder),
-        v: ENV.fetch("VK_API_VERSION", "5.199")
+        v: VkConfiguration.api_version
       })
       body = JSON.parse(response.body)
       raise body["error"]["error_msg"] if body["error"].present?
