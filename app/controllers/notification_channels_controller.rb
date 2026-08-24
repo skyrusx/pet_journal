@@ -10,7 +10,7 @@ class NotificationChannelsController < ApplicationController
     @selected_delivery_status = params[:delivery_status].presence_in(%w[all pending sent failed skipped]) || "all"
     @deliveries = filtered_deliveries.limit(50)
     @delivery_counts = delivery_counts
-    @vapid_public_key = ENV["VAPID_PUBLIC_KEY"]
+    @vapid_public_key = WebPushConfiguration.public_key
   end
 
   def new
