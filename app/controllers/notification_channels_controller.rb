@@ -1,6 +1,8 @@
 class NotificationChannelsController < ApplicationController
   layout "workspace_new_design"
 
+  DELIVERY_PAGE_SIZE = 25
+
   before_action :authenticate_user!
   before_action :set_channel, only: %i[edit update destroy test]
   before_action :set_delivery, only: %i[retry_delivery]
@@ -8,7 +10,13 @@ class NotificationChannelsController < ApplicationController
   def index
     @channels = current_user.notification_channels.order(:channel_type, :created_at)
     @selected_delivery_status = params[:delivery_status].presence_in(%w[all pending sent failed skipped]) || "all"
-    @deliveries = filtered_deliveries.limit(50)
+    @page = [params[:page].to_i, 1].max
+    @deliveries_limit = DELIVERY_PAGE_SIZE * @page
+
+    deliveries_scope = filtered_deliveries
+    @matching_deliveries_count = deliveries_scope.count
+    @has_more_deliveries = @matching_deliveries_count > @deliveries_limit
+    @deliveries = deliveries_scope.limit(@deliveries_limit)
     @delivery_counts = delivery_counts
     @vapid_public_key = WebPushConfiguration.public_key
   end
