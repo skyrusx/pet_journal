@@ -1,14 +1,21 @@
 class PetsController < ApplicationController
+  PAGE_SIZE = 25
+
   before_action :authenticate_user!
   before_action :set_pet, only: %i[show edit update]
 
   layout "workspace_new_design"
 
   def index
+    @page = [params[:page].to_i, 1].max
+    @pets_limit = PAGE_SIZE * @page
+    @matching_pets_count = current_user.pets.count
+    @has_more_pets = @matching_pets_count > @pets_limit
     @pets = current_user.pets
                         .with_attached_photo
                         .includes(:pet_tag, :reminders)
                         .order(created_at: :desc)
+                        .limit(@pets_limit)
                         .to_a
     @latest_events_by_pet_id = latest_events_by_pet_id(@pets)
     @active_reminders_count = current_user.reminders.status_active.count
