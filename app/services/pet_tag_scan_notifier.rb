@@ -16,6 +16,8 @@ class PetTagScanNotifier
   end
 
   def notify
+    InAppNotification.for_pet_tag_scan!(scan, event:)
+
     channels = notification_channels
     channels.each { |channel| deliver_to_channel(channel) }
     scan.update!(owner_notified_at: Time.current, notification_error: nil)
