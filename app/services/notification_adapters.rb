@@ -34,13 +34,13 @@ module NotificationAdapters
   end
 
   class Email < Base
-    def deliver(delivery)
+    def deliver(delivery, test_delivery: false)
       ReminderMailer.due_reminder(delivery.reminder, channel).deliver_now
     end
   end
 
   class Telegram < Base
-    def deliver(delivery)
+    def deliver(delivery, test_delivery: false)
       NotificationChannelConnectors::TelegramBot.send_message(
         chat_id: channel.address,
         text: reminder_text(delivery.reminder)
@@ -51,23 +51,121 @@ module NotificationAdapters
   class Vk < Base
     VK_ENDPOINT = "https://api.vk.com/method/messages.send".freeze
     USER_PERMISSION_ERROR_CODE = 901
+    MONTH_NAMES = %w[
+      января февраля марта апреля мая июня июля августа сентября октября ноября декабря
+    ].freeze
+    TYPE_ICONS = {
+      "medication" => "💊",
+      "vaccination" => "💉",
+      "treatment" => "🩹",
+      "visit" => "🩺",
+      "weight" => "⚖️",
+      "other" => "🐾"
+    }.freeze
 
-    def deliver(delivery)
+    def deliver(delivery, test_delivery: false)
       token = VkConfiguration.group_token
       raise "VK-уведомления временно недоступны. Попробуйте позже." if token.blank?
 
-      response = Net::HTTP.post_form(URI(VK_ENDPOINT), {
+      reminder = delivery.reminder
+      params = {
         access_token: token,
         peer_id: channel.address,
         random_id: SecureRandom.random_number(2_147_483_647),
-        message: reminder_text(delivery.reminder),
+        message: test_delivery ? test_message : reminder_message(reminder),
         v: VkConfiguration.api_version
-      })
+      }
+
+      keyboard = reminder_keyboard(reminder) unless test_delivery
+      params[:keyboard] = keyboard if keyboard.present?
+
+      response = Net::HTTP.post_form(URI(VK_ENDPOINT), params)
       body = JSON.parse(response.body)
       handle_vk_error!(body["error"]) if body["error"].present?
     end
 
     private
+
+    def test_message
+      [
+        "✅ VK подключён",
+        "",
+        "Тестовое уведомление PetJournal успешно доставлено.",
+        "",
+        "Теперь сюда будут приходить напоминания о важных событиях вашего питомца. 🐾"
+      ].join("\n")
+    end
+
+    def reminder_message(reminder)
+      lines = [
+        "🐾 PetJournal",
+        "",
+        "Пора: #{reminder.title}",
+        "для #{reminder.pet.name}",
+        "",
+        "🕒 #{friendly_time(reminder)}",
+        "#{TYPE_ICONS.fetch(reminder.reminder_type, "🐾")} #{reminder.reminder_type_label}"
+      ]
+
+      if reminder.note.present?
+        lines << ""
+        lines << "📝 #{reminder.note}"
+      end
+
+      lines.join("\n")
+    end
+
+    def friendly_time(reminder)
+      zone_name = reminder.user.notifications_time_zone_name
+      time = reminder.next_run_at.in_time_zone(zone_name)
+      now = Time.current.in_time_zone(zone_name)
+
+      day_label = case time.to_date
+      when now.to_date
+        "Сегодня"
+      when now.to_date + 1.day
+        "Завтра"
+      else
+        label = "#{time.day} #{MONTH_NAMES.fetch(time.month - 1)}"
+        label += " #{time.year}" if time.year != now.year
+        label
+      end
+
+      "#{day_label}, #{time.strftime('%H:%M')}"
+    end
+
+    def reminder_keyboard(reminder)
+      url = reminder_url(reminder)
+      return if url.blank?
+
+      {
+        inline: true,
+        buttons: [
+          [
+            {
+              action: {
+                type: "open_link",
+                link: url,
+                label: "Открыть напоминание"
+              }
+            }
+          ]
+        ]
+      }.to_json
+    end
+
+    def reminder_url(reminder)
+      defaults = Rails.application.config.action_mailer.default_url_options.to_h.symbolize_keys
+      return if defaults[:host].blank?
+
+      Rails.application.routes.url_helpers.pet_reminder_url(
+        reminder.pet,
+        reminder,
+        **defaults
+      )
+    rescue ArgumentError
+      nil
+    end
 
     def handle_vk_error!(error)
       code = error["error_code"].to_i
@@ -90,7 +188,7 @@ module NotificationAdapters
   end
 
   class WebPush < Base
-    def deliver(delivery)
+    def deliver(delivery, test_delivery: false)
       require "webpush"
 
       reminder = delivery.reminder
