@@ -119,7 +119,7 @@
                 <small><%= latest_event.event_date.strftime("%d.%m.%Y") %></small>
               </div>
             </div>
-            <%= link_to "Открыть журнал", pet_pet_events_path(@pet), class: "pj-pet-summary-card__button pj-pet-summary-card__button--compact" %>
+            <%= link_to "Открыть журнал", journal_overview_path(pet_id: @pet.id), class: "pj-pet-summary-card__button pj-pet-summary-card__button--compact" %>
           <% else %>
             <div class="pj-pet-summary-card__empty">Событий пока нет</div>
             <%= link_to "Добавить запись", new_pet_pet_event_path(@pet), class: "pj-pet-summary-card__button" %>
@@ -131,7 +131,7 @@
     <section class="pj-pet-quick-section">
       <h2>Быстрые разделы</h2>
       <div class="pj-pet-quick-grid">
-        <%= link_to pet_pet_events_path(@pet), class: "pj-pet-quick-card" do %>
+        <%= link_to journal_overview_path(pet_id: @pet.id), class: "pj-pet-quick-card" do %>
           <span><%= pj_icon(:journal) %></span><strong>Журнал</strong><small><%= @events_count %> <%= russian_plural(@events_count, "запись", "записи", "записей") %></small>
         <% end %>
         <%= link_to pet_reminders_path(@pet), class: "pj-pet-quick-card" do %>
