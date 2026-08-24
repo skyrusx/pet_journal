@@ -149,7 +149,7 @@ class RemindersController < ApplicationController
   def default_reminder_attributes
     {
       reminder_type: params[:type].presence_in(Reminder.reminder_types.keys) || :other,
-      remind_at: 1.day.from_now.change(sec: 0),
+      remind_at: 1.hour.from_now.change(sec: 0),
       repeat_rule: :once
     }
   end
