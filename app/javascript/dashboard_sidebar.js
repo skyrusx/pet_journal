@@ -85,6 +85,48 @@ function initDashboardMobileSheets() {
   });
 }
 
+function initDashboardJournalPetPicker() {
+  const addSheet = document.querySelector('[data-dashboard-sheet="add"]');
+  const sourcePetSheet = document.querySelector('[data-dashboard-sheet="public-access-pet"]');
+
+  if (!addSheet || !sourcePetSheet || document.querySelector('[data-dashboard-sheet="journal-pet"]')) return;
+
+  const journalLink = [...addSheet.querySelectorAll("a.pj-mobile-sheet__action")]
+    .find((link) => /\/pets\/\d+\/events\/new(?:$|[?#])/.test(link.getAttribute("href") || ""));
+
+  if (!journalLink) return;
+
+  const journalPetSheet = sourcePetSheet.cloneNode(true);
+  journalPetSheet.dataset.dashboardSheet = "journal-pet";
+  journalPetSheet.setAttribute("aria-labelledby", "pj-mobile-journal-pet-title");
+
+  const heading = journalPetSheet.querySelector("h2");
+  if (heading) {
+    heading.id = "pj-mobile-journal-pet-title";
+    heading.textContent = "Для какого питомца?";
+  }
+
+  const kicker = journalPetSheet.querySelector(".pj-mobile-sheet__head small");
+  if (kicker) kicker.textContent = "Запись в журнал";
+
+  journalPetSheet.querySelectorAll('a[href*="/profile_shares/new"]').forEach((link) => {
+    link.setAttribute("href", link.getAttribute("href").replace("/profile_shares/new", "/events/new"));
+  });
+
+  const trigger = document.createElement("button");
+  trigger.type = "button";
+  trigger.className = journalLink.className;
+  trigger.innerHTML = journalLink.innerHTML;
+  trigger.setAttribute("aria-expanded", "false");
+  trigger.dataset.dashboardSheetToggle = "journal-pet";
+
+  const description = trigger.querySelector("small");
+  if (description) description.textContent = "Сначала выберите питомца";
+
+  journalLink.replaceWith(trigger);
+  sourcePetSheet.insertAdjacentElement("beforebegin", journalPetSheet);
+}
+
 function initDashboardSidebar() {
   document.querySelectorAll("[data-dashboard-root]").forEach((root) => {
     const button = root.querySelector("[data-dashboard-sidebar-toggle]");
@@ -122,6 +164,7 @@ function initDashboardSidebar() {
 
 function initDashboardUi() {
   initDashboardSidebar();
+  initDashboardJournalPetPicker();
   initDashboardMobileSheets();
 }
 
