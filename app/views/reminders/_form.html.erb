@@ -112,7 +112,7 @@
   </div>
 
   <div class="pj-reminder-form-actions">
-    <%= link_to "Отмена", reminder.persisted? ? pet_reminder_path(pet, reminder) : pet_reminders_path(pet), class: "pj-reminder-form-cancel" %>
-    <%= form.submit reminder.persisted? ? "Сохранить изменения" : "Создать напоминание", class: "pj-reminders-primary-button" %>
+    <%= link_to "Отмена", reminder.persisted? ? pet_reminder_path(pet, reminder) : reminders_overview_path(pet_id: pet.id), class: "pj-reminder-form-cancel" %>
+    <%= form.submit "Сохранить", class: "pj-reminders-primary-button" %>
   </div>
 <% end %>
