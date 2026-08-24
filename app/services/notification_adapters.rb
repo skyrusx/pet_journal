@@ -50,10 +50,11 @@ module NotificationAdapters
 
   class Vk < Base
     VK_ENDPOINT = "https://api.vk.com/method/messages.send".freeze
+    USER_PERMISSION_ERROR_CODE = 901
 
     def deliver(delivery)
       token = VkConfiguration.group_token
-      raise "VK не настроен: добавьте токен сообщества в Rails credentials или VK_GROUP_TOKEN" if token.blank?
+      raise "VK-уведомления временно недоступны. Попробуйте позже." if token.blank?
 
       response = Net::HTTP.post_form(URI(VK_ENDPOINT), {
         access_token: token,
@@ -63,7 +64,28 @@ module NotificationAdapters
         v: VkConfiguration.api_version
       })
       body = JSON.parse(response.body)
-      raise body["error"]["error_msg"] if body["error"].present?
+      handle_vk_error!(body["error"]) if body["error"].present?
+    end
+
+    private
+
+    def handle_vk_error!(error)
+      code = error["error_code"].to_i
+      technical_message = error["error_msg"].to_s
+      Rails.logger.warn("VK notification delivery failed (#{code}): #{technical_message}")
+
+      message = case code
+      when USER_PERMISSION_ERROR_CODE
+        "Чтобы получать уведомления VK, сначала разрешите сообщения от PetJournal: откройте сообщество со своего профиля и отправьте ему любое сообщение. Затем повторите тест."
+      when 5
+        "VK-уведомления временно недоступны. Попробуйте позже."
+      when 100, 113
+        "Не удалось определить получателя VK. Переподключите VK-канал и повторите попытку."
+      else
+        "VK не смог отправить уведомление. Проверьте, что сообщения сообщества разрешены для вашего профиля, и повторите попытку."
+      end
+
+      raise message
     end
   end
 
