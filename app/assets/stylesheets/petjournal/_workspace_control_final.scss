@@ -13,27 +13,27 @@
   background-size: 16px 16px !important;
 }
 
-.pj-dashboard-body select:not([multiple]) {
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-/* Android Chrome can keep drawing the native date/time chevron even when the
-   picker indicator is transparent. Remove that visual indicator completely;
-   tapping the date/time field itself still opens the native picker. */
-.pj-dashboard-body input[type="date"]::-webkit-calendar-picker-indicator,
-.pj-dashboard-body input[type="time"]::-webkit-calendar-picker-indicator,
-.pj-dashboard-body input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-  display: none !important;
+.pj-dashboard-body select:not([multiple]),
+.pj-dashboard-body input[type="date"],
+.pj-dashboard-body input[type="time"],
+.pj-dashboard-body input[type="datetime-local"] {
   -webkit-appearance: none !important;
   appearance: none !important;
 }
 
+/* Android Chrome may render the date/time affordance as part of the native
+   control appearance instead of only through calendar-picker-indicator. The
+   input-level appearance reset above removes that second chevron; these rules
+   additionally suppress WebKit pseudo-elements on browsers that expose them. */
+.pj-dashboard-body input[type="date"]::-webkit-calendar-picker-indicator,
+.pj-dashboard-body input[type="time"]::-webkit-calendar-picker-indicator,
+.pj-dashboard-body input[type="datetime-local"]::-webkit-calendar-picker-indicator,
 .pj-dashboard-body input[type="date"]::-webkit-inner-spin-button,
 .pj-dashboard-body input[type="time"]::-webkit-inner-spin-button,
 .pj-dashboard-body input[type="datetime-local"]::-webkit-inner-spin-button {
   display: none !important;
   -webkit-appearance: none !important;
+  appearance: none !important;
 }
 
 @media (max-width: 820px) {
