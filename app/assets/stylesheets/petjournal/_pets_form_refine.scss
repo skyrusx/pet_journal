@@ -2,6 +2,7 @@
 
 @media (min-width: 821px) {
   .pj-pet-form-content {
+    --pj-form-content-max: var(--pj-form-wide-content-max);
     width: min(930px, calc(100% - 72px));
   }
 
