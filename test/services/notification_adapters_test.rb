@@ -46,7 +46,7 @@ class NotificationAdaptersTest < ActiveSupport::TestCase
     assert_equal "reminder-#{reminder.id}", payload["tag"]
   end
 
-  test "VK adapter uses centralized credentials configuration" do
+  test "VK adapter sends polished reminder with inline open button" do
     user = users(:one)
     reminder = reminders(:one)
     channel = user.notification_channels.create!(
@@ -72,8 +72,44 @@ class NotificationAdaptersTest < ActiveSupport::TestCase
     assert_equal "credential-token", params[:access_token]
     assert_equal "123456", params[:peer_id]
     assert_equal "5.199", params[:v]
+    assert_includes params[:message], "🐾 PetJournal"
+    assert_includes params[:message], "Пора: #{reminder.title}"
     assert_includes params[:message], reminder.pet.name
-    assert_includes params[:message], reminder.title
+    assert_includes params[:message], reminder.reminder_type_label
+    assert_includes params[:message], reminder.note
+
+    keyboard = JSON.parse(params[:keyboard])
+    action = keyboard.dig("buttons", 0, 0, "action")
+    assert_equal true, keyboard["inline"]
+    assert_equal "open_link", action["type"]
+    assert_equal "Открыть напоминание", action["label"]
+    assert_includes action["link"], "/pets/#{reminder.pet_id}/reminders/#{reminder.id}"
+  end
+
+  test "VK adapter sends a dedicated test message without old reminder data" do
+    user = users(:one)
+    reminder = reminders(:one)
+    channel = user.notification_channels.create!(
+      channel_type: :vk,
+      name: "VK",
+      address: "123456",
+      enabled: true
+    )
+    delivery = reminder.notification_deliveries.create!(notification_channel: channel)
+    submitted = nil
+    response = Struct.new(:body).new({ response: 1 }.to_json)
+
+    VkConfiguration.stub(:group_token, "credential-token") do
+      Net::HTTP.stub(:post_form, ->(_uri, params) { submitted = params; response }) do
+        NotificationAdapters.for(channel).deliver(delivery, test_delivery: true)
+      end
+    end
+
+    assert_includes submitted[:message], "✅ VK подключён"
+    assert_includes submitted[:message], "Тестовое уведомление PetJournal успешно доставлено"
+    assert_not_includes submitted[:message], reminder.title
+    assert_not_includes submitted[:message], reminder.note
+    assert_nil submitted[:keyboard]
   end
 
   test "VK adapter explains when user has not allowed community messages" do
