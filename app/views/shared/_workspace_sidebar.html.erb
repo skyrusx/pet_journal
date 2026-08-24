@@ -1,7 +1,7 @@
 <% workspace_pet = defined?(@pet) && @pet&.persisted? ? @pet : current_user.pets.order(created_at: :desc).first %>
 <% workspace_journal_path = journal_overview_path %>
 <% workspace_reminders_path = reminders_overview_path %>
-<% workspace_documents_path = workspace_pet ? pet_pet_documents_path(workspace_pet) : documents_overview_path %>
+<% workspace_documents_path = documents_overview_path %>
 <% workspace_public_access_path = workspace_pet ? pet_profile_shares_path(workspace_pet) : public_access_overview_path %>
 <% workspace_reminders_badge = mobile_reminders_badge %>
 <% display_name = current_user.name.presence || current_user.email.to_s.split("@").first.presence || "Аккаунт" %>
