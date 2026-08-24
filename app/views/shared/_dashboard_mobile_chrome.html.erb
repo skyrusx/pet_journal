@@ -55,9 +55,19 @@
       <% end %>
 
       <% if primary_pet %>
-        <%= link_to new_pet_pet_event_path(primary_pet), class: "pj-mobile-sheet__action" do %>
-          <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:journal) %></span>
-          <span><strong>Запись в журнал</strong><small>Событие, наблюдение или здоровье</small></span>
+        <% if mobile_pets.many? %>
+          <button type="button"
+                  class="pj-mobile-sheet__action"
+                  aria-expanded="false"
+                  data-dashboard-sheet-toggle="journal-pet">
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:journal) %></span>
+            <span><strong>Запись в журнал</strong><small>Сначала выберите питомца</small></span>
+          </button>
+        <% else %>
+          <%= link_to new_pet_pet_event_path(primary_pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:journal) %></span>
+            <span><strong>Запись в журнал</strong><small>Событие, наблюдение или здоровье</small></span>
+          <% end %>
         <% end %>
 
         <%= link_to new_pet_reminder_path(primary_pet), class: "pj-mobile-sheet__action" do %>
@@ -94,6 +104,31 @@
       <% end %>
     </div>
   </section>
+
+  <% if mobile_pets.many? %>
+    <section class="pj-mobile-sheet" data-dashboard-sheet="journal-pet" aria-hidden="true" aria-labelledby="pj-mobile-journal-pet-title">
+      <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+      <div class="pj-mobile-sheet__head">
+        <div>
+          <small>Запись в журнал</small>
+          <h2 id="pj-mobile-journal-pet-title">Для какого питомца?</h2>
+        </div>
+        <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+      </div>
+
+      <div class="pj-mobile-sheet__actions">
+        <% mobile_pets.each do |pet| %>
+          <%= link_to new_pet_pet_event_path(pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:paw) %></span>
+            <span>
+              <strong><%= pet.name %></strong>
+              <small><%= [pet.breed.presence || pet.species.presence, pet_age(pet)].compact.join(" · ") %></small>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
 
   <% if mobile_pets.many? && context_pet.blank? %>
     <section class="pj-mobile-sheet" data-dashboard-sheet="public-access-pet" aria-hidden="true" aria-labelledby="pj-mobile-public-access-pet-title">
