@@ -1,0 +1,12 @@
+/* Final mobile consistency pass for the Pets section. */
+
+@media (max-width: 820px) {
+  /* Text actions in pet forms and profile summary cards use one canonical size. */
+  .pj-pets-page .pj-pet-form__actions .pj-pet-secondary-button,
+  .pj-pets-page .pj-pet-form__actions .pj-pets-primary-button,
+  .pj-pets-page .pj-pet-summary-card__button {
+    font-size: var(--pj-font-body);
+    font-weight: 700;
+    line-height: 1;
+  }
+}
