@@ -3,13 +3,23 @@ module NotificationChannelsHelper
     keys = NotificationChannel.channel_types.keys
     keys -= ["web_push"] unless include_web_push
 
-    keys.map { |key| [I18n.t("notification_channels.types.#{key}"), key] }
+    keys.map do |key|
+      label = I18n.t("notification_channels.types.#{key}")
+
+      if key == "telegram" && !TelegramConfiguration.configured?
+        ["#{label} — в разработке", key, { disabled: true }]
+      else
+        [label, key]
+      end
+    end
   end
 
   def notification_channel_hint(channel_type)
     {
       "email" => "Укажите адрес электронной почты, на который будут приходить уведомления.",
-      "telegram" => "Telegram подключается через бота PetJournal — никаких chat_id вводить не нужно.",
+      "telegram" => TelegramConfiguration.configured? ?
+        "Telegram подключается через бота PetJournal — никаких chat_id вводить не нужно." :
+        "Telegram-уведомления пока в разработке и недоступны для подключения.",
       "vk" => "Вставьте ссылку на профиль, короткое имя или ID — PetJournal сам определит получателя."
     }.fetch(channel_type.to_s, "Укажите данные канала.")
   end
@@ -56,15 +66,15 @@ module NotificationChannelsHelper
   end
 
   def telegram_connection_url
-    username = ENV["TELEGRAM_BOT_USERNAME"].to_s.delete_prefix("@").presence
-    return if username.blank? || ENV["TELEGRAM_BOT_TOKEN"].blank? || current_user.blank?
+    username = TelegramConfiguration.bot_username
+    return if username.blank? || TelegramConfiguration.bot_token.blank? || current_user.blank?
 
     token = TelegramConnectionToken.generate(current_user)
     "https://t.me/#{username}?start=#{token}"
   end
 
   def telegram_bot_label
-    username = ENV["TELEGRAM_BOT_USERNAME"].to_s.delete_prefix("@").presence
+    username = TelegramConfiguration.bot_username
     username.present? ? "@#{username}" : "бот PetJournal"
   end
 
@@ -139,9 +149,15 @@ module NotificationChannelsHelper
   end
 
   def notification_channel_onboarding_steps
+    telegram_step = if TelegramConfiguration.configured?
+      ["Telegram", "Нажмите «Подключить Telegram» и Start в боте. Никаких ID искать не нужно."]
+    else
+      ["Telegram · в разработке", "Канал появится после запуска бота PetJournal. Сейчас подключить его нельзя."]
+    end
+
     [
       ["Email", "Укажите почту — PetJournal будет отправлять туда напоминания."],
-      ["Telegram", "Нажмите «Подключить Telegram» и Start в боте. Никаких ID искать не нужно."],
+      telegram_step,
       ["VK", "Сначала напишите сообществу PetJournal со своего профиля, затем добавьте ссылку на профиль — ID определится автоматически."],
       ["Push", "Включите уведомления в браузере, чтобы получать быстрые сигналы на этом устройстве."]
     ]
