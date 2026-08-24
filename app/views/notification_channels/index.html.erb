@@ -1,15 +1,16 @@
-<% content_for :title, "Уведомления — PetJournal" %>
+<% content_for :title, "Настройки уведомлений — PetJournal" %>
 
 <div class="pj-notifications-page">
   <header class="pj-workspace-topbar">
-    <h1>Уведомления</h1>
+    <h1>Настройки уведомлений</h1>
+    <%= render "shared/workspace_notification_link" %>
   </header>
 
   <div class="pj-notifications-content">
     <div class="pj-notifications-heading">
       <div>
-        <h1>Каналы уведомлений</h1>
-        <p>Выберите, куда PetJournal будет отправлять напоминания и важные сигналы.</p>
+        <h1>Настройки уведомлений</h1>
+        <p>Настройте внешние каналы доставки, тихие часы и поведение напоминаний.</p>
       </div>
       <%= link_to new_notification_channel_path, class: "pj-notifications-primary-button" do %>
         <%= pj_icon(:plus) %><span>Добавить канал</span>
