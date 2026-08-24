@@ -1,0 +1,221 @@
+/* Final Documents alignment with Journal / Reminders. */
+
+.pj-documents-add-picker {
+  position: relative;
+}
+
+.pj-documents-add-picker > summary {
+  list-style: none;
+}
+
+.pj-documents-add-picker > summary::-webkit-details-marker {
+  display: none;
+}
+
+.pj-document-form-content {
+  width: min(1180px, calc(100% - 72px));
+  max-width: none;
+}
+
+.pj-document-detail-heading--standard {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e9e4da;
+}
+
+.pj-document-detail-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: #46664f;
+  background: #eef2df;
+}
+
+.pj-document-detail-icon .pj-nav-icon {
+  width: 21px;
+  height: 21px;
+  stroke: currentColor;
+}
+
+.pj-document-detail-heading--standard h1 {
+  margin: 0 0 3px;
+  color: #354139;
+  font-family: "Prata", Georgia, serif;
+  font-size: var(--pj-font-page-title);
+  font-weight: 400;
+  line-height: var(--pj-line-heading);
+}
+
+.pj-document-detail-heading--standard p {
+  margin: 0;
+  color: var(--pj-muted);
+  font-size: var(--pj-font-caption);
+  line-height: 1.4;
+}
+
+@media (min-width: 821px) {
+  .pj-documents-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 14px;
+  }
+
+  .pj-documents-pet-switcher > summary {
+    min-width: 190px;
+    min-height: 39px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+
+  .pj-documents-pet-avatar {
+    width: 27px;
+    height: 27px;
+    flex: 0 0 27px;
+  }
+
+  .pj-documents-pet-switcher > summary > .pj-nav-icon {
+    width: 15px;
+    height: 15px;
+    margin-left: auto;
+  }
+
+  .pj-documents-filters {
+    grid-template-columns: minmax(220px, 1fr) 150px 150px 160px auto auto;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 10px;
+    border-radius: 9px;
+  }
+
+  .pj-documents-filter select,
+  .pj-documents-filter input {
+    height: 37px;
+    border-radius: 6px;
+    font-size: var(--pj-font-meta);
+  }
+
+  .pj-documents-filter-submit {
+    min-height: 37px;
+    border-radius: 7px;
+  }
+
+  .pj-document-detail-content {
+    width: min(1180px, calc(100% - 72px));
+    padding-top: 28px;
+  }
+
+  .pj-document-detail-grid {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 24px;
+  }
+
+  .pj-document-info-card,
+  .pj-document-files-card,
+  .pj-document-related-card {
+    border-radius: var(--pj-radius-card);
+  }
+
+  .pj-document-info-card {
+    padding: 18px;
+  }
+
+  .pj-document-detail-list > div {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 820px) {
+  /* Same single 16px inset as Dashboard / Journal / Reminders. */
+  .pj-dashboard-body .pj-documents-content,
+  .pj-dashboard-body .pj-document-form-content,
+  .pj-dashboard-body .pj-document-detail-content {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+    padding-inline: var(--pj-workspace-mobile-side);
+    box-sizing: border-box;
+  }
+
+  .pj-documents-index > .pj-documents-content > .pj-documents-filters {
+    display: none !important;
+  }
+
+  .pj-documents-toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--pj-space-2);
+    margin-bottom: var(--pj-space-3);
+  }
+
+  .pj-documents-pet-switcher {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .pj-documents-pet-switcher,
+  .pj-documents-pet-switcher > summary {
+    width: 100%;
+  }
+
+  .pj-documents-pet-switcher > summary {
+    min-width: 0;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 12px;
+    border-radius: 14px;
+  }
+
+  .pj-documents-pet-switcher > summary > .pj-nav-icon {
+    margin-left: auto;
+  }
+
+  .pj-documents-add-picker,
+  .pj-documents-toolbar > .pj-documents-primary-button {
+    flex: 0 0 auto;
+  }
+
+  .pj-documents-add-picker > .pj-documents-primary-button,
+  .pj-documents-toolbar > .pj-documents-primary-button {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+    border-radius: var(--pj-radius-icon);
+  }
+
+  .pj-documents-add-picker > .pj-documents-primary-button span,
+  .pj-documents-toolbar > .pj-documents-primary-button span {
+    display: none;
+  }
+
+  .pj-documents-mobile-filters {
+    margin-bottom: var(--pj-space-3);
+  }
+
+  .pj-document-detail-heading--standard {
+    grid-template-columns: 44px minmax(0, 1fr);
+    padding: 14px 0;
+  }
+
+  .pj-document-detail-heading--standard .pj-document-status {
+    grid-column: 1 / -1;
+  }
+
+  .pj-document-detail-heading--standard h1 {
+    font-size: var(--pj-font-detail-title);
+  }
+}
