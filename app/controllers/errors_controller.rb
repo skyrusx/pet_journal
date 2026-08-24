@@ -1,3 +1,5 @@
+require "uri"
+
 class ErrorsController < ApplicationController
   ERROR_PAGES = {
     404 => {
@@ -63,7 +65,7 @@ class ErrorsController < ApplicationController
   def render_public_error
     public_file = PUBLIC_FILES.fetch(@error_status, PUBLIC_FILES.fetch(500))
 
-    render file: Rails.public_path.join(public_file), layout: false, status: @error_status
+    render file: Rails.public_path.join(public_file).to_s, layout: false, status: @error_status
   end
 
   def primary_path
