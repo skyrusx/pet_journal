@@ -1,14 +1,15 @@
 <% notification_scope = current_user.in_app_notifications.recent %>
 <% recent_notifications = notification_scope.limit(6) %>
 <% unread_notifications_count = current_user.in_app_notifications.unread.count %>
+<% unread_notifications_label = "#{unread_notifications_count} #{russian_plural(unread_notifications_count, "непрочитанное", "непрочитанных", "непрочитанных")}" %>
 
 <details class="pj-notification-center">
   <summary class="pj-workspace-icon pj-notification-center__trigger"
-           aria-label="Уведомления<%= ": #{unread_notifications_count} непрочитанных" if unread_notifications_count.positive? %>"
+           aria-label="Уведомления<%= ": #{unread_notifications_label}" if unread_notifications_count.positive? %>"
            title="Уведомления">
     <%= pj_icon(:bell) %>
     <% if unread_notifications_count.positive? %>
-      <span class="pj-notification-center__badge"><%= [unread_notifications_count, 9].min %></span>
+      <span class="pj-notification-center__badge"><%= unread_notifications_count > 9 ? "9+" : unread_notifications_count %></span>
     <% end %>
   </summary>
 
@@ -16,7 +17,7 @@
     <div class="pj-notification-center__head">
       <div>
         <strong>Уведомления</strong>
-        <small><%= unread_notifications_count.positive? ? "#{unread_notifications_count} непрочитанных" : "Всё прочитано" %></small>
+        <small><%= unread_notifications_count.positive? ? unread_notifications_label : "Всё прочитано" %></small>
       </div>
       <% if unread_notifications_count.positive? %>
         <%= button_to "Прочитать все", mark_all_read_notifications_path,
