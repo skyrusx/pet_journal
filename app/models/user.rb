@@ -7,6 +7,7 @@ class User < ApplicationRecord
 
   has_many :pets, dependent: :destroy
   has_many :notification_channels, dependent: :destroy
+  has_many :in_app_notifications, dependent: :destroy
   has_many :reminders, through: :pets
 
   attr_accessor :remove_avatar
