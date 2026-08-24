@@ -18,6 +18,11 @@
   column-gap: 24px;
 }
 
+/* Keep the 404 content on the same horizontal grid as the landing header. */
+.pj-error-page--404 .pj-error-main {
+  width: min(1240px, calc(100% - 96px));
+}
+
 .pj-error-page--404 .pj-error-brand {
   display: inline-flex;
   width: fit-content;
@@ -133,6 +138,10 @@
     grid-template-columns: 1fr auto;
     align-items: center;
     column-gap: 16px;
+  }
+
+  .pj-error-page--404 .pj-error-main {
+    width: min(1240px, calc(100% - 96px));
   }
 
   .pj-error-page--404 .pj-error-logo {
@@ -284,7 +293,8 @@
 }
 
 @media (max-width: 640px) {
-  .pj-error-page--404 .pj-error-shell {
+  .pj-error-page--404 .pj-error-shell,
+  .pj-error-page--404 .pj-error-main {
     width: calc(100% - 24px);
   }
 }
