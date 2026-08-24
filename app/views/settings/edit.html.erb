@@ -3,9 +3,7 @@
 <div class="pj-settings-page">
   <header class="pj-workspace-topbar">
     <h1>Настройки</h1>
-    <%= link_to notification_channels_path, class: "pj-workspace-icon", aria: { label: "Настройки уведомлений" }, title: "Настройки уведомлений" do %>
-      <%= pj_icon(:bell) %>
-    <% end %>
+    <%= render "shared/workspace_notification_link" %>
   </header>
 
   <div class="pj-settings-content">
@@ -81,12 +79,12 @@
           <span class="pj-settings-card__icon" aria-hidden="true"><%= pj_icon(:bell) %></span>
           <div>
             <span class="pj-settings-card__kicker">Уведомления</span>
-            <h2 id="pj-settings-notifications-title">Каналы и тихие часы</h2>
-            <p>Email, Telegram, VK, Push, история доставки и расписание уведомлений.</p>
+            <h2 id="pj-settings-notifications-title">Настройки уведомлений</h2>
+            <p>Каналы доставки, тихие часы, часовой пояс и история внешних отправок.</p>
           </div>
         </div>
         <%= link_to notification_channels_path, class: "pj-settings-link" do %>
-          <span>Открыть уведомления</span>
+          <span>Настроить уведомления</span>
           <%= pj_icon(:chevron) %>
         <% end %>
       </section>
