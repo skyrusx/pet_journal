@@ -1,0 +1,47 @@
+/* Final dashboard polish: use the same desktop topbar language as workspace pages. */
+
+@media (min-width: 761px) {
+  .pj-dash-desktop-actions {
+    min-height: 62px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    padding: 0 clamp(28px, 3vw, 48px);
+    border-bottom: 1px solid #e7e2d7;
+    background: rgba(255, 254, 250, .94);
+  }
+
+  .pj-dash-desktop-actions__inner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .pj-dash-desktop-actions__inner::before {
+    content: "Главная";
+    color: #354239;
+    font-family: "Prata", Georgia, serif;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .pj-dash-desktop-actions .pj-dash-bell {
+    width: 36px;
+    height: 36px;
+    color: #315743;
+  }
+
+  .pj-dash-desktop-actions .pj-dash-bell:hover {
+    color: #174f34;
+    background: #f0f2e7;
+  }
+
+  .pj-dash-desktop-actions .pj-dash-bell .pj-nav-icon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 1.6;
+  }
+}
