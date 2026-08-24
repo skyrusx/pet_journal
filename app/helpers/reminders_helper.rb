@@ -112,7 +112,11 @@ module RemindersHelper
   def reminder_channels_label(reminder)
     return "Все включенные каналы" if reminder.notification_channels.empty?
 
-    reminder.notification_channels.map(&:channel_type_label).uniq.to_sentence
+    reminder.notification_channels.map(&:channel_type_label).uniq.to_sentence(
+      words_connector: ", ",
+      two_words_connector: " и ",
+      last_word_connector: " и "
+    )
   end
 
   def reminder_completion_label(completion)
