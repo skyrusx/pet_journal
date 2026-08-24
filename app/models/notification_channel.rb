@@ -62,7 +62,7 @@ class NotificationChannel < ApplicationRecord
   def vk_configuration_issues
     issues = []
     issues << "Подключите профиль VK" if address.blank?
-    issues << "VK временно недоступен. Попробуйте позже." if ENV["VK_GROUP_TOKEN"].blank?
+    issues << "VK временно недоступен. Попробуйте позже." unless VkConfiguration.configured?
     issues
   end
 
