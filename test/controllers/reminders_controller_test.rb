@@ -157,6 +157,28 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
     assert_select "select[name='status'] option[selected='selected'][value='overdue']"
   end
 
+  test "navigation badge matches the total number of active reminders" do
+    @user.reminders.update_all(status: Reminder.statuses.fetch("completed"))
+    @pet.reminders.create!(
+      title: "Просроченное",
+      reminder_type: :other,
+      remind_at: 1.hour.ago,
+      repeat_rule: :once
+    )
+    @pet.reminders.create!(
+      title: "Будущее",
+      reminder_type: :other,
+      remind_at: 1.day.from_now,
+      repeat_rule: :once
+    )
+
+    get reminders_overview_url(pet_id: @pet.id)
+
+    assert_response :success
+    assert_select ".pj-reminders-summary span", text: /2\s+активно/
+    assert_select ".pj-dash-nav__badge", text: "2"
+  end
+
   test "should progressively load reminders in batches of 25" do
     26.times do |index|
       @pet.reminders.create!(
