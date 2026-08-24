@@ -18,14 +18,7 @@ class PetEventsController < ApplicationController
     @selected_pet = selected_journal_pet
     @pet = @selected_pet
 
-    base_scope = journal_events_scope
-    @event_type_counts = base_scope.group(:event_type).count
-    @total_events_count = base_scope.count
-    @events_with_files_count = base_scope.joins(:files_attachments).distinct.count
-    @events_with_follow_up_count = base_scope.where.not(next_action_at: nil).count
-    @latest_event = base_scope.order(event_date: :desc, event_time: :desc, created_at: :desc).first
-
-    filtered_scope = base_scope
+    filtered_scope = journal_events_scope
     filtered_scope = filtered_scope.where(event_type: @selected_event_type) if @selected_event_type.present?
     filtered_scope = filter_by_period(filtered_scope)
     filtered_scope = filter_by_status(filtered_scope)
@@ -96,7 +89,7 @@ class PetEventsController < ApplicationController
   def selected_journal_pet
     return if params[:pet_id].blank?
 
-    current_user.pets.find_by(id: params[:pet_id])
+    current_user.pets.find(params[:pet_id])
   end
 
   def journal_events_scope
