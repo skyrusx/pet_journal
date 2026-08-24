@@ -2,6 +2,12 @@ Rails.application.routes.draw do
   root "pages#index"
   get "new-design" => "pages#new_design", as: :new_design
 
+  if Rails.env.development?
+    get "error-preview/:status" => "errors#show",
+        as: :error_preview,
+        constraints: { status: /404|406|422|500/ }
+  end
+
   devise_for :users, skip: %i[sessions registrations passwords]
   devise_scope :user do
     get "login" => "devise/sessions#new", as: :new_user_session
