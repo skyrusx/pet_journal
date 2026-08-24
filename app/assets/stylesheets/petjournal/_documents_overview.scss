@@ -17,6 +17,59 @@
   max-width: none;
 }
 
+/* Keep the reminder lead-time input and its unit visually as one control.
+   The parent owns the only outline; child borders/radii cannot create a seam. */
+.pj-document-number-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  overflow: hidden;
+  border: 1px solid #ddd8ce;
+  border-radius: var(--pj-radius-control);
+  background: var(--pj-surface);
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.pj-document-number-control:focus-within {
+  border-color: #91a392;
+  box-shadow: 0 0 0 3px rgba(72, 111, 83, .08);
+}
+
+.pj-document-field .pj-document-number-control input[type="number"] {
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  margin: 0;
+  padding-inline: 11px;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0;
+  background: transparent;
+  box-shadow: none !important;
+}
+
+.pj-document-field .pj-document-number-control input[type="number"]:focus {
+  border: 0 !important;
+  outline: 0;
+  box-shadow: none !important;
+}
+
+.pj-document-number-control > span {
+  min-width: 68px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0 14px;
+  border: 0;
+  border-left: 1px solid #ddd8ce;
+  border-radius: 0;
+  color: #7f8781;
+  background: #f7f5ef;
+  font-size: var(--pj-font-caption);
+  white-space: nowrap;
+}
+
 .pj-document-detail-heading--standard {
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr) auto;
