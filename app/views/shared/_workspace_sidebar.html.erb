@@ -1,5 +1,5 @@
 <% workspace_pet = defined?(@pet) && @pet&.persisted? ? @pet : current_user.pets.order(created_at: :desc).first %>
-<% workspace_journal_path = workspace_pet ? pet_pet_events_path(workspace_pet) : journal_overview_path %>
+<% workspace_journal_path = journal_overview_path %>
 <% workspace_reminders_path = workspace_pet ? pet_reminders_path(workspace_pet) : reminders_overview_path %>
 <% workspace_documents_path = workspace_pet ? pet_pet_documents_path(workspace_pet) : documents_overview_path %>
 <% workspace_public_access_path = workspace_pet ? pet_profile_shares_path(workspace_pet) : public_access_overview_path %>
