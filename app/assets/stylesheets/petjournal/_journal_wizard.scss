@@ -68,10 +68,18 @@
   background: #f4f5ec;
 }
 
+/*
+ * The legacy form stylesheet separates consecutive sections with a top border
+ * and extra spacing. Wizard steps are mutually exclusive screens, not stacked
+ * sections, so every step must start on the same vertical baseline.
+ */
 .pj-journal-form-section[data-journal-wizard-step] {
   min-height: 420px;
   display: flex;
   flex-direction: column;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  border-top: 0 !important;
 }
 
 .pj-journal-form-section[data-journal-wizard-step="1"] .pj-journal-type-grid {
