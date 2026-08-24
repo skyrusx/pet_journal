@@ -1,6 +1,6 @@
 <% content_for :title, "Редактировать #{@reminder.title} — PetJournal" %>
 
-<div class="pj-reminders-page pj-reminder-form-page">
+<div class="pj-reminders-page pj-reminder-form-page pj-reminder-form-page--edit">
   <header class="pj-workspace-topbar pj-workspace-topbar--form">
     <%= link_to pet_reminder_path(@pet, @reminder), class: "pj-workspace-back" do %>
       <%= pj_icon(:chevron) %><span>Назад к напоминанию</span>
