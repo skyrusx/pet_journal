@@ -1,3 +1,4 @@
+require "ipaddr"
 require "json"
 require "net/http"
 require "securerandom"
@@ -136,7 +137,7 @@ module NotificationAdapters
 
     def reminder_keyboard(reminder)
       url = reminder_url(reminder)
-      return if url.blank?
+      return if url.blank? || !public_http_url?(url)
 
       {
         inline: true,
@@ -167,6 +168,28 @@ module NotificationAdapters
       nil
     end
 
+    # VK validates open_link keyboard URLs. Development addresses such as
+    # localhost, *.local or private LAN IPs are not reachable from VK and can
+    # make the whole messages.send request fail. The reminder itself must still
+    # be delivered, so the button is attached only for a public web address.
+    def public_http_url?(url)
+      uri = URI.parse(url)
+      return false unless %w[http https].include?(uri.scheme)
+
+      host = uri.host.to_s.downcase
+      return false if host.blank?
+      return false if host == "localhost" || host.end_with?(".localhost", ".local", ".test")
+
+      ip = IPAddr.new(host)
+      return false if ip.loopback? || ip.private? || ip.link_local?
+
+      true
+    rescue IPAddr::InvalidAddressError
+      true
+    rescue URI::InvalidURIError
+      false
+    end
+
     def handle_vk_error!(error)
       code = error["error_code"].to_i
       technical_message = error["error_msg"].to_s
@@ -178,9 +201,9 @@ module NotificationAdapters
       when 5
         "VK-уведомления временно недоступны. Попробуйте позже."
       when 100, 113
-        "Не удалось определить получателя VK. Переподключите VK-канал и повторите попытку."
+        "ВКонтакте не смог отправить уведомление. Переподключите канал и повторите попытку."
       else
-        "VK не смог отправить уведомление. Проверьте, что сообщения сообщества разрешены для вашего профиля, и повторите попытку."
+        "ВКонтакте не смог отправить уведомление. Проверьте подключение канала и повторите попытку."
       end
 
       raise message
@@ -195,8 +218,10 @@ module NotificationAdapters
       payload = {
         title: "PetJournal",
         body: "#{reminder.pet.name}: #{reminder.title}",
-        path: Rails.application.routes.url_helpers.reminders_overview_path(pet_id: reminder.pet_id),
-        tag: "reminder-#{reminder.id}"
+        path: Rails.application.routes.url_helpers.pet_reminder_path(reminder.pet, reminder),
+        tag: "reminder-#{reminder.id}",
+        timestamp: reminder.next_run_at.to_i * 1000,
+        require_interaction: true
       }
 
       ::Webpush.payload_send(
