@@ -32,14 +32,49 @@
   --pj-link: #07392f;
   --pj-header-bg: rgba(247, 241, 229, .92);
 
-  /* Shared typography scale. Keep product text readable by default and let
-     future accessibility settings override these tokens in one place. */
-  --pj-font-caption: .75rem;      /* 12px */
-  --pj-font-meta: .8125rem;       /* 13px */
-  --pj-font-body: .875rem;        /* 14px */
-  --pj-font-control: .875rem;     /* 14px */
-  --pj-font-card-title: 1rem;     /* 16px */
+  /* Typography is expressed in rem so the product scales predictably with
+     browser and accessibility font settings. */
+  --pj-font-caption: .75rem;        /* 12px */
+  --pj-font-meta: .8125rem;         /* 13px */
+  --pj-font-body: .875rem;          /* 14px */
+  --pj-font-control: .875rem;       /* 14px */
+  --pj-font-card-title: 1rem;       /* 16px */
+  --pj-font-topbar-title: 1.25rem;  /* 20px */
   --pj-font-section-title: 1.25rem; /* 20px */
-  --pj-font-page-title: 1.75rem;  /* 28px */
-  --pj-font-mobile-control: 1rem; /* 16px; also prevents iOS input zoom */
+  --pj-font-detail-title: 1.5rem;   /* 24px */
+  --pj-font-page-title: 1.75rem;    /* 28px */
+  --pj-font-mobile-control: 1rem;   /* 16px; also prevents iOS input zoom */
+
+  /* Geometry stays pixel-based where exact visual alignment matters. */
+  --pj-size-topbar: 62px;
+  --pj-size-icon-button: 36px;
+  --pj-size-icon: 20px;
+  --pj-size-control-sm: 36px;
+  --pj-size-control: 38px;
+  --pj-size-control-lg: 44px;
+  --pj-size-touch-target: 44px;
+
+  /* One spacing rhythm for all product screens. */
+  --pj-space-1: 4px;
+  --pj-space-2: 8px;
+  --pj-space-3: 12px;
+  --pj-space-4: 16px;
+  --pj-space-5: 20px;
+  --pj-space-6: 24px;
+  --pj-space-7: 28px;
+  --pj-space-8: 32px;
+  --pj-space-10: 40px;
+  --pj-space-12: 48px;
+
+  /* Shared workspace geometry. */
+  --pj-workspace-gutter: clamp(28px, 3vw, 48px);
+  --pj-workspace-content-gutter: clamp(28px, 3vw, 52px);
+
+  /* Radius scale: controls < cards < panels. */
+  --pj-radius-xs: 6px;
+  --pj-radius-sm: 8px;
+  --pj-radius-md: 12px;
+  --pj-radius-lg: 16px;
+  --pj-radius-xl: 20px;
+  --pj-radius-pill: 999px;
 }
