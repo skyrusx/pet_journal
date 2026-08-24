@@ -1,7 +1,7 @@
 class NotificationDeliveryJob < ApplicationJob
   queue_as :default
 
-  def perform(delivery)
+  def perform(delivery, test_delivery: false)
     return if delivery.status_sent?
 
     unless delivery.notification_channel.ready_for_delivery?
@@ -10,7 +10,7 @@ class NotificationDeliveryJob < ApplicationJob
     end
 
     delivery.register_attempt!
-    NotificationAdapters.for(delivery.notification_channel).deliver(delivery)
+    NotificationAdapters.for(delivery.notification_channel).deliver(delivery, test_delivery: test_delivery)
     delivery.mark_sent!
     delivery.notification_channel.mark_verified!
   rescue StandardError => e
