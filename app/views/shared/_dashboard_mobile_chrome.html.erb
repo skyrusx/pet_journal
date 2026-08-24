@@ -3,7 +3,7 @@
 <% primary_pet = context_pet || Array(@pets).first || mobile_pets.first %>
 <% journal_path = journal_overview_path %>
 <% reminders_path = reminders_overview_path %>
-<% documents_path = primary_pet ? pet_pet_documents_path(primary_pet) : documents_overview_path %>
+<% documents_path = documents_overview_path %>
 <% pettag_path = primary_pet ? pet_pet_tag_path(primary_pet) : pet_tags_path %>
 <% public_access_path = primary_pet ? pet_profile_shares_path(primary_pet) : public_access_overview_path %>
 <% reminders_badge = mobile_reminders_badge %>
