@@ -16,7 +16,9 @@ module NotificationChannelConnectors
     end
 
     def self.post(method, payload)
-      token = ENV.fetch("TELEGRAM_BOT_TOKEN")
+      token = TelegramConfiguration.bot_token
+      raise Error, "Telegram пока в разработке и недоступен для подключения." if token.blank?
+
       uri = URI("#{API_ROOT}#{token}/#{method}")
       response = Net::HTTP.post(uri, payload.to_json, "Content-Type" => "application/json")
       body = JSON.parse(response.body)
