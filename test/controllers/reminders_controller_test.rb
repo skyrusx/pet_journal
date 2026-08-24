@@ -87,6 +87,25 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to reminders_overview_url(pet_id: @pet.id)
   end
 
+  test "interprets browser reminder time in the user's notification time zone" do
+    @user.update!(notifications_time_zone: "Novosibirsk")
+
+    travel_to Time.utc(2026, 8, 24, 15, 30) do
+      post pet_reminders_url(@pet), params: {
+        reminder: {
+          title: "Дать таблетку",
+          reminder_type: "medication",
+          remind_at: "2026-08-24T22:35",
+          repeat_rule: "once"
+        }
+      }
+    end
+
+    reminder = Reminder.order(:created_at).last
+    assert_equal Time.utc(2026, 8, 24, 15, 35), reminder.remind_at.utc
+    assert_equal reminder.remind_at, reminder.next_run_at
+  end
+
   test "should create reminder with selected channels" do
     assert_difference("ReminderNotificationChannel.count") do
       post pet_reminders_url(@pet), params: {
