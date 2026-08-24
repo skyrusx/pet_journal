@@ -32,11 +32,11 @@ Rails.application.routes.draw do
   get "settings" => "settings#edit", as: :settings
   patch "settings" => "settings#update"
 
-  # Stable workspace entry points. Journal and Reminders are cross-pet overviews;
-  # the remaining sections still forward to a pet-specific workspace when needed.
+  # Stable cross-pet workspace entry points. A specific pet is selected via a
+  # query parameter while nested routes remain available for CRUD operations.
   get "journal" => "pet_events#index", as: :journal_overview
   get "reminders" => "reminders#index", as: :reminders_overview
-  get "documents" => "workspace_sections#documents", as: :documents_overview
+  get "documents" => "pet_documents#index", as: :documents_overview
   get "public-access" => "workspace_sections#public_access", as: :public_access_overview
 
   resources :notification_channels, except: %i[show] do
