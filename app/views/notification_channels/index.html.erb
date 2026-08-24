@@ -142,12 +142,13 @@
             </div>
             <div class="pj-notifications-field pj-notifications-field--wide">
               <%= form.label :notifications_time_zone, "Часовой пояс" %>
-              <%= form.time_zone_select :notifications_time_zone %>
+              <%= form.select :notifications_time_zone,
+                              options_for_select(notification_time_zone_options, current_user.notifications_time_zone_name) %>
             </div>
           </div>
 
           <div class="pj-notifications-panel__actions">
-            <%= form.submit "Сохранить тихие часы", class: "pj-notifications-secondary-button" %>
+            <%= form.submit "Сохранить", class: "pj-notifications-secondary-button" %>
           </div>
         <% end %>
       </section>
@@ -181,7 +182,7 @@
         <div>
           <span class="pj-notifications-eyebrow">Журнал</span>
           <h2 id="delivery-history-title">История отправок</h2>
-          <p>Последние 50 доставок напоминаний, включая ошибки и повторные попытки.</p>
+          <p>Отправки напоминаний, включая ошибки и повторные попытки.</p>
         </div>
 
         <%= form_with url: notification_channels_path, method: :get, class: "pj-notifications-history-filter" do |form| %>
@@ -204,7 +205,7 @@
             <span>Дата и время</span>
             <span>Канал</span>
             <span>Напоминание</span>
-            <span>Попытки</span>
+            <span title="Сколько раз PetJournal пытался доставить уведомление. Максимум — 3.">Попытки доставки</span>
             <span>Статус</span>
             <span></span>
           </div>
@@ -234,7 +235,10 @@
                 <% end %>
               </div>
 
-              <div class="pj-notifications-delivery-row__attempts"><%= delivery.attempts_label %></div>
+              <div class="pj-notifications-delivery-row__attempts"
+                   title="Сколько раз PetJournal пытался доставить это уведомление. Максимум — <%= NotificationDelivery::MAX_ATTEMPTS %>.">
+                <%= delivery.attempts_count %> из <%= NotificationDelivery::MAX_ATTEMPTS %>
+              </div>
 
               <div>
                 <span class="pj-notifications-status <%= delivery.status_sent? ? "is-success" : delivery.status_failed? ? "is-error" : delivery.status_skipped? ? "is-muted" : "is-warning" %>">
@@ -253,6 +257,16 @@
             </article>
           <% end %>
         </div>
+
+        <% if @has_more_deliveries %>
+          <div class="pj-notifications-load-more">
+            <%= link_to notification_channels_path(request.query_parameters.merge("page" => @page + 1)),
+                        class: "pj-notifications-load-more__button" do %>
+              <span>Показать ещё</span>
+              <small><%= [@matching_deliveries_count - @deliveries_limit, NotificationChannelsController::DELIVERY_PAGE_SIZE].min %> отправок</small>
+            <% end %>
+          </div>
+        <% end %>
       <% else %>
         <div class="pj-notifications-history-empty">
           <span><%= pj_icon(:bell) %></span>
