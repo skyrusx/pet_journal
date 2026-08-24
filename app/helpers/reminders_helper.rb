@@ -4,7 +4,10 @@ module RemindersHelper
   end
 
   def repeat_rule_options
-    Reminder.repeat_rules.keys.map { |key| [I18n.t("reminders.repeat_rules.#{key}"), key] }
+    Reminder.repeat_rules.keys.map do |key|
+      label = key == "custom" ? "Настроить интервал" : I18n.t("reminders.repeat_rules.#{key}")
+      [label, key]
+    end
   end
 
   def repeat_unit_options
