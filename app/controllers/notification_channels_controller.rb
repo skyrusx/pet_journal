@@ -70,7 +70,7 @@ class NotificationChannelsController < ApplicationController
     end
 
     delivery = reminder.notification_deliveries.create!(notification_channel: @channel)
-    NotificationDeliveryJob.perform_now(delivery)
+    NotificationDeliveryJob.perform_now(delivery, test_delivery: true)
 
     if delivery.reload.status_sent?
       redirect_to notification_channels_path, notice: "Тестовая отправка выполнена."
