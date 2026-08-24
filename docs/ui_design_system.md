@@ -80,7 +80,8 @@ Avoid introducing one-off `7px`, `9px`, `11px`, `13px`, `15px`, `17px`, `19px`, 
 ## Workspace layout
 
 - Desktop content max width: `--pj-content-max` = 1180px.
-- Narrow form content max width: `--pj-form-content-max` = 760px.
+- All signed-in page and form content containers use the same 1180px maximum width. Forms must not introduce a narrower page-level container; compactness should be handled by the form's internal grid, card widths and field composition.
+- `--pj-form-content-max` and `--pj-form-wide-content-max` are compatibility aliases to `--pj-content-max` and therefore also resolve to 1180px.
 - Desktop side clearance: `--pj-workspace-page-side` = 36px.
 - Mobile side clearance: `--pj-workspace-mobile-side` = 16px.
 - Standard content top spacing: 28px.
