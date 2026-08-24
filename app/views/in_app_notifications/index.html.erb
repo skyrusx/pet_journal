@@ -1,0 +1,76 @@
+<% content_for :title, "Уведомления — PetJournal" %>
+
+<div class="pj-inbox-page">
+  <header class="pj-workspace-topbar">
+    <h1>Уведомления</h1>
+    <%= render "shared/workspace_notification_link" %>
+  </header>
+
+  <div class="pj-inbox-content">
+    <div class="pj-inbox-heading">
+      <div>
+        <span class="pj-inbox-eyebrow">Центр уведомлений</span>
+        <h1>Что произошло в PetJournal</h1>
+        <p>Напоминания и важные события остаются здесь, даже если внешний канал не смог их доставить.</p>
+      </div>
+
+      <% if @unread_count.positive? %>
+        <%= button_to mark_all_read_notifications_path,
+                      method: :patch,
+                      class: "pj-inbox-mark-all" do %>
+          Отметить всё прочитанным
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="pj-inbox-toolbar">
+      <span><strong><%= @unread_count %></strong> непрочитанных</span>
+      <%= link_to notification_channels_path do %>
+        <%= pj_icon(:settings) %>
+        <span>Настройки уведомлений</span>
+      <% end %>
+    </div>
+
+    <% if @notifications.any? %>
+      <div class="pj-inbox-list">
+        <% @notifications.each do |notification| %>
+          <%= link_to notification_path(notification),
+                      class: class_names("pj-inbox-item", unread: !notification.read?) do %>
+            <span class="pj-inbox-item__icon" aria-hidden="true">
+              <%= notification.kind.start_with?("pet_tag") ? pj_icon(:tag) : pj_icon(:alarm) %>
+            </span>
+            <span class="pj-inbox-item__body">
+              <span class="pj-inbox-item__topline">
+                <strong><%= notification.title %></strong>
+                <% unless notification.read? %><i aria-label="Непрочитано"></i><% end %>
+              </span>
+              <% if notification.body.present? %>
+                <span class="pj-inbox-item__text"><%= notification.body %></span>
+              <% end %>
+              <% if notification.metadata["note"].present? %>
+                <span class="pj-inbox-item__note"><%= notification.metadata["note"] %></span>
+              <% end %>
+            </span>
+            <time datetime="<%= notification.occurred_at.iso8601 %>"><%= in_app_notification_time_label(notification) %></time>
+            <%= pj_icon(:chevron, class: "pj-inbox-item__chevron") %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <% if @has_more %>
+        <div class="pj-inbox-load-more">
+          <%= link_to notifications_path(page: @page + 1), class: "pj-inbox-load-more__button" do %>
+            <span>Показать ещё</span>
+            <small><%= [@total_count - @limit, InAppNotificationsController::PAGE_SIZE].min %> уведомлений</small>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <section class="pj-inbox-empty">
+        <span><%= pj_icon(:bell) %></span>
+        <h2>Пока всё спокойно</h2>
+        <p>Здесь появятся напоминания и важные события PetJournal.</p>
+      </section>
+    <% end %>
+  </div>
+</div>
