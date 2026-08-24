@@ -35,4 +35,15 @@ class ProductionReadinessTest < ActiveSupport::TestCase
     assert warnings.any? { |warning| warning.include?("TELEGRAM_BOT_TOKEN") }
     assert warnings.any? { |warning| warning.include?("VK_GROUP_TOKEN") }
   end
+
+  test "accepts VAPID environment configuration for Web Push" do
+    env = {
+      "VAPID_PUBLIC_KEY" => "public-key",
+      "VAPID_PRIVATE_KEY" => "private-key"
+    }
+
+    warnings = PetJournal::ProductionReadiness.notification_warnings(env)
+
+    assert_not warnings.any? { |warning| warning.include?("Web Push is not configured") }
+  end
 end
