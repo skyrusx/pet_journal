@@ -215,14 +215,7 @@ module NotificationAdapters
       require "webpush"
 
       reminder = delivery.reminder
-      payload = {
-        title: "PetJournal",
-        body: "#{reminder.pet.name}: #{reminder.title}",
-        path: Rails.application.routes.url_helpers.pet_reminder_path(reminder.pet, reminder),
-        tag: "reminder-#{reminder.id}",
-        timestamp: reminder.next_run_at.to_i * 1000,
-        require_interaction: true
-      }
+      payload = test_delivery ? test_payload : reminder_payload(reminder)
 
       ::Webpush.payload_send(
         message: payload.to_json,
@@ -239,6 +232,48 @@ module NotificationAdapters
     end
 
     private
+
+    def test_payload
+      {
+        title: "✅ Push подключён",
+        body: "Тестовое уведомление PetJournal успешно доставлено.",
+        path: Rails.application.routes.url_helpers.notification_channels_path,
+        tag: "petjournal-push-test",
+        timestamp: Time.current.to_i * 1000,
+        require_interaction: true
+      }
+    end
+
+    def reminder_payload(reminder)
+      {
+        title: "⏰ #{reminder.title}",
+        body: reminder_body(reminder),
+        path: Rails.application.routes.url_helpers.pet_reminder_path(reminder.pet, reminder),
+        tag: "reminder-#{reminder.id}",
+        timestamp: reminder.next_run_at.to_i * 1000,
+        require_interaction: true
+      }
+    end
+
+    def reminder_body(reminder)
+      lines = [
+        "#{reminder.pet.name} • #{friendly_time(reminder)} • #{reminder.reminder_type_label}"
+      ]
+      lines << reminder.note if reminder.note.present?
+      lines.join("\n")
+    end
+
+    def friendly_time(reminder)
+      zone_name = reminder.user.notifications_time_zone_name
+      time = reminder.next_run_at.in_time_zone(zone_name)
+      now = Time.current.in_time_zone(zone_name)
+
+      if time.to_date == now.to_date
+        "Сегодня, #{time.strftime('%H:%M')}"
+      else
+        time.strftime("%d.%m.%Y, %H:%M")
+      end
+    end
 
     def invalidate_subscription!
       channel.update!(
