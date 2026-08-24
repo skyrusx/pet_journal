@@ -92,12 +92,14 @@
             <div class="pj-pet-summary-card__row">
               <span class="pj-pet-summary-card__icon"><%= pj_icon(:bell) %></span>
               <div>
-                <strong><%= @next_reminder.title %></strong>
+                <div class="pj-pet-summary-card__title-line">
+                  <strong><%= @next_reminder.title %></strong>
+                  <span class="pj-pet-summary-status pj-pet-summary-status--inline <%= "is-danger" if @next_reminder.overdue? %>"><%= @next_reminder.overdue? ? "Просрочено" : "Запланировано" %></span>
+                </div>
                 <small><%= @next_reminder.next_run_at.strftime("%d.%m.%Y, %H:%M") %></small>
               </div>
             </div>
-            <span class="pj-pet-summary-status <%= "is-danger" if @next_reminder.overdue? %>"><%= @next_reminder.overdue? ? "Просрочено" : "Запланировано" %></span>
-            <%= link_to "Перейти к напоминаниям", pet_reminders_path(@pet), class: "pj-pet-summary-card__button" %>
+            <%= link_to "Перейти к напоминаниям", pet_reminders_path(@pet), class: "pj-pet-summary-card__button pj-pet-summary-card__button--compact" %>
           <% else %>
             <div class="pj-pet-summary-card__empty">Ничего не запланировано</div>
             <%= link_to "Добавить напоминание", new_pet_reminder_path(@pet), class: "pj-pet-summary-card__button" %>
