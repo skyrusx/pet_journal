@@ -10,6 +10,14 @@ class NotificationChannel < ApplicationRecord
 
   validates :channel_type, :name, presence: true
   validates :address, presence: true, unless: :channel_web_push?
+  validates :address,
+            uniqueness: {
+              scope: %i[user_id channel_type],
+              case_sensitive: false,
+              message: "уже подключён для этого канала"
+            },
+            allow_blank: true,
+            unless: :channel_web_push?
   validate :web_push_settings_present, if: :channel_web_push?
 
   scope :enabled, -> { where(enabled: true) }
@@ -61,8 +69,8 @@ class NotificationChannel < ApplicationRecord
 
   def vk_configuration_issues
     issues = []
-    issues << "Подключите профиль VK" if address.blank?
-    issues << "VK временно недоступен. Попробуйте позже." unless VkConfiguration.configured?
+    issues << "Подключите профиль ВКонтакте" if address.blank?
+    issues << "ВКонтакте временно недоступен. Попробуйте позже." unless VkConfiguration.configured?
     issues
   end
 
