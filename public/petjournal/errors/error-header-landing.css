@@ -1,5 +1,5 @@
-/* 404 header mirrors the PetJournal new-design landing navigation 1:1. */
-.pj-error-page--404 .pj-error-header {
+/* Shared error-page header mirrors the PetJournal new-design landing navigation 1:1. */
+.pj-error-page--landing-chrome .pj-error-header {
   position: relative;
   z-index: 10;
   height: auto;
@@ -12,7 +12,7 @@
   text-rendering: optimizeLegibility;
 }
 
-.pj-error-page--404 .pj-error-shell {
+.pj-error-page--landing-chrome .pj-error-shell {
   width: min(1240px, calc(100% - 96px));
   min-height: 88px;
   margin-inline: auto;
@@ -22,12 +22,12 @@
   column-gap: 24px;
 }
 
-/* Keep the 404 content on the same horizontal grid as the landing header. */
-.pj-error-page--404 .pj-error-main {
+/* Keep error content on the same horizontal grid as the landing header. */
+.pj-error-page--landing-chrome .pj-error-main {
   width: min(1240px, calc(100% - 96px));
 }
 
-.pj-error-page--404 .pj-error-brand {
+.pj-error-page--landing-chrome .pj-error-brand {
   display: inline-flex;
   width: fit-content;
   min-height: 0;
@@ -36,7 +36,7 @@
   text-decoration: none;
 }
 
-.pj-error-page--404 .pj-error-logo {
+.pj-error-page--landing-chrome .pj-error-logo {
   display: block;
   width: 180px;
   height: auto;
@@ -116,7 +116,7 @@
 .pj-error-navbar__nav a:focus-visible,
 .pj-error-navbar__login:focus-visible,
 .pj-error-navbar__cta:focus-visible,
-.pj-error-page--404 .pj-error-brand:focus-visible {
+.pj-error-page--landing-chrome .pj-error-brand:focus-visible {
   outline: 3px solid rgba(151, 168, 58, 0.38);
   outline-offset: 4px;
 }
@@ -126,7 +126,7 @@
 }
 
 @media (max-width: 900px) {
-  .pj-error-page--404 .pj-error-header {
+  .pj-error-page--landing-chrome .pj-error-header {
     position: sticky;
     top: 0;
     z-index: 50;
@@ -137,7 +137,7 @@
     -webkit-backdrop-filter: blur(14px);
   }
 
-  .pj-error-page--404 .pj-error-shell {
+  .pj-error-page--landing-chrome .pj-error-shell {
     position: relative;
     min-height: 72px;
     display: grid;
@@ -146,16 +146,16 @@
     column-gap: 16px;
   }
 
-  .pj-error-page--404 .pj-error-main {
+  .pj-error-page--landing-chrome .pj-error-main {
     width: min(1240px, calc(100% - 96px));
   }
 
-  .pj-error-page--404 .pj-error-brand {
+  .pj-error-page--landing-chrome .pj-error-brand {
     position: relative;
     z-index: 2;
   }
 
-  .pj-error-page--404 .pj-error-logo {
+  .pj-error-page--landing-chrome .pj-error-logo {
     width: 158px;
   }
 
@@ -306,16 +306,16 @@
 }
 
 @media (max-width: 640px) {
-  .pj-error-page--404 .pj-error-shell,
-  .pj-error-page--404 .pj-error-main {
+  .pj-error-page--landing-chrome .pj-error-shell,
+  .pj-error-page--landing-chrome .pj-error-main {
     width: calc(100% - 24px);
   }
 
-  .pj-error-page--404 .pj-error-shell {
+  .pj-error-page--landing-chrome .pj-error-shell {
     min-height: 68px;
   }
 
-  .pj-error-page--404 .pj-error-logo {
+  .pj-error-page--landing-chrome .pj-error-logo {
     width: 150px;
   }
 }
