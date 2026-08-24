@@ -62,6 +62,35 @@ Validate production configuration:
 bin/rails release:check
 ```
 
+## Web Push
+
+Generate one VAPID key pair for the PetJournal installation:
+
+```sh
+bin/rails web_push:vapid
+```
+
+Keep the generated private key out of Git. Configure Web Push either with server environment variables:
+
+```sh
+VAPID_PUBLIC_KEY=...
+VAPID_PRIVATE_KEY=...
+VAPID_SUBJECT=mailto:support@pet-journal.ru
+```
+
+or with Rails credentials:
+
+```yaml
+web_push:
+  public_key: "..."
+  private_key: "..."
+  subject: "mailto:support@pet-journal.ru"
+```
+
+The public key is sent to the browser when the user explicitly enables Web Push. The private key is used only by the Rails server when sending notifications. Avoid rotating the VAPID pair after users have subscribed unless you intentionally want browsers to recreate their subscriptions.
+
+Production Web Push requires HTTPS. `localhost` may be used for development because browsers treat it as a secure context.
+
 ## Processes
 
 The app expects separate web and worker processes:
