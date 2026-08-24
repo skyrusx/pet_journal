@@ -8,6 +8,7 @@
   <title>Страница не найдена — PetJournal</title>
   <link rel="stylesheet" href="/petjournal/errors/error-pages.css?v=12">
   <link rel="stylesheet" href="/petjournal/errors/error-pages-reference.css?v=14">
+  <link rel="stylesheet" href="/petjournal/errors/error-header-landing.css?v=1">
 </head>
 <body class="pj-error-page pj-error-page--404">
   <header class="pj-error-header">
@@ -15,6 +16,38 @@
       <a href="/" class="pj-error-brand" aria-label="PetJournal — на главную">
         <img src="/petjournal/errors/logo.svg" class="pj-error-logo" width="166" height="49" alt="PetJournal">
       </a>
+
+      <nav class="pj-error-navbar__nav" aria-label="Основная навигация">
+        <a href="/#features">Возможности</a>
+        <a href="/#how-it-works">Как это работает</a>
+      </nav>
+
+      <div class="pj-error-navbar__actions">
+        <a href="/users/sign_in" class="pj-error-navbar__login">Войти</a>
+        <a href="/users/sign_up" class="pj-error-navbar__cta">Создать журнал</a>
+      </div>
+
+      <details class="pj-error-navbar__mobile">
+        <summary aria-label="Открыть меню">
+          <span class="pj-error-navbar__burger" aria-hidden="true"><span></span></span>
+        </summary>
+
+        <div class="pj-error-navbar__mobile-panel">
+          <div class="pj-error-navbar__mobile-card">
+            <nav class="pj-error-navbar__mobile-nav" aria-label="Мобильная навигация">
+              <a href="/#features">Возможности</a>
+              <a href="/#how-it-works">Как это работает</a>
+            </nav>
+
+            <div class="pj-error-navbar__mobile-separator" aria-hidden="true"></div>
+
+            <div class="pj-error-navbar__mobile-actions">
+              <a href="/users/sign_in" class="pj-error-navbar__mobile-login">Войти</a>
+              <a href="/users/sign_up" class="pj-error-navbar__mobile-cta">Создать журнал</a>
+            </div>
+          </div>
+        </div>
+      </details>
     </div>
   </header>
 
