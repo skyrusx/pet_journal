@@ -13,13 +13,20 @@ self.addEventListener("push", (event) => {
     }
   }
 
+  const notificationOptions = {
+    body: payload.body,
+    icon: "/icon.png",
+    badge: "/icon.png",
+    data: { path: payload.path || "/pets" }
+  };
+
+  if (payload.tag) {
+    notificationOptions.tag = payload.tag;
+    notificationOptions.renotify = true;
+  }
+
   event.waitUntil(
-    self.registration.showNotification(payload.title, {
-      body: payload.body,
-      icon: "/icon.png",
-      badge: "/icon.png",
-      data: { path: payload.path || "/pets" }
-    })
+    self.registration.showNotification(payload.title, notificationOptions)
   );
 });
 
@@ -28,18 +35,19 @@ self.addEventListener("notificationclick", (event) => {
 
   event.waitUntil(
     clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
-      const targetPath = event.notification.data.path || "/pets";
+      const targetPath = event.notification.data?.path || "/pets";
+      const targetUrl = new URL(targetPath, self.location.origin);
 
       for (const client of clientList) {
-        const clientPath = new URL(client.url).pathname;
+        const clientUrl = new URL(client.url);
 
-        if (clientPath === targetPath && "focus" in client) {
+        if (clientUrl.pathname === targetUrl.pathname && clientUrl.search === targetUrl.search && "focus" in client) {
           return client.focus();
         }
       }
 
       if (clients.openWindow) {
-        return clients.openWindow(targetPath);
+        return clients.openWindow(targetUrl.href);
       }
     })
   );
