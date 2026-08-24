@@ -137,8 +137,7 @@ module ApplicationHelper
   def mobile_reminders_badge
     return unless user_signed_in?
 
-    count = current_user.reminders.overdue.count
-    count = current_user.reminders.status_active.where(next_run_at: Time.current.beginning_of_day..Time.current.end_of_day).count if count.zero?
+    count = current_user.reminders.status_active.count
     count.positive? ? [count, 9].min : nil
   end
 
