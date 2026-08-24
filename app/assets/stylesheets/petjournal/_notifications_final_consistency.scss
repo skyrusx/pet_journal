@@ -29,6 +29,13 @@
   transform: none;
 }
 
+/* Channel names are user labels, not headings. Keep them readable without the
+   heavy bold treatment used by section titles. */
+.pj-dashboard-body .pj-notifications-channel-card__name-row h3 {
+  font-weight: 500 !important;
+  font-variation-settings: "wght" 500;
+}
+
 /* Delivery history follows the same progressive-loading pattern as Journal,
    Reminders and Documents instead of using a hard 50-row cap. */
 .pj-notifications-load-more {
