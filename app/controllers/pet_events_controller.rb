@@ -1,6 +1,8 @@
 class PetEventsController < ApplicationController
+  PAGE_SIZE = 25
+
   before_action :authenticate_user!
-  before_action :set_pet
+  before_action :set_pet, except: :index
   before_action :set_journal_pets
   before_action :set_pet_event, only: %i[show edit update destroy]
 
@@ -13,18 +15,33 @@ class PetEventsController < ApplicationController
     @selected_status = selected_status
     @selected_marker = selected_marker
     @query = params[:q].to_s.strip
-    @event_type_counts = @pet.pet_events.group(:event_type).count
-    @total_events_count = @pet.pet_events.count
-    @events_with_files_count = @pet.pet_events.joins(:files_attachments).distinct.count
-    @events_with_follow_up_count = @pet.pet_events.where.not(next_action_at: nil).count
-    @latest_event = @pet.pet_events.order(event_date: :desc, event_time: :desc, created_at: :desc).first
+    @selected_pet = selected_journal_pet
+    @pet = @selected_pet
 
-    @pet_events = @pet.pet_events.with_attached_files.order(event_date: :desc, event_time: :desc, created_at: :desc)
-    @pet_events = @pet_events.where(event_type: @selected_event_type) if @selected_event_type.present?
-    @pet_events = filter_by_period(@pet_events)
-    @pet_events = filter_by_status(@pet_events)
-    @pet_events = filter_by_marker(@pet_events)
-    @pet_events = search_events(@pet_events) if @query.present?
+    base_scope = journal_events_scope
+    @event_type_counts = base_scope.group(:event_type).count
+    @total_events_count = base_scope.count
+    @events_with_files_count = base_scope.joins(:files_attachments).distinct.count
+    @events_with_follow_up_count = base_scope.where.not(next_action_at: nil).count
+    @latest_event = base_scope.order(event_date: :desc, event_time: :desc, created_at: :desc).first
+
+    filtered_scope = base_scope
+    filtered_scope = filtered_scope.where(event_type: @selected_event_type) if @selected_event_type.present?
+    filtered_scope = filter_by_period(filtered_scope)
+    filtered_scope = filter_by_status(filtered_scope)
+    filtered_scope = filter_by_marker(filtered_scope)
+    filtered_scope = search_events(filtered_scope) if @query.present?
+
+    @page = [params[:page].to_i, 1].max
+    @events_limit = PAGE_SIZE * @page
+    @matching_events_count = filtered_scope.distinct.count(:id)
+    @has_more_events = @matching_events_count > @events_limit
+
+    @pet_events = filtered_scope
+                  .includes(:pet)
+                  .with_attached_files
+                  .order(event_date: :desc, event_time: :desc, created_at: :desc)
+                  .limit(@events_limit)
   end
 
   def show; end
@@ -63,7 +80,7 @@ class PetEventsController < ApplicationController
   def destroy
     @pet_event.destroy
 
-    redirect_to pet_pet_events_path(@pet), notice: "Событие удалено."
+    redirect_to journal_overview_path(pet_id: @pet.id), notice: "Событие удалено."
   end
 
   private
@@ -74,6 +91,17 @@ class PetEventsController < ApplicationController
 
   def set_journal_pets
     @journal_pets = current_user.pets.with_attached_photo.order(:name).to_a
+  end
+
+  def selected_journal_pet
+    return if params[:pet_id].blank?
+
+    current_user.pets.find_by(id: params[:pet_id])
+  end
+
+  def journal_events_scope
+    scope = PetEvent.where(pet_id: @journal_pets.map(&:id))
+    @selected_pet.present? ? scope.where(pet_id: @selected_pet.id) : scope
   end
 
   def set_pet_event
