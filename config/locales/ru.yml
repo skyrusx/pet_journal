@@ -1,4 +1,9 @@
 ru:
+  support:
+    array:
+      words_connector: ", "
+      two_words_connector: " и "
+      last_word_connector: " и "
   date:
     formats:
       default: "%d.%m.%Y"
@@ -213,8 +218,8 @@ ru:
     types:
       email: "Эл. почта"
       telegram: "Telegram"
-      vk: "VK"
-      web_push: "Web Push"
+      vk: "ВКонтакте"
+      web_push: "Push"
     hints:
       email: "Укажите эл. почту для получения напоминаний."
       telegram: "Укажите chat_id. Пользователь должен сначала написать боту."
