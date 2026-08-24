@@ -19,4 +19,13 @@
     font-weight: 700;
     line-height: 1;
   }
+
+  /* Textareas need a comfortable writing area on mobile instead of input height. */
+  .pj-pets-page textarea.pj-pet-form__textarea {
+    height: auto;
+    min-height: var(--pj-size-textarea-mobile);
+    padding-block: 12px;
+    line-height: 1.5;
+    resize: vertical;
+  }
 }
