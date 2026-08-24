@@ -82,10 +82,10 @@
   --pj-space-12: 48px;
   --pj-space-16: 64px;
 
-  /* Shared signed-in workspace geometry. */
+  /* Shared signed-in workspace geometry. All page and form content uses one 1180px frame. */
   --pj-content-max: 1180px;
-  --pj-form-wide-content-max: 930px;
-  --pj-form-content-max: 760px;
+  --pj-form-wide-content-max: var(--pj-content-max);
+  --pj-form-content-max: var(--pj-content-max);
   --pj-workspace-page-side: 36px;
   --pj-workspace-mobile-side: 16px;
   --pj-workspace-gutter: clamp(28px, 3vw, 48px);
