@@ -168,7 +168,7 @@ class NotificationChannelsController < ApplicationController
     {
       "email" => "Email",
       "telegram" => "Telegram",
-      "vk" => "VK"
+      "vk" => "ВКонтакте"
     }.fetch(channel_type, "Канал")
   end
 
