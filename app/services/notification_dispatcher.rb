@@ -27,6 +27,7 @@ class NotificationDispatcher
   end
 
   def dispatch_reminder(reminder)
+    InAppNotification.for_reminder!(reminder)
     return if reminder.user.quiet_hours_now?(now)
 
     channels = channels_for(reminder)
