@@ -93,6 +93,22 @@
         </div>
       </div>
 
+      <div class="pj-notifications-form-info pj-notifications-form-info--wide"
+           data-vk-connect-panel
+           <%= "hidden" unless current_type == "vk" %>>
+        <span><%= notification_channel_icon(:vk) %></span>
+        <div>
+          <strong>Сначала разрешите сообщения от PetJournal</strong>
+          <p>VK разрешает сообществу отправлять уведомления только после того, как вы сами откроете с ним диалог. Перейдите в сообщество PetJournal со своего личного профиля и отправьте любое сообщение — достаточно одного раза.</p>
+          <%= link_to "Открыть PetJournal в VK",
+                      "https://vk.ru/petjournal",
+                      class: "pj-notifications-secondary-button",
+                      target: "_blank",
+                      rel: "noopener" %>
+          <small>После этого вернитесь в PetJournal, добавьте VK-канал и проверьте его тестовой отправкой.</small>
+        </div>
+      </div>
+
       <% if channel.persisted? && channel.channel_telegram? %>
         <%= form.hidden_field :address %>
       <% end %>
