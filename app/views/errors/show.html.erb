@@ -1,0 +1,36 @@
+<% content_for :title, "Ошибка #{@error_status} — PetJournal" %>
+
+<div class="pj-system-error-page">
+  <header class="pj-workspace-topbar">
+    <h1>Ошибка</h1>
+    <div class="pj-workspace-topbar__actions">
+      <%= render "shared/workspace_notification_link" %>
+    </div>
+  </header>
+
+  <div class="pj-system-error-content">
+    <section class="pj-system-error-state" aria-labelledby="pj-system-error-title">
+      <div class="pj-system-error-state__copy">
+        <span class="pj-system-error-state__code">Ошибка <%= @error_status %></span>
+        <h2 id="pj-system-error-title"><%= @error[:title] %></h2>
+        <p><%= @error[:text] %></p>
+
+        <div class="pj-system-error-state__actions">
+          <%= link_to @error[:primary_label],
+                      @error_primary_path,
+                      class: "pj-system-error-state__primary",
+                      target: (@error_primary_external ? "_blank" : nil),
+                      rel: (@error_primary_external ? "noopener noreferrer" : nil) %>
+
+          <%= link_to @error[:secondary_label],
+                      @error_secondary_path,
+                      class: "pj-system-error-state__secondary" %>
+        </div>
+      </div>
+
+      <div class="pj-system-error-state__visual" aria-hidden="true">
+        <img src="<%= @error[:image] %>" alt="" width="670" height="330">
+      </div>
+    </section>
+  </div>
+</div>
