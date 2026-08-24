@@ -181,20 +181,33 @@
           <%= f.text_area :description, rows: 4, placeholder: "Что произошло, рекомендации, важные наблюдения..." %>
         </div>
 
-        <div class="pj-journal-file-control">
-          <div><strong>Файлы</strong><small>Анализы, назначения, чеки или фотографии</small></div>
-          <%= f.file_field :files, multiple: true %>
-        </div>
-
-        <% if @pet_event.persisted? && @pet_event.files.attached? %>
-          <div class="pj-journal-attached-files">
-            <% @pet_event.files.each do |file| %>
-              <%= link_to url_for(file), target: "_blank", rel: "noopener" do %>
-                <%= pj_icon(:file) %><span><strong><%= file.filename %></strong><small><%= number_to_human_size(file.byte_size) %></small></span>
-              <% end %>
-            <% end %>
+        <section class="pj-document-form-card pj-document-upload-card pj-journal-upload-card" data-document-file-control>
+          <div class="pj-document-form-card__heading">
+            <h2>Файлы</h2>
+            <p>Анализы, назначения, чеки или фотографии. Можно выбрать несколько.</p>
           </div>
-        <% end %>
+
+          <% if @pet_event.persisted? && @pet_event.files.attached? %>
+            <div class="pj-document-existing-files">
+              <% @pet_event.files.each do |file| %>
+                <%= link_to url_for(file), target: "_blank", rel: "noopener", class: "pj-document-existing-file" do %>
+                  <span><%= pj_icon(:file) %></span>
+                  <span><strong><%= file.filename.to_s %></strong><small><%= number_to_human_size(file.byte_size) %></small></span>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+
+          <label class="pj-document-dropzone" data-document-file-dropzone>
+            <span class="pj-document-dropzone__icon"><%= pj_icon(:file) %></span>
+            <strong><%= @pet_event.files.attached? ? "Добавить ещё файлы" : "Перетащите файлы сюда" %></strong>
+            <small>или выберите их с устройства</small>
+            <span class="pj-document-dropzone__button">Выбрать файлы</span>
+            <%= f.file_field :files, multiple: true, class: "pj-document-dropzone__input" %>
+          </label>
+
+          <div class="pj-document-selected-files" data-document-file-previews hidden aria-live="polite"></div>
+        </section>
 
         <label class="pj-journal-follow-up-toggle" data-follow-up-section>
           <%= check_box_tag :create_follow_up_reminder, "1", false %>
