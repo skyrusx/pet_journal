@@ -75,4 +75,34 @@ class NotificationAdaptersTest < ActiveSupport::TestCase
     assert_includes params[:message], reminder.pet.name
     assert_includes params[:message], reminder.title
   end
+
+  test "VK adapter explains when user has not allowed community messages" do
+    user = users(:one)
+    reminder = reminders(:one)
+    channel = user.notification_channels.create!(
+      channel_type: :vk,
+      name: "VK",
+      address: "123456",
+      enabled: true
+    )
+    delivery = reminder.notification_deliveries.create!(notification_channel: channel)
+    response = Struct.new(:body).new({
+      error: {
+        error_code: 901,
+        error_msg: "Can't send messages for users without permission"
+      }
+    }.to_json)
+
+    error = assert_raises(RuntimeError) do
+      VkConfiguration.stub(:group_token, "credential-token") do
+        Net::HTTP.stub(:post_form, response) do
+          NotificationAdapters.for(channel).deliver(delivery)
+        end
+      end
+    end
+
+    assert_includes error.message, "сначала разрешите сообщения от PetJournal"
+    assert_includes error.message, "отправьте ему любое сообщение"
+    assert_not_includes error.message, "Can't send messages"
+  end
 end
