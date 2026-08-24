@@ -77,11 +77,21 @@ function initWebPushControls() {
 
     if (!enableButton || !disableButton || !status || !vapidPublicKey) return;
 
+    // Service Worker and Push API are available only in a secure context.
+    // Browsers treat localhost as secure for development, but a LAN address such
+    // as http://192.168.x.x is regular insecure HTTP and Web Push is unavailable.
+    if (!window.isSecureContext) {
+      enableButton.disabled = true;
+      disableButton.disabled = true;
+      status.textContent = "Web Push требует HTTPS. Для локальной проверки откройте PetJournal через http://localhost:3000.";
+      return;
+    }
+
     const supported = "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
     if (!supported) {
       enableButton.disabled = true;
       disableButton.disabled = true;
-      status.textContent = "Этот браузер не поддерживает Web Push.";
+      status.textContent = "Этот браузер действительно не поддерживает Web Push.";
       return;
     }
 
