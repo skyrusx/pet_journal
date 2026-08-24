@@ -23,7 +23,7 @@
 
   .pj-journal-mobile-filters {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 44px 44px;
+    grid-template-columns: minmax(0, 1fr) 44px auto;
     align-items: center;
     gap: var(--pj-space-2);
     margin-bottom: var(--pj-space-3);
@@ -79,37 +79,33 @@
 
   .pj-journal-mobile-filters__search-button,
   .pj-journal-mobile-filters__trigger {
-    width: 44px;
     height: 44px;
     min-height: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
     border-radius: var(--pj-radius-control);
     font: inherit;
     cursor: pointer;
   }
 
   .pj-journal-mobile-filters__search-button {
+    width: 44px;
+    padding: 0;
     border: 0;
     color: #fff;
     background: var(--pj-green);
   }
 
   .pj-journal-mobile-filters__trigger {
-    position: relative;
+    min-width: 96px;
+    gap: 6px;
+    padding: 0 11px;
     border: 1px solid var(--pj-border);
     color: var(--pj-green);
     background: var(--pj-surface);
-  }
-
-  .pj-journal-mobile-filters__trigger > span {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
+    font-size: var(--pj-font-meta);
+    font-weight: 700;
     white-space: nowrap;
   }
 
@@ -119,15 +115,11 @@
   }
 
   .pj-journal-mobile-filters__trigger em {
-    position: absolute;
-    top: -5px;
-    right: -5px;
     min-width: 19px;
     height: 19px;
     display: grid;
     place-items: center;
     padding: 0 5px;
-    border: 2px solid var(--pj-bg);
     border-radius: var(--pj-radius-pill);
     color: #fff;
     background: var(--pj-green);
