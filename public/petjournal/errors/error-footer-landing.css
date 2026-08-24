@@ -1,5 +1,6 @@
 /* 404 footer mirrors the PetJournal new-design landing footer 1:1. */
 .pj-error-page--404 .pj-nd-footer {
+  margin-top: 46px;
   padding: 0 0 42px;
   font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
