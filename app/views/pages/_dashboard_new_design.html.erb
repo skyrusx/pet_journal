@@ -40,7 +40,7 @@
       </header>
 
       <header class="pj-workspace-topbar pj-dashboard-topbar">
-        <h1>Dashboard</h1>
+        <h1>Главная</h1>
         <div class="pj-workspace-topbar__actions">
           <%= render "shared/workspace_notification_link" %>
         </div>
@@ -156,7 +156,7 @@
 
             <aside class="pj-dash-pettag-card">
               <div class="pj-dash-pettag-card__title">PetTag</div>
-              <%= image_tag "petjournal/auth-pettag.png", alt: "PetTag", class: "pj-dash-pettag-card__image" %>
+              <img src="/new_design/pettag-emerald.png" alt="PetTag" class="pj-dash-pettag-card__image">
               <% if primary_pet&.pet_tag.present? %>
                 <div class="pj-dash-pettag-card__status-row">
                   <span class="pj-dash-pettag-card__status"><span>●</span> <%= primary_pet.pet_tag.lost_mode_enabled? ? "Режим поиска" : "Активен" %></span>
