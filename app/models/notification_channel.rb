@@ -69,7 +69,8 @@ class NotificationChannel < ApplicationRecord
   def web_push_configuration_issues
     issues = []
     issues << "Push для этого браузера нужно подключить заново" if settings["endpoint"].blank? || settings["p256dh"].blank? || settings["auth"].blank?
-    issues << "Push временно недоступен. Попробуйте позже." if ENV["VAPID_PUBLIC_KEY"].blank? || ENV["VAPID_PRIVATE_KEY"].blank?
+    issues << "Push-подписка браузера истекла. Подключите push заново." if settings["invalidated_at"].present?
+    issues << "Push временно недоступен. На сервере не настроены VAPID-ключи." unless WebPushConfiguration.configured?
     issues.uniq
   end
 end
