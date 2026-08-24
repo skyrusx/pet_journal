@@ -135,11 +135,13 @@
 
 @media (max-width: 820px) {
   .pj-journal-add-picker {
-    width: 100%;
+    flex: 0 0 auto;
   }
 
   .pj-journal-add-picker > .pj-journal-add {
-    width: 100%;
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
   }
 
   .pj-journal-add-picker__menu {
