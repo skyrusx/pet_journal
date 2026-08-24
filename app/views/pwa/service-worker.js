@@ -17,12 +17,21 @@ self.addEventListener("push", (event) => {
     body: payload.body,
     icon: "/icon.png",
     badge: "/icon.png",
-    data: { path: payload.path || "/pets" }
+    data: { path: payload.path || "/pets" },
+    silent: false
   };
 
   if (payload.tag) {
     notificationOptions.tag = payload.tag;
     notificationOptions.renotify = true;
+  }
+
+  if (payload.timestamp) {
+    notificationOptions.timestamp = payload.timestamp;
+  }
+
+  if (payload.require_interaction === true) {
+    notificationOptions.requireInteraction = true;
   }
 
   event.waitUntil(
