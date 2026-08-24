@@ -22,7 +22,10 @@ class NotificationChannelsController < ApplicationController
   end
 
   def new
-    requested_type = params[:type].presence_in(%w[email telegram vk]) || "email"
+    available_types = %w[email vk]
+    available_types << "telegram" if TelegramConfiguration.configured?
+    requested_type = params[:type].presence_in(available_types) || "email"
+
     @channel = current_user.notification_channels.new(
       channel_type: requested_type,
       name: default_channel_name(requested_type)
@@ -31,6 +34,13 @@ class NotificationChannelsController < ApplicationController
 
   def create
     @channel = current_user.notification_channels.new(channel_params)
+
+    unless channel_available_for_creation?(@channel)
+      @channel.errors.add(:channel_type, "Telegram пока в разработке и недоступен для подключения.")
+      render :new, status: :unprocessable_entity
+      return
+    end
+
     apply_web_push_settings
     mark_verification
 
@@ -119,6 +129,10 @@ class NotificationChannelsController < ApplicationController
       :notifications_quiet_hours_end,
       :notifications_time_zone
     )
+  end
+
+  def channel_available_for_creation?(channel)
+    !channel.channel_telegram? || TelegramConfiguration.configured?
   end
 
   def apply_web_push_settings
