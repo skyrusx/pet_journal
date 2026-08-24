@@ -7,8 +7,9 @@
 <% pettag_path = primary_pet ? pet_pet_tag_path(primary_pet) : pet_tags_path %>
 <% public_access_path = primary_pet ? pet_profile_shares_path(primary_pet) : public_access_overview_path %>
 <% reminders_badge = mobile_reminders_badge %>
+<% notifications_badge = mobile_notifications_badge %>
 <% empty_workspace_section = controller_name == "workspace_sections" ? action_name : nil %>
-<% more_active = %w[pet_profile_shares settings notification_channels].include?(controller_name) || empty_workspace_section == "public_access" || devise_controller? %>
+<% more_active = %w[pet_profile_shares settings notification_channels in_app_notifications].include?(controller_name) || empty_workspace_section == "public_access" || devise_controller? %>
 
 <div class="pj-mobile-chrome" data-dashboard-mobile-chrome>
   <header class="pj-mobile-chrome__header">
@@ -27,11 +28,14 @@
         <% end %>
       <% end %>
 
-      <%= link_to notification_channels_path,
-                  class: class_names("pj-mobile-chrome__bell", "is-active": controller_name == "notification_channels"),
-                  aria: { label: "Настройки уведомлений", current: controller_name == "notification_channels" ? "page" : nil },
-                  title: "Настройки уведомлений" do %>
+      <%= link_to notifications_path,
+                  class: class_names("pj-mobile-chrome__bell", "is-active": controller_name == "in_app_notifications"),
+                  aria: { label: "Уведомления", current: controller_name == "in_app_notifications" ? "page" : nil },
+                  title: "Уведомления" do %>
         <%= pj_icon(:bell) %>
+        <% if notifications_badge.present? %>
+          <span class="pj-mobile-chrome__badge" aria-hidden="true"><%= notifications_badge %></span>
+        <% end %>
       <% end %>
     </div>
   </header>
