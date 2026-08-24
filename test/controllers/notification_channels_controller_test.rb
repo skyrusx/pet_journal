@@ -22,6 +22,31 @@ class NotificationChannelsControllerTest < ActionDispatch::IntegrationTest
     assert_select "select[name='delivery_status'] option[value='pending'][selected]"
   end
 
+  test "should progressively load delivery history" do
+    reminder = reminders(:one)
+    30.times do
+      NotificationDelivery.create!(
+        reminder: reminder,
+        notification_channel: @channel,
+        status: :sent,
+        attempts_count: 1,
+        delivered_at: Time.current
+      )
+    end
+
+    get notification_channels_url(delivery_status: "sent")
+
+    assert_response :success
+    assert_select ".pj-notifications-delivery-row", NotificationChannelsController::DELIVERY_PAGE_SIZE
+    assert_select ".pj-notifications-load-more__button", text: /Показать ещё/
+
+    get notification_channels_url(delivery_status: "sent", page: 2)
+
+    assert_response :success
+    assert_select ".pj-notifications-delivery-row", 30
+    assert_select ".pj-notifications-load-more__button", count: 0
+  end
+
   test "should create telegram channel" do
     assert_difference("NotificationChannel.count") do
       post notification_channels_url, params: {
