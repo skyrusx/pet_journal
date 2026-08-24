@@ -204,24 +204,30 @@
     display: none !important;
   }
 
+  /* Creation lives in the global Quick actions sheet on mobile. Keeping a
+     second add control here only competes with the pet selector. */
+  .pj-documents-index .pj-documents-toolbar > .pj-documents-primary-button,
+  .pj-documents-index .pj-documents-toolbar > .pj-documents-add-picker,
+  .pj-documents-index .pj-documents-empty > .pj-documents-primary-button {
+    display: none !important;
+  }
+
+  /* With the add action removed the pet selector becomes the single toolbar
+     control and mirrors the approved full-width Journal selector. */
   .pj-documents-toolbar {
-    display: flex;
-    align-items: center;
-    gap: var(--pj-space-2);
+    display: block;
     margin-bottom: var(--pj-space-3);
   }
 
   .pj-documents-pet-switcher {
     min-width: 0;
-    flex: 1 1 auto;
+    width: 100%;
+    max-width: none;
+    display: block;
   }
 
-  .pj-documents-pet-switcher,
   .pj-documents-pet-switcher > summary {
     width: 100%;
-  }
-
-  .pj-documents-pet-switcher > summary {
     min-width: 0;
     min-height: 52px;
     display: flex;
@@ -229,34 +235,54 @@
     gap: 10px;
     padding: 7px 12px;
     border-radius: 14px;
+    box-sizing: border-box;
   }
 
   .pj-documents-pet-switcher > summary > .pj-nav-icon {
     margin-left: auto;
   }
 
-  .pj-documents-add-picker,
-  .pj-documents-toolbar > .pj-documents-primary-button {
-    flex: 0 0 auto;
-  }
-
-  .pj-documents-add-picker > .pj-documents-primary-button,
-  .pj-documents-toolbar > .pj-documents-primary-button {
-    width: 44px;
-    min-width: 44px;
-    height: 44px;
-    min-height: 44px;
-    padding: 0;
-    border-radius: var(--pj-radius-icon);
-  }
-
-  .pj-documents-add-picker > .pj-documents-primary-button span,
-  .pj-documents-toolbar > .pj-documents-primary-button span {
-    display: none;
+  .pj-documents-pet-menu {
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .pj-documents-mobile-filters {
     margin-bottom: var(--pj-space-3);
+  }
+
+  /* Same fixed/sticky action surface as Journal event editing. Applies to both
+     create and edit document forms so primary actions remain reachable. */
+  .pj-dashboard-body .pj-document-form-actions {
+    position: sticky;
+    z-index: 8;
+    bottom: 75px;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 10px;
+    margin: 15px -4px 0;
+    padding: 8px 4px;
+    border-top: 0;
+    background: rgba(251, 250, 246, .94);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .pj-dashboard-body .pj-document-form-actions > * {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .pj-dashboard-body .pj-document-form-actions .pj-document-form-cancel,
+  .pj-dashboard-body .pj-document-form-actions input.pj-documents-primary-button[type="submit"],
+  .pj-dashboard-body .pj-document-form-actions button.pj-documents-primary-button {
+    min-height: var(--pj-size-touch-target) !important;
+    height: var(--pj-size-touch-target) !important;
+    border-radius: var(--pj-radius-control) !important;
+    font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif !important;
+    font-size: var(--pj-font-body) !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
   }
 
   .pj-document-detail-heading--standard {
