@@ -35,7 +35,7 @@ class PetsControllerTest < ActionDispatch::IntegrationTest
     get pet_url(@pet)
 
     assert_response :success
-    assert_select ".pj-pet-profile"
+    assert_select ".pj-pet-profile-page"
   end
 
   test "should get new" do
