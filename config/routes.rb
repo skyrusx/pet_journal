@@ -32,9 +32,9 @@ Rails.application.routes.draw do
   get "settings" => "settings#edit", as: :settings
   patch "settings" => "settings#update"
 
-  # Stable workspace entry points. When a pet exists they forward to its section;
-  # for a brand-new account they render a useful empty state instead of /pets.
-  get "journal" => "workspace_sections#journal", as: :journal_overview
+  # Stable workspace entry points. Journal is a true cross-pet overview; the
+  # other sections still forward to a pet-specific workspace when available.
+  get "journal" => "pet_events#index", as: :journal_overview
   get "reminders" => "workspace_sections#reminders", as: :reminders_overview
   get "documents" => "workspace_sections#documents", as: :documents_overview
   get "public-access" => "workspace_sections#public_access", as: :public_access_overview
