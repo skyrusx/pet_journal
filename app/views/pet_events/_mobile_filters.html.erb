@@ -1,0 +1,104 @@
+<% active_filter_count = [@selected_event_type, @selected_period, @selected_status, @selected_marker].count(&:present?) %>
+
+<%= form_with url: journal_overview_path,
+              method: :get,
+              class: "pj-journal-mobile-filters",
+              data: { mobile_sheet_root: true } do |form| %>
+  <%= hidden_field_tag :pet_id, @selected_pet.id if @selected_pet.present? %>
+
+  <div class="pj-journal-mobile-filters__search">
+    <span aria-hidden="true">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+    </span>
+    <%= form.search_field :q,
+                          value: @query,
+                          placeholder: "Поиск по событиям",
+                          aria: { label: "Поиск по журналу" } %>
+  </div>
+
+  <button type="submit"
+          class="pj-journal-mobile-filters__search-button"
+          aria-label="Найти события"
+          title="Найти">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="10.5" cy="10.5" r="5.75"/>
+      <path d="m15 15 4.25 4.25"/>
+    </svg>
+  </button>
+
+  <button type="button"
+          class="pj-journal-mobile-filters__trigger <%= "is-active" if active_filter_count.positive? %>"
+          data-mobile-sheet-open
+          aria-controls="journal-mobile-filter-sheet"
+          aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 6h16M7 12h10M10 18h4"/>
+    </svg>
+    <span>Фильтры</span>
+    <% if active_filter_count.positive? %>
+      <em><%= active_filter_count %></em>
+    <% end %>
+  </button>
+
+  <button type="button"
+          class="pj-journal-mobile-filter-backdrop"
+          data-mobile-sheet-backdrop
+          hidden
+          aria-label="Закрыть фильтры"></button>
+
+  <section id="journal-mobile-filter-sheet"
+           class="pj-journal-mobile-filter-sheet"
+           data-mobile-sheet
+           hidden
+           aria-hidden="true"
+           tabindex="-1"
+           aria-labelledby="journal-mobile-filter-title">
+    <header class="pj-journal-mobile-filter-sheet__header">
+      <div>
+        <h2 id="journal-mobile-filter-title">Фильтры</h2>
+        <p>Уточните записи журнала</p>
+      </div>
+      <button type="button"
+              class="pj-journal-mobile-filter-sheet__close"
+              data-mobile-sheet-close
+              aria-label="Закрыть фильтры">×</button>
+    </header>
+
+    <div class="pj-journal-mobile-filter-sheet__fields">
+      <label class="pj-journal-mobile-filter-field">
+        <span>Тип события</span>
+        <%= select_tag :type,
+                       options_for_select([["Все типы", ""]] + @event_type_filters.map { |key, label| [label, key] }, @selected_event_type),
+                       aria: { label: "Тип события" } %>
+      </label>
+
+      <label class="pj-journal-mobile-filter-field">
+        <span>Период</span>
+        <%= select_tag :period,
+                       options_for_select([["Все время", ""], ["Месяц", "month"], ["3 месяца", "quarter"], ["Год", "year"]], @selected_period),
+                       aria: { label: "Период" } %>
+      </label>
+
+      <label class="pj-journal-mobile-filter-field">
+        <span>Состояние</span>
+        <%= select_tag :status,
+                       options_for_select([["Все состояния", ""]] + PetEvent::STATUS_LABELS.map { |key, label| [label, key] }, @selected_status),
+                       aria: { label: "Состояние" } %>
+      </label>
+
+      <label class="pj-journal-mobile-filter-field">
+        <span>Дополнительно</span>
+        <%= select_tag :marker,
+                       options_for_select([["Все записи", ""], ["С файлами", "with_files"], ["С будущим действием", "follow_up"]], @selected_marker),
+                       aria: { label: "Дополнительный фильтр" } %>
+      </label>
+    </div>
+
+    <footer class="pj-journal-mobile-filter-sheet__actions">
+      <%= link_to "Сбросить",
+                  journal_overview_path(pet_id: @selected_pet&.id),
+                  class: "pj-journal-mobile-filter-sheet__reset" %>
+      <button type="submit" class="pj-journal-mobile-filter-sheet__apply">Применить</button>
+    </footer>
+  </section>
+<% end %>
