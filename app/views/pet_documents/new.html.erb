@@ -2,7 +2,7 @@
 
 <div class="pj-documents-page pj-document-form-page">
   <header class="pj-workspace-topbar pj-workspace-topbar--form">
-    <%= link_to pet_pet_documents_path(@pet), class: "pj-workspace-back" do %>
+    <%= link_to documents_overview_path(pet_id: @pet.id), class: "pj-workspace-back" do %>
       <%= pj_icon(:chevron) %><span>Назад к документам</span>
     <% end %>
     <%= render "shared/workspace_notification_link" %>
@@ -10,7 +10,7 @@
 
   <div class="pj-documents-content pj-document-form-content">
     <div class="pj-mobile-detail-nav pj-mobile-form-nav pj-document-form-mobile-nav">
-      <%= link_to pet_pet_documents_path(@pet), class: "pj-mobile-context-back" do %>
+      <%= link_to documents_overview_path(pet_id: @pet.id), class: "pj-mobile-context-back" do %>
         <%= pj_icon(:chevron) %><span>К документам</span>
       <% end %>
     </div>
