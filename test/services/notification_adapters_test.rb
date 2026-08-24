@@ -2,7 +2,7 @@ require "test_helper"
 require "webpush"
 
 class NotificationAdaptersTest < ActiveSupport::TestCase
-  test "web push adapter sends reminder through Webpush with VAPID" do
+  test "web push adapter sends clear reminder through Webpush with VAPID" do
     user = users(:one)
     reminder = reminders(:one)
     endpoint = "https://push.example.test/adapter"
@@ -40,12 +40,48 @@ class NotificationAdaptersTest < ActiveSupport::TestCase
     assert_equal "high", sent_options[:urgency]
 
     payload = JSON.parse(sent_options[:message])
-    assert_equal "PetJournal", payload["title"]
+    assert_equal "⏰ #{reminder.title}", payload["title"]
     assert_includes payload["body"], reminder.pet.name
+    assert_includes payload["body"], reminder.reminder_type_label
+    assert_includes payload["body"], reminder.note
     assert_equal Rails.application.routes.url_helpers.pet_reminder_path(reminder.pet, reminder), payload["path"]
     assert_equal "reminder-#{reminder.id}", payload["tag"]
     assert_equal reminder.next_run_at.to_i * 1000, payload["timestamp"]
     assert_equal true, payload["require_interaction"]
+  end
+
+  test "web push adapter sends dedicated test copy and opens notification settings" do
+    user = users(:one)
+    reminder = reminders(:one)
+    endpoint = "https://push.example.test/test-delivery"
+    channel = user.notification_channels.create!(
+      channel_type: :web_push,
+      name: "Тестовый браузер",
+      address: endpoint,
+      enabled: true,
+      verified_at: Time.current,
+      settings: {
+        "endpoint" => endpoint,
+        "p256dh" => "browser-public-key",
+        "auth" => "browser-auth"
+      }
+    )
+    delivery = reminder.notification_deliveries.create!(notification_channel: channel)
+    sent_options = nil
+
+    WebPushConfiguration.stub(:vapid_options, {}) do
+      Webpush.stub(:payload_send, ->(**options) { sent_options = options }) do
+        NotificationAdapters.for(channel).deliver(delivery, test_delivery: true)
+      end
+    end
+
+    payload = JSON.parse(sent_options[:message])
+    assert_equal "✅ Push подключён", payload["title"]
+    assert_equal "Тестовое уведомление PetJournal успешно доставлено.", payload["body"]
+    assert_equal Rails.application.routes.url_helpers.notification_channels_path, payload["path"]
+    assert_equal "petjournal-push-test", payload["tag"]
+    assert_not_includes payload["body"], reminder.title
+    assert_not_includes payload["body"], reminder.note
   end
 
   test "VK adapter sends polished reminder with inline open button for public host" do
