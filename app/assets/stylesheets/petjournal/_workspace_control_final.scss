@@ -1,0 +1,51 @@
+/* Final workspace control geometry.
+   Imported after page-specific and consistency layers so every signed-in form
+   keeps the same comfortable inset for dropdown/picker affordances. */
+
+.pj-dashboard-body select:not([multiple]) {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 48px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4.75 6.25 8 9.5l3.25-3.25' stroke='%2367736b' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 16px center !important;
+  background-size: 16px 16px !important;
+}
+
+/* Chrome/Android renders date and time inputs with its own picker affordance.
+   Keep the native picker functional, but inset it to the same visual rhythm as
+   our custom select chevron instead of letting it sit against the border. */
+.pj-dashboard-body input[type="date"],
+.pj-dashboard-body input[type="time"],
+.pj-dashboard-body input[type="datetime-local"] {
+  padding-right: 44px !important;
+}
+
+.pj-dashboard-body input[type="date"]::-webkit-calendar-picker-indicator,
+.pj-dashboard-body input[type="time"]::-webkit-calendar-picker-indicator,
+.pj-dashboard-body input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  padding: 2px;
+  cursor: pointer;
+}
+
+@media (max-width: 820px) {
+  .pj-dashboard-body select:not([multiple]) {
+    padding-right: 52px !important;
+    background-position: right 18px center !important;
+  }
+
+  .pj-dashboard-body input[type="date"],
+  .pj-dashboard-body input[type="time"],
+  .pj-dashboard-body input[type="datetime-local"] {
+    padding-right: 48px !important;
+  }
+
+  .pj-dashboard-body input[type="date"]::-webkit-calendar-picker-indicator,
+  .pj-dashboard-body input[type="time"]::-webkit-calendar-picker-indicator,
+  .pj-dashboard-body input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    margin-right: 8px;
+  }
+}
