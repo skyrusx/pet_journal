@@ -3,12 +3,7 @@
 <div class="pj-pettag-page <%= @pets.empty? ? "pj-section-empty-page pj-section-empty-page--pettag" : "pj-pettag-overview-page" %>">
   <header class="pj-workspace-topbar">
     <h1>PetTag</h1>
-    <%= link_to notification_channels_path,
-                class: "pj-workspace-icon",
-                aria: { label: "Настройки уведомлений" },
-                title: "Настройки уведомлений" do %>
-      <%= pj_icon(:bell) %>
-    <% end %>
+    <%= render "shared/workspace_notification_link" %>
   </header>
 
   <% if @pets.any? %>
