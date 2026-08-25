@@ -7,12 +7,18 @@
   </header>
 
   <div class="pj-public-access-content">
+    <div class="pj-mobile-detail-nav pj-public-access-mobile-nav">
+      <%= link_to public_access_overview_path, class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К питомцам</span>
+      <% end %>
+    </div>
+
     <div class="pj-public-access-intro">
       <div>
         <p>Безопасно делитесь выбранными данными питомца по отдельной ссылке.</p>
       </div>
-      <div class="pj-public-access-intro__actions">
-        <%= link_to "← Все питомцы", public_access_overview_path, class: "pj-public-access-quiet" %>
+      <div class="pj-public-access-intro__actions pj-public-access-index-actions">
+        <%= link_to "← К питомцам", public_access_overview_path, class: "pj-public-access-quiet" %>
         <%= link_to new_pet_profile_share_path(@pet), class: "pj-public-access-primary" do %>
           <%= pj_icon(:plus) %>
           <span>Создать доступ</span>
