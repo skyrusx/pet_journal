@@ -8,7 +8,10 @@
 
   <div class="pj-inbox-content">
     <div class="pj-inbox-heading">
-      <p>Напоминания и важные события остаются здесь, даже если внешний канал не смог их доставить.</p>
+      <div>
+        <h1>Уведомления</h1>
+        <p>Напоминания и важные события остаются здесь, даже если внешний канал не смог их доставить.</p>
+      </div>
 
       <% if @unread_count.positive? %>
         <%= button_to mark_all_read_notifications_path,
@@ -68,6 +71,8 @@
         <%= link_to "Сбросить", notifications_path, class: "pj-inbox-filter-reset" %>
       <% end %>
     <% end %>
+
+    <%= render "mobile_filters" %>
 
     <% if @notifications.any? %>
       <div class="pj-inbox-table-wrap">
