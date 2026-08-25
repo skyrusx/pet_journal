@@ -109,6 +109,12 @@ body.public-pettag-layout-body {
     min-width: 0;
     padding-left: 14px;
   }
+
+  /* Mobile PetTag is a focused rescue/contact flow. The footer adds no action
+     or essential context and only extends the page after the form. */
+  .pj-public-tag-footer {
+    display: none;
+  }
 }
 
 @media (max-width: 390px) {
