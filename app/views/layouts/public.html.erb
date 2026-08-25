@@ -16,7 +16,10 @@
     <%= javascript_include_tag "public_pettag_location", defer: true %>
   </head>
 
-  <body class="<%= class_names("app-body", "public-body", { "public-profile-layout-body" => controller_name == "public_pet_profile_shares" }) %>">
+  <body class="<%= class_names("app-body", "public-body", {
+    "public-profile-layout-body" => controller_name == "public_pet_profile_shares",
+    "public-pettag-layout-body" => controller_name == "public_pet_tags"
+  }) %>">
     <%= yield %>
     <%= render "pages/new_design_footer" if controller_name == "public_pet_profile_shares" %>
 
