@@ -5,11 +5,14 @@
 }
 
 .pj-pettag-public-link__row {
+  width: 100%;
   min-width: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 30px;
   align-items: center;
   gap: 8px;
+  padding-right: 10px;
+  box-sizing: border-box;
 }
 
 .pj-pettag-public-link__row > a {
@@ -21,6 +24,7 @@
   height: 30px;
   display: grid;
   place-items: center;
+  justify-self: end;
   padding: 0;
   border: 0;
   border-radius: 8px;
