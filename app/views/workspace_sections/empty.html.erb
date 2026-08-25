@@ -1,10 +1,6 @@
 <% content_for :title, "#{@section_title} — PetJournal" %>
 
-<div class="<%= class_names(
-  "pj-section-empty-page",
-  "pj-section-empty-page--#{@section_key}",
-  "pj-public-access-overview-page": @section_key == "public_access"
-) %>">
+<div class="pj-section-empty-page pj-section-empty-page--<%= @section_key %>">
   <header class="pj-workspace-topbar">
     <h1><%= @section_title %></h1>
     <%= link_to notification_channels_path, class: "pj-workspace-icon", aria: { label: "Настройки уведомлений" }, title: "Настройки уведомлений" do %>
@@ -13,6 +9,13 @@
   </header>
 
   <div class="pj-section-empty-content">
+    <% if @section_key == "public_access" %>
+      <div class="pj-public-access-empty-mobile-heading">
+        <h1><%= @section_title %></h1>
+        <p><%= @section_subtitle %></p>
+      </div>
+    <% end %>
+
     <div class="pj-section-empty-heading">
       <p><%= @section_subtitle %></p>
     </div>
