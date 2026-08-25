@@ -1,5 +1,6 @@
 class PetsController < ApplicationController
   PAGE_SIZE = 25
+  MOBILE_PAGE_SIZE = 10
 
   before_action :authenticate_user!
   before_action :set_pet, only: %i[show edit update]
@@ -8,7 +9,8 @@ class PetsController < ApplicationController
 
   def index
     @page = [params[:page].to_i, 1].max
-    @pets_limit = PAGE_SIZE * @page
+    @page_size = mobile_request? ? MOBILE_PAGE_SIZE : PAGE_SIZE
+    @pets_limit = @page_size * @page
     @matching_pets_count = current_user.pets.count
     @has_more_pets = @matching_pets_count > @pets_limit
     @pets = current_user.pets
