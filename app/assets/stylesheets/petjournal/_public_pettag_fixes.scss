@@ -3,6 +3,67 @@
   box-sizing: border-box;
 }
 
+.pj-public-tag-owner__phone {
+  width: fit-content;
+  color: #315f47;
+  font-size: var(--pj-font-caption);
+  line-height: 1.45;
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.pj-public-tag-owner__phone:hover,
+.pj-public-tag-owner__phone:focus-visible {
+  color: #174f34;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pj-public-tag-outline-button,
+.pj-public-tag-primary-button,
+.pj-public-tag-location-button {
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 120ms ease;
+}
+
+.pj-public-tag-outline-button:hover,
+.pj-public-tag-outline-button:focus-visible {
+  color: #174f34;
+  border-color: #cbd5c8;
+  background: #f2f5ed;
+  box-shadow: 0 5px 14px rgba(49, 57, 50, .06);
+  transform: translateY(-1px);
+}
+
+.pj-public-tag-primary-button:hover,
+.pj-public-tag-primary-button:focus-visible,
+.pj-public-tag-page.is-lost .pj-public-tag-primary-button:hover,
+.pj-public-tag-page.is-lost .pj-public-tag-primary-button:focus-visible {
+  color: #fff;
+  background: #154d34;
+  box-shadow: 0 7px 18px rgba(25, 90, 60, .16);
+  transform: translateY(-1px);
+}
+
+.pj-public-tag-location-button:hover,
+.pj-public-tag-location-button:focus-visible {
+  color: #25563d;
+  border-color: #cbd8bd;
+  background: #f1f6e8;
+  box-shadow: 0 5px 14px rgba(49, 57, 50, .05);
+  transform: translateY(-1px);
+}
+
+.pj-public-tag-outline-button:active,
+.pj-public-tag-primary-button:active,
+.pj-public-tag-location-button:active {
+  transform: translateY(0) scale(.985);
+}
+
 .pj-public-tag-location-button:disabled {
   cursor: wait;
   opacity: .72;
@@ -13,10 +74,27 @@
   background: #f4f5f0;
 }
 
+.pj-public-tag-location-button.is-loading:hover,
+.pj-public-tag-location-button.is-loading:focus-visible,
+.pj-public-tag-location-button:disabled:hover,
+.pj-public-tag-location-button:disabled:focus-visible {
+  box-shadow: none;
+  transform: none;
+}
+
 .pj-public-tag-location-status.is-success {
   color: #587144;
 }
 
 .pj-public-tag-location-status.is-error {
   color: #9a5149;
+}
+
+@media (hover: none) {
+  .pj-public-tag-outline-button:hover,
+  .pj-public-tag-primary-button:hover,
+  .pj-public-tag-location-button:hover {
+    box-shadow: none;
+    transform: none;
+  }
 }
