@@ -119,6 +119,6 @@
 
   <div class="pj-pettag-form-actions">
     <%= link_to "Отмена", @pet_tag.persisted? ? pet_pet_tag_path(@pet) : pet_path(@pet), class: "pj-pettag-secondary-button" %>
-    <%= f.submit @pet_tag.persisted? ? "Сохранить" : "Создать PetTag", class: "pj-pettag-primary-button" %>
+    <%= f.submit @pet_tag.persisted? ? "Сохранить" : "Создать", class: "pj-pettag-primary-button" %>
   </div>
 <% end %>
