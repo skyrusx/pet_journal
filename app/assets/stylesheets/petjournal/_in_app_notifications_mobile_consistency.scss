@@ -1,0 +1,28 @@
+/* Final mobile pass for the in-app notification inbox.
+   Reuse the exact compact search + Filters bottom-sheet pattern from Reminders. */
+
+.pj-inbox-heading > div:first-child {
+  max-width: 760px;
+}
+
+@media (max-width: 820px) {
+  /* Desktop filter grid is replaced by the same mobile control used by Reminders. */
+  .pj-inbox-page .pj-inbox-filters {
+    display: none !important;
+  }
+
+  .pj-inbox-mobile-filters {
+    margin-bottom: var(--pj-space-3);
+  }
+
+  /* The workspace topbar title is hidden by the shared mobile chrome, so keep
+     the content title visible just like on the Reminders index. */
+  .pj-inbox-heading > div:first-child {
+    width: 100%;
+    max-width: none;
+  }
+
+  .pj-inbox-heading h1 {
+    display: block;
+  }
+}
