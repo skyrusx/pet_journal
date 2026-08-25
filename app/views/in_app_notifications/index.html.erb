@@ -131,8 +131,9 @@
       </div>
 
       <% if @has_more %>
-        <div class="pj-inbox-load-more">
-          <%= link_to notifications_path(request.query_parameters.merge("page" => @page + 1)), class: "pj-inbox-load-more__button" do %>
+        <div class="pj-journal-load-more pj-inbox-load-more">
+          <%= link_to notifications_path(request.query_parameters.merge("page" => @page + 1)),
+                      class: "pj-journal-load-more__button pj-inbox-load-more__button" do %>
             <span>Показать ещё</span>
             <small><%= [@total_count - @limit, InAppNotificationsController::PAGE_SIZE].min %> уведомлений</small>
           <% end %>
