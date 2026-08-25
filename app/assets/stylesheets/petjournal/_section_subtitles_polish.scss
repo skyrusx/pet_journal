@@ -27,8 +27,48 @@
     display: block;
   }
 
+  /* The shared workspace topbar is hidden on mobile. PetTag still needs a page
+     title, so restore only its title row and keep the duplicate notification
+     control hidden because notifications already live in the mobile chrome. */
+  .pj-pettag-page:not(.pj-pettag-form-page) > .pj-workspace-topbar {
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 18px var(--pj-workspace-mobile-side) 0;
+    border-bottom: 0;
+    background: transparent;
+  }
+
+  .pj-pettag-page:not(.pj-pettag-form-page) > .pj-workspace-topbar h1 {
+    margin: 0;
+    color: #354139;
+    font-family: "Prata", Georgia, serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.25;
+  }
+
+  .pj-pettag-page:not(.pj-pettag-form-page) > .pj-workspace-topbar .pj-notification-center {
+    display: none;
+  }
+
+  /* Match Dashboard's canonical 16px mobile rail exactly. */
+  .pj-pettag-page:not(.pj-pettag-form-page) .pj-pettag-content {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+    padding: 6px var(--pj-workspace-mobile-side) 30px;
+    box-sizing: border-box;
+  }
+
   .pj-pettag-page:not(.pj-pettag-form-page) .pj-pettag-content::before {
     margin-bottom: 18px;
     font-size: var(--pj-font-meta);
+  }
+
+  /* Give the copy state a little breathing room from the card edge. */
+  .pj-pettag-public-link__row {
+    padding-right: 4px;
   }
 }
