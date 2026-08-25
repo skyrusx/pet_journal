@@ -10,6 +10,52 @@
   object-position: center;
 }
 
+/* Keep the PetTag verification mark attached to the pet name. The existing markup
+   wraps name + description in one element, so display: contents lets the title row
+   position the name, description and badge as three deliberate grid items. */
+.pj-public-profile-identity__title {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) auto;
+  grid-template-areas:
+    "name verified"
+    "description description";
+  align-items: center;
+  justify-content: start;
+  column-gap: 10px;
+  row-gap: 6px;
+}
+
+.pj-public-profile-identity__title > div {
+  display: contents;
+}
+
+.pj-public-profile-identity__title h1 {
+  grid-area: name;
+  min-width: 0;
+}
+
+.pj-public-profile-identity__title > div > p {
+  grid-area: description;
+  margin: 0;
+}
+
+.pj-public-profile-verified {
+  grid-area: verified;
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 28px;
+  border-radius: 50%;
+  color: #fff;
+  background: #5d815d;
+  box-shadow: 0 4px 10px rgba(60, 91, 62, .14);
+  font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+}
+
 /* Compact section metadata belongs beside the heading, not in a detached right-side
    counter. This keeps journal/document capabilities readable without adding noise. */
 .pj-public-profile-heading-row {
@@ -40,6 +86,32 @@
 }
 
 @media (min-width: 821px) {
+  /* The primary public card is the outer frame. Its content sections use the same
+     inset card treatment, so About / Owner contact / PetTag no longer touch the
+     outer frame and all three have one visual hierarchy. */
+  .pj-public-profile-primary {
+    padding-bottom: 2px;
+  }
+
+  .pj-public-profile-primary > .pj-public-profile-section {
+    margin: 0 16px 16px;
+    padding: 20px 22px;
+    border: 1px solid #e8e3d8;
+    border-radius: 14px;
+    background: #fffefa;
+    box-shadow: 0 4px 14px rgba(55, 64, 56, .025);
+  }
+
+  .pj-public-profile-primary > .pj-public-profile-section:first-of-type {
+    margin-top: 2px;
+  }
+
+  /* Contact keeps its useful horizontal action layout, but visually is now the same
+     card as About and PetTag instead of behaving like a footer strip. */
+  .pj-public-profile-primary > .pj-public-profile-contact {
+    padding-top: 20px;
+  }
+
   /* Form pages use the same heading rhythm as Documents and other workspace forms. */
   .pj-public-access-form-title {
     align-items: flex-start;
