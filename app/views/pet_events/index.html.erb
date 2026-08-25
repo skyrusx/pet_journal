@@ -5,9 +5,7 @@
 <div class="pj-journal-page pj-journal-index">
   <header class="pj-workspace-topbar">
     <h1>Журнал</h1>
-    <%= link_to reminders_overview_path, class: "pj-workspace-icon", aria: { label: "Напоминания" } do %>
-      <%= pj_icon(:bell) %>
-    <% end %>
+    <%= render "shared/workspace_notification_link" %>
   </header>
 
   <div class="pj-journal-content">
