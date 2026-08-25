@@ -3,6 +3,12 @@
    left to the dedicated public-access mobile layers so the polished mobile flow
    remains unchanged. */
 
+/* Public profile owns the whole browser canvas. This also prevents the global app
+   gradient from showing through below the document on mobile browser overscroll. */
+html:has(body.public-profile-layout-body) {
+  background: #fdfcf8;
+}
+
 /* Public profile photos should preserve the whole pet instead of aggressively
    cropping portrait and square images into the wide hero frame. */
 .pj-public-profile-photo-wrap img.pj-public-profile-photo {
@@ -199,11 +205,10 @@
 /* On mobile the same three primary sections remain inset cards. Only geometry is
    normalized here; existing mobile typography, contact stacking and actions stay intact. */
 @media (max-width: 820px) {
-  /* Mobile public pages should follow content height. The desktop flex-grow shell can
-     otherwise create a large empty area before the footer on short profiles. */
+  html:has(body.public-profile-layout-body),
   body.public-profile-layout-body {
-    min-height: 100svh;
-    background: #fdfcf8;
+    min-height: 100dvh;
+    background: #fdfcf8 !important;
   }
 
   .public-profile-layout-body > .pj-public-profile-page {
