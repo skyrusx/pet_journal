@@ -54,3 +54,25 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+@media (min-width: 821px) {
+  .pj-pettag-public-link__row {
+    display: flex;
+    justify-content: flex-start;
+    gap: 6px;
+    padding-right: 0;
+  }
+
+  .pj-pettag-public-link__row > a {
+    flex: 0 1 auto;
+    max-width: calc(100% - 36px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pj-pettag-copy-icon {
+    flex: 0 0 30px;
+    justify-self: auto;
+  }
+}
