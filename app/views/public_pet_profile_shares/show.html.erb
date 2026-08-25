@@ -58,11 +58,11 @@
   <main class="pj-public-profile-shell">
     <div class="pj-public-profile-layout">
       <section class="pj-public-profile-primary">
-        <div class="pj-public-profile-photo-wrap">
+        <div class="<%= class_names("pj-public-profile-photo-wrap", "is-empty": !@pet.photo.attached?) %>">
           <% if @pet.photo.attached? %>
             <%= image_tag @pet.photo, class: "pj-public-profile-photo", alt: @pet.name %>
           <% else %>
-            <div class="pj-public-profile-photo pj-public-profile-photo--placeholder"><%= @pet.name.to_s.first.to_s.upcase.presence || "P" %></div>
+            <span aria-hidden="true"><%= @pet.name.to_s.first.to_s.upcase.presence || "P" %></span>
           <% end %>
         </div>
 
@@ -164,7 +164,9 @@
                 <small>Журнал</small>
                 <h2>Недавние записи</h2>
               </div>
-              <span class="pj-public-profile-count"><%= @share.detail_full? ? "до 50" : "5" %></span>
+              <% if @events.any? %>
+                <span class="pj-public-profile-count"><%= @events.size %></span>
+              <% end %>
             </div>
 
             <% if @events.any? %>
