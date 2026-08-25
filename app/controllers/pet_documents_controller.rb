@@ -1,5 +1,6 @@
 class PetDocumentsController < ApplicationController
   PAGE_SIZE = 25
+  MOBILE_PAGE_SIZE = 10
 
   before_action :authenticate_user!
   before_action :set_pet, except: :index
@@ -18,7 +19,8 @@ class PetDocumentsController < ApplicationController
 
     filtered_scope = filtered_documents
     @page = [params[:page].to_i, 1].max
-    @documents_limit = PAGE_SIZE * @page
+    @page_size = mobile_request? ? MOBILE_PAGE_SIZE : PAGE_SIZE
+    @documents_limit = @page_size * @page
     @matching_documents_count = filtered_scope.distinct.count(:id)
     @has_more_documents = @matching_documents_count > @documents_limit
     @documents = filtered_scope
