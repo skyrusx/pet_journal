@@ -10,6 +10,35 @@
   object-position: center;
 }
 
+/* Compact section metadata belongs beside the heading, not in a detached right-side
+   counter. This keeps journal/document capabilities readable without adding noise. */
+.pj-public-profile-heading-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pj-public-profile-heading-row h2 {
+  margin-bottom: 0;
+}
+
+.pj-public-profile-heading-badge {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 9px;
+  border-radius: 999px;
+  color: #56705c;
+  background: #edf2e3;
+  font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+  font-size: var(--pj-font-caption);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 @media (min-width: 821px) {
   /* Form pages use the same heading rhythm as Documents and other workspace forms. */
   .pj-public-access-form-title {
