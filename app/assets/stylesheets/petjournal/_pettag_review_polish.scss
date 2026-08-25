@@ -1,0 +1,52 @@
+/* Final PetTag review polish: mixed-weight labels and compact copy control. */
+
+.pj-pettag-card__heading .pj-pettag-heading-regular {
+  font-weight: 400;
+}
+
+.pj-pettag-public-link__row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 30px;
+  align-items: center;
+  gap: 8px;
+}
+
+.pj-pettag-public-link__row > a {
+  min-width: 0;
+}
+
+.pj-pettag-copy-icon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  color: #69756d;
+  background: transparent;
+  cursor: pointer;
+  transition: color .16s ease, background-color .16s ease;
+}
+
+.pj-pettag-copy-icon:hover,
+.pj-pettag-copy-icon:focus-visible {
+  color: #315f47;
+  background: #f1f4e8;
+}
+
+.pj-pettag-copy-icon.is-copied {
+  color: #315f47;
+  background: #edf2dc;
+}
+
+.pj-pettag-copy-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
