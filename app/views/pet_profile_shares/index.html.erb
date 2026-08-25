@@ -89,7 +89,7 @@
 
             <div class="pj-public-access-card__actions">
               <%= link_to "Управлять", pet_profile_share_path(@pet, share), class: "pj-public-access-secondary" %>
-              <%= link_to "Открыть публично", public_pet_profile_share_path(share.public_token), class: "pj-public-access-quiet", target: "_blank", rel: "noopener" %>
+              <%= link_to "Открыть", public_pet_profile_share_path(share.public_token), class: "pj-public-access-quiet", target: "_blank", rel: "noopener" %>
             </div>
           </article>
         <% end %>
