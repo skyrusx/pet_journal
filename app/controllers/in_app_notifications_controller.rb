@@ -2,6 +2,8 @@ class InAppNotificationsController < ApplicationController
   layout "workspace_new_design"
 
   PAGE_SIZE = 25
+  STATUS_FILTERS = %w[all unread read].freeze
+  TYPE_FILTERS = %w[all reminder pet_tag].freeze
 
   before_action :authenticate_user!
   before_action :set_notification, only: :show
@@ -9,11 +11,20 @@ class InAppNotificationsController < ApplicationController
   def index
     @page = [params[:page].to_i, 1].max
     @limit = PAGE_SIZE * @page
+    @query = params[:q].to_s.strip
+    @selected_status = STATUS_FILTERS.include?(params[:status]) ? params[:status] : "all"
+    @selected_type = TYPE_FILTERS.include?(params[:type]) ? params[:type] : "all"
+
     scope = current_user.in_app_notifications.recent
+    scope = apply_search(scope)
+    scope = apply_status_filter(scope)
+    scope = apply_type_filter(scope)
+
     @total_count = scope.count
     @notifications = scope.limit(@limit)
     @has_more = @total_count > @limit
     @unread_count = current_user.in_app_notifications.unread.count
+    @has_filters = @query.present? || @selected_status != "all" || @selected_type != "all"
   end
 
   def show
@@ -30,6 +41,35 @@ class InAppNotificationsController < ApplicationController
 
   def set_notification
     @notification = current_user.in_app_notifications.find(params[:id])
+  end
+
+  def apply_search(scope)
+    return scope if @query.blank?
+
+    query = "%#{ActiveRecord::Base.sanitize_sql_like(@query)}%"
+    scope.where("title ILIKE :query OR body ILIKE :query", query:)
+  end
+
+  def apply_status_filter(scope)
+    case @selected_status
+    when "unread"
+      scope.unread
+    when "read"
+      scope.where.not(read_at: nil)
+    else
+      scope
+    end
+  end
+
+  def apply_type_filter(scope)
+    case @selected_type
+    when "reminder"
+      scope.where(kind: "reminder_due")
+    when "pet_tag"
+      scope.where("kind LIKE ?", "pet_tag%")
+    else
+      scope
+    end
   end
 
   def safe_target_path(path)
