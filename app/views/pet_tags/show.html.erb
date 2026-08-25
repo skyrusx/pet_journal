@@ -1,14 +1,10 @@
 <% content_for :title, "PetTag — #{@pet.name} — PetJournal" %>
+<%= javascript_import_module_tag "public_access_copy" %>
 
 <div class="pj-pettag-page">
   <header class="pj-workspace-topbar">
     <h1>PetTag</h1>
-    <%= link_to notification_channels_path,
-                class: "pj-workspace-icon",
-                aria: { label: "Настройки уведомлений" },
-                title: "Настройки уведомлений" do %>
-      <%= pj_icon(:bell) %>
-    <% end %>
+    <%= render "shared/workspace_notification_link" %>
   </header>
 
   <div class="pj-pettag-content">
@@ -87,7 +83,7 @@
         <section class="pj-pettag-card pj-pettag-qr-card">
           <div class="pj-pettag-card__heading">
             <div>
-              <h2>QR-код и токен</h2>
+              <h2><span class="pj-pettag-heading-regular">QR</span>-код и токен</h2>
               <p>Этот QR ведёт на безопасную публичную страницу питомца.</p>
             </div>
           </div>
@@ -115,7 +111,19 @@
 
           <div class="pj-pettag-public-link">
             <span>Публичная ссылка</span>
-            <%= link_to public_pet_tag_url(@pet_tag.public_token), public_pet_tag_path(@pet_tag.public_token), target: "_blank", rel: "noopener" %>
+            <div class="pj-pettag-public-link__row">
+              <%= link_to public_pet_tag_url(@pet_tag.public_token), public_pet_tag_path(@pet_tag.public_token), target: "_blank", rel: "noopener" %>
+              <%= button_tag type: "button",
+                             class: "pj-pettag-copy-icon pj-public-access-copy-icon",
+                             data: { copy_url: public_pet_tag_url(@pet_tag.public_token) },
+                             aria: { label: "Скопировать публичную ссылку" },
+                             title: "Скопировать ссылку" do %>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="9" y="9" width="10" height="10" rx="2"/>
+                  <path d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/>
+                </svg>
+              <% end %>
+            </div>
           </div>
         </section>
 
@@ -136,7 +144,7 @@
             <div><dt>Особые приметы</dt><dd><%= @pet_tag.behavior_notes.presence || "Не указаны" %></dd></div>
           </dl>
 
-          <%= link_to "Редактировать данные PetTag", edit_pet_pet_tag_path(@pet), class: "pj-pettag-secondary-button is-full" %>
+          <%= link_to "Изменить", edit_pet_pet_tag_path(@pet), class: "pj-pettag-secondary-button is-full" %>
         </section>
       </div>
 
@@ -238,7 +246,7 @@
       <section class="pj-pettag-card pj-pettag-settings-card">
         <div class="pj-pettag-card__heading">
           <div>
-            <h2>Настройки PetTag</h2>
+            <h2>Настройки <span class="pj-pettag-heading-regular">PetTag</span></h2>
             <p>Только реальные настройки, которые уже поддерживаются сервисом.</p>
           </div>
           <%= link_to "Изменить", edit_pet_pet_tag_path(@pet), class: "pj-pettag-text-link" %>
