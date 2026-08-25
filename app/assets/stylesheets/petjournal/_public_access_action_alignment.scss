@@ -39,6 +39,10 @@
   min-width: 154px;
 }
 
+.pj-public-access-mobile-form-nav {
+  display: none;
+}
+
 @media (max-width: 820px) {
   /* On mobile the contextual back row replaces the explanatory/action intro.
      This keeps profile-share pages aligned with the compact detail-page pattern. */
@@ -60,5 +64,74 @@
   .pj-public-access-danger-panel__actions > form > * {
     width: 100%;
     min-width: 0;
+  }
+
+  /* Public Access edit follows the same mobile form navigation as Documents. */
+  .pj-public-access-form-page .pj-public-access-form-title {
+    display: none;
+  }
+
+  .pj-public-access-form-page .pj-public-access-mobile-form-nav {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+  }
+
+  /* Keep Cancel + Save visible above the persistent bottom navigation. */
+  .pj-dashboard-body .pj-public-access-form-page .pj-public-access-form-actions {
+    position: sticky;
+    z-index: 8;
+    bottom: 75px;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 10px;
+    margin: 15px -4px 0;
+    padding: 8px 4px;
+    background: rgba(251, 250, 246, .94);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .pj-dashboard-body .pj-public-access-form-page .pj-public-access-form-actions > * {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+  }
+
+  .pj-dashboard-body .pj-public-access-form-page .pj-public-access-form-actions .pj-public-access-quiet {
+    order: 1;
+  }
+
+  .pj-dashboard-body .pj-public-access-form-page .pj-public-access-form-actions .pj-public-access-primary {
+    order: 2;
+  }
+
+  .pj-dashboard-body .pj-public-access-form-page .pj-public-access-form-actions .pj-public-access-quiet,
+  .pj-dashboard-body .pj-public-access-form-page .pj-public-access-form-actions .pj-public-access-primary {
+    min-height: var(--pj-size-touch-target) !important;
+    height: var(--pj-size-touch-target) !important;
+    padding-inline: var(--pj-space-4) !important;
+    border-radius: var(--pj-radius-control) !important;
+    font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif !important;
+    font-size: var(--pj-font-body) !important;
+    font-weight: 700 !important;
+    font-variation-settings: "wght" 700;
+    line-height: 1 !important;
+    box-sizing: border-box;
+  }
+
+  /* The form's select used a browser arrow almost against the right edge.
+     Reuse the standard PetJournal chevron with the normal inset. */
+  .pj-dashboard-body .pj-public-access-form-page .pj-public-access-field select:not([multiple]) {
+    -webkit-appearance: none;
+    appearance: none;
+    padding-right: 44px !important;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4.75 6.25 8 9.5l3.25-3.25' stroke='%2367736b' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px 16px;
   }
 }
