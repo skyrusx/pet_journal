@@ -45,6 +45,32 @@ class InAppNotificationsControllerTest < ActionDispatch::IntegrationTest
     assert_select ".pj-inbox-load-more__button", count: 0
   end
 
+  test "progressively loads notifications in batches of 10 on mobile" do
+    10.times do |index|
+      InAppNotification.create!(
+        user: @user,
+        kind: "reminder_due",
+        title: "Мобильное уведомление #{index + 1}",
+        source_key: "mobile-pagination:#{index}",
+        occurred_at: Time.current - index.minutes
+      )
+    end
+
+    headers = { "User-Agent" => "Mozilla/5.0 (Linux; Android 15; Mobile) AppleWebKit/537.36 Chrome/140 Mobile Safari/537.36" }
+
+    get notifications_url, headers: headers
+
+    assert_response :success
+    assert_select ".pj-inbox-row", count: 10
+    assert_select ".pj-inbox-load-more__button[href*='page=2']", count: 1
+
+    get notifications_url(page: 2), headers: headers
+
+    assert_response :success
+    assert_select ".pj-inbox-row", count: 11
+    assert_select ".pj-inbox-load-more__button", count: 0
+  end
+
   test "opening notification marks it read and redirects to target" do
     get notification_url(@notification)
 
