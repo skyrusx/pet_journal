@@ -1,0 +1,97 @@
+/* Final workspace standardization for Public Access.
+   Desktop aligns with the approved Pets/Documents patterns. Mobile is intentionally
+   left to the dedicated public-access mobile layers so the polished mobile flow
+   remains unchanged. */
+
+@media (min-width: 821px) {
+  /* Form pages use the same heading rhythm as Documents and other workspace forms. */
+  .pj-public-access-form-title {
+    align-items: flex-start;
+  }
+
+  .pj-public-access-form-title h1 {
+    margin: 0;
+    color: #334038;
+    font-family: "Prata", Georgia, serif;
+    font-weight: 400;
+    line-height: var(--pj-line-heading);
+  }
+
+  .pj-public-access-form-title p {
+    margin-top: 4px;
+  }
+
+  /* Keep Public Access sections conceptually intact, but make them speak the same
+     compact form-card language as Documents/Reminders instead of a separate wizard. */
+  .pj-public-access-form-section {
+    padding: 18px;
+    border-radius: var(--pj-radius-card);
+  }
+
+  .pj-public-access-form-section__head {
+    gap: 0;
+    margin-bottom: 15px;
+  }
+
+  .pj-public-access-form-section__head > span {
+    display: none;
+  }
+
+  .pj-public-access-form-section h2 {
+    margin: 0;
+    color: #49554d;
+    font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+    font-size: var(--pj-font-card-title);
+    font-weight: 750;
+    line-height: var(--pj-line-heading);
+  }
+
+  .pj-public-access-form-section__head p {
+    margin-top: 4px;
+    color: #909690;
+    font-size: var(--pj-font-caption);
+    line-height: 1.4;
+  }
+
+  .pj-public-access-form-grid {
+    gap: 13px 12px;
+  }
+
+  .pj-public-access-field > span {
+    font-weight: 700;
+  }
+
+  /* Cancel + primary action mirror the approved Documents form footer. */
+  .pj-public-access-form-actions {
+    display: grid;
+    grid-template-columns: 130px minmax(210px, 250px);
+    justify-content: end;
+    gap: 9px;
+    margin-top: 14px;
+    padding-top: 0;
+  }
+
+  .pj-public-access-form-actions > * {
+    width: 100%;
+    margin: 0;
+  }
+
+  /* Empty states use the same visual weight as the other workspace sections. */
+  .pj-public-access-empty {
+    min-height: 360px;
+    padding: 28px;
+  }
+
+  .pj-public-access-empty h2 {
+    font-size: var(--pj-font-section-title);
+    line-height: var(--pj-line-heading);
+  }
+}
+
+/* A single share should not look like a half-empty two-column layout. The underlying
+   grid and multi-share behaviour are unchanged. */
+@media (min-width: 981px) {
+  .pj-public-access-share-grid > .pj-public-access-card:only-child {
+    grid-column: 1 / -1;
+  }
+}
