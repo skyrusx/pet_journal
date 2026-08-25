@@ -30,7 +30,7 @@
 
               <div class="pj-auth-v2-field">
                 <%= f.label :password, "Новый пароль" %>
-                <div class="pj-auth-v2-password">
+                <div class="pj-auth-v2-password auth-password-field">
                   <%= f.password_field :password,
                                        autofocus: true,
                                        autocomplete: "new-password",
@@ -51,7 +51,7 @@
 
               <div class="pj-auth-v2-field">
                 <%= f.label :password_confirmation, "Повторите пароль" %>
-                <div class="pj-auth-v2-password">
+                <div class="pj-auth-v2-password auth-password-field">
                   <%= f.password_field :password_confirmation,
                                        autocomplete: "new-password",
                                        placeholder: "••••••••",
