@@ -3,6 +3,13 @@
    left to the dedicated public-access mobile layers so the polished mobile flow
    remains unchanged. */
 
+/* Public profile photos should preserve the whole pet instead of aggressively
+   cropping portrait and square images into the wide hero frame. */
+.pj-public-profile-photo-wrap img.pj-public-profile-photo {
+  object-fit: contain;
+  object-position: center;
+}
+
 @media (min-width: 821px) {
   /* Form pages use the same heading rhythm as Documents and other workspace forms. */
   .pj-public-access-form-title {
