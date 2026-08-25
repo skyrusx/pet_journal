@@ -22,6 +22,11 @@
   line-height: 1.5;
 }
 
+/* Public Access detail pages reuse the same contextual back navigation as pet details. */
+.pj-public-access-mobile-nav {
+  display: none;
+}
+
 @media (max-width: 820px) {
   .pj-settings-heading h1 {
     display: block;
@@ -70,5 +75,24 @@
   /* Keep the highlighted copy control visually separated from the card edge. */
   .pj-pettag-public-link__row {
     padding-right: 12px;
+  }
+
+  .pj-public-access-mobile-nav {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    margin: 0 0 12px;
+  }
+
+  /* Creation is already available from mobile Quick Actions. Keep the detail
+     header focused on navigation and the current pet. */
+  .pj-public-access-index-actions {
+    display: none !important;
+  }
+
+  /* A pet without links does not need an extra creation prompt inside the
+     compact selector card; Quick Actions owns that mobile entry point. */
+  .pj-public-access-overview-card__signal.is-create-prompt {
+    display: none;
   }
 }
