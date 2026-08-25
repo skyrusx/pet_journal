@@ -159,14 +159,14 @@
       <aside class="pj-public-profile-secondary">
         <% if @share.show_journal? %>
           <section class="public-share-section pj-public-profile-side-card">
-            <div class="pj-public-profile-section__head pj-public-profile-section__head--split">
-              <div>
-                <small>Журнал</small>
+            <div class="pj-public-profile-section__head">
+              <small>Журнал</small>
+              <div class="pj-public-profile-heading-row">
                 <h2>Недавние записи</h2>
+                <% if @events.any? %>
+                  <span class="pj-public-profile-heading-badge"><%= @events.size %> <%= russian_plural(@events.size, "запись", "записи", "записей") %></span>
+                <% end %>
               </div>
-              <% if @events.any? %>
-                <span class="pj-public-profile-count"><%= @events.size %></span>
-              <% end %>
             </div>
 
             <% if @events.any? %>
@@ -210,12 +210,14 @@
 
         <% if @share.show_documents? %>
           <section class="public-share-section pj-public-profile-side-card">
-            <div class="pj-public-profile-section__head pj-public-profile-section__head--split">
-              <div>
-                <small>Документы</small>
+            <div class="pj-public-profile-section__head">
+              <small>Документы</small>
+              <div class="pj-public-profile-heading-row">
                 <h2>Документы питомца</h2>
+                <% if @documents.any? && @share.allow_file_downloads? %>
+                  <span class="pj-public-profile-heading-badge">Можно скачать</span>
+                <% end %>
               </div>
-              <% if @share.allow_file_downloads? %><span class="pj-public-profile-count">скачивание</span><% end %>
             </div>
 
             <% if @documents.any? %>
