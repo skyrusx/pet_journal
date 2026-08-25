@@ -54,6 +54,16 @@
     margin: 0;
   }
 
+  /* The semantic order is always secondary first, primary second:
+     Отменить → Сохранить / Добавить. */
+  .pj-dashboard-body .pj-notifications-form-actions[data-standard-channel-actions] .pj-notifications-secondary-button {
+    order: 1;
+  }
+
+  .pj-dashboard-body .pj-notifications-form-actions[data-standard-channel-actions] .pj-notifications-primary-button {
+    order: 2;
+  }
+
   .pj-dashboard-body .pj-notifications-form-actions[data-standard-channel-actions] .pj-notifications-secondary-button,
   .pj-dashboard-body .pj-notifications-form-actions[data-standard-channel-actions] .pj-notifications-primary-button {
     min-height: var(--pj-size-touch-target) !important;
