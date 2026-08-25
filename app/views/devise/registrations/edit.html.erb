@@ -20,7 +20,7 @@
         </div>
 
         <%= f.label :email, "Эл. почта", class: "form-label" %>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
+        <%= f.email_field :email, autocomplete: "email", class: "form-control" %>
 
         <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
           <div class="form-hint mt-3">Ожидается подтверждение: <%= resource.unconfirmed_email %></div>
