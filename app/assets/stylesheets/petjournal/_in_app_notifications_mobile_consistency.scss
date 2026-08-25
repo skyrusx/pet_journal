@@ -33,9 +33,9 @@
     max-width: none;
   }
 
-  /* Lock the mobile title to the exact Reminders value. Bootstrap/global h1
-     typography must not replace this with its responsive 1.75rem rule. */
-  .pj-inbox-page .pj-inbox-heading h1.pj-inbox-mobile-title {
+  /* Exact mobile title language from Reminders. The higher specificity and
+     !important prevent the shared responsive h1 rule (1.75rem) from winning. */
+  .pj-inbox-page .pj-inbox-heading .pj-inbox-mobile-title {
     display: block;
     margin: 0;
     color: #334038;
@@ -43,5 +43,12 @@
     font-size: 24px !important;
     font-weight: 400;
     line-height: normal;
+  }
+
+  /* Mobile requests load 10 rows at a time rather than the desktop batch of 25.
+     Hide the desktop-oriented remaining-count caption so the compact action only
+     communicates the progressive action itself. */
+  .pj-inbox-load-more__button small {
+    display: none;
   }
 }
