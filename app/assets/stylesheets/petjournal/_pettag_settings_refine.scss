@@ -1,3 +1,8 @@
+/* Keep PetTag settings aligned with the standard PetJournal workspace width. */
+.pj-pettag-form-content {
+  max-width: 1180px;
+}
+
 .pj-pettag-token-management {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
