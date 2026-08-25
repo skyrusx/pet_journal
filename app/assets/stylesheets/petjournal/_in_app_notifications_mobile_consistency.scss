@@ -33,13 +33,14 @@
     max-width: none;
   }
 
-  /* Exact mobile title language from Reminders. */
-  .pj-inbox-mobile-title {
+  /* Lock the mobile title to the exact Reminders value. Bootstrap/global h1
+     typography must not replace this with its responsive 1.75rem rule. */
+  .pj-inbox-page .pj-inbox-heading h1.pj-inbox-mobile-title {
     display: block;
     margin: 0;
     color: #334038;
     font-family: "Prata", Georgia, serif;
-    font-size: 24px;
+    font-size: 24px !important;
     font-weight: 400;
     line-height: normal;
   }
