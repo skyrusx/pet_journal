@@ -74,12 +74,6 @@ class InAppNotificationsController < ApplicationController
     end
   end
 
-  def mobile_request?
-    return true if request.headers["Sec-CH-UA-Mobile"] == "?1"
-
-    request.user_agent.to_s.match?(/Android|iPhone|iPod|IEMobile|Opera Mini|Mobile/i)
-  end
-
   def safe_target_path(path)
     value = path.to_s
     value.start_with?("/") && !value.start_with?("//") ? value : notifications_path
