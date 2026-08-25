@@ -196,6 +196,31 @@
   }
 }
 
+/* On mobile the same three primary sections remain inset cards. Only geometry is
+   normalized here; existing mobile typography, contact stacking and actions stay intact. */
+@media (max-width: 820px) {
+  .pj-public-profile-primary {
+    padding-bottom: 2px;
+  }
+
+  .pj-public-profile-primary > .pj-public-profile-section {
+    margin: 0 12px 12px;
+    padding: 18px 16px;
+    border: 1px solid #e8e3d8;
+    border-radius: 14px;
+    background: #fffefa;
+    box-shadow: 0 3px 12px rgba(55, 64, 56, .022);
+  }
+
+  .pj-public-profile-primary > .pj-public-profile-section:first-of-type {
+    margin-top: 2px;
+  }
+
+  .pj-public-profile-primary > .pj-public-profile-contact {
+    padding-top: 18px;
+  }
+}
+
 /* On desktop the public profile uses the exact shell of the current new-design
    homepage. The secondary area is already the right column of the outer grid, so
    its cards must stack vertically rather than creating a second three-column grid. */
