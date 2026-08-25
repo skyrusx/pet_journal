@@ -4,6 +4,16 @@
    remains unchanged. */
 
 @media (min-width: 821px) {
+  /* Public profile and landing footer share the exact same desktop grid as the
+     homepage: 1180px with a 24px side rail. This removes the previous 1120/1240
+     mismatch between profile content and footer. */
+  .pj-public-profile-topbar__inner,
+  .pj-public-profile-shell,
+  .public-profile-layout-body > .pj-nd-footer .pj-nd-shell {
+    width: min(1180px, calc(100% - 48px));
+    margin-inline: auto;
+  }
+
   /* Form pages use the same heading rhythm as Documents and other workspace forms. */
   .pj-public-access-form-title {
     align-items: flex-start;
