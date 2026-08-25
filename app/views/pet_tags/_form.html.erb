@@ -67,7 +67,11 @@
 
       <div class="pj-pettag-field">
         <%= f.label :contact_phone, "Телефон" %>
-        <%= f.telephone_field :contact_phone, placeholder: "+7..." %>
+        <%= f.telephone_field :contact_phone,
+                              placeholder: "+7 (999) 123-45-67",
+                              autocomplete: "tel",
+                              inputmode: "tel",
+                              data: { account_phone_input: true } %>
       </div>
 
       <label class="pj-pettag-toggle">
@@ -104,7 +108,7 @@
               <small>Последняя замена: <%= @pet_tag.token_rotated_at.strftime("%d.%m.%Y %H:%M") %></small>
             <% end %>
           </div>
-          <%= link_to "Обновить ссылку",
+          <%= link_to "Обновить",
                       rotate_token_pet_pet_tag_path(@pet),
                       class: "pj-pettag-token-rotate",
                       data: { turbo_method: :patch, turbo_confirm: "Обновить публичную ссылку? Старый QR-код перестанет работать." } %>
@@ -115,6 +119,6 @@
 
   <div class="pj-pettag-form-actions">
     <%= link_to "Отмена", @pet_tag.persisted? ? pet_pet_tag_path(@pet) : pet_path(@pet), class: "pj-pettag-secondary-button" %>
-    <%= f.submit @pet_tag.persisted? ? "Сохранить настройки" : "Создать PetTag", class: "pj-pettag-primary-button" %>
+    <%= f.submit @pet_tag.persisted? ? "Сохранить" : "Создать PetTag", class: "pj-pettag-primary-button" %>
   </div>
 <% end %>
