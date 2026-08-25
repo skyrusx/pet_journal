@@ -1,5 +1,6 @@
 class PetEventsController < ApplicationController
   PAGE_SIZE = 25
+  MOBILE_PAGE_SIZE = 10
 
   before_action :authenticate_user!
   before_action :set_pet, except: :index
@@ -26,7 +27,8 @@ class PetEventsController < ApplicationController
     filtered_scope = search_events(filtered_scope) if @query.present?
 
     @page = [params[:page].to_i, 1].max
-    @events_limit = PAGE_SIZE * @page
+    @page_size = mobile_request? ? MOBILE_PAGE_SIZE : PAGE_SIZE
+    @events_limit = @page_size * @page
     @matching_events_count = filtered_scope.distinct.count(:id)
     @has_more_events = @matching_events_count > @events_limit
 
