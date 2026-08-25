@@ -50,7 +50,14 @@ class WorkspaceSectionsController < ApplicationController
   end
 
   def public_access
-    return redirect_to pet_profile_shares_path(@primary_pet) if @primary_pet
+    @pets = current_user.pets
+                        .includes(:pet_profile_shares, photo_attachment: :blob)
+                        .order(:name)
+
+    if @pets.any?
+      render :public_access
+      return
+    end
 
     configure_empty_section(
       key: "public_access",
