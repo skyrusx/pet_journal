@@ -72,7 +72,12 @@ class PetProfileSharesController < ApplicationController
 
     case params[:format]
     when "svg"
-      send_data qr_code.as_svg(module_size: 8, standalone: true, use_path: true),
+      send_data qr_code.as_svg(
+                  module_size: 8,
+                  standalone: true,
+                  use_path: false,
+                  shape_rendering: "crispEdges"
+                ),
                 filename: "#{@pet.name.parameterize.presence || "pet"}-profile-share.svg",
                 type: "image/svg+xml"
     when "png"
