@@ -1,9 +1,10 @@
-/* Final Settings / notification-settings alignment.
+/* Final Settings / notifications / account alignment.
    Desktop uses the canonical 1180px workspace frame; mobile uses the same 16px
    side inset as Dashboard. This layer stays last so legacy page widths cannot
    reintroduce a wider or narrower content rail. */
 
 @media (min-width: 821px) {
+  .pj-account-content,
   .pj-settings-content,
   .pj-notifications-content,
   .pj-notifications-form-content {
@@ -19,6 +20,7 @@
 }
 
 @media (max-width: 820px) {
+  .pj-account-content,
   .pj-settings-content,
   .pj-notifications-content,
   .pj-notifications-form-content {
