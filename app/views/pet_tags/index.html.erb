@@ -8,13 +8,6 @@
 
   <% if @pets.any? %>
     <div class="pj-pettag-content pj-pettag-overview-content">
-      <div class="pj-pettag-overview-heading">
-        <div>
-          <h1>PetTag питомцев</h1>
-          <p>Выберите питомца, чтобы открыть его QR-профиль, статус безопасности и историю сканирований.</p>
-        </div>
-      </div>
-
       <div class="pj-pettag-pet-grid">
         <% @pets.each do |pet| %>
           <% pet_tag = pet.pet_tag %>
