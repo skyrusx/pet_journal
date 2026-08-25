@@ -41,7 +41,7 @@
               </span>
             </span>
             <small><%= pet.breed.presence || pet.species.presence || "Питомец" %></small>
-            <span class="pj-public-access-overview-card__signal <%= shares.empty? ? "is-muted" : "" %>">
+            <span class="pj-public-access-overview-card__signal <%= shares.empty? ? "is-muted is-create-prompt" : "" %>">
               <%= shares.any? ? "#{shares.size} #{russian_plural(shares.size, "ссылка", "ссылки", "ссылок")}" : "Создайте публичный доступ" %>
             </span>
           </span>
