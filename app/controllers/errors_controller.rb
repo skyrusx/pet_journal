@@ -13,7 +13,7 @@ class ErrorsController < ApplicationController
       title: "Не удалось выполнить действие",
       text: "Обновите страницу и попробуйте ещё раз.",
       image: "/petjournal/errors/error-422.webp?v=14",
-      primary_label: "Обновить страницу",
+      primary_label: "На главную",
       secondary_label: "Вернуться назад"
     },
     500 => {
@@ -70,11 +70,11 @@ class ErrorsController < ApplicationController
 
   def primary_path
     case @error_status
-    when 404
+    when 404, 422
       root_path
     when 406
       "https://browser-update.org/update-browser.html"
-    when 422, 500
+    when 500
       original_request_path
     else
       root_path
