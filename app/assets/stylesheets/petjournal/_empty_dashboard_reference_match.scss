@@ -119,23 +119,96 @@
 }
 
 @media (min-width: 821px) {
+  /* Empty Dashboard is a single first-run state, so it should fit the workspace
+     viewport rather than behave like a long content page. The main pane already
+     owns the 100vh shell; let the hero consume the remaining height and keep the
+     three previews compact below it. */
   .pj-dash-main:has(.pj-empty-dashboard) {
     display: flex;
     flex-direction: column;
+    overflow-y: hidden;
   }
 
   .pj-dash-content:has(.pj-empty-dashboard) {
-    display: block;
-    flex: 1 0 auto;
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding-bottom: clamp(8px, 1.4vh, 16px);
   }
 
   .pj-dash-content:has(.pj-empty-dashboard) .pj-empty-dashboard {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: clamp(12px, 1.8vh, 22px);
+    padding: clamp(8px, 1.4vh, 16px) 0 0;
     margin: 0;
+  }
+
+  .pj-empty-dashboard__hero {
+    min-height: 0;
+    padding: clamp(16px, 2.2vh, 27px) 32px clamp(16px, 2vh, 24px);
+  }
+
+  .pj-empty-dashboard__hero-image {
+    width: min(390px, 44%, 36vh);
+    max-height: 36vh;
+    margin-bottom: clamp(8px, 1.3vh, 14px);
+  }
+
+  .pj-empty-dashboard__hero h1 {
+    margin-bottom: clamp(7px, 1vh, 11px);
+    font-size: clamp(28px, 3.1vh, 36px);
+  }
+
+  .pj-empty-dashboard__hero > p {
+    margin-bottom: clamp(12px, 1.7vh, 20px);
+    font-size: clamp(13px, 1.55vh, 15.5px);
+    line-height: 1.5;
+  }
+
+  .pj-empty-dashboard__button {
+    min-height: clamp(44px, 5.4vh, 50px);
+    font-size: clamp(13px, 1.55vh, 15px);
+  }
+
+  .pj-empty-dashboard__hint {
+    margin-top: clamp(8px, 1.2vh, 13px);
+    font-size: clamp(11px, 1.3vh, 13px);
+  }
+
+  .pj-empty-dashboard__preview-card {
+    min-height: clamp(132px, 18vh, 178px);
+    grid-template-columns: clamp(72px, 9vh, 96px) minmax(0, 1fr);
+    gap: clamp(12px, 1.6vw, 18px);
+    padding: clamp(14px, 1.8vh, 19px);
+  }
+
+  .pj-empty-dashboard__preview-icon {
+    width: clamp(72px, 9vh, 96px);
+    height: clamp(86px, 11vh, 112px);
+  }
+
+  .pj-empty-dashboard__preview-copy h2 {
+    margin-bottom: 5px;
+    font-size: clamp(14px, 1.55vh, 16px);
+  }
+
+  .pj-empty-dashboard__preview-copy p {
+    min-height: 0;
+    margin-bottom: clamp(5px, .9vh, 9px);
+    font-size: clamp(11px, 1.3vh, 13px);
+    line-height: 1.42;
+  }
+
+  .pj-empty-dashboard__preview-copy > span {
+    font-size: clamp(9.5px, 1.1vh, 11px);
   }
 
   .pj-dash-main:has(.pj-empty-dashboard) .pj-dash-footer {
     flex: 0 0 auto;
-    margin-top: auto;
+    margin-top: 0 !important;
   }
 }
 
@@ -145,49 +218,8 @@
     padding-top: 14px;
   }
 
-  .pj-empty-dashboard__hero {
-    min-height: 455px;
-  }
-
   .pj-empty-dashboard__hero-image {
-    width: 390px;
     max-width: 50%;
-    margin-bottom: 14px;
-  }
-
-  .pj-empty-dashboard__hero h1 {
-    font-size: 33px;
-  }
-
-  .pj-empty-dashboard__hero > p {
-    max-width: 560px;
-    font-size: 14.5px;
-  }
-
-  .pj-empty-dashboard__preview-card {
-    min-height: 190px;
-    grid-template-columns: 92px minmax(0, 1fr);
-    gap: 17px;
-    padding: 20px;
-  }
-
-  .pj-empty-dashboard__preview-icon {
-    width: 92px;
-    height: 108px;
-  }
-
-  .pj-empty-dashboard__preview-copy h2 {
-    font-size: 15px;
-  }
-
-  .pj-empty-dashboard__preview-copy p {
-    min-height: 54px;
-    margin-bottom: 11px;
-    font-size: 12.5px;
-  }
-
-  .pj-empty-dashboard__preview-copy > span {
-    font-size: 10.5px;
   }
 }
 
