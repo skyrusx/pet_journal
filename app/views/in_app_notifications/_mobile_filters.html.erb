@@ -1,0 +1,95 @@
+<% active_filter_count = (@selected_status != "all" ? 1 : 0) + (@selected_type != "all" ? 1 : 0) %>
+
+<%= form_with url: notifications_path,
+              method: :get,
+              class: "pj-journal-mobile-filters pj-inbox-mobile-filters",
+              data: { mobile_sheet_root: true } do |form| %>
+  <div class="pj-journal-mobile-filters__search">
+    <span aria-hidden="true">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+    </span>
+    <%= form.search_field :q,
+                          id: "notifications_mobile_q",
+                          value: @query,
+                          placeholder: "Поиск по уведомлениям",
+                          aria: { label: "Поиск по уведомлениям" } %>
+  </div>
+
+  <button type="submit"
+          class="pj-journal-mobile-filters__search-button"
+          aria-label="Найти уведомления"
+          title="Найти">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="10.5" cy="10.5" r="5.75"/>
+      <path d="m15 15 4.25 4.25"/>
+    </svg>
+  </button>
+
+  <button type="button"
+          class="pj-journal-mobile-filters__trigger <%= "is-active" if active_filter_count.positive? %>"
+          data-mobile-sheet-open
+          aria-controls="notifications-mobile-filter-sheet"
+          aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 6h16M7 12h10M10 18h4"/>
+    </svg>
+    <span>Фильтры</span>
+    <% if active_filter_count.positive? %>
+      <em><%= active_filter_count %></em>
+    <% end %>
+  </button>
+
+  <button type="button"
+          class="pj-journal-mobile-filter-backdrop"
+          data-mobile-sheet-backdrop
+          hidden
+          aria-label="Закрыть фильтры"></button>
+
+  <section id="notifications-mobile-filter-sheet"
+           class="pj-journal-mobile-filter-sheet"
+           data-mobile-sheet
+           hidden
+           aria-hidden="true"
+           tabindex="-1"
+           aria-labelledby="notifications-mobile-filter-title">
+    <header class="pj-journal-mobile-filter-sheet__header">
+      <div>
+        <h2 id="notifications-mobile-filter-title">Фильтры</h2>
+        <p>Уточните список уведомлений</p>
+      </div>
+      <button type="button"
+              class="pj-journal-mobile-filter-sheet__close"
+              data-mobile-sheet-close
+              aria-label="Закрыть фильтры">×</button>
+    </header>
+
+    <div class="pj-journal-mobile-filter-sheet__fields">
+      <label class="pj-journal-mobile-filter-field" for="notifications_mobile_status">
+        <span>Статус</span>
+        <%= select_tag :status,
+                       options_for_select(
+                         [["Все статусы", "all"], ["Непрочитанные", "unread"], ["Прочитанные", "read"]],
+                         @selected_status
+                       ),
+                       id: "notifications_mobile_status",
+                       aria: { label: "Статус уведомления" } %>
+      </label>
+
+      <label class="pj-journal-mobile-filter-field" for="notifications_mobile_type">
+        <span>Тип уведомления</span>
+        <%= select_tag :type,
+                       options_for_select(
+                         [["Все типы", "all"], ["Напоминания", "reminder"], ["PetTag", "pet_tag"]],
+                         @selected_type
+                       ),
+                       id: "notifications_mobile_type",
+                       aria: { label: "Тип уведомления" } %>
+      </label>
+    </div>
+
+    <footer class="pj-journal-mobile-filter-sheet__actions">
+      <%= link_to "Сбросить", notifications_path, class: "pj-journal-mobile-filter-sheet__reset" %>
+      <button type="submit" class="pj-journal-mobile-filter-sheet__apply">Применить</button>
+    </footer>
+  </section>
+<% end %>
