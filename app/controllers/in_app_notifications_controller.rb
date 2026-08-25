@@ -2,6 +2,7 @@ class InAppNotificationsController < ApplicationController
   layout "workspace_new_design"
 
   PAGE_SIZE = 25
+  MOBILE_PAGE_SIZE = 10
   STATUS_FILTERS = %w[all unread read].freeze
   TYPE_FILTERS = %w[all reminder pet_tag].freeze
 
@@ -10,7 +11,8 @@ class InAppNotificationsController < ApplicationController
 
   def index
     @page = [params[:page].to_i, 1].max
-    @limit = PAGE_SIZE * @page
+    @page_size = mobile_request? ? MOBILE_PAGE_SIZE : PAGE_SIZE
+    @limit = @page_size * @page
     @query = params[:q].to_s.strip
     @selected_status = STATUS_FILTERS.include?(params[:status]) ? params[:status] : "all"
     @selected_type = TYPE_FILTERS.include?(params[:type]) ? params[:type] : "all"
@@ -70,6 +72,12 @@ class InAppNotificationsController < ApplicationController
     else
       scope
     end
+  end
+
+  def mobile_request?
+    return true if request.headers["Sec-CH-UA-Mobile"] == "?1"
+
+    request.user_agent.to_s.match?(/Android|iPhone|iPod|IEMobile|Opera Mini|Mobile/i)
   end
 
   def safe_target_path(path)
