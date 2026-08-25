@@ -3,6 +3,15 @@
   max-width: 1180px;
 }
 
+/* The first-time PetTag form is rendered inline on the PetTag page. It used to
+   keep the old 980px mockup width, making creation narrower than the rest of
+   the workspace. Let the parent 1180px content rail own its width. */
+.pj-pettag-inline-form {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
 .pj-pettag-token-management {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
