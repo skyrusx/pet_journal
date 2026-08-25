@@ -8,6 +8,9 @@
 <% public_access_path = primary_pet ? pet_profile_shares_path(primary_pet) : public_access_overview_path %>
 <% reminders_badge = mobile_reminders_badge %>
 <% notifications_badge = mobile_notifications_badge %>
+<% mobile_notification_scope = current_user.in_app_notifications.recent %>
+<% mobile_recent_notifications = mobile_notification_scope.limit(6) %>
+<% mobile_unread_notifications_count = current_user.in_app_notifications.unread.count %>
 <% empty_workspace_section = controller_name == "workspace_sections" ? action_name : nil %>
 <% more_active = %w[pet_profile_shares settings notification_channels in_app_notifications].include?(controller_name) || empty_workspace_section == "public_access" || devise_controller? %>
 
@@ -28,19 +31,79 @@
         <% end %>
       <% end %>
 
-      <%= link_to notifications_path,
-                  class: class_names("pj-mobile-chrome__bell", "is-active": controller_name == "in_app_notifications"),
-                  aria: { label: "Уведомления", current: controller_name == "in_app_notifications" ? "page" : nil },
-                  title: "Уведомления" do %>
+      <button type="button"
+              class="<%= class_names('pj-mobile-chrome__bell', 'is-active': controller_name == 'in_app_notifications') %>"
+              aria-label="Уведомления"
+              aria-expanded="false"
+              title="Уведомления"
+              data-dashboard-sheet-toggle="notifications">
         <%= pj_icon(:bell) %>
         <% if notifications_badge.present? %>
           <span class="pj-mobile-chrome__badge" aria-hidden="true"><%= notifications_badge %></span>
         <% end %>
-      <% end %>
+      </button>
     </div>
   </header>
 
   <div class="pj-mobile-chrome__backdrop" data-dashboard-sheet-backdrop hidden></div>
+
+  <section class="pj-mobile-sheet pj-mobile-notifications-sheet"
+           data-dashboard-sheet="notifications"
+           aria-hidden="true"
+           aria-labelledby="pj-mobile-notifications-title">
+    <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+    <div class="pj-mobile-sheet__head">
+      <div>
+        <h2 id="pj-mobile-notifications-title">Уведомления</h2>
+        <% if mobile_unread_notifications_count.positive? %>
+          <small><%= mobile_unread_notifications_count %> непрочитано</small>
+        <% end %>
+      </div>
+      <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+    </div>
+
+    <% if mobile_recent_notifications.any? %>
+      <div class="pj-mobile-sheet__actions pj-mobile-notifications-sheet__list">
+        <% mobile_recent_notifications.each do |notification| %>
+          <%= link_to notification_path(notification),
+                      class: class_names("pj-mobile-sheet__action", "pj-mobile-notification-item", unread: !notification.read?) do %>
+            <span class="pj-mobile-sheet__action-icon">
+              <%= notification.kind.start_with?("pet_tag") ? pj_icon(:tag) : pj_icon(:alarm) %>
+            </span>
+            <span>
+              <strong><%= notification.title %></strong>
+              <% if notification.body.present? %><small><%= notification.body %></small><% end %>
+              <small><%= in_app_notification_time_label(notification) %></small>
+            </span>
+            <% unless notification.read? %><i class="pj-mobile-notification-item__dot" aria-label="Непрочитано"></i><% end %>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="pj-mobile-sheet__hint">Новых уведомлений нет.</p>
+    <% end %>
+
+    <div class="pj-mobile-sheet__actions pj-mobile-notifications-sheet__footer">
+      <% if mobile_unread_notifications_count.positive? %>
+        <%= button_to mark_all_read_notifications_path,
+                      method: :patch,
+                      class: "pj-mobile-sheet__action" do %>
+          <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:check) %></span>
+          <span><strong>Прочитать все</strong></span>
+        <% end %>
+      <% end %>
+
+      <%= link_to notifications_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:bell) %></span>
+        <span><strong>Все уведомления</strong></span>
+      <% end %>
+
+      <%= link_to notification_channels_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:settings) %></span>
+        <span><strong>Настройки уведомлений</strong></span>
+      <% end %>
+    </div>
+  </section>
 
   <section class="pj-mobile-sheet" data-dashboard-sheet="add" aria-hidden="true" aria-labelledby="pj-mobile-add-title">
     <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
