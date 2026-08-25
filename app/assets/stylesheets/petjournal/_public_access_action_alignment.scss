@@ -40,6 +40,12 @@
 }
 
 @media (max-width: 820px) {
+  /* On mobile the contextual back row replaces the explanatory/action intro.
+     This keeps profile-share pages aligned with the compact detail-page pattern. */
+  .pj-public-access-mobile-nav + .pj-public-access-intro {
+    display: none;
+  }
+
   .pj-public-access-intro__actions,
   .pj-public-access-link-card__actions,
   .pj-public-access-downloads,
