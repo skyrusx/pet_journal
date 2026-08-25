@@ -39,6 +39,7 @@
     bottom: 75px;
     display: grid;
     grid-template-columns: 1fr 1.2fr;
+    grid-template-rows: auto;
     gap: 10px;
     margin: 18px -4px -4px;
     padding: 8px 4px;
@@ -54,14 +55,19 @@
     margin: 0;
   }
 
-  /* The semantic order is always secondary first, primary second:
-     Отменить → Сохранить / Добавить. */
+  /* Older notification CSS explicitly puts the primary button into grid-row 1.
+     Pin both row and column here so the real mobile order is unambiguous:
+     Отменить | Сохранить / Добавить. */
   .pj-dashboard-body .pj-notifications-form-actions[data-standard-channel-actions] .pj-notifications-secondary-button {
     order: 1;
+    grid-column: 1 !important;
+    grid-row: 1 !important;
   }
 
   .pj-dashboard-body .pj-notifications-form-actions[data-standard-channel-actions] .pj-notifications-primary-button {
     order: 2;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
   }
 
   .pj-dashboard-body .pj-notifications-form-actions[data-standard-channel-actions] .pj-notifications-secondary-button,
