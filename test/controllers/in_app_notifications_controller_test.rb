@@ -11,8 +11,34 @@ class InAppNotificationsControllerTest < ActionDispatch::IntegrationTest
     get notifications_url
 
     assert_response :success
-    assert_select ".pj-inbox-item", minimum: 1
-    assert_select ".pj-inbox-item", text: /#{Regexp.escape(reminders(:one).title)}/
+    assert_select ".pj-inbox-row", minimum: 1
+    assert_select ".pj-inbox-row", text: /#{Regexp.escape(reminders(:one).title)}/
+  end
+
+  test "progressively loads notifications in batches of 25 and preserves filters" do
+    25.times do |index|
+      InAppNotification.create!(
+        user: @user,
+        kind: "reminder_due",
+        title: "Уведомление #{index + 1}",
+        body: "Проверка прогрессивной загрузки",
+        source_key: "pagination:#{index}",
+        occurred_at: Time.current - index.minutes
+      )
+    end
+
+    get notifications_url(status: "unread", type: "reminder")
+
+    assert_response :success
+    assert_select ".pj-inbox-row", count: 25
+    assert_select ".pj-inbox-load-more__button", text: /Показать ещё/, count: 1
+    assert_select ".pj-inbox-load-more__button[href*='status=unread'][href*='type=reminder'][href*='page=2']", count: 1
+
+    get notifications_url(status: "unread", type: "reminder", page: 2)
+
+    assert_response :success
+    assert_select ".pj-inbox-row", count: 26
+    assert_select ".pj-inbox-load-more__button", count: 0
   end
 
   test "opening notification marks it read and redirects to target" do
