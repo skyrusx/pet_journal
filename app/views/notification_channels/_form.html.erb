@@ -137,7 +137,7 @@
        data-standard-channel-actions
        <%= "hidden" if channel.new_record? && channel.channel_telegram? %>>
     <%= link_to "Отмена", notification_channels_path, class: "pj-notifications-secondary-button" %>
-    <%= form.submit channel.persisted? ? "Сохранить изменения" : "Добавить канал",
+    <%= form.submit channel.persisted? ? "Сохранить" : "Добавить",
                     class: "pj-notifications-primary-button",
                     data: { channel_submit: true } %>
   </div>
