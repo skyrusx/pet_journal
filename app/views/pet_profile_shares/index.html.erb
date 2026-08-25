@@ -1,9 +1,10 @@
 <% content_for :title, "Публичный доступ — PetJournal" %>
 
 <div class="pj-public-access-page">
-  <header class="pj-workspace-topbar">
-    <h1>Публичный доступ</h1>
-    <%= render "shared/workspace_notification_link" %>
+  <header class="pj-workspace-topbar pj-workspace-topbar--profile">
+    <%= link_to public_access_overview_path, class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>К питомцам</span>
+    <% end %>
   </header>
 
   <div class="pj-public-access-content">
@@ -18,7 +19,6 @@
         <p>Безопасно делитесь выбранными данными питомца по отдельной ссылке.</p>
       </div>
       <div class="pj-public-access-intro__actions pj-public-access-index-actions">
-        <%= link_to "← К питомцам", public_access_overview_path, class: "pj-public-access-quiet" %>
         <%= link_to new_pet_profile_share_path(@pet), class: "pj-public-access-primary" do %>
           <%= pj_icon(:plus) %>
           <span>Создать доступ</span>
@@ -42,14 +42,15 @@
         </div>
       </div>
 
+      <% active_shares_count = @shares.count(&:active?) %>
       <div class="pj-public-access-summary__stats" aria-label="Статистика публичного доступа">
         <div><strong><%= @shares.size %></strong><span><%= russian_plural(@shares.size, "ссылка", "ссылки", "ссылок") %></span></div>
-        <div><strong><%= @shares.count(&:active?) %></strong><span>активно</span></div>
+        <div><strong><%= active_shares_count %></strong><span><%= russian_plural(active_shares_count, "активная", "активные", "активных") %></span></div>
       </div>
     </section>
 
     <% if @shares.any? %>
-      <div class="pj-public-access-grid">
+      <div class="pj-public-access-grid pj-public-access-share-grid">
         <% @shares.each do |share| %>
           <article class="pj-public-access-card">
             <div class="pj-public-access-card__head">
