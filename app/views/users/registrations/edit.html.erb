@@ -30,11 +30,10 @@
     <% end %>
 
     <div class="pj-account-grid">
-      <section class="pj-account-card pj-account-profile-card" aria-labelledby="pj-profile-title">
+      <section class="pj-account-card pj-account-profile-card" aria-label="Основные данные">
         <div class="pj-account-card__head">
           <div>
             <span class="pj-account-card__kicker">Основные данные</span>
-            <h2 id="pj-profile-title">Профиль</h2>
             <p>Имя, телефон и фотография владельца.</p>
           </div>
         </div>
@@ -103,16 +102,15 @@
           </div>
 
           <div class="pj-account-form-actions">
-            <%= f.submit "Сохранить профиль", class: "pj-account-primary-button" %>
+            <%= f.submit "Сохранить", class: "pj-account-primary-button" %>
           </div>
         <% end %>
       </section>
 
-      <section class="pj-account-card pj-account-security-card" aria-labelledby="pj-security-title">
+      <section class="pj-account-card pj-account-security-card" aria-label="Безопасность">
         <div class="pj-account-card__head">
           <div>
             <span class="pj-account-card__kicker">Безопасность</span>
-            <h2 id="pj-security-title">Email и пароль</h2>
             <p>Данные для входа в аккаунт.</p>
           </div>
           <span class="pj-account-lock" aria-hidden="true"><%= pj_icon(:settings) %></span>
@@ -177,7 +175,7 @@
           </div>
 
           <div class="pj-account-form-actions">
-            <%= f.submit "Сохранить данные входа", class: "pj-account-primary-button" %>
+            <%= f.submit "Сохранить", class: "pj-account-primary-button" %>
           </div>
         <% end %>
       </section>
@@ -199,7 +197,7 @@
         <p>Аккаунт и связанные данные будут удалены. Это действие нельзя отменить.</p>
       </div>
 
-      <%= button_to "Удалить аккаунт",
+      <%= button_to "Удалить",
                     edit_user_registration_path,
                     method: :delete,
                     class: "pj-account-danger-button",
