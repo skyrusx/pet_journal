@@ -5,6 +5,13 @@
   max-width: 760px;
 }
 
+/* The workspace topbar already owns the desktop page title. Keep the content
+   title as a mobile-only counterpart because the shared mobile chrome hides the
+   topbar heading. */
+.pj-inbox-mobile-title {
+  display: none;
+}
+
 @media (max-width: 820px) {
   /* Desktop filter grid is replaced by the same mobile control used by Reminders. */
   .pj-inbox-page .pj-inbox-filters {
@@ -15,14 +22,25 @@
     margin-bottom: var(--pj-space-3);
   }
 
-  /* The workspace topbar title is hidden by the shared mobile chrome, so keep
-     the content title visible just like on the Reminders index. */
+  .pj-inbox-heading {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
   .pj-inbox-heading > div:first-child {
     width: 100%;
     max-width: none;
   }
 
-  .pj-inbox-heading h1 {
+  /* Exact mobile title language from Reminders. */
+  .pj-inbox-mobile-title {
     display: block;
+    margin: 0;
+    color: #334038;
+    font-family: "Prata", Georgia, serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: normal;
   }
 }
