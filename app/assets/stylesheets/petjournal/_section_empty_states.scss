@@ -32,6 +32,10 @@
   line-height: 1.55;
 }
 
+.pj-public-access-empty-mobile-heading {
+  display: none;
+}
+
 .pj-section-empty-card {
   min-height: 480px;
   display: flex;
@@ -192,6 +196,40 @@
 
   .pj-section-empty-heading p {
     font-size: 12px;
+  }
+
+  /* Public Access empty state follows the canonical mobile list-page heading used
+     by Pets and Journal instead of restoring the hidden desktop topbar. */
+  .pj-section-empty-page--public_access .pj-section-empty-content {
+    width: 100%;
+    padding: 18px 16px 118px;
+    box-sizing: border-box;
+  }
+
+  .pj-section-empty-page--public_access .pj-section-empty-heading {
+    display: none;
+  }
+
+  .pj-public-access-empty-mobile-heading {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
+  .pj-public-access-empty-mobile-heading h1 {
+    margin: 0;
+    color: #303d34;
+    font-family: "Prata", Georgia, serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .pj-public-access-empty-mobile-heading p {
+    margin: 0;
+    color: #828b84;
+    font-size: 13px;
+    line-height: 1.45;
   }
 
   .pj-section-empty-card {
