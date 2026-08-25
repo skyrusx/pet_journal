@@ -119,6 +119,14 @@
   font-weight: 600;
 }
 
+/* Keep the mixed Latin/Cyrillic QR label on one real font weight. */
+.pj-public-access-qr-panel .pj-public-access-panel__head small {
+  font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+  font-weight: 700;
+  font-variation-settings: "wght" 700;
+  font-synthesis: none;
+}
+
 /* QR preview stays on a crisp, fixed pixel grid instead of being fractionally stretched. */
 .pj-public-access-qr img {
   width: 180px;
