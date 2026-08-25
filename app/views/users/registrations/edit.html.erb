@@ -5,9 +5,7 @@
 <div class="pj-account-page">
   <header class="pj-workspace-topbar">
     <h1>Профиль</h1>
-    <%= link_to notification_channels_path, class: "pj-workspace-icon", aria: { label: "Настройки уведомлений" }, title: "Настройки уведомлений" do %>
-      <%= pj_icon(:bell) %>
-    <% end %>
+    <%= render "shared/workspace_notification_link" %>
   </header>
 
   <div class="pj-account-content">
