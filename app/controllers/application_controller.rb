@@ -14,6 +14,13 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def mobile_request?
+    return true if request.headers["Sec-CH-UA-Mobile"] == "?1"
+
+    user_agent = request.user_agent.to_s
+    %w[Android iPhone iPod IEMobile Mobile].any? { |marker| user_agent.include?(marker) }
+  end
+
   def use_user_time_zone(&block)
     Time.use_zone(current_user.notifications_time_zone_name, &block)
   end
