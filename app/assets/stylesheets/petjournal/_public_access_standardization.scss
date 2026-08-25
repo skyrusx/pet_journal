@@ -4,16 +4,6 @@
    remains unchanged. */
 
 @media (min-width: 821px) {
-  /* Public profile and landing footer share the exact same desktop grid as the
-     homepage: 1180px with a 24px side rail. This removes the previous 1120/1240
-     mismatch between profile content and footer. */
-  .pj-public-profile-topbar__inner,
-  .pj-public-profile-shell,
-  .public-profile-layout-body > .pj-nd-footer .pj-nd-shell {
-    width: min(1180px, calc(100% - 48px));
-    margin-inline: auto;
-  }
-
   /* Form pages use the same heading rhythm as Documents and other workspace forms. */
   .pj-public-access-form-title {
     align-items: flex-start;
@@ -98,9 +88,23 @@
   }
 }
 
-/* A single share should not look like a half-empty two-column layout. The underlying
-   grid and multi-share behaviour are unchanged. */
+/* On desktop the public profile uses the exact shell of the current new-design
+   homepage. The secondary area is already the right column of the outer grid, so
+   its cards must stack vertically rather than creating a second three-column grid. */
 @media (min-width: 981px) {
+  .pj-public-profile-topbar__inner,
+  .pj-public-profile-shell,
+  .public-profile-layout-body > .pj-nd-footer .pj-nd-shell {
+    width: min(1240px, calc(100% - 96px));
+    margin-inline: auto;
+  }
+
+  .pj-public-profile-secondary {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 0;
+  }
+
   .pj-public-access-share-grid > .pj-public-access-card:only-child {
     grid-column: 1 / -1;
   }
