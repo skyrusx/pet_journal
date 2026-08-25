@@ -43,6 +43,14 @@
   white-space: nowrap;
 }
 
+/* Latin glyphs in these mixed-script headings render visually heavier than
+   the Cyrillic text at the same nominal weight. Slightly reduce only the
+   Latin fragment so QR-код и токен / Настройки PetTag read as one weight. */
+.pj-pettag-card__heading h2 .pj-pettag-heading-regular {
+  font-family: inherit;
+  font-weight: 600;
+}
+
 .pj-pettag-safe-state {
   min-height: 76px;
   display: grid;
