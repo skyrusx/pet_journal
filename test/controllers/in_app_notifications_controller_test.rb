@@ -11,8 +11,12 @@ class InAppNotificationsControllerTest < ActionDispatch::IntegrationTest
     get notifications_url
 
     assert_response :success
+    assert_select ".pj-inbox-heading h1", text: "Уведомления"
     assert_select ".pj-inbox-row", minimum: 1
     assert_select ".pj-inbox-row", text: /#{Regexp.escape(reminders(:one).title)}/
+    assert_select ".pj-inbox-mobile-filters[data-mobile-sheet-root]", count: 1
+    assert_select "#notifications-mobile-filter-sheet[data-mobile-sheet]", count: 1
+    assert_select "#notifications_mobile_q[placeholder='Поиск по уведомлениям']", count: 1
   end
 
   test "progressively loads notifications in batches of 25 and preserves filters" do
