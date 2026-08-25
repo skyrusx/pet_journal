@@ -24,31 +24,42 @@
     padding-right: var(--pj-workspace-mobile-side);
   }
 
-  /* Android Chrome keeps drawing its own time-picker indicator even when it is
-     merely transparent. Remove that native glyph completely and use exactly the
-     same chevron geometry as our standardized selects. Tapping the time field
-     itself still opens the platform time picker on mobile. */
+  /* Android Chrome may keep painting its native time-control glyph even when
+     WebKit picker pseudo-elements are hidden. Do not put a second background
+     chevron on the input itself. Instead cover the native glyph area visually
+     and render exactly one PetJournal chevron from the field wrapper. */
+  .pj-notifications-quiet-fields .pj-notifications-field:has(> input[type="time"]) {
+    position: relative;
+  }
+
   .pj-notifications-quiet-fields input[type="time"] {
     padding-right: 46px !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4.75 6.25 8 9.5l3.25-3.25' stroke='%2367736b' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
-    background-repeat: no-repeat !important;
-    background-position: right 16px center !important;
-    background-size: 16px 16px !important;
+    background-image: none !important;
     cursor: pointer;
   }
 
-  .pj-notifications-quiet-fields input[type="time"]::-webkit-calendar-picker-indicator {
-    display: none !important;
-    -webkit-appearance: none;
-    width: 0;
-    height: 0;
-    margin: 0;
-    padding: 0;
+  .pj-notifications-quiet-fields .pj-notifications-field:has(> input[type="time"])::after {
+    content: "";
+    position: absolute;
+    right: 1px;
+    bottom: 1px;
+    z-index: 2;
+    width: 40px;
+    height: calc(var(--pj-size-touch-target) - 2px);
+    border-radius: 0 calc(var(--pj-radius-control) - 1px) calc(var(--pj-radius-control) - 1px) 0;
+    background-color: #fffefa;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4.75 6.25 8 9.5l3.25-3.25' stroke='%2367736b' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px 16px;
+    pointer-events: none;
   }
 
+  .pj-notifications-quiet-fields input[type="time"]::-webkit-calendar-picker-indicator,
   .pj-notifications-quiet-fields input[type="time"]::-webkit-inner-spin-button,
   .pj-notifications-quiet-fields input[type="time"]::-webkit-clear-button {
-    display: none !important;
-    -webkit-appearance: none;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    opacity: 0 !important;
   }
 }
