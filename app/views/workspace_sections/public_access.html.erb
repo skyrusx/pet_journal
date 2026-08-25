@@ -36,13 +36,13 @@
                     elsif shares.any?
                       "Нет активного"
                     else
-                      "Не создан"
+                      "Нет ссылок"
                     end %>
               </span>
             </span>
             <small><%= pet.breed.presence || pet.species.presence || "Питомец" %></small>
-            <span class="pj-public-access-overview-card__signal <%= shares.empty? ? "is-muted is-create-prompt" : "" %>">
-              <%= shares.any? ? "#{shares.size} #{russian_plural(shares.size, "ссылка", "ссылки", "ссылок")}" : "Создайте публичный доступ" %>
+            <span class="pj-public-access-overview-card__signal <%= "is-muted" if shares.empty? %>">
+              <%= "#{shares.size} #{russian_plural(shares.size, "ссылка", "ссылки", "ссылок")}" %>
             </span>
           </span>
 
