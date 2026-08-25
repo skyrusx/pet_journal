@@ -11,30 +11,14 @@
       <div>
         <p>Безопасно делитесь выбранными данными питомца по отдельной ссылке.</p>
       </div>
-      <%= link_to new_pet_profile_share_path(@pet), class: "pj-public-access-primary" do %>
-        <%= pj_icon(:plus) %>
-        <span>Создать доступ</span>
-      <% end %>
-    </div>
-
-    <% if @pet_choices.many? %>
-      <nav class="pj-public-access-pets" aria-label="Выбор питомца">
-        <% @pet_choices.each do |pet| %>
-          <%= link_to pet_profile_shares_path(pet),
-                      class: class_names("pj-public-access-pet", "is-active": pet == @pet),
-                      aria: { current: pet == @pet ? "page" : nil } do %>
-            <span class="pj-public-access-pet__avatar">
-              <% if pet.photo.attached? %>
-                <%= image_tag pet.photo, alt: "" %>
-              <% else %>
-                <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
-              <% end %>
-            </span>
-            <span><%= pet.name %></span>
-          <% end %>
+      <div class="pj-public-access-intro__actions">
+        <%= link_to "← Все питомцы", public_access_overview_path, class: "pj-public-access-quiet" %>
+        <%= link_to new_pet_profile_share_path(@pet), class: "pj-public-access-primary" do %>
+          <%= pj_icon(:plus) %>
+          <span>Создать доступ</span>
         <% end %>
-      </nav>
-    <% end %>
+      </div>
+    </div>
 
     <section class="pj-public-access-summary">
       <div class="pj-public-access-summary__pet">
