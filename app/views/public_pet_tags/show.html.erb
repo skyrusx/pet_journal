@@ -99,7 +99,12 @@
             <span class="pj-public-tag-owner__avatar"><%= owner_name.first.to_s.upcase %></span>
             <div>
               <strong><%= owner_name %></strong>
-              <% if phone.present? %><small><%= phone %></small><% end %>
+              <% if phone.present? %>
+                <%= link_to phone,
+                            "tel:#{phone.gsub(/[^\d+]/, "")}",
+                            class: "pj-public-tag-owner__phone",
+                            aria: { label: "Позвонить владельцу по номеру #{phone}" } %>
+              <% end %>
             </div>
           </div>
 
@@ -184,7 +189,7 @@
           <div class="pj-public-tag-location-status" data-location-status aria-live="polite"></div>
 
           <%= submit_tag "Отправить владельцу", class: "pj-public-tag-primary-button" %>
-          <small class="pj-public-tag-form__privacy">Ваши данные не будут раскрыты публично.</small>
+          <small class="pj-public-tag-form__privacy">Контактные данные из этой формы увидит только владелец питомца.</small>
         <% end %>
       </section>
     <% end %>
