@@ -1,4 +1,7 @@
 <% content_for :title, "Настройки PetTag — #{@pet.name} — PetJournal" %>
+<% content_for :head do %>
+  <%= javascript_import_module_tag "account_profile" %>
+<% end %>
 
 <div class="pj-pettag-page pj-pettag-form-page">
   <header class="pj-workspace-topbar pj-workspace-topbar--form">
