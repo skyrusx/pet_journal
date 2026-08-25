@@ -1,4 +1,5 @@
-<% mobile_pets = current_user.pets.order(created_at: :desc).to_a %>
+<% mobile_pets = current_user.pets.includes(:pet_tag).order(created_at: :desc).to_a %>
+<% mobile_pets_without_pettag = mobile_pets.select { |pet| pet.pet_tag.blank? } %>
 <% context_pet = (defined?(@pet) && @pet&.persisted?) ? @pet : nil %>
 <% primary_pet = context_pet || Array(@pets).first || mobile_pets.first %>
 <% journal_path = journal_overview_path %>
@@ -167,6 +168,24 @@
           <% end %>
         <% end %>
 
+        <% if mobile_pets_without_pettag.any? %>
+          <% if mobile_pets_without_pettag.many? %>
+            <button type="button"
+                    class="pj-mobile-sheet__action"
+                    aria-expanded="false"
+                    data-dashboard-sheet-toggle="pettag-pet">
+              <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:tag) %></span>
+              <span><strong>PetTag</strong><small>Выбрать питомца и создать QR-профиль</small></span>
+            </button>
+          <% else %>
+            <% pet_without_pettag = mobile_pets_without_pettag.first %>
+            <%= link_to pet_pet_tag_path(pet_without_pettag), class: "pj-mobile-sheet__action" do %>
+              <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:tag) %></span>
+              <span><strong>PetTag</strong><small>Создать QR-профиль для <%= pet_without_pettag.name %></small></span>
+            <% end %>
+          <% end %>
+        <% end %>
+
         <% if mobile_pets.many? && context_pet.blank? %>
           <button type="button"
                   class="pj-mobile-sheet__action"
@@ -182,7 +201,7 @@
           <% end %>
         <% end %>
       <% else %>
-        <p class="pj-mobile-sheet__hint">После добавления питомца здесь появятся запись в журнал, напоминание, документ и публичный доступ.</p>
+        <p class="pj-mobile-sheet__hint">После добавления питомца здесь появятся запись в журнал, напоминание, документ, PetTag и публичный доступ.</p>
       <% end %>
 
       <%= link_to new_notification_channel_path, class: "pj-mobile-sheet__action" do %>
@@ -252,6 +271,31 @@
       <div class="pj-mobile-sheet__actions">
         <% mobile_pets.each do |pet| %>
           <%= link_to new_pet_pet_document_path(pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:paw) %></span>
+            <span>
+              <strong><%= pet.name %></strong>
+              <small><%= [pet.breed.presence || pet.species.presence, pet_age(pet)].compact.join(" · ") %></small>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <% if mobile_pets_without_pettag.many? %>
+    <section class="pj-mobile-sheet" data-dashboard-sheet="pettag-pet" aria-hidden="true" aria-labelledby="pj-mobile-pettag-pet-title">
+      <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+      <div class="pj-mobile-sheet__head">
+        <div>
+          <small>PetTag</small>
+          <h2 id="pj-mobile-pettag-pet-title">Для какого питомца?</h2>
+        </div>
+        <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+      </div>
+
+      <div class="pj-mobile-sheet__actions">
+        <% mobile_pets_without_pettag.each do |pet| %>
+          <%= link_to pet_pet_tag_path(pet), class: "pj-mobile-sheet__action" do %>
             <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:paw) %></span>
             <span>
               <strong><%= pet.name %></strong>
