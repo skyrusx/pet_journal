@@ -1,16 +1,20 @@
-/* Align Settings and its nested notification-settings screens with the Dashboard
-   content edge. This layer is imported last so older 1180px centered frames and
-   tablet overrides cannot reintroduce the wider side margins. */
+/* Final Settings / notification-settings alignment.
+   Desktop uses the canonical 1180px workspace frame; mobile uses the same 16px
+   side inset as Dashboard. This layer stays last so legacy page widths cannot
+   reintroduce a wider or narrower content rail. */
 
 @media (min-width: 821px) {
   .pj-settings-content,
   .pj-notifications-content,
   .pj-notifications-form-content {
-    width: 100%;
+    width: min(
+      var(--pj-content-max),
+      calc(100% - var(--pj-workspace-page-side) - var(--pj-workspace-page-side))
+    );
     max-width: none;
-    margin-inline: 0;
-    padding-left: var(--pj-workspace-content-gutter);
-    padding-right: var(--pj-workspace-content-gutter);
+    margin-inline: auto;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
