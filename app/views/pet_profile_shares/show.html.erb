@@ -12,6 +12,24 @@
   </header>
 
   <div class="pj-public-access-content">
+    <div class="pj-mobile-detail-nav pj-public-access-mobile-nav">
+      <%= link_to pet_profile_shares_path(@pet), class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>Доступы питомца</span>
+      <% end %>
+
+      <div class="pj-mobile-detail-actions" aria-label="Действия с публичным доступом">
+        <%= link_to edit_pet_profile_share_path(@pet, @share),
+                    class: "pj-mobile-detail-action",
+                    aria: { label: "Редактировать публичный доступ" },
+                    title: "Редактировать" do %>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4.5 19.5 5.7 15l9.9-9.9a2.15 2.15 0 0 1 3 0l.3.3a2.15 2.15 0 0 1 0 3L9 18.3l-4.5 1.2Z"/>
+            <path d="m14.3 6.4 3.3 3.3"/>
+          </svg>
+        <% end %>
+      </div>
+    </div>
+
     <div class="pj-public-access-intro pj-public-access-intro--manager">
       <div>
         <p>Управление ссылкой «<%= @share.title %>» для <%= @pet.name %>.</p>
