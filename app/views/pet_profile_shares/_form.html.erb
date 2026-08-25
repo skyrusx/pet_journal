@@ -122,7 +122,7 @@
   </section>
 
   <div class="pj-public-access-form-actions">
-    <%= form.submit @share.persisted? ? "Сохранить" : "Создать публичный доступ", class: "pj-public-access-primary" %>
     <%= link_to "Отмена", @share.persisted? ? pet_profile_share_path(@pet, @share) : pet_profile_shares_path(@pet), class: "pj-public-access-quiet" %>
+    <%= form.submit @share.persisted? ? "Сохранить" : "Создать", class: "pj-public-access-primary" %>
   </div>
 <% end %>
