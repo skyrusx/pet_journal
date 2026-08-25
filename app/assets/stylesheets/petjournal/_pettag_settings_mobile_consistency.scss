@@ -13,9 +13,10 @@
     box-sizing: border-box;
   }
 
-  /* Same sticky action surface as Documents so save/cancel remain reachable
-     above the mobile bottom navigation throughout the long settings form. */
-  .pj-dashboard-body .pj-pettag-form-page .pj-pettag-form-actions {
+  /* The edit/settings screen and first-time inline create form share one sticky
+     action pattern, matching Documents exactly. */
+  .pj-dashboard-body .pj-pettag-form-page .pj-pettag-form-actions,
+  .pj-dashboard-body .pj-pettag-inline-form .pj-pettag-form-actions {
     position: sticky;
     z-index: 8;
     bottom: 75px;
@@ -30,7 +31,8 @@
     -webkit-backdrop-filter: blur(8px);
   }
 
-  .pj-dashboard-body .pj-pettag-form-page .pj-pettag-form-actions > * {
+  .pj-dashboard-body .pj-pettag-form-page .pj-pettag-form-actions > *,
+  .pj-dashboard-body .pj-pettag-inline-form .pj-pettag-form-actions > * {
     width: 100%;
     min-width: 0;
     margin: 0;
@@ -38,7 +40,10 @@
 
   .pj-dashboard-body .pj-pettag-form-page .pj-pettag-form-actions .pj-pettag-secondary-button,
   .pj-dashboard-body .pj-pettag-form-page .pj-pettag-form-actions input.pj-pettag-primary-button[type="submit"],
-  .pj-dashboard-body .pj-pettag-form-page .pj-pettag-form-actions button.pj-pettag-primary-button {
+  .pj-dashboard-body .pj-pettag-form-page .pj-pettag-form-actions button.pj-pettag-primary-button,
+  .pj-dashboard-body .pj-pettag-inline-form .pj-pettag-form-actions .pj-pettag-secondary-button,
+  .pj-dashboard-body .pj-pettag-inline-form .pj-pettag-form-actions input.pj-pettag-primary-button[type="submit"],
+  .pj-dashboard-body .pj-pettag-inline-form .pj-pettag-form-actions button.pj-pettag-primary-button {
     min-height: var(--pj-size-touch-target) !important;
     height: var(--pj-size-touch-target) !important;
     display: inline-flex;
