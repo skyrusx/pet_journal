@@ -1,0 +1,62 @@
+<% content_for :title, "Публичный доступ — PetJournal" %>
+
+<div class="pj-public-access-page">
+  <header class="pj-workspace-topbar">
+    <h1>Публичный доступ</h1>
+    <%= render "shared/workspace_notification_link" %>
+  </header>
+
+  <div class="pj-public-access-content">
+    <div class="pj-public-access-intro">
+      <div>
+        <p>Выберите питомца, чтобы создать или управлять его публичными ссылками.</p>
+      </div>
+    </div>
+
+    <div class="pj-public-access-grid">
+      <% @pets.each do |pet| %>
+        <% shares = pet.pet_profile_shares.to_a %>
+        <% active_shares_count = shares.count(&:active?) %>
+
+        <article class="pj-public-access-card">
+          <div class="pj-public-access-card__head">
+            <div class="pj-public-access-summary__pet">
+              <span class="pj-public-access-summary__avatar">
+                <% if pet.photo.attached? %>
+                  <%= image_tag pet.photo, alt: "" %>
+                <% else %>
+                  <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
+                <% end %>
+              </span>
+
+              <div>
+                <span class="pj-public-access-card__status <%= active_shares_count.positive? ? "is-active" : "is-muted" %>">
+                  <%= active_shares_count.positive? ? "Есть активный доступ" : "Нет активного доступа" %>
+                </span>
+                <h2><%= link_to pet.name, pet_profile_shares_path(pet) %></h2>
+                <p><%= pet.breed.presence || pet.species.presence || "Питомец" %></p>
+              </div>
+            </div>
+
+            <%= link_to pet_profile_shares_path(pet),
+                        class: "pj-public-access-card__arrow",
+                        aria: { label: "Открыть публичный доступ для #{pet.name}" } do %>
+              <%= pj_icon(:chevron) %>
+            <% end %>
+          </div>
+
+          <div class="pj-public-access-card__meta">
+            <span><strong><%= shares.size %></strong> <%= russian_plural(shares.size, "ссылка", "ссылки", "ссылок") %></span>
+            <span><strong><%= active_shares_count %></strong> активно</span>
+          </div>
+
+          <div class="pj-public-access-card__actions">
+            <%= link_to shares.any? ? "Управлять" : "Создать доступ",
+                        shares.any? ? pet_profile_shares_path(pet) : new_pet_profile_share_path(pet),
+                        class: "pj-public-access-primary" %>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  </div>
+</div>
