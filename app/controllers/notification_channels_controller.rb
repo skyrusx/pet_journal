@@ -2,6 +2,7 @@ class NotificationChannelsController < ApplicationController
   layout "workspace_new_design"
 
   DELIVERY_PAGE_SIZE = 25
+  DELIVERY_MOBILE_PAGE_SIZE = 10
 
   before_action :authenticate_user!
   before_action :set_channel, only: %i[edit update destroy test]
@@ -11,7 +12,8 @@ class NotificationChannelsController < ApplicationController
     @channels = current_user.notification_channels.order(:channel_type, :created_at)
     @selected_delivery_status = params[:delivery_status].presence_in(%w[all pending sent failed skipped]) || "all"
     @page = [params[:page].to_i, 1].max
-    @deliveries_limit = DELIVERY_PAGE_SIZE * @page
+    @delivery_page_size = mobile_request? ? DELIVERY_MOBILE_PAGE_SIZE : DELIVERY_PAGE_SIZE
+    @deliveries_limit = @delivery_page_size * @page
 
     deliveries_scope = filtered_deliveries
     @matching_deliveries_count = deliveries_scope.count
