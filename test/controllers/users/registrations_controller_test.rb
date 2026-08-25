@@ -11,8 +11,17 @@ class Users::RegistrationsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select ".pj-account-page"
-    assert_select "#pj-profile-form"
-    assert_select "#pj-security-form"
+    assert_select "#pj-profile-form" do
+      assert_select "input[type='submit'][value='Сохранить']", count: 1
+    end
+    assert_select "#pj-security-form" do
+      assert_select "input[type='submit'][value='Сохранить']", count: 1
+    end
+    assert_select ".pj-account-profile-card .pj-account-card__kicker", text: "Основные данные"
+    assert_select ".pj-account-profile-card h2", count: 0
+    assert_select ".pj-account-security-card .pj-account-card__kicker", text: "Безопасность"
+    assert_select ".pj-account-security-card h2", count: 0
+    assert_select ".pj-account-danger-form button", text: "Удалить"
   end
 
   test "should update profile fields without current password" do
