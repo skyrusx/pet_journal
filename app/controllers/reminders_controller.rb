@@ -1,5 +1,6 @@
 class RemindersController < ApplicationController
   PAGE_SIZE = 25
+  MOBILE_PAGE_SIZE = 10
 
   before_action :authenticate_user!
   before_action :set_pet, except: :index
@@ -26,7 +27,8 @@ class RemindersController < ApplicationController
 
     filtered_scope = filtered_reminders(summary_scope)
     @page = [params[:page].to_i, 1].max
-    @reminders_limit = PAGE_SIZE * @page
+    @page_size = mobile_request? ? MOBILE_PAGE_SIZE : PAGE_SIZE
+    @reminders_limit = @page_size * @page
     @matching_reminders_count = filtered_scope.count
     @has_more_reminders = @matching_reminders_count > @reminders_limit
 
