@@ -119,6 +119,22 @@
   font-weight: 600;
 }
 
+/* QR preview stays on a crisp, fixed pixel grid instead of being fractionally stretched. */
+.pj-public-access-qr img {
+  width: 180px;
+  height: 180px;
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* Public contact actions use the same weight as the standard product buttons. */
+.pj-public-profile-primary-action {
+  font-weight: 700;
+  font-variation-settings: "wght" 700;
+}
+
 /* Keep the remaining public-link action on one line. */
 .pj-public-access-link-card__actions > .pj-public-access-primary,
 .pj-public-access-link-card__actions > .pj-public-access-secondary,
