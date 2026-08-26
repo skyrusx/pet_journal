@@ -6,4 +6,4 @@
 <meta name="apple-mobile-web-app-title" content="PetJournal">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="<%= pwa_manifest_path(format: :json) %>">
-<%= stylesheet_link_tag "pwa" %>
+<%= stylesheet_link_tag "pwa" if local_assigns.fetch(:include_styles, true) %>
