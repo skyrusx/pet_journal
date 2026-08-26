@@ -1,0 +1,109 @@
+<% content_for :title, "Настройки — PetJournal" %>
+
+<div class="pj-settings-page">
+  <header class="pj-workspace-topbar">
+    <h1>Настройки</h1>
+    <%= render "shared/workspace_notification_link" %>
+  </header>
+
+  <div class="pj-settings-content">
+    <div class="pj-settings-heading">
+      <h1>Настройки</h1>
+      <p>Настройте интерфейс PetJournal под себя.</p>
+    </div>
+
+    <% if current_user.errors.any? %>
+      <div class="pj-settings-errors" role="alert">
+        <strong>Не удалось сохранить настройки</strong>
+        <ul>
+          <% current_user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= form_with model: current_user, url: settings_path, method: :patch, class: "pj-settings-form" do |f| %>
+      <section class="pj-settings-card" aria-labelledby="pj-settings-interface-title">
+        <div class="pj-settings-card__head">
+          <span class="pj-settings-card__icon" aria-hidden="true"><%= pj_icon(:settings) %></span>
+          <div>
+            <span class="pj-settings-card__kicker">Интерфейс</span>
+            <h2 id="pj-settings-interface-title">Размер текста</h2>
+            <p>Выберите комфортный размер. Настройка применяется ко всему рабочему интерфейсу.</p>
+          </div>
+        </div>
+
+        <div class="pj-settings-text-options" role="radiogroup" aria-label="Размер текста">
+          <% [
+            ["compact", "Уменьшенный", "Больше информации помещается на экране", "Aa"],
+            ["standard", "Стандартный", "Оптимальный баланс текста и пространства", "Aa"],
+            ["comfortable", "Увеличенный", "Немного крупнее для более лёгкого чтения", "Aa"],
+            ["large", "Крупный", "Максимальная читаемость интерфейса", "Aa"]
+          ].each do |value, label, description, sample| %>
+            <label class="pj-settings-text-option">
+              <%= f.radio_button :interface_text_size, value %>
+              <span class="pj-settings-text-option__sample pj-settings-text-option__sample--<%= value %>"><%= sample %></span>
+              <span class="pj-settings-text-option__copy">
+                <strong><%= label %></strong>
+                <small><%= description %></small>
+              </span>
+              <span class="pj-settings-text-option__check" aria-hidden="true"></span>
+            </label>
+          <% end %>
+        </div>
+      </section>
+
+      <section class="pj-settings-card" aria-labelledby="pj-settings-region-title">
+        <div class="pj-settings-card__head">
+          <span class="pj-settings-card__icon" aria-hidden="true"><%= pj_icon(:clock) %></span>
+          <div>
+            <span class="pj-settings-card__kicker">Регион</span>
+            <h2 id="pj-settings-region-title">Часовой пояс</h2>
+            <p>Используется для напоминаний, тихих часов и отображения времени.</p>
+          </div>
+        </div>
+
+        <div class="pj-settings-field">
+          <%= f.label :notifications_time_zone, "Часовой пояс" %>
+          <%= f.select :notifications_time_zone,
+                       options_for_select(@time_zone_options, current_user.notifications_time_zone_name),
+                       {},
+                       class: "pj-settings-select" %>
+          <small>Доступен полный список часовых поясов. Названия локализованы на русский там, где это возможно.</small>
+        </div>
+      </section>
+
+      <section class="pj-settings-card pj-settings-card--link" aria-labelledby="pj-settings-notifications-title">
+        <div class="pj-settings-card__head pj-settings-card__head--compact">
+          <span class="pj-settings-card__icon" aria-hidden="true"><%= pj_icon(:bell) %></span>
+          <div>
+            <span class="pj-settings-card__kicker">Уведомления</span>
+            <h2 id="pj-settings-notifications-title">Настройки уведомлений</h2>
+            <p>Каналы доставки, тихие часы, часовой пояс и история внешних отправок.</p>
+          </div>
+        </div>
+        <%= link_to notification_channels_path, class: "pj-settings-link" do %>
+          <span>Настроить уведомления</span>
+          <%= pj_icon(:chevron) %>
+        <% end %>
+      </section>
+
+      <section class="pj-settings-card pj-settings-card--muted" aria-labelledby="pj-settings-language-title">
+        <div class="pj-settings-card__head pj-settings-card__head--compact">
+          <span class="pj-settings-card__icon" aria-hidden="true"><%= pj_icon(:journal) %></span>
+          <div>
+            <span class="pj-settings-card__kicker">Язык</span>
+            <h2 id="pj-settings-language-title">Русский</h2>
+            <p>Сейчас PetJournal работает на русском языке. Другие языки добавим позже.</p>
+          </div>
+        </div>
+        <span class="pj-settings-soon">Скоро</span>
+      </section>
+
+      <div class="pj-settings-actions">
+        <%= f.submit "Сохранить", class: "pj-settings-save" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,64 +1,150 @@
 <% if channel.errors.any? %>
-  <div class="flash-stack inline" aria-live="polite" aria-atomic="true">
-    <div class="flash-toast alert" role="alert" data-flash-toast>
-      <div>
-        <strong>Проверьте форму</strong>
-        <p><%= channel.errors.full_messages.to_sentence %></p>
-      </div>
-      <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
-    </div>
+  <div class="pj-notifications-form-errors" role="alert">
+    <strong>Проверьте форму</strong>
+    <span><%= channel.errors.full_messages.to_sentence %></span>
   </div>
 <% end %>
 
-<%= form_with(model: channel, class: "structured-form") do |form| %>
-  <section class="form-section">
-    <div class="form-section-heading">
-      <div>
-        <h2>Канал</h2>
-        <p>Куда PetJournal будет отправлять напоминания.</p>
-      </div>
-    </div>
-
-    <div class="row g-3">
-      <div class="col-md-5">
-        <%= form.label :channel_type, class: "form-label" %>
+<%= form_with(model: channel, class: "pj-notifications-form-card", data: { notification_channel_form: true }) do |form| %>
+  <div class="pj-notifications-form-grid">
+    <div class="pj-notifications-field">
+      <%= form.label :channel_type, "Тип канала" %>
+      <% if channel.persisted? || channel.channel_web_push? %>
+        <div class="pj-notifications-readonly-field">
+          <span class="pj-notifications-readonly-field__icon"><%= notification_channel_icon(channel) %></span>
+          <span>
+            <strong><%= channel.channel_type_label %></strong>
+            <small><%= channel.channel_web_push? ? "Подписка этого браузера" : "Тип канала нельзя изменить после подключения" %></small>
+          </span>
+        </div>
+        <%= form.hidden_field :channel_type %>
+      <% else %>
         <%= form.select :channel_type,
-                        notification_channel_type_options(include_web_push: channel.persisted?),
+                        notification_channel_type_options(include_web_push: false),
                         {},
-                        class: "form-select",
                         data: { channel_type_select: true } %>
-      </div>
-
-      <div class="col-md-7">
-        <%= form.label :name, class: "form-label" %>
-        <%= form.text_field :name, class: "form-control", placeholder: "Например: Telegram владельца" %>
-      </div>
-
-      <div class="col-12" data-address-field>
-        <%= form.label :address, class: "form-label" %>
-        <%= form.text_field :address, class: "form-control", placeholder: "Эл. почта, chat_id или peer_id" %>
-        <div class="form-text" data-channel-hint>
-          <%= notification_channel_hint(channel.channel_type.presence || "email") %>
-        </div>
-      </div>
-
-      <div class="col-12">
-        <div class="form-check">
-          <%= form.check_box :enabled, class: "form-check-input" %>
-          <%= form.label :enabled, class: "form-check-label" %>
-        </div>
-      </div>
-
-      <% if channel.channel_web_push? %>
-        <%= hidden_field_tag "notification_channel[endpoint]", channel.settings["endpoint"] %>
-        <%= hidden_field_tag "notification_channel[p256dh]", channel.settings["p256dh"] %>
-        <%= hidden_field_tag "notification_channel[auth]", channel.settings["auth"] %>
       <% end %>
     </div>
-  </section>
 
-  <div class="form-actions">
-    <%= form.submit channel.persisted? ? "Сохранить" : "Добавить канал", class: "btn btn-primary" %>
-    <%= link_to "Отмена", notification_channels_path, class: "btn btn-outline-secondary" %>
+    <div class="pj-notifications-field" data-standard-channel-field <%= "hidden" if channel.new_record? && channel.channel_telegram? %>>
+      <%= form.label :name, "Название" %>
+      <%= form.text_field :name,
+                          placeholder: "Например, Личная почта",
+                          required: true,
+                          data: { channel_name_input: true } %>
+      <small>Название видно только вам. Можно оставить предложенный вариант.</small>
+    </div>
+
+    <% if channel.channel_web_push? %>
+      <div class="pj-notifications-form-info pj-notifications-form-info--wide">
+        <span><%= notification_channel_icon(:web_push) %></span>
+        <div>
+          <strong>Push-подписка привязана к браузеру</strong>
+          <p>Технический endpoint и ключи нельзя редактировать вручную. Если push перестал работать, отключите его на странице уведомлений и подключите заново.</p>
+        </div>
+      </div>
+      <%= hidden_field_tag "notification_channel[endpoint]", channel.settings["endpoint"] %>
+      <%= hidden_field_tag "notification_channel[p256dh]", channel.settings["p256dh"] %>
+      <%= hidden_field_tag "notification_channel[auth]", channel.settings["auth"] %>
+      <%= form.hidden_field :address %>
+    <% else %>
+      <% current_type = channel.channel_type.presence || "email" %>
+      <div class="pj-notifications-field pj-notifications-field--wide"
+           data-address-field
+           data-standard-channel-field
+           <%= "hidden" if current_type == "telegram" %>>
+        <%= form.label :address,
+                       notification_channel_address_label(current_type),
+                       data: { channel_address_label: true } %>
+        <%= form.text_field :address,
+                            value: notification_channel_form_address(channel),
+                            placeholder: notification_channel_address_placeholder(current_type),
+                            required: current_type != "telegram",
+                            autocomplete: current_type == "email" ? "email" : "off",
+                            data: { channel_address_input: true } %>
+        <small data-channel-hint><%= notification_channel_hint(current_type) %></small>
+      </div>
+
+      <div class="pj-notifications-form-info pj-notifications-form-info--wide"
+           data-telegram-connect-panel
+           <%= "hidden" unless current_type == "telegram" %>>
+        <span><%= notification_channel_icon(:telegram) %></span>
+        <div>
+          <% if channel.persisted? && channel.channel_telegram? %>
+            <strong>Telegram уже подключён</strong>
+            <p><%= notification_channel_display_address(channel) %>. Чтобы подключить другой аккаунт, добавьте новый Telegram-канал.</p>
+          <% elsif telegram_connection_url.present? %>
+            <strong>Подключите Telegram в один шаг</strong>
+            <p>Откройте <%= telegram_bot_label %> и нажмите Start. PetJournal сам получит нужный chat_id и сохранит подключение.</p>
+            <%= link_to "Подключить Telegram",
+                        telegram_connection_url,
+                        class: "pj-notifications-primary-button",
+                        target: "_blank",
+                        rel: "noopener",
+                        data: {
+                          telegram_connect_link: true,
+                          return_url: notification_channels_path
+                        } %>
+            <small>После Start просто вернитесь в PetJournal — список каналов обновится автоматически.</small>
+          <% else %>
+            <strong>Telegram пока не настроен</strong>
+            <p>Подключение через бота станет доступно после настройки Telegram-бота PetJournal.</p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="pj-notifications-form-info pj-notifications-form-info--wide"
+           data-vk-connect-panel
+           <%= "hidden" unless current_type == "vk" %>>
+        <span><%= notification_channel_icon(:vk) %></span>
+        <div>
+          <strong>Сначала разрешите сообщения от PetJournal</strong>
+          <p>ВКонтакте разрешает сообществу отправлять уведомления только после того, как вы сами откроете с ним диалог. Перейдите в сообщество PetJournal со своего личного профиля и отправьте любое сообщение — достаточно одного раза.</p>
+          <%= link_to "Открыть PetJournal во ВКонтакте",
+                      "https://vk.ru/petjournal",
+                      class: "pj-notifications-secondary-button",
+                      target: "_blank",
+                      rel: "noopener" %>
+          <small>После этого вернитесь в PetJournal, добавьте канал ВКонтакте и проверьте его тестовой отправкой.</small>
+        </div>
+      </div>
+
+      <% if channel.persisted? && channel.channel_telegram? %>
+        <%= form.hidden_field :address %>
+      <% end %>
+    <% end %>
+
+    <label class="pj-notifications-toggle-row pj-notifications-form-toggle pj-notifications-field--wide"
+           data-standard-channel-field
+           <%= "hidden" if channel.new_record? && channel.channel_telegram? %>>
+      <span>
+        <strong>Получать уведомления через этот канал</strong>
+        <small>Канал можно временно выключить, не удаляя его настройки.</small>
+      </span>
+      <span class="pj-notifications-switch">
+        <%= form.check_box :enabled %>
+        <span aria-hidden="true"></span>
+      </span>
+    </label>
   </div>
+
+  <div class="pj-notifications-form-note">
+    <strong>Как выбирается канал для напоминания</strong>
+    <p>Если в конкретном напоминании выбраны каналы — PetJournal использует их. Если ничего не выбрано — используются все включённые каналы. Когда дополнительных каналов нет, остаётся email аккаунта.</p>
+  </div>
+
+  <div class="pj-notifications-form-actions"
+       data-standard-channel-actions
+       <%= "hidden" if channel.new_record? && channel.channel_telegram? %>>
+    <%= link_to "Отменить", notification_channels_path, class: "pj-notifications-secondary-button" %>
+    <%= form.submit channel.persisted? ? "Сохранить" : "Добавить",
+                    class: "pj-notifications-primary-button",
+                    data: { channel_submit: true } %>
+  </div>
+
+  <% if channel.new_record? %>
+    <div class="pj-notifications-form-actions" data-telegram-only-actions <%= "hidden" unless channel.channel_telegram? %>>
+      <%= link_to "Вернуться к уведомлениям", notification_channels_path, class: "pj-notifications-secondary-button" %>
+    </div>
+  <% end %>
 <% end %>

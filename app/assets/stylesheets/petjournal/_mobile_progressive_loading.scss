@@ -1,0 +1,9 @@
+/* Mobile progressive loading: lists load in 10-item batches while desktop keeps 25.
+   Keep the mobile action compact and avoid showing the desktop batch-size hint. */
+
+@media (max-width: 820px) {
+  .pj-journal-load-more__button small,
+  .pj-notifications-load-more__button small {
+    display: none;
+  }
+}

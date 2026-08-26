@@ -1,31 +1,52 @@
 class PetEventsController < ApplicationController
+  PAGE_SIZE = 25
+  MOBILE_PAGE_SIZE = 10
+
   before_action :authenticate_user!
-  before_action :set_pet
+  before_action :set_pet, except: :index
+  before_action :set_journal_pets
   before_action :set_pet_event, only: %i[show edit update destroy]
+
+  layout "workspace_new_design"
 
   def index
     @event_type_filters = PetEvent::EVENT_TYPE_LABELS
     @selected_event_type = selected_event_type
     @selected_period = selected_period
     @selected_status = selected_status
+    @selected_marker = selected_marker
     @query = params[:q].to_s.strip
-    @event_type_counts = @pet.pet_events.group(:event_type).count
-    @total_events_count = @pet.pet_events.count
-    @events_with_files_count = @pet.pet_events.joins(:files_attachments).distinct.count
-    @events_with_follow_up_count = @pet.pet_events.where.not(next_action_at: nil).count
-    @latest_event = @pet.pet_events.order(event_date: :desc, created_at: :desc).first
+    @selected_pet = selected_journal_pet
+    @pet = @selected_pet
 
-    @pet_events = @pet.pet_events.with_attached_files.order(event_date: :desc, created_at: :desc)
-    @pet_events = @pet_events.where(event_type: @selected_event_type) if @selected_event_type.present?
-    @pet_events = filter_by_period(@pet_events)
-    @pet_events = filter_by_status(@pet_events)
-    @pet_events = search_events(@pet_events) if @query.present?
+    filtered_scope = journal_events_scope
+    filtered_scope = filtered_scope.where(event_type: @selected_event_type) if @selected_event_type.present?
+    filtered_scope = filter_by_period(filtered_scope)
+    filtered_scope = filter_by_status(filtered_scope)
+    filtered_scope = filter_by_marker(filtered_scope)
+    filtered_scope = search_events(filtered_scope) if @query.present?
+
+    @page = [params[:page].to_i, 1].max
+    @page_size = mobile_request? ? MOBILE_PAGE_SIZE : PAGE_SIZE
+    @events_limit = @page_size * @page
+    @matching_events_count = filtered_scope.distinct.count(:id)
+    @has_more_events = @matching_events_count > @events_limit
+
+    @pet_events = filtered_scope
+                  .includes(:pet)
+                  .with_attached_files
+                  .order(event_date: :desc, event_time: :desc, created_at: :desc)
+                  .limit(@events_limit)
   end
 
   def show; end
 
   def new
-    @pet_event = @pet.pet_events.new(event_date: Date.current, event_type: params[:type].presence_in(PetEvent.event_types.keys) || :note)
+    @pet_event = @pet.pet_events.new(
+      event_date: Date.current,
+      status: :completed,
+      event_type: params[:type].presence_in(PetEvent.event_types.keys) || :note
+    )
   end
 
   def create
@@ -53,13 +74,28 @@ class PetEventsController < ApplicationController
   def destroy
     @pet_event.destroy
 
-    redirect_to pet_pet_events_path(@pet), notice: "Событие удалено."
+    redirect_to journal_overview_path(pet_id: @pet.id), notice: "Событие удалено."
   end
 
   private
 
   def set_pet
     @pet = current_user.pets.find(params[:pet_id])
+  end
+
+  def set_journal_pets
+    @journal_pets = current_user.pets.with_attached_photo.order(:name).to_a
+  end
+
+  def selected_journal_pet
+    return if params[:pet_id].blank?
+
+    current_user.pets.find(params[:pet_id])
+  end
+
+  def journal_events_scope
+    scope = PetEvent.where(pet_id: @journal_pets.map(&:id))
+    @selected_pet.present? ? scope.where(pet_id: @selected_pet.id) : scope
   end
 
   def set_pet_event
@@ -69,8 +105,10 @@ class PetEventsController < ApplicationController
   def pet_event_params
     params.require(:pet_event).permit(
       :event_type,
+      :status,
       :title,
       :event_date,
+      :event_time,
       :description,
       :weight_value,
       :weight_unit,
@@ -105,7 +143,13 @@ class PetEventsController < ApplicationController
   end
 
   def selected_status
-    params[:status].presence_in(%w[all with_files follow_up])
+    return if params[:status].blank?
+
+    params[:status] if PetEvent.statuses.key?(params[:status])
+  end
+
+  def selected_marker
+    params[:marker].presence_in(%w[with_files follow_up])
   end
 
   def filter_by_period(scope)
@@ -122,7 +166,13 @@ class PetEventsController < ApplicationController
   end
 
   def filter_by_status(scope)
-    case @selected_status
+    return scope if @selected_status.blank?
+
+    scope.where(status: @selected_status)
+  end
+
+  def filter_by_marker(scope)
+    case @selected_marker
     when "with_files"
       scope.joins(:files_attachments).distinct
     when "follow_up"
@@ -179,7 +229,8 @@ class PetEventsController < ApplicationController
   def reminder_type_for_event
     {
       "vaccination" => :vaccination,
-      "treatment" => :treatment,
+      "treatment" => :medication,
+      "parasite_treatment" => :treatment,
       "visit" => :visit,
       "weight" => :weight
     }.fetch(@pet_event.event_type, :other)

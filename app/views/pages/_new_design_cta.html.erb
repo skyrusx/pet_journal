@@ -1,0 +1,19 @@
+<section class="pj-nd-cta" aria-labelledby="pj-nd-cta-title">
+  <div class="pj-nd-shell">
+    <div class="pj-nd-cta__panel">
+      <div class="pj-nd-cta__content">
+        <h2 id="pj-nd-cta-title">Создайте PetJournal<br>своего питомца</h2>
+        <p>Заботьтесь о любимце с умом и теплом</p>
+
+        <%= link_to new_user_registration_path, class: "pj-nd-cta__button" do %>
+          <span>Создать журнал</span>
+          <img src="/new_design/paw-trust.svg" alt="" aria-hidden="true" class="pj-nd-cta__button-paw">
+        <% end %>
+      </div>
+
+      <svg class="pj-nd-cta__heart" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M32 52S13 39.1 13 24.4C13 17 17.8 12 24 12c4.5 0 7.4 2.3 9.5 5.8C35.6 14.3 38.5 12 43 12c6.2 0 11 5 11 12.4C54 39.1 35 52 32 52Z" />
+      </svg>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,31 @@
+<% content_for :title, "#{@section_title} — PetJournal" %>
+
+<div class="pj-section-empty-page pj-section-empty-page--<%= @section_key %>">
+  <header class="pj-workspace-topbar">
+    <h1><%= @section_title %></h1>
+    <%= link_to notification_channels_path, class: "pj-workspace-icon", aria: { label: "Настройки уведомлений" }, title: "Настройки уведомлений" do %>
+      <%= pj_icon(:bell) %>
+    <% end %>
+  </header>
+
+  <div class="pj-section-empty-content">
+    <% if @section_key == "public_access" %>
+      <div class="pj-public-access-empty-mobile-heading">
+        <h1><%= @section_title %></h1>
+        <p><%= @section_subtitle %></p>
+      </div>
+    <% end %>
+
+    <div class="pj-section-empty-heading">
+      <p><%= @section_subtitle %></p>
+    </div>
+
+    <section class="pj-section-empty-card" aria-labelledby="pj-section-empty-title">
+      <%= image_tag @illustration, alt: "", class: "pj-section-empty-card__illustration" %>
+      <h2 id="pj-section-empty-title"><%= @empty_title %></h2>
+      <p><%= @empty_text %></p>
+      <%= link_to "Добавить питомца", new_pet_path, class: "pj-section-empty-card__button" %>
+      <span class="pj-section-empty-card__hint">Сначала создайте профиль питомца</span>
+    </section>
+  </div>
+</div>

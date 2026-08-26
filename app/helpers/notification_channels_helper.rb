@@ -3,11 +3,99 @@ module NotificationChannelsHelper
     keys = NotificationChannel.channel_types.keys
     keys -= ["web_push"] unless include_web_push
 
-    keys.map { |key| [I18n.t("notification_channels.types.#{key}"), key] }
+    keys.map do |key|
+      label = I18n.t("notification_channels.types.#{key}")
+
+      if key == "telegram" && !TelegramConfiguration.configured?
+        ["#{label} — в разработке", key, { disabled: true }]
+      else
+        [label, key]
+      end
+    end
   end
 
   def notification_channel_hint(channel_type)
-    I18n.t("notification_channels.hints.#{channel_type}", default: "Укажите данные канала.")
+    {
+      "email" => "Укажите адрес электронной почты, на который будут приходить уведомления.",
+      "telegram" => TelegramConfiguration.configured? ?
+        "Telegram подключается через бота PetJournal — никаких chat_id вводить не нужно." :
+        "Telegram-уведомления пока в разработке и недоступны для подключения.",
+      "vk" => "Вставьте ссылку на профиль, короткое имя или ID — PetJournal сам определит получателя."
+    }.fetch(channel_type.to_s, "Укажите данные канала.")
+  end
+
+  def notification_channel_address_label(channel_type)
+    {
+      "email" => "Email",
+      "telegram" => "Telegram",
+      "vk" => "Ваш профиль ВКонтакте"
+    }.fetch(channel_type.to_s, "Адрес")
+  end
+
+  def notification_channel_address_placeholder(channel_type)
+    {
+      "email" => "name@example.ru",
+      "telegram" => "Подключается через бота",
+      "vk" => "Например, vk.ru/username или @username"
+    }.fetch(channel_type.to_s, "Укажите адрес канала")
+  end
+
+  def notification_channel_form_address(channel)
+    return channel.address unless channel.channel_vk?
+
+    screen_name = channel.settings["screen_name"].presence
+    screen_name.present? ? "https://vk.ru/#{screen_name}" : channel.address
+  end
+
+  def notification_channel_display_address(channel)
+    return "Уведомления в этом браузере" if channel.channel_web_push?
+
+    if channel.channel_telegram?
+      username = channel.settings["username"].presence
+      display_name = channel.settings["display_name"].presence
+      return [display_name, username.present? ? "@#{username}" : nil].compact.join(" · ").presence || "Telegram подключён"
+    end
+
+    if channel.channel_vk?
+      screen_name = channel.settings["screen_name"].presence
+      display_name = channel.settings["display_name"].presence
+      return [display_name, screen_name.present? ? "@#{screen_name}" : nil].compact.join(" · ").presence || channel.address
+    end
+
+    channel.address.presence || "Адрес не указан"
+  end
+
+  def telegram_connection_url
+    username = TelegramConfiguration.bot_username
+    return if username.blank? || TelegramConfiguration.bot_token.blank? || current_user.blank?
+
+    token = TelegramConnectionToken.generate(current_user)
+    "https://t.me/#{username}?start=#{token}"
+  end
+
+  def telegram_bot_label
+    username = TelegramConfiguration.bot_username
+    username.present? ? "@#{username}" : "бот PetJournal"
+  end
+
+  def notification_channel_icon(channel_or_type, class_name: nil)
+    type = channel_or_type.respond_to?(:channel_type) ? channel_or_type.channel_type : channel_or_type.to_s
+    paths = {
+      "email" => '<rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m5 7 7 5 7-5"/>',
+      "telegram" => '<path d="M20.5 4.5 3.8 10.9c-1.1.4-1.1 1.1-.2 1.4l4.3 1.4 1.7 5.2c.2.7.1 1 .8 1 .5 0 .8-.2 1-.4l2.5-2.4 5.1 3.8c.9.5 1.6.2 1.8-.9L23 6c.3-1.4-.5-2-1.5-1.5Z"/><path d="m8 13.7 10.6-6.6-8.3 8.2-.3 3.3"/>',
+      "vk" => '<path d="M4.2 7.1h3.1c.3 0 .5.2.6.5.7 2.2 1.7 4.1 3.1 5.7V7.7c0-.4.3-.7.7-.7h2.6c.4 0 .7.3.7.7v3.8c1.3-1.4 2.3-2.9 3.1-4.3.1-.2.3-.3.6-.3h3c.6 0 .9.7.6 1.2-1 1.7-2.2 3.3-3.6 4.8 1.5 1.3 2.8 2.8 4 4.6.4.6 0 1.3-.7 1.3h-3.1c-.3 0-.5-.1-.7-.4-.9-1.3-1.9-2.4-3.2-3.4v3.1c0 .4-.3.7-.7.7h-1.8c-4.4 0-7.3-3.1-9.2-10.8-.1-.5.3-.9.9-.9Z"/>',
+      "web_push" => '<path d="M18 10.5a6 6 0 0 0-12 0c0 5-2 5.5-2 7h16c0-1.5-2-2-2-7z"/><path d="M10 20a2.2 2.2 0 0 0 4 0"/>'
+    }
+
+    content_tag(
+      :svg,
+      paths.fetch(type, paths.fetch("web_push")).html_safe,
+      viewBox: "0 0 24 24",
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      aria: { hidden: true },
+      class: class_names("pj-notification-channel-icon", class_name)
+    )
   end
 
   def notification_delivery_status_label(delivery)
@@ -41,9 +129,13 @@ module NotificationChannelsHelper
   end
 
   def notification_channel_configuration_label(channel)
+    if channel.channel_vk? && channel.ready_for_delivery? && !channel.verified?
+      return "Перед первой отправкой напишите сообществу PetJournal во ВКонтакте со своего профиля, затем запустите тест."
+    end
+
     return "Канал готов к отправке." if channel.ready_for_delivery?
 
-    "Канал пока недоступен. Проверьте настройки подключения."
+    channel.configuration_issues.to_sentence.presence || "Проверьте настройки подключения."
   end
 
   def notification_delivery_filter_options(counts)
@@ -57,11 +149,17 @@ module NotificationChannelsHelper
   end
 
   def notification_channel_onboarding_steps
+    telegram_step = if TelegramConfiguration.configured?
+      ["Telegram", "Нажмите «Подключить Telegram» и Start в боте. Никаких ID искать не нужно."]
+    else
+      ["Telegram · в разработке", "Канал появится после запуска бота PetJournal. Сейчас подключить его нельзя."]
+    end
+
     [
-      ["Email", "Основной канал для системных уведомлений и напоминаний."],
-      ["Telegram", "Подключите чат, если удобнее получать напоминания в мессенджере."],
-      ["VK", "Подключите диалог VK, чтобы получать напоминания там, где вы чаще отвечаете."],
-      ["Push", "Включите уведомления в текущем браузере, если хотите получать быстрые сигналы на этом устройстве."]
+      ["Email", "Укажите почту — PetJournal будет отправлять туда напоминания."],
+      telegram_step,
+      ["ВКонтакте", "Сначала напишите сообществу PetJournal со своего профиля, затем добавьте ссылку на профиль — ID определится автоматически."],
+      ["Push", "Включите уведомления в браузере, чтобы получать быстрые сигналы на этом устройстве."]
     ]
   end
 end

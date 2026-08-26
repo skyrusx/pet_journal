@@ -1,11 +1,24 @@
-<div class="py-4">
-  <div class="page-heading mb-4">
-    <div>
-      <div class="text-muted small mb-1">Уведомления</div>
-      <h1 class="h3 mb-1">Редактировать канал</h1>
-      <p class="text-muted mb-0">Измените получателя, название или статус канала.</p>
-    </div>
-  </div>
+<% content_for :title, "Редактировать канал — PetJournal" %>
 
-  <%= render "form", channel: @channel %>
+<div class="pj-notifications-page pj-notifications-form-page">
+  <header class="pj-workspace-topbar pj-workspace-topbar--form">
+    <%= link_to notification_channels_path, class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>Назад к уведомлениям</span>
+    <% end %>
+  </header>
+
+  <div class="pj-notifications-form-content">
+    <div class="pj-mobile-detail-nav pj-mobile-form-nav">
+      <%= link_to notification_channels_path, class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К уведомлениям</span>
+      <% end %>
+    </div>
+
+    <div class="pj-notifications-form-heading">
+      <h1><%= @channel.name %></h1>
+      <p>Измените название, получателя или временно отключите этот способ доставки.</p>
+    </div>
+
+    <%= render "form", channel: @channel %>
+  </div>
 </div>

@@ -1,0 +1,100 @@
+<section class="pj-nd-features" id="features" aria-label="Возможности PetJournal">
+  <div class="pj-nd-shell">
+    <div class="pj-nd-features__grid">
+      <article class="pj-nd-feature-card">
+        <div class="pj-nd-feature-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32">
+            <rect x="5" y="7" width="22" height="20" rx="3.5" />
+            <path d="M10 4v6M22 4v6M5 12h22" />
+            <circle cx="11" cy="17" r="1.1" />
+            <circle cx="16" cy="17" r="1.1" />
+            <circle cx="21" cy="17" r="1.1" />
+            <circle cx="11" cy="22" r="1.1" />
+            <circle cx="16" cy="22" r="1.1" />
+          </svg>
+        </div>
+        <h3>Журнал</h3>
+
+        <ul class="pj-nd-feature-list">
+          <% ["Вакцинации", "Вес", "Лекарства", "Обработка от паразитов", "Визиты к врачу"].each do |item| %>
+            <li>
+              <span class="pj-nd-feature-check" aria-hidden="true">
+                <svg viewBox="0 0 20 20"><path d="m4.5 10.2 3.2 3.2 7.8-7.8" /></svg>
+              </span>
+              <span><%= item %></span>
+            </li>
+          <% end %>
+        </ul>
+
+        <a class="pj-nd-feature-card__button" href="#how-it-works">Подробнее</a>
+      </article>
+
+      <article class="pj-nd-feature-card">
+        <div class="pj-nd-feature-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32">
+            <path d="M16 5a7 7 0 0 1 7 7v4.5c0 1.3.4 2.6 1.1 3.7l1.6 2.3H6.3l1.6-2.3c.7-1.1 1.1-2.4 1.1-3.7V12a7 7 0 0 1 7-7Z" />
+            <path d="M12.5 25a3.7 3.7 0 0 0 7 0" />
+          </svg>
+        </div>
+        <h3>Напоминания</h3>
+
+        <div class="pj-nd-feature-reminder">
+          <div class="pj-nd-feature-reminder__title">
+            <span class="pj-nd-feature-reminder__dot" aria-hidden="true"></span>
+            <span>Вакцинация Нобивак DHPPi</span>
+          </div>
+          <div class="pj-nd-feature-reminder__date">24 мая · 11:00</div>
+        </div>
+
+        <a class="pj-nd-feature-card__button" href="#how-it-works">Все напоминания</a>
+      </article>
+
+      <article class="pj-nd-feature-card">
+        <div class="pj-nd-feature-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32">
+            <path d="M9 4h10l6 6v18H9z" />
+            <path d="M19 4v7h6M13 16h8M13 20h8" />
+          </svg>
+        </div>
+        <h3>Документы</h3>
+
+        <ul class="pj-nd-feature-list">
+          <% ["Ветпаспорт", "Анализы", "Сертификаты", "Назначения"].each do |item| %>
+            <li>
+              <span class="pj-nd-feature-check" aria-hidden="true">
+                <svg viewBox="0 0 20 20"><path d="m4.5 10.2 3.2 3.2 7.8-7.8" /></svg>
+              </span>
+              <span><%= item %></span>
+            </li>
+          <% end %>
+        </ul>
+
+        <a class="pj-nd-feature-card__button" href="#how-it-works">Все документы</a>
+      </article>
+
+      <article class="pj-nd-feature-card">
+        <div class="pj-nd-feature-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32">
+            <path d="M5 18 17.5 5.5h7l3 3v7L15 28l-6-1-4-4z" />
+            <circle cx="21.5" cy="11.5" r="2" />
+            <path d="m7 25-2 2" />
+          </svg>
+        </div>
+        <h3>PetTag</h3>
+
+        <ul class="pj-nd-feature-list">
+          <% ["QR-профиль", "Режим «Потерялся»", "Связь с владельцем", "Отправка местоположения"].each do |item| %>
+            <li>
+              <span class="pj-nd-feature-check" aria-hidden="true">
+                <svg viewBox="0 0 20 20"><path d="m4.5 10.2 3.2 3.2 7.8-7.8" /></svg>
+              </span>
+              <span><%= item %></span>
+            </li>
+          <% end %>
+        </ul>
+
+        <a class="pj-nd-feature-card__button" href="#how-it-works">Как это работает</a>
+      </article>
+    </div>
+  </div>
+</section>

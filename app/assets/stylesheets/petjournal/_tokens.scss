@@ -31,4 +31,81 @@
   --pj-input-border: #ded8c9;
   --pj-link: #07392f;
   --pj-header-bg: rgba(247, 241, 229, .92);
+
+  /*
+   * Canonical typography scale.
+   * Text is rem-based so browser/accessibility font settings remain meaningful.
+   * New product UI should use these semantic roles instead of one-off values.
+   */
+  --pj-font-status: .6875rem;        /* 11px */
+  --pj-font-caption: .75rem;         /* 12px */
+  --pj-font-meta: .8125rem;          /* 13px */
+  --pj-font-body: .875rem;           /* 14px */
+  --pj-font-body-lg: .9375rem;       /* 15px */
+  --pj-font-control: .875rem;        /* 14px */
+  --pj-font-card-title: 1rem;        /* 16px */
+  --pj-font-topbar-title: 1.0625rem; /* 17px */
+  --pj-font-subheading: 1.125rem;    /* 18px */
+  --pj-font-section-title: 1.25rem;  /* 20px */
+  --pj-font-detail-title: 1.5rem;    /* 24px */
+  --pj-font-page-title: 1.75rem;     /* 28px */
+  --pj-font-display-title: 2.125rem; /* 34px; reserved for intentional hero-like headings */
+  --pj-font-mobile-control: 1rem;    /* 16px; prevents iOS input zoom */
+
+  --pj-line-tight: 1.2;
+  --pj-line-heading: 1.25;
+  --pj-line-body: 1.5;
+  --pj-line-copy: 1.55;
+
+  /* Exact interface geometry remains pixel-based for reliable alignment. */
+  --pj-size-topbar: 62px;
+  --pj-size-icon-button: 36px;
+  --pj-size-icon-action: 40px;
+  --pj-size-icon: 20px;
+  --pj-size-control-sm: 36px;
+  --pj-size-control: 40px;
+  --pj-size-control-lg: 44px;
+  --pj-size-touch-target: 44px;
+  --pj-size-textarea-mobile: 112px;
+  --pj-size-status: 24px;
+
+  /* One spacing rhythm. Prefer these values over page-specific magic numbers. */
+  --pj-space-1: 4px;
+  --pj-space-2: 8px;
+  --pj-space-3: 12px;
+  --pj-space-4: 16px;
+  --pj-space-5: 20px;
+  --pj-space-6: 24px;
+  --pj-space-7: 28px;
+  --pj-space-8: 32px;
+  --pj-space-9: 36px;
+  --pj-space-10: 40px;
+  --pj-space-12: 48px;
+  --pj-space-16: 64px;
+
+  /* Shared signed-in workspace geometry. All page and form content uses one 1180px frame. */
+  --pj-content-max: 1180px;
+  --pj-form-wide-content-max: var(--pj-content-max);
+  --pj-form-content-max: var(--pj-content-max);
+  --pj-workspace-page-side: 36px;
+  --pj-workspace-mobile-side: 16px;
+  --pj-workspace-gutter: clamp(28px, 3vw, 48px);
+  --pj-workspace-content-gutter: clamp(28px, 3vw, 52px);
+  --pj-workspace-content-top: 28px;
+  --pj-workspace-content-bottom: 48px;
+
+  /* Radius scale: controls < icon actions < cards < panels. */
+  --pj-radius-xs: 6px;
+  --pj-radius-control: 8px;
+  --pj-radius-icon: 10px;
+  --pj-radius-card: 12px;
+  --pj-radius-panel: 16px;
+  --pj-radius-xl: 20px;
+  --pj-radius-pill: 999px;
+
+  /* Backward-compatible aliases for already migrated styles. */
+  --pj-radius-sm: var(--pj-radius-control);
+  --pj-radius-md: var(--pj-radius-card);
+  --pj-radius-lg: var(--pj-radius-panel);
+  --pj-font-h1: var(--pj-font-page-title);
 }

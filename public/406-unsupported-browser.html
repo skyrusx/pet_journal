@@ -1,66 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <title>Your browser is not supported (406)</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <style>
-  .rails-default-error-page {
-    background-color: #EFEFEF;
-    color: #2E2F30;
-    text-align: center;
-    font-family: arial, sans-serif;
-    margin: 0;
-  }
-
-  .rails-default-error-page div.dialog {
-    width: 95%;
-    max-width: 33em;
-    margin: 4em auto 0;
-  }
-
-  .rails-default-error-page div.dialog > div {
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #BBB;
-    border-top: #B00100 solid 4px;
-    border-top-left-radius: 9px;
-    border-top-right-radius: 9px;
-    background-color: white;
-    padding: 7px 12% 0;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
-
-  .rails-default-error-page h1 {
-    font-size: 100%;
-    color: #730E15;
-    line-height: 1.5em;
-  }
-
-  .rails-default-error-page div.dialog > p {
-    margin: 0 0 1em;
-    padding: 1em;
-    background-color: #F7F7F7;
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #999;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-top-color: #DADADA;
-    color: #666;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#fffdf8">
+  <title>Обновите браузер — PetJournal</title>
+  <link rel="stylesheet" href="/petjournal/errors/error-pages.css?v=12">
+  <link rel="stylesheet" href="/petjournal/errors/error-pages-reference.css?v=14">
+  <link rel="stylesheet" href="/petjournal/errors/error-header-landing.css?v=4">
+  <link rel="stylesheet" href="/petjournal/errors/error-footer-landing.css?v=3">
 </head>
+<body class="pj-error-page pj-error-page--406 pj-error-page--landing-chrome">
+  <header class="pj-error-header">
+    <div class="pj-error-shell">
+      <a href="/" class="pj-error-brand" aria-label="PetJournal — на главную">
+        <img src="/petjournal/errors/logo-horizontal.png" class="pj-error-logo" alt="PetJournal">
+      </a>
 
-<body class="rails-default-error-page">
-  <!-- This file lives in public/406-unsupported-browser.html -->
-  <div class="dialog">
-    <div>
-      <h1>Your browser is not supported.</h1>
-      <p>Please upgrade your browser to continue.</p>
+      <nav class="pj-error-navbar__nav" aria-label="Основная навигация">
+        <a href="/#features">Возможности</a>
+        <a href="/#how-it-works">Как это работает</a>
+      </nav>
+
+      <div class="pj-error-navbar__actions">
+        <a href="/login" class="pj-error-navbar__login">Войти</a>
+        <a href="/register" class="pj-error-navbar__cta">Создать журнал</a>
+      </div>
+
+      <details class="pj-error-navbar__mobile">
+        <summary aria-label="Открыть меню">
+          <span class="pj-error-navbar__burger" aria-hidden="true"><span></span></span>
+        </summary>
+
+        <div class="pj-error-navbar__mobile-panel">
+          <div class="pj-error-navbar__mobile-card">
+            <nav class="pj-error-navbar__mobile-nav" aria-label="Мобильная навигация">
+              <a href="/#features">Возможности</a>
+              <a href="/#how-it-works">Как это работает</a>
+            </nav>
+
+            <div class="pj-error-navbar__mobile-separator" aria-hidden="true"></div>
+
+            <div class="pj-error-navbar__mobile-actions">
+              <a href="/login" class="pj-error-navbar__mobile-login">Войти</a>
+              <a href="/register" class="pj-error-navbar__mobile-cta">Создать журнал</a>
+            </div>
+          </div>
+        </div>
+      </details>
     </div>
-  </div>
+  </header>
+
+  <main class="pj-error-main">
+    <section class="pj-error-card" aria-labelledby="pj-error-title">
+      <img src="/petjournal/errors/error-406.webp?v=17"
+           class="pj-error-illustration"
+           width="670" height="330"
+           alt="Собака и кошка рядом с окном браузера PetJournal">
+      <h1 class="pj-error-title" id="pj-error-title">Ваш браузер нужно обновить</h1>
+      <p class="pj-error-copy">PetJournal использует современные возможности браузера<br class="pj-error-copy-break"> для корректной и безопасной работы.</p>
+      <div class="pj-error-actions">
+        <a href="https://browser-update.org/update-browser.html" class="pj-error-primary" target="_blank" rel="noopener noreferrer">Обновить браузер</a>
+        <a href="/" class="pj-error-secondary">На главную</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pj-nd-footer" aria-label="Подвал PetJournal">
+    <div class="pj-nd-shell">
+      <div class="pj-nd-footer__panel">
+        <div class="pj-nd-footer__top">
+          <div class="pj-nd-footer__brand">
+            <a href="/" class="pj-nd-footer__brand-link" aria-label="PetJournal">
+              <img src="/petjournal/errors/logo-horizontal.png" alt="PetJournal" class="pj-nd-footer__logo">
+            </a>
+            <p class="pj-nd-footer__tagline">Забота. Память. Спокойствие.</p>
+          </div>
+
+          <nav class="pj-nd-footer__column pj-nd-footer__nav" aria-label="Разделы сайта">
+            <h3>Разделы</h3>
+            <a href="/#features">Возможности</a>
+            <a href="/#how-it-works">Как это работает</a>
+            <a href="/login">Войти</a>
+            <a href="/register">Создать журнал</a>
+          </nav>
+
+          <div class="pj-nd-footer__column pj-nd-footer__support">
+            <h3>Поддержка</h3>
+            <a href="mailto:support@pet-journal.ru">support@pet-journal.ru</a>
+            <p>Мы рядом, если нужна помощь</p>
+          </div>
+
+          <div class="pj-nd-footer__column pj-nd-footer__social">
+            <h3>Мы в соцсетях</h3>
+            <a class="pj-nd-footer__vk" href="https://vk.ru/petjournal" target="_blank" rel="noopener noreferrer" aria-label="PetJournal во ВКонтакте">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m9.489.004.729-.003h3.564l.73.003.914.01.433.007.418.011.403.014.388.016.374.021.36.025.345.03.333.033c1.74.196 2.933.616 3.833 1.516.9.9 1.32 2.092 1.516 3.833l.034.333.029.346.025.36.02.373.025.588.012.41.013.644.009.915.004.98-.001 3.313-.003.73-.01.914-.007.433-.011.418-.014.403-.016.388-.021.374-.025.36-.03.345-.033.333c-.196 1.74-.616 2.933-1.516 3.833-.9.9-2.092 1.32-3.833 1.516l-.333.034-.346.029-.36.025-.373.02-.588.025-.41.012-.644.013-.915.009-.98.004-3.313-.001-.73-.003-.914-.01-.433-.007-.418-.011-.403-.014-.388-.016-.374-.021-.36-.025-.345-.03-.333-.033c-1.74-.196-2.933-.616-3.833-1.516-.9-.9-1.32-2.092-1.516-3.833l-.034-.333-.029-.346-.025-.36-.02-.373-.025-.588-.012-.41-.013-.644-.009-.915-.004-.98.001-3.313.003-.73.01-.914.007-.433.011-.418.014-.403.016-.388.021-.374.025-.36.03-.345.033-.333c.196-1.74.616-2.933 1.516-3.833.9-.9 2.092-1.32 3.833-1.516l.333-.034.346-.029.36-.025.373-.02.588-.025.41-.012.644-.013.915-.009.98-.004ZM6.79 7.3H4.05c.13 6.24 3.25 9.99 8.72 9.99h.31v-3.57c2.01.2 3.53 1.67 4.14 3.57h2.84c-.78-2.84-2.83-4.41-4.11-5.01 1.28-.74 3.08-2.54 3.51-4.98h-2.58c-.56 1.98-2.22 3.78-3.8 3.95V7.3H10.5v6.92c-1.6-.4-3.62-2.34-3.71-6.92Z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="pj-nd-footer__bottom">
+          <p>© 2026 PetJournal. Все права защищены.</p>
+          <p class="pj-nd-footer__made-with-care">Сделано с заботой о тех, кто рядом ♡</p>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

@@ -1,191 +1,227 @@
-<div class="events-index journal-dashboard py-4">
-  <section class="journal-workspace-hero mb-4">
-    <div class="journal-hero-main">
-      <div>
-        <div class="text-muted small mb-1"><%= @pet.name %></div>
-        <h1 class="h3 mb-2">Журнал событий</h1>
-        <p class="text-muted mb-0">История здоровья, ухода, документов и будущих действий в хронологическом порядке.</p>
-      </div>
+<% content_for :title, "Журнал — PetJournal" %>
+<% journal_filter_params = request.query_parameters.except("pet_id", "page") %>
+<% has_event_filters = @selected_event_type.present? || @selected_period.present? || @selected_status.present? || @selected_marker.present? || @query.present? %>
 
-      <div class="journal-current-signal">
-        <span>Последняя активность</span>
-        <% if @latest_event.present? %>
-          <h2><%= @latest_event.title.presence || @latest_event.event_type_label %></h2>
-          <p><%= @latest_event.event_date.strftime("%d.%m.%Y") %> · <%= event_structured_summary(@latest_event) %></p>
-        <% else %>
-          <h2>Журнал пока пуст</h2>
-          <p>Добавьте первую запись, чтобы видеть историю питомца на обзоре и главной.</p>
+<div class="pj-journal-page pj-journal-index">
+  <header class="pj-workspace-topbar">
+    <h1>Журнал</h1>
+    <%= render "shared/workspace_notification_link" %>
+  </header>
+
+  <div class="pj-journal-content">
+    <div class="pj-mobile-list-heading">
+      <h1>Журнал</h1>
+      <p>История здоровья и ухода за всеми питомцами в одном месте</p>
+    </div>
+
+    <p class="pj-journal-desktop-subtitle">История здоровья и ухода за всеми питомцами в одном месте</p>
+
+    <div class="pj-journal-toolbar">
+      <details class="pj-journal-pet-switcher">
+        <summary>
+          <span class="pj-journal-pet-avatar <%= "is-all" if @selected_pet.blank? %>">
+            <% if @selected_pet&.photo&.attached? %>
+              <%= image_tag @selected_pet.photo, alt: "" %>
+            <% elsif @selected_pet.present? %>
+              <%= @selected_pet.name.to_s.first.to_s.upcase.presence || "P" %>
+            <% else %>
+              <%= pj_icon(:paw) %>
+            <% end %>
+          </span>
+          <span><%= @selected_pet&.name || "Все питомцы" %></span>
+          <%= pj_icon(:chevron) %>
+        </summary>
+
+        <div class="pj-journal-pet-menu">
+          <%= link_to journal_overview_path(journal_filter_params),
+                      class: class_names("pj-journal-pet-option", active: @selected_pet.blank?) do %>
+            <span class="pj-journal-pet-avatar is-all"><%= pj_icon(:paw) %></span>
+            <span><strong>Все питомцы</strong><small>Общая история</small></span>
+          <% end %>
+
+          <% @journal_pets.each do |pet| %>
+            <%= link_to journal_overview_path(journal_filter_params.merge("pet_id" => pet.id)),
+                        class: class_names("pj-journal-pet-option", active: pet == @selected_pet) do %>
+              <span class="pj-journal-pet-avatar">
+                <% if pet.photo.attached? %>
+                  <%= image_tag pet.photo, alt: "" %>
+                <% else %>
+                  <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
+                <% end %>
+              </span>
+              <span><strong><%= pet.name %></strong><small><%= pet.breed.presence || pet.species.presence || "Питомец" %></small></span>
+            <% end %>
+          <% end %>
+        </div>
+      </details>
+
+      <% if @journal_pets.one? || @selected_pet.present? %>
+        <% add_pet = @selected_pet || @journal_pets.first %>
+        <%= link_to new_pet_pet_event_path(add_pet), class: "pj-journal-add" do %>
+          <%= pj_icon(:plus) %><span>Добавить запись</span>
         <% end %>
-      </div>
-    </div>
-
-    <div class="journal-metrics">
-      <div>
-        <span><%= @total_events_count %></span>
-        <small><%= russian_plural(@total_events_count, "запись", "записи", "записей") %></small>
-      </div>
-      <div>
-        <span><%= @event_type_counts.keys.size %></span>
-        <small><%= russian_plural(@event_type_counts.keys.size, "тип", "типа", "типов") %></small>
-      </div>
-      <div>
-        <span><%= @events_with_files_count %></span>
-        <small>с файлами</small>
-      </div>
-      <div>
-        <span><%= @events_with_follow_up_count %></span>
-        <small>с будущим действием</small>
-      </div>
-    </div>
-
-    <div class="journal-quick-actions">
-      <%= link_to "Добавить событие", new_pet_pet_event_path(@pet), class: "btn btn-primary" %>
-      <%= link_to "Обзор питомца", pet_path(@pet), class: "btn btn-outline-secondary" %>
-      <% quick_event_actions(@pet).each do |label, path| %>
-        <%= link_to label, path, class: "btn btn-outline-primary btn-sm" %>
-      <% end %>
-    </div>
-  </section>
-
-  <%= render "shared/pet_tabs", pet: @pet %>
-
-  <section class="journal-filter-panel compact-filter-panel mb-4">
-    <div class="section-heading compact">
-      <div>
-        <div class="filter-panel-title mb-0">Фильтры</div>
-        <div class="compact-filter-summary"><%= journal_filter_summary(@selected_event_type, @selected_period, @selected_status, @query) %></div>
-      </div>
-    </div>
-
-    <%= form_with url: pet_pet_events_path(@pet), method: :get, class: "journal-filter-form" do |form| %>
-      <div class="journal-filter-fields">
-        <div class="journal-filter-field">
-          <%= label_tag :type, "Тип события" %>
-          <%= select_tag :type,
-                         options_for_select(
-                           [["Все типы (#{@total_events_count})", ""]] +
-                             @event_type_filters.map { |event_type, label| ["#{label} (#{@event_type_counts.fetch(event_type, 0)})", event_type] },
-                           @selected_event_type
-                         ),
-                         class: "form-select" %>
-        </div>
-
-        <div class="journal-filter-field">
-          <%= label_tag :period, "Период" %>
-          <%= select_tag :period,
-                         options_for_select(
-                           [["Все время", ""], ["Месяц", "month"], ["3 месяца", "quarter"], ["Год", "year"]],
-                           @selected_period
-                         ),
-                         class: "form-select" %>
-        </div>
-
-        <div class="journal-filter-field">
-          <%= label_tag :status, "Состояние" %>
-          <%= select_tag :status,
-                         options_for_select(
-                           [["Все записи", ""], ["С файлами", "with_files"], ["С будущим действием", "follow_up"]],
-                           @selected_status
-                         ),
-                         class: "form-select" %>
-        </div>
-      </div>
-
-      <div class="journal-filter-search-row">
-        <%= form.search_field :q,
-                              value: @query,
-                              class: "form-control",
-                              placeholder: "Поиск: препарат, клиника, врач, диагноз…",
-                              aria: { label: "Поиск по журналу" } %>
-        <%= form.submit "Применить", class: "btn btn-outline-primary" %>
-      </div>
-
-      <% if @selected_event_type.present? || @selected_period.present? || @selected_status.present? || @query.present? %>
-        <%= link_to "Сбросить фильтры", pet_pet_events_path(@pet), class: "journal-filter-reset" %>
-      <% end %>
-    <% end %>
-  </section>
-
-  <% if @pet_events.any? %>
-    <div class="journal-timeline enhanced">
-      <% @pet_events.group_by { |event| event.event_date.beginning_of_month }.each do |month, events| %>
-        <section class="journal-month">
-          <div class="journal-month-heading">
-            <h2 class="journal-month-title"><%= event_month_label(month) %></h2>
-            <span><%= events.size %> <%= russian_plural(events.size, "запись", "записи", "записей") %></span>
-          </div>
-
-          <div class="journal-month-events">
-            <% events.each do |event| %>
-              <article class="journal-event enhanced <%= event_tone(event.event_type) %>">
-                <div class="journal-event-date">
-                  <span><%= event.event_date.day %></span>
-                  <small><%= event.event_date.strftime("%m.%Y") %></small>
-                </div>
-
-                <div class="journal-event-body">
-                  <div class="journal-event-topline">
-                    <div class="d-flex flex-wrap align-items-center gap-2">
-                      <span class="event-badge"><%= event.event_type_label %></span>
-                      <% if event_attachment_label(event).present? %>
-                        <span class="attachment-pill"><%= event_attachment_label(event) %></span>
-                      <% end %>
-                      <% if event.next_action_at.present? %>
-                        <span class="signal-pill">Следующее: <%= event.next_action_at.strftime("%d.%m %H:%M") %></span>
-                      <% end %>
-                    </div>
-                  </div>
-
-                  <h3 class="h5 mb-2">
-                    <%= link_to event.title.presence || event.event_type_label,
-                                pet_pet_event_path(@pet, event),
-                                class: "text-dark text-decoration-none" %>
-                  </h3>
-
-                  <p class="text-muted mb-3"><%= event_structured_summary(event) %></p>
-
-                  <% if event.structured? %>
-                    <div class="event-structured-preview mb-3">
-                      <% event.structured_rows.first(4).each do |label, value| %>
-                        <span><%= label %>: <strong><%= value %></strong></span>
-                      <% end %>
-                    </div>
+      <% elsif @journal_pets.many? %>
+        <details class="pj-journal-add-picker">
+          <summary class="pj-journal-add">
+            <%= pj_icon(:plus) %><span>Добавить запись</span>
+          </summary>
+          <div class="pj-journal-add-picker__menu">
+            <small>Для какого питомца?</small>
+            <% @journal_pets.each do |pet| %>
+              <%= link_to new_pet_pet_event_path(pet), class: "pj-journal-add-picker__item" do %>
+                <span class="pj-journal-pet-avatar">
+                  <% if pet.photo.attached? %>
+                    <%= image_tag pet.photo, alt: "" %>
+                  <% else %>
+                    <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
                   <% end %>
-
-                  <div class="journal-event-actions">
-                    <%= link_to "Открыть", pet_pet_event_path(@pet, event), class: "btn btn-outline-primary btn-sm" %>
-                    <%= link_to "Редактировать", edit_pet_pet_event_path(@pet, event), class: "btn btn-outline-secondary btn-sm" %>
-                    <% if event.next_action_at.present? %>
-                      <%= link_to "Создать напоминание",
-                                  new_pet_reminder_path(@pet, reminder: { title: "Повторить: #{event.title.presence || event.event_type_label}", remind_at: event.next_action_at }),
-                                  class: "btn btn-outline-secondary btn-sm" %>
-                    <% end %>
-                  </div>
-                </div>
-              </article>
+                </span>
+                <span><strong><%= pet.name %></strong><small><%= pet.breed.presence || pet.species.presence || "Питомец" %></small></span>
+              <% end %>
             <% end %>
           </div>
-        </section>
+        </details>
       <% end %>
     </div>
-  <% elsif @selected_event_type.present? || @selected_period.present? || @selected_status.present? || @query.present? %>
-    <div class="empty-panel">
-      <h2 class="h4 mb-2">По фильтрам ничего нет</h2>
-      <p class="text-muted mb-3">Измените период, тип события или поисковый запрос. Можно сразу добавить новую запись с нужным типом.</p>
-      <div class="d-flex flex-wrap gap-2">
-        <%= link_to "Показать все", pet_pet_events_path(@pet), class: "btn btn-outline-secondary" %>
-        <%= link_to "Добавить событие", new_pet_pet_event_path(@pet, type: @selected_event_type.presence), class: "btn btn-primary" %>
+
+    <%= form_with url: journal_overview_path, method: :get, class: "pj-journal-filters" do |form| %>
+      <%= hidden_field_tag :pet_id, @selected_pet.id if @selected_pet.present? %>
+
+      <div class="pj-journal-filter pj-journal-filter--search">
+        <span class="pj-journal-search-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+        </span>
+        <%= form.search_field :q,
+                              value: @query,
+                              placeholder: "Поиск по событиям",
+                              aria: { label: "Поиск по журналу" } %>
       </div>
-    </div>
-  <% else %>
-    <div class="empty-panel">
-      <h2 class="h4 mb-2">Журнал пока пуст</h2>
-      <p class="text-muted mb-3">Добавьте первую запись: заметку, вес, прививку, обработку или визит к врачу.</p>
-      <div class="d-flex flex-wrap gap-2">
-        <% quick_event_actions(@pet).each do |label, path| %>
-          <%= link_to label, path, class: label == "Заметка" ? "btn btn-primary" : "btn btn-outline-primary" %>
+
+      <div class="pj-journal-filter">
+        <%= select_tag :type,
+                       options_for_select([["Все типы", ""]] + @event_type_filters.map { |key, label| [label, key] }, @selected_event_type),
+                       aria: { label: "Тип события" } %>
+      </div>
+
+      <div class="pj-journal-filter">
+        <%= select_tag :period,
+                       options_for_select([["Все время", ""], ["Месяц", "month"], ["3 месяца", "quarter"], ["Год", "year"]], @selected_period),
+                       aria: { label: "Период" } %>
+      </div>
+
+      <div class="pj-journal-filter">
+        <%= select_tag :status,
+                       options_for_select([["Все состояния", ""]] + PetEvent::STATUS_LABELS.map { |key, label| [label, key] }, @selected_status),
+                       aria: { label: "Состояние" } %>
+      </div>
+
+      <div class="pj-journal-filter">
+        <%= select_tag :marker,
+                       options_for_select([["Все записи", ""], ["С файлами", "with_files"], ["С будущим действием", "follow_up"]], @selected_marker),
+                       aria: { label: "Дополнительный фильтр" } %>
+      </div>
+
+      <button type="submit" class="pj-journal-filter-submit pj-journal-filter-submit--icon" aria-label="Найти события" title="Найти">
+        <span class="pj-journal-filter-submit__label">Применить</span>
+        <svg class="pj-journal-filter-submit__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="5.75"/>
+          <path d="m15 15 4.25 4.25"/>
+        </svg>
+      </button>
+
+      <% if has_event_filters %>
+        <%= link_to "Сбросить",
+                    journal_overview_path(pet_id: @selected_pet&.id),
+                    class: "pj-journal-filter-reset" %>
+      <% end %>
+    <% end %>
+
+    <%= render "mobile_filters" %>
+
+    <% if @pet_events.any? %>
+      <div class="pj-journal-table-wrap">
+        <div class="pj-journal-table-head">
+          <span>Дата</span><span>Событие</span><span>Детали</span><span>Состояние</span><span></span>
+        </div>
+
+        <% @pet_events.each do |event| %>
+          <% state_label, state_tone = journal_event_state(event) %>
+          <%= link_to pet_pet_event_path(event.pet, event), class: "pj-journal-row" do %>
+            <span class="pj-journal-row__date"><%= event_date_time_label(event) %></span>
+            <span class="pj-journal-row__event">
+              <span class="pj-journal-row__icon"><%= journal_event_icon(event.event_type) %></span>
+              <span>
+                <strong><%= journal_event_title(event) %></strong>
+                <small><%= @selected_pet.present? ? event.event_type_label : "#{event.pet.name} · #{event.event_type_label}" %></small>
+              </span>
+            </span>
+            <span class="pj-journal-row__detail">
+              <%= truncate(journal_event_detail(event).to_s, length: 72) %>
+              <% if event.files.attached? %><small><%= event_attachment_label(event) %></small><% end %>
+            </span>
+            <span><span class="pj-journal-state <%= state_tone %>"><%= state_label %></span></span>
+            <span class="pj-journal-row__chevron"><%= pj_icon(:chevron) %></span>
+          <% end %>
         <% end %>
       </div>
-    </div>
-  <% end %>
+
+      <div class="pj-journal-mobile-list">
+        <% @pet_events.each do |event| %>
+          <% state_label, state_tone = journal_event_state(event) %>
+          <article class="pj-journal-mobile-card-wrap">
+            <%= link_to pet_pet_event_path(event.pet, event), class: "pj-journal-mobile-card" do %>
+              <span class="pj-journal-mobile-card__icon"><%= journal_event_icon(event.event_type) %></span>
+              <span class="pj-journal-mobile-card__body">
+                <small><%= event_date_time_label(event) %></small>
+                <strong><%= journal_event_title(event) %></strong>
+                <% if @selected_pet.blank? %>
+                  <small class="pj-journal-mobile-card__pet"><%= event.pet.name %> · <%= event.event_type_label %></small>
+                <% end %>
+                <span><%= truncate(journal_event_detail(event).to_s, length: 54) %></span>
+                <em class="pj-journal-state <%= state_tone %>"><%= state_label %></em>
+              </span>
+            <% end %>
+
+            <%= link_to edit_pet_pet_event_path(event.pet, event),
+                        class: "pj-journal-mobile-card__edit",
+                        aria: { label: "Редактировать #{journal_event_title(event)}" },
+                        title: "Редактировать" do %>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 20l4.1-1 10.8-10.8a2.1 2.1 0 0 0-3-3L5.1 16 4 20z"/>
+                <path d="m14.6 6.5 3 3"/>
+              </svg>
+            <% end %>
+          </article>
+        <% end %>
+      </div>
+
+      <% if @has_more_events %>
+        <div class="pj-journal-load-more">
+          <%= link_to journal_overview_path(request.query_parameters.merge("page" => @page + 1)),
+                      class: "pj-journal-load-more__button" do %>
+            <span>Показать ещё</span>
+            <small><%= [@matching_events_count - @events_limit, PetEventsController::PAGE_SIZE].min %> записей</small>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <section class="pj-journal-empty">
+        <span><%= pj_icon(:journal) %></span>
+        <h2><%= has_event_filters ? "Ничего не найдено" : "Журнал пока пуст" %></h2>
+        <p>
+          <% if @journal_pets.empty? %>
+            Добавьте питомца, чтобы начать сохранять важные события, наблюдения и историю здоровья.
+          <% elsif @selected_pet.present? %>
+            Здесь будет храниться история здоровья и ухода за <%= @selected_pet.name %>.
+          <% else %>
+            Здесь будет храниться общая история здоровья и ухода за вашими питомцами.
+          <% end %>
+        </p>
+        <% if @selected_pet.present? || @journal_pets.one? %>
+          <% empty_add_pet = @selected_pet || @journal_pets.first %>
+          <%= link_to "Добавить запись", new_pet_pet_event_path(empty_add_pet), class: "pj-journal-add" if empty_add_pet %>
+        <% end %>
+      </section>
+    <% end %>
+  </div>
 </div>

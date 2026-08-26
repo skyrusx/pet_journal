@@ -1,4 +1,9 @@
 class NotificationChannelsController < ApplicationController
+  layout "workspace_new_design"
+
+  DELIVERY_PAGE_SIZE = 25
+  DELIVERY_MOBILE_PAGE_SIZE = 10
+
   before_action :authenticate_user!
   before_action :set_channel, only: %i[edit update destroy test]
   before_action :set_delivery, only: %i[retry_delivery]
@@ -6,21 +11,42 @@ class NotificationChannelsController < ApplicationController
   def index
     @channels = current_user.notification_channels.order(:channel_type, :created_at)
     @selected_delivery_status = params[:delivery_status].presence_in(%w[all pending sent failed skipped]) || "all"
-    @deliveries = filtered_deliveries.limit(50)
+    @page = [params[:page].to_i, 1].max
+    @delivery_page_size = mobile_request? ? DELIVERY_MOBILE_PAGE_SIZE : DELIVERY_PAGE_SIZE
+    @deliveries_limit = @delivery_page_size * @page
+
+    deliveries_scope = filtered_deliveries
+    @matching_deliveries_count = deliveries_scope.count
+    @has_more_deliveries = @matching_deliveries_count > @deliveries_limit
+    @deliveries = deliveries_scope.limit(@deliveries_limit)
     @delivery_counts = delivery_counts
-    @vapid_public_key = ENV["VAPID_PUBLIC_KEY"]
+    @vapid_public_key = WebPushConfiguration.public_key
   end
 
   def new
-    @channel = current_user.notification_channels.new(channel_type: params[:type].presence || :email)
+    available_types = %w[email vk]
+    available_types << "telegram" if TelegramConfiguration.configured?
+    requested_type = params[:type].presence_in(available_types) || "email"
+
+    @channel = current_user.notification_channels.new(
+      channel_type: requested_type,
+      name: default_channel_name(requested_type)
+    )
   end
 
   def create
     @channel = current_user.notification_channels.new(channel_params)
+
+    unless channel_available_for_creation?(@channel)
+      @channel.errors.add(:channel_type, "Telegram пока в разработке и недоступен для подключения.")
+      render :new, status: :unprocessable_entity
+      return
+    end
+
     apply_web_push_settings
     mark_verification
 
-    if @channel.save
+    if prepare_channel_for_save && @channel.save
       redirect_to notification_channels_path, notice: "Канал уведомлений добавлен."
     else
       render :new, status: :unprocessable_entity
@@ -34,7 +60,7 @@ class NotificationChannelsController < ApplicationController
     apply_web_push_settings
     mark_verification
 
-    if @channel.save
+    if prepare_channel_for_save && @channel.save
       redirect_to notification_channels_path, notice: "Канал уведомлений обновлен."
     else
       render :edit, status: :unprocessable_entity
@@ -56,7 +82,7 @@ class NotificationChannelsController < ApplicationController
     end
 
     delivery = reminder.notification_deliveries.create!(notification_channel: @channel)
-    NotificationDeliveryJob.perform_now(delivery)
+    NotificationDeliveryJob.perform_now(delivery, test_delivery: true)
 
     if delivery.reload.status_sent?
       redirect_to notification_channels_path, notice: "Тестовая отправка выполнена."
@@ -107,6 +133,10 @@ class NotificationChannelsController < ApplicationController
     )
   end
 
+  def channel_available_for_creation?(channel)
+    !channel.channel_telegram? || TelegramConfiguration.configured?
+  end
+
   def apply_web_push_settings
     return unless @channel.channel_web_push?
 
@@ -117,8 +147,31 @@ class NotificationChannelsController < ApplicationController
     }
   end
 
+  def prepare_channel_for_save
+    return true unless @channel.channel_vk?
+
+    resolved = NotificationChannelConnectors::VkProfileResolver.call(@channel.address)
+    @channel.address = resolved.user_id
+    @channel.settings = @channel.settings.merge(
+      "screen_name" => resolved.screen_name,
+      "display_name" => resolved.display_name
+    ).compact
+    true
+  rescue NotificationChannelConnectors::VkProfileResolver::Error => e
+    @channel.errors.add(:address, e.message)
+    false
+  end
+
   def mark_verification
     @channel.verified_at ||= Time.current if @channel.channel_email?
+  end
+
+  def default_channel_name(channel_type)
+    {
+      "email" => "Email",
+      "telegram" => "Telegram",
+      "vk" => "ВКонтакте"
+    }.fetch(channel_type, "Канал")
   end
 
   def filtered_deliveries

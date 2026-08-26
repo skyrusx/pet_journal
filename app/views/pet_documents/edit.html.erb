@@ -1,11 +1,52 @@
-<div class="py-4">
-  <div class="page-heading mb-4">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1">Редактировать документ</h1>
-      <p class="text-muted mb-0">Обновите реквизиты, файлы, срок действия и связанные действия.</p>
-    </div>
-  </div>
+<% content_for :title, "Редактирование документа — PetJournal" %>
 
-  <%= render "form", pet: @pet, document: @document %>
+<div class="pj-documents-page pj-document-form-page">
+  <header class="pj-workspace-topbar pj-workspace-topbar--form">
+    <%= link_to pet_pet_document_path(@pet, @document), class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>Назад к документу</span>
+    <% end %>
+
+    <div class="pj-desktop-detail-actions" aria-label="Действия с документом">
+      <%= button_to pet_pet_document_path(@pet, @document),
+                    method: :delete,
+                    class: "pj-desktop-detail-action pj-desktop-detail-action--danger",
+                    form_class: "pj-desktop-detail-action-form",
+                    form: { onsubmit: "return confirm('Удалить документ?')" },
+                    aria: { label: "Удалить документ" },
+                    title: "Удалить" do %>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+        </svg>
+      <% end %>
+    </div>
+  </header>
+
+  <div class="pj-documents-content pj-document-form-content">
+    <div class="pj-mobile-detail-nav pj-mobile-form-nav pj-document-form-mobile-nav">
+      <%= link_to pet_pet_document_path(@pet, @document), class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К документу</span>
+      <% end %>
+
+      <div class="pj-mobile-detail-actions" aria-label="Действия с документом">
+        <%= button_to pet_pet_document_path(@pet, @document),
+                      method: :delete,
+                      class: "pj-mobile-detail-action pj-mobile-detail-action--danger",
+                      form_class: "pj-mobile-detail-action-form",
+                      form: { onsubmit: "return confirm('Удалить документ?')" },
+                      aria: { label: "Удалить документ" },
+                      title: "Удалить" do %>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+          </svg>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="pj-document-form-heading">
+      <h1>Редактировать документ</h1>
+      <p>Обновите реквизиты, файлы, срок действия и связанные действия.</p>
+    </div>
+
+    <%= render "form", pet: @pet, document: @document %>
+  </div>
 </div>

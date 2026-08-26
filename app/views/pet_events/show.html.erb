@@ -1,127 +1,149 @@
-<div class="event-show py-4">
-  <section class="event-detail-hero <%= event_tone(@pet_event.event_type) %> mb-4">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %> · <%= event_date_label(@pet_event.event_date) %></div>
-      <span class="event-badge mb-3"><%= @pet_event.event_type_label %></span>
-      <h1 class="h3 mb-2"><%= @pet_event.title.presence || @pet_event.event_type_label %></h1>
-      <p class="text-muted mb-0"><%= event_type_hint(@pet_event.event_type) %></p>
-    </div>
+<% content_for :title, "#{journal_event_title(@pet_event)} — #{@pet.name} — PetJournal" %>
+<% state_label, state_tone = journal_event_state(@pet_event) %>
 
-    <div class="event-detail-actions">
-      <%= link_to "К журналу", pet_pet_events_path(@pet), class: "btn btn-outline-secondary" %>
-      <%= link_to "К обзору", pet_path(@pet), class: "btn btn-outline-secondary" %>
-      <%= link_to "Редактировать", edit_pet_pet_event_path(@pet, @pet_event), class: "btn btn-primary" %>
-    </div>
-  </section>
+<div class="pj-journal-page pj-journal-show">
+  <header class="pj-workspace-topbar pj-journal-detail-topbar">
+    <%= link_to pet_pet_events_path(@pet), class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>Назад к журналу</span>
+    <% end %>
 
-  <div class="row g-4">
-    <section class="col-lg-7">
-      <% if @pet_event.structured? %>
-        <div class="workspace-section mb-4">
-          <div class="section-heading compact">
-            <div>
-              <div class="text-muted small mb-1">Структура</div>
-              <h2 class="h4 mb-0">Данные события</h2>
-            </div>
-          </div>
-
-          <dl class="details-list">
-            <% @pet_event.structured_rows.each do |label, value| %>
-              <div><dt><%= label %></dt><dd><%= simple_format(value.to_s) %></dd></div>
-            <% end %>
-          </dl>
-        </div>
+    <div class="pj-desktop-detail-actions" aria-label="Действия с событием">
+      <%= link_to edit_pet_pet_event_path(@pet, @pet_event),
+                  class: "pj-desktop-detail-action",
+                  aria: { label: "Редактировать событие" },
+                  title: "Редактировать" do %>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4.5 19.5 5.7 15l9.9-9.9a2.15 2.15 0 0 1 3 0l.3.3a2.15 2.15 0 0 1 0 3L9 18.3l-4.5 1.2Z"/>
+          <path d="m14.3 6.4 3.3 3.3"/>
+        </svg>
       <% end %>
 
-      <div class="workspace-section mb-4">
-        <div class="section-heading compact">
-          <div>
-            <div class="text-muted small mb-1">Запись</div>
-            <h2 class="h4 mb-0">Описание</h2>
-          </div>
-        </div>
+      <%= button_to pet_pet_event_path(@pet, @pet_event),
+                    method: :delete,
+                    class: "pj-desktop-detail-action pj-desktop-detail-action--danger",
+                    form_class: "pj-desktop-detail-action-form",
+                    form: { onsubmit: "return confirm('Удалить событие?')" },
+                    aria: { label: "Удалить событие" },
+                    title: "Удалить" do %>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+        </svg>
+      <% end %>
+    </div>
+  </header>
 
-        <div class="event-description">
-          <%= simple_format(@pet_event.description.presence || "Описание не заполнено.") %>
-        </div>
+  <div class="pj-journal-content pj-journal-detail-content">
+    <div class="pj-mobile-detail-nav pj-journal-mobile-detail-nav">
+      <%= link_to pet_pet_events_path(@pet), class: "pj-mobile-context-back pj-journal-mobile-back" do %>
+        <%= pj_icon(:chevron) %><span>К журналу</span>
+      <% end %>
+
+      <div class="pj-mobile-detail-actions" aria-label="Действия с событием">
+        <%= link_to edit_pet_pet_event_path(@pet, @pet_event),
+                    class: "pj-mobile-detail-action",
+                    aria: { label: "Редактировать событие" },
+                    title: "Редактировать" do %>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4.5 19.5 5.7 15l9.9-9.9a2.15 2.15 0 0 1 3 0l.3.3a2.15 2.15 0 0 1 0 3L9 18.3l-4.5 1.2Z"/>
+            <path d="m14.3 6.4 3.3 3.3"/>
+          </svg>
+        <% end %>
+
+        <%= button_to pet_pet_event_path(@pet, @pet_event),
+                      method: :delete,
+                      class: "pj-mobile-detail-action pj-mobile-detail-action--danger",
+                      form_class: "pj-mobile-detail-action-form",
+                      form: { onsubmit: "return confirm('Удалить событие?')" },
+                      aria: { label: "Удалить событие" },
+                      title: "Удалить" do %>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+          </svg>
+        <% end %>
       </div>
+    </div>
 
-      <% if @pet_event.files.attached? %>
-        <section class="workspace-section">
-          <div class="section-heading compact">
-            <div>
-              <div class="text-muted small mb-1">Документы</div>
-              <h2 class="h4 mb-0"><%= @pet_event.files.count %> <%= russian_plural(@pet_event.files.count, "файл", "файла", "файлов") %></h2>
-            </div>
+    <div class="pj-journal-detail-grid">
+      <article class="pj-journal-event-sheet">
+        <div class="pj-journal-event-heading">
+          <span class="pj-journal-event-heading__icon"><%= journal_event_icon(@pet_event.event_type) %></span>
+          <div>
+            <h1><%= journal_event_title(@pet_event) %></h1>
+            <p><%= event_date_time_label(@pet_event) %></p>
           </div>
-
-          <div class="document-list">
-            <% @pet_event.files.each do |file| %>
-              <div class="document-row">
-                <div>
-                  <div class="fw-semibold"><%= file.filename %></div>
-                  <div class="text-muted small"><%= event_file_label(file) %></div>
-                </div>
-                <%= link_to "Открыть", url_for(file), class: "btn btn-outline-primary btn-sm", target: "_blank", rel: "noopener" %>
-              </div>
-            <% end %>
-          </div>
-        </section>
-      <% end %>
-    </section>
-
-    <aside class="col-lg-5">
-      <section class="details-panel mb-4">
-        <div class="section-heading compact">
-          <h2 class="h4 mb-0">Детали</h2>
+          <span class="pj-journal-state <%= state_tone %>"><%= state_label %></span>
         </div>
 
-        <dl class="details-list">
+        <dl class="pj-journal-detail-list">
           <div><dt>Питомец</dt><dd><%= @pet.name %></dd></div>
-          <div><dt>Тип</dt><dd><%= @pet_event.event_type_label %></dd></div>
-          <div><dt>Дата</dt><dd><%= event_date_label(@pet_event.event_date) %></dd></div>
-          <div><dt>Файлы</dt><dd><%= @pet_event.files.count %> <%= russian_plural(@pet_event.files.count, "файл", "файла", "файлов") %></dd></div>
-          <% if @pet_event.next_action_at.present? %>
-            <div><dt>Следующее действие</dt><dd><%= l(@pet_event.next_action_at) %></dd></div>
+          <div><dt>Тип события</dt><dd><%= @pet_event.event_type_label %></dd></div>
+          <div><dt>Состояние</dt><dd><%= @pet_event.status_label %></dd></div>
+          <div><dt>Дата и время</dt><dd><%= event_date_time_label(@pet_event) %></dd></div>
+          <% @pet_event.structured_rows.each do |label, value| %>
+            <div><dt><%= label %></dt><dd><%= simple_format(value.to_s) %></dd></div>
           <% end %>
-          <% if @pet_event.pet_documents.any? %>
-            <div>
-              <dt>Документы</dt>
-              <dd><%= safe_join(@pet_event.pet_documents.map { |document| link_to(document.title, pet_pet_document_path(@pet, document)) }, ", ") %></dd>
-            </div>
+          <% if @pet_event.next_action_at.present? %>
+            <div><dt>Следующее действие</dt><dd><%= l(@pet_event.next_action_at, format: :default) %></dd></div>
           <% end %>
         </dl>
-      </section>
 
-      <% if @pet_event.next_action_at.present? %>
-        <section class="action-panel mb-4">
-          <div class="text-muted small mb-1">Следующий шаг</div>
-          <h2 class="h5 mb-2">Закрепить в напоминаниях</h2>
-          <p class="text-muted mb-3">Событие содержит дату следующего действия. Создайте напоминание, чтобы оно попало в общий план ухода.</p>
-          <%= link_to "Создать напоминание",
-                      new_pet_reminder_path(
-                        @pet,
-                        reminder: {
-                          title: @pet_event.title.presence || @pet_event.event_type_label,
-                          reminder_type: @pet_event.event_type.in?(Reminder.reminder_types.keys) ? @pet_event.event_type : "other",
-                          remind_at: @pet_event.next_action_at,
-                          note: "Создано из записи журнала от #{event_date_label(@pet_event.event_date)}."
-                        }
-                      ),
-                      class: "btn btn-primary btn-sm w-100" %>
+        <section class="pj-journal-note-block">
+          <h2>Заметки</h2>
+          <%= simple_format(@pet_event.description.presence || "Заметки не добавлены.") %>
         </section>
-      <% end %>
 
-      <section class="action-panel danger-zone">
-        <div class="text-muted small mb-1">Опасное действие</div>
-        <h2 class="h5 mb-2">Удалить запись</h2>
-        <p class="text-muted mb-3">Запись исчезнет из журнала питомца вместе с привязанными файлами.</p>
-        <%= button_to "Удалить событие",
-                      pet_pet_event_path(@pet, @pet_event),
-                      method: :delete,
-                      class: "btn btn-outline-danger btn-sm",
-                      form: { onsubmit: "return confirm('Удалить событие?')" } %>
-      </section>
-    </aside>
+        <% if @pet_event.files.attached? %>
+          <section class="pj-journal-files">
+            <h2>Файлы</h2>
+            <% @pet_event.files.each do |file| %>
+              <div class="pj-journal-file-row">
+                <span class="pj-journal-file-row__icon"><%= pj_icon(:file) %></span>
+                <span><strong><%= file.filename %></strong><small><%= number_to_human_size(file.byte_size) %></small></span>
+                <%= link_to url_for(file), target: "_blank", rel: "noopener", aria: { label: "Открыть #{file.filename}" } do %>
+                  <%= pj_icon(:chevron) %>
+                <% end %>
+              </div>
+            <% end %>
+          </section>
+        <% end %>
+
+        <% if @pet_event.next_action_at.present? %>
+          <section class="pj-journal-follow-up">
+            <div><strong>Не забыть следующий шаг</strong><small><%= l(@pet_event.next_action_at, format: :default) %></small></div>
+            <%= link_to "Создать напоминание",
+                        new_pet_reminder_path(
+                          @pet,
+                          reminder: {
+                            title: journal_event_title(@pet_event),
+                            remind_at: @pet_event.next_action_at,
+                            note: "Создано из записи журнала от #{event_date_label(@pet_event.event_date)}."
+                          }
+                        ),
+                        class: "pj-journal-secondary-action" %>
+          </section>
+        <% end %>
+      </article>
+
+      <aside class="pj-journal-event-aside">
+        <%= link_to pet_path(@pet), class: "pj-journal-pet-card" do %>
+          <span class="pj-journal-pet-card__photo">
+            <% if @pet.photo.attached? %>
+              <%= image_tag @pet.photo, alt: @pet.name %>
+            <% else %>
+              <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
+            <% end %>
+          </span>
+          <span><strong><%= @pet.name %></strong><small><%= @pet.breed.presence || @pet.species.presence || "Питомец" %></small><small><%= pet_age(@pet) %></small></span>
+        <% end %>
+
+        <section class="pj-journal-history-card">
+          <h2>История события</h2>
+          <div><span></span><p><strong>Создано</strong><small><%= l(@pet_event.created_at, format: :default) %></small></p></div>
+          <% if @pet_event.updated_at > @pet_event.created_at + 1.second %>
+            <div><span></span><p><strong>Обновлено</strong><small><%= l(@pet_event.updated_at, format: :default) %></small></p></div>
+          <% end %>
+        </section>
+      </aside>
+    </div>
   </div>
 </div>

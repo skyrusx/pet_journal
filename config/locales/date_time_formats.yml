@@ -1,0 +1,15 @@
+ru:
+  date:
+    formats:
+      short: "%d.%m.%Y"
+  time:
+    formats:
+      short: "%d.%m.%Y %H:%M"
+
+en:
+  date:
+    formats:
+      short: "%d/%m/%Y"
+  time:
+    formats:
+      short: "%d/%m/%Y %H:%M"

@@ -9,6 +9,21 @@ module ApplicationHelper
     end
   end
 
+  def pet_age_label(birth_date, today: Date.current)
+    return nil if birth_date.blank?
+
+    months = (today.year - birth_date.year) * 12 + today.month - birth_date.month
+    months -= 1 if today.day < birth_date.day
+    months = [months, 0].max
+
+    years, remaining_months = months.divmod(12)
+    parts = []
+    parts << "#{years} #{russian_plural(years, "год", "года", "лет")}" if years.positive?
+    parts << "#{remaining_months} #{russian_plural(remaining_months, "месяц", "месяца", "месяцев")}" if remaining_months.positive?
+
+    parts.presence&.join(" ") || "меньше месяца"
+  end
+
   def app_nav_link(label, path, active: false, **options)
     classes = class_names("app-nav-link", active: active)
     link_to(label, path, options.merge(class: classes))
@@ -20,6 +35,7 @@ module ApplicationHelper
       journal: '<path d="M6 4.5h9a3 3 0 0 1 3 3V20H8a3 3 0 0 0-3 3V6a1.5 1.5 0 0 1 1-1.5z"/><path d="M8 16h7M8 12h7M8 8h5"/>',
       plus: '<path d="M12 5v14M5 12h14"/>',
       clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+      alarm: '<circle cx="12" cy="13" r="7"/><path d="M12 9.5V13l2.6 1.7M6.4 4.2 3.8 6.8M17.6 4.2l2.6 2.6M7.2 19.1 5.8 21M16.8 19.1l1.4 1.9M9 3h6"/>',
       more: '<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',
       paw: '<circle cx="7.2" cy="8.3" r="2"/><circle cx="12" cy="6.6" r="2"/><circle cx="16.8" cy="8.3" r="2"/><path d="M6.2 16.2c.5-3 3.1-5.2 5.8-5.2s5.3 2.2 5.8 5.2c.3 1.8-1 3.3-2.8 3.3-.9 0-1.7-.3-3-.3s-2.1.3-3 .3c-1.8 0-3.1-1.5-2.8-3.3z"/>',
       tag: '<path d="M4 12.5 12.5 4H20v7.5L11.5 20 4 12.5z"/><circle cx="16.5" cy="7.5" r="1.3"/>',
@@ -60,22 +76,29 @@ module ApplicationHelper
     [
       { key: :home, label: "Главная", path: root_path, icon: :home, active: mobile_nav_active?(:home) },
       { key: :journal, label: "Журнал", path: pet.present? ? pet_pet_events_path(pet) : pets_path, icon: :journal, active: mobile_nav_active?(:journal) },
-      { key: :reminders, label: "Напом.", aria_label: "Напоминания", path: pet.present? ? pet_reminders_path(pet) : pets_path, icon: :clock, active: mobile_nav_active?(:reminders), badge: mobile_reminders_badge },
+      { key: :reminders, label: "Напом.", aria_label: "Напоминания", path: pet.present? ? pet_reminders_path(pet) : pets_path, icon: :alarm, active: mobile_nav_active?(:reminders), badge: mobile_reminders_badge },
       { key: :more, label: "Ещё", icon: :more, active: mobile_nav_active?(:more) }
     ]
   end
 
   def mobile_add_actions
     pet = mobile_nav_pet
-    return [{ label: "Питомца", path: new_pet_path, icon: :paw }] unless pet.present?
+    notification_channel_action = { label: "Канал уведомлений", path: new_notification_channel_path, icon: :bell }
+
+    return [
+      { label: "Питомца", path: new_pet_path, icon: :paw },
+      notification_channel_action
+    ] unless pet.present?
 
     [
       { label: "Событие в журнал", path: new_pet_pet_event_path(pet), icon: :journal },
-      { label: "Напоминание", path: new_pet_reminder_path(pet), icon: :clock },
+      { label: "Напоминание", path: new_pet_reminder_path(pet), icon: :alarm },
       { label: "Вес", path: new_pet_pet_event_path(pet, type: :weight), icon: :plus },
-      { label: "Лекарство / обработка", path: new_pet_pet_event_path(pet, type: :treatment), icon: :plus },
+      { label: "Лекарство", path: new_pet_pet_event_path(pet, type: :treatment), icon: :plus },
+      { label: "Обработка от паразитов", path: new_pet_pet_event_path(pet, type: :parasite_treatment), icon: :plus },
       { label: "Вакцинация", path: new_pet_pet_event_path(pet, type: :vaccination), icon: :plus },
-      { label: "Документ", path: new_pet_pet_document_path(pet), icon: :file }
+      { label: "Документ", path: new_pet_pet_document_path(pet), icon: :file },
+      notification_channel_action
     ]
   end
 
@@ -83,12 +106,13 @@ module ApplicationHelper
     pet = mobile_nav_pet
     items = [
       { label: "Мои питомцы", path: pets_path, icon: :paw, active: controller_name == "pets" },
-      { label: "Настройки уведомлений", path: notification_channels_path, icon: :bell, active: controller_name == "notification_channels" },
+      { label: "Уведомления", path: notifications_path, icon: :bell, active: controller_name == "in_app_notifications" },
+      { label: "Настройки уведомлений", path: notification_channels_path, icon: :settings, active: controller_name == "notification_channels" },
       { label: "Аккаунт", path: edit_user_registration_path, icon: :user, active: devise_controller? }
     ]
 
     if pet.present?
-      items.insert(1, { label: "PetTag", path: pet_pet_tag_path(pet), icon: :tag, active: controller_name == "pet_tags" })
+      items.insert(1, { label: "PetTag", path: pet_tags_path, icon: :tag, active: controller_name == "pet_tags" })
       items.insert(2, { label: "Документы", path: pet_pet_documents_path(pet), icon: :file, active: controller_name == "pet_documents" })
       items.insert(3, { label: "Доступ", path: pet_profile_shares_path(pet), icon: :share, active: controller_name == "pet_profile_shares" })
     end
@@ -105,7 +129,7 @@ module ApplicationHelper
     when :reminders
       controller_name == "reminders"
     when :more
-      %w[pets pet_tags pet_documents pet_profile_shares notification_channels].include?(controller_name) || devise_controller?
+      %w[pets pet_tags pet_documents pet_profile_shares notification_channels in_app_notifications].include?(controller_name) || devise_controller?
     else
       false
     end
@@ -114,15 +138,29 @@ module ApplicationHelper
   def mobile_reminders_badge
     return unless user_signed_in?
 
-    count = current_user.reminders.overdue.count
-    count = current_user.reminders.status_active.where(next_run_at: Time.current.beginning_of_day..Time.current.end_of_day).count if count.zero?
+    count = current_user.reminders.status_active.count
     count.positive? ? [count, 9].min : nil
   end
 
-  # The bell opens notification settings/history, not a notification inbox.
-  # Reminder urgency is shown only on the dedicated Reminders navigation item.
   def mobile_notifications_badge
-    nil
+    return unless user_signed_in?
+
+    count = current_user.in_app_notifications.unread.count
+    count.positive? ? [count, 9].min : nil
+  end
+
+  def in_app_notification_time_label(notification)
+    time = notification.occurred_at.in_time_zone(current_user.notifications_time_zone_name)
+    today = Time.current.in_time_zone(current_user.notifications_time_zone_name).to_date
+
+    case time.to_date
+    when today
+      "Сегодня, #{time.strftime('%H:%M')}"
+    when today - 1.day
+      "Вчера, #{time.strftime('%H:%M')}"
+    else
+      time.strftime("%d.%m.%Y, %H:%M")
+    end
   end
 
   def pet_nav_items(pet)

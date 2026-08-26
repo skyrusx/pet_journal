@@ -1,0 +1,193 @@
+/* Cross-pet journal overview: pet scope selector, add-record chooser and progressive loading. */
+
+.pj-journal-pet-avatar.is-all {
+  color: var(--pj-green);
+  background: var(--pj-soft);
+}
+
+.pj-journal-pet-avatar.is-all .pj-nav-icon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.7;
+}
+
+/* The legacy switcher rule rotates every nav icon inside summary. Keep the
+   all-pets paw upright and reserve rotation for the trailing chevron only. */
+.pj-journal-pet-switcher > summary .pj-journal-pet-avatar.is-all .pj-nav-icon,
+.pj-journal-pet-switcher[open] > summary .pj-journal-pet-avatar.is-all .pj-nav-icon {
+  margin-left: 0;
+  transform: none;
+}
+
+.pj-journal-add-picker {
+  position: relative;
+}
+
+.pj-journal-add-picker > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.pj-journal-add-picker > summary::-webkit-details-marker {
+  display: none;
+}
+
+.pj-journal-add-picker__menu {
+  position: absolute;
+  z-index: 24;
+  top: calc(100% + var(--pj-space-2));
+  right: 0;
+  width: 280px;
+  display: grid;
+  gap: var(--pj-space-1);
+  padding: var(--pj-space-2);
+  border: 1px solid var(--pj-border);
+  border-radius: var(--pj-radius-card);
+  background: var(--pj-surface);
+  box-shadow: var(--pj-shadow-strong);
+}
+
+.pj-journal-add-picker__menu > small {
+  padding: var(--pj-space-2) var(--pj-space-2) var(--pj-space-1);
+  color: var(--pj-muted);
+  font-size: var(--pj-font-caption);
+  font-weight: 700;
+}
+
+.pj-journal-add-picker__item {
+  min-height: var(--pj-size-control-lg);
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--pj-space-3);
+  padding: var(--pj-space-2);
+  border-radius: var(--pj-radius-control);
+  color: var(--pj-ink);
+  text-decoration: none;
+}
+
+.pj-journal-add-picker__item:hover,
+.pj-journal-add-picker__item:focus-visible {
+  background: var(--pj-soft);
+}
+
+.pj-journal-add-picker__item .pj-journal-pet-avatar {
+  width: 34px;
+  height: 34px;
+}
+
+.pj-journal-add-picker__item > span:last-child {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+
+.pj-journal-add-picker__item strong {
+  overflow: hidden;
+  font-size: var(--pj-font-meta);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pj-journal-add-picker__item small {
+  overflow: hidden;
+  color: var(--pj-muted);
+  font-size: var(--pj-font-caption);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pj-journal-load-more {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--pj-space-5);
+}
+
+.pj-journal-load-more__button {
+  min-height: var(--pj-size-control-lg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--pj-space-2);
+  padding-inline: var(--pj-space-5);
+  border: 1px solid var(--pj-border);
+  border-radius: var(--pj-radius-control);
+  color: var(--pj-green);
+  background: var(--pj-surface);
+  font-size: var(--pj-font-body);
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+
+.pj-journal-load-more__button:hover,
+.pj-journal-load-more__button:focus-visible {
+  border-color: #cad5c9;
+  background: var(--pj-soft);
+}
+
+.pj-journal-load-more__button:active {
+  transform: translateY(1px);
+}
+
+.pj-journal-load-more__button small {
+  color: var(--pj-muted);
+  font-size: var(--pj-font-caption);
+  font-weight: 600;
+}
+
+.pj-journal-mobile-card__pet {
+  color: #66756f !important;
+}
+
+@media (max-width: 820px) {
+  /*
+   * Journal mobile views already own a 16px inner padding. The canonical
+   * consistency layer also narrows the container by 16px on each side, which
+   * would produce an accidental 32px visual gutter. Keep the page full width
+   * and let the inner padding provide the single Dashboard-aligned 16px gutter.
+   */
+  .pj-journal-page .pj-journal-content,
+  .pj-journal-page .pj-journal-form-content {
+    width: 100% !important;
+    padding-inline: var(--pj-workspace-mobile-side);
+  }
+
+  .pj-journal-add-picker {
+    flex: 0 0 auto;
+  }
+
+  .pj-journal-add-picker > .pj-journal-add {
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+
+  .pj-journal-add-picker__menu {
+    position: fixed;
+    z-index: 85;
+    top: auto;
+    right: var(--pj-workspace-mobile-side);
+    bottom: calc(82px + env(safe-area-inset-bottom));
+    left: var(--pj-workspace-mobile-side);
+    width: auto;
+    max-height: min(60vh, 460px);
+    overflow-y: auto;
+    padding: var(--pj-space-3);
+    border-radius: var(--pj-radius-panel);
+  }
+
+  .pj-journal-add-picker__item {
+    min-height: 54px;
+  }
+
+  .pj-journal-load-more {
+    padding-top: var(--pj-space-4);
+  }
+
+  .pj-journal-load-more__button {
+    width: 100%;
+    min-height: var(--pj-size-touch-target);
+  }
+}

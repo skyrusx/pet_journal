@@ -1,0 +1,54 @@
+/*
+ * Global footer behavior.
+ * Sparse pages keep the standard footer at the bottom of the viewport;
+ * long pages keep it in normal flow after the content.
+ */
+
+.pj-workspace-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.pj-workspace-main > .pj-workspace-footer {
+  position: static !important;
+  inset: auto !important;
+  flex: 0 0 auto;
+  margin-top: auto !important;
+}
+
+/* The public shared profile uses the same rule outside the authenticated workspace. */
+.pj-public-profile-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.pj-public-profile-topbar {
+  flex: 0 0 auto;
+}
+
+.pj-public-profile-shell {
+  width: min(1180px, calc(100% - 72px));
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.pj-public-profile-layout {
+  flex: 0 0 auto;
+}
+
+.pj-public-profile-standard-footer {
+  flex: 0 0 auto;
+  margin-top: auto !important;
+}
+
+@media (max-width: 820px) {
+  .pj-workspace-main {
+    min-height: 100vh;
+  }
+
+  .pj-public-profile-shell {
+    width: calc(100% - 32px);
+  }
+}

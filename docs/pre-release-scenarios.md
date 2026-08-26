@@ -22,7 +22,10 @@ Run these checks before a release candidate is approved.
 ## Notifications
 
 - Configure email, Telegram, VK, and Web Push where environment allows it.
+- For Telegram, choose the channel in PetJournal, open the bot, press Start, return to PetJournal, and verify the channel appears without entering a chat id.
+- For VK, connect using a friendly profile value such as `vk.ru/name` or `@name` and verify PetJournal stores/resolves the channel without asking for `peer_id`.
 - Run a channel test and verify immediate success or a clear diagnostic error.
+- Verify Telegram and VK test messages arrive in the expected personal dialog.
 - Run `bin/rails reminders:dispatch` and verify due reminders produce delivery history.
 - Run `bin/rails reminders:dispatch_loop` in a worker process for continuous dispatch.
 - Verify quiet hours prevent sending during the configured window.

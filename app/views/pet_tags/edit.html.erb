@@ -1,12 +1,27 @@
-<div class="form-page py-4">
-  <div class="form-page-header">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1">Настроить жетон</h1>
-      <p class="text-muted mb-0">Выберите, какие данные будут видны на публичной странице.</p>
-    </div>
-    <%= link_to "К жетону", pet_pet_tag_path(@pet), class: "btn btn-outline-secondary" %>
-  </div>
+<% content_for :title, "Настройки PetTag — #{@pet.name} — PetJournal" %>
+<% content_for :head do %>
+  <%= javascript_import_module_tag "account_profile" %>
+<% end %>
 
-  <%= render "form" %>
+<div class="pj-pettag-page pj-pettag-form-page">
+  <header class="pj-workspace-topbar pj-workspace-topbar--form">
+    <%= link_to pet_pet_tag_path(@pet), class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>Назад к PetTag</span>
+    <% end %>
+  </header>
+
+  <div class="pj-pettag-content pj-pettag-form-content">
+    <div class="pj-mobile-detail-nav pj-mobile-form-nav">
+      <%= link_to pet_pet_tag_path(@pet), class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К PetTag</span>
+      <% end %>
+    </div>
+
+    <div class="pj-pettag-form-heading">
+      <h1>Настройки PetTag</h1>
+      <p>Управляйте публичным профилем, режимом потери, контактами и уведомлениями.</p>
+    </div>
+
+    <%= render "form" %>
+  </div>
 </div>

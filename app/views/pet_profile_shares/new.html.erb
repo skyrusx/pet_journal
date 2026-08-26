@@ -1,12 +1,26 @@
-<div class="profile-shares-page py-4">
-  <div class="page-heading mb-4">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1">Новый публичный доступ</h1>
-      <p class="text-muted mb-0">Настройте, какие данные питомца будут доступны по ссылке.</p>
-    </div>
-  </div>
+<% content_for :title, "Новый публичный доступ — PetJournal" %>
 
-  <%= render "tabs", pet: @pet %>
-  <%= render "form" %>
+<div class="pj-public-access-page pj-public-access-form-page">
+  <header class="pj-workspace-topbar pj-workspace-topbar--form">
+    <%= link_to pet_profile_shares_path(@pet), class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>Назад к доступам</span>
+    <% end %>
+  </header>
+
+  <div class="pj-public-access-content">
+    <div class="pj-mobile-detail-nav pj-mobile-form-nav pj-public-access-mobile-form-nav">
+      <%= link_to pet_profile_shares_path(@pet), class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>Доступы питомца</span>
+      <% end %>
+    </div>
+
+    <div class="pj-public-access-form-title">
+      <div>
+        <h1>Создать публичный доступ</h1>
+        <p>Настройте отдельную ссылку для <%= @pet.name %> и выберите, какие данные будут доступны без входа в аккаунт.</p>
+      </div>
+    </div>
+
+    <%= render "form" %>
+  </div>
 </div>

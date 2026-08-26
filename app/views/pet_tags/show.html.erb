@@ -1,292 +1,343 @@
-<div class="pet-tag-page py-4">
-  <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1">Жетон</h1>
-      <p class="text-muted mb-0">Публичный QR-профиль для связи, если питомец потеряется.</p>
-    </div>
+<% content_for :title, "PetTag — #{@pet.name} — PetJournal" %>
+<%= javascript_import_module_tag "public_access_copy" %>
 
-    <div class="d-flex flex-wrap align-items-start gap-2">
-      <%= link_to "Обзор питомца", pet_path(@pet), class: "btn btn-outline-secondary" %>
-      <% if @pet_tag.persisted? %>
-        <%= link_to "Редактировать", edit_pet_pet_tag_path(@pet), class: "btn btn-primary" %>
-      <% end %>
-    </div>
-  </div>
+<div class="pj-pettag-page">
+  <header class="pj-workspace-topbar">
+    <h1>PetTag</h1>
+    <%= render "shared/workspace_notification_link" %>
+  </header>
 
-  <%= render "shared/pet_tabs", pet: @pet %>
+  <div class="pj-pettag-content">
+    <% if @pet_tag.persisted? %>
+      <% status_tone = if @pet_tag.status_lost?
+                         "danger"
+                       elsif @pet_tag.status_found?
+                         "warning"
+                       elsif @pet_tag.status_reunited?
+                         "success"
+                       elsif @pet_tag.enabled?
+                         "success"
+                       else
+                         "muted"
+                       end %>
 
-  <% if @pet_tag.persisted? %>
-    <section class="pet-tag-hero mb-4">
-      <div class="pet-tag-hero-main">
-        <div>
-          <span class="<%= pet_tag_status_class(@pet_tag) %>"><%= pet_tag_status_label(@pet_tag) %></span>
-          <h2 class="h3 mt-3 mb-2"><%= pet_tag_primary_signal(@pet_tag, @recent_scans.first) %></h2>
-          <p class="text-muted mb-0">
-            QR-профиль показывает только выбранные данные и помогает быстро связаться с владельцем.
-          </p>
-        </div>
+      <section class="pj-pettag-hero <%= "is-lost" if @pet_tag.status_lost? %>">
+        <div class="pj-pettag-pet">
+          <span class="pj-pettag-pet__avatar">
+            <% if @pet.photo.attached? %>
+              <%= image_tag @pet.photo, alt: "" %>
+            <% else %>
+              <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
+            <% end %>
+          </span>
 
-        <div class="pet-tag-stats">
-          <div>
-            <span><%= @scan_counts[:total] %></span>
-            <small><%= russian_plural(@scan_count, "сканирование", "сканирования", "сканирований") %></small>
-          </div>
-          <div>
-            <span><%= @scan_counts[:found] %></span>
-            <small>нашедших</small>
-          </div>
-          <div>
-            <span><%= @scan_counts[:locations] %></span>
-            <small>геолокаций</small>
-          </div>
-        </div>
-      </div>
-
-      <div class="pet-tag-hero-actions">
-        <%= link_to "Открыть публичную страницу",
-                    public_pet_tag_path(@pet_tag.public_token),
-                    class: "btn btn-primary",
-                    target: "_blank",
-                    rel: "noopener" %>
-        <%= link_to "Редактировать", edit_pet_pet_tag_path(@pet), class: "btn btn-outline-secondary" %>
-      </div>
-    </section>
-
-    <div class="row g-4">
-      <section class="col-lg-7">
-        <div class="tag-section-grid mb-4">
-          <div class="action-panel">
-            <div class="section-heading compact">
-              <div>
-                <div class="text-muted small mb-1">Публичная ссылка</div>
-                <h2 class="h5 mb-0">Адрес QR-профиля</h2>
-              </div>
-            </div>
-
-            <div class="public-url-box mb-3">
-              <%= public_pet_tag_url(@pet_tag.public_token) %>
-            </div>
-
-            <div class="d-flex flex-wrap gap-2">
-              <%= button_to "Обновить ссылку",
-                            rotate_token_pet_pet_tag_path(@pet),
-                            method: :patch,
-                            class: "btn btn-outline-danger btn-sm",
-                            form: { onsubmit: "return confirm('Обновить публичную ссылку? Старый QR-код перестанет работать.')" } %>
-              <% if @pet_tag.token_rotated_at.present? %>
-                <span class="text-muted small align-self-center">Обновлена <%= @pet_tag.token_rotated_at.strftime("%d.%m.%Y %H:%M") %></span>
-              <% end %>
-            </div>
-          </div>
-
-          <div class="action-panel qr-panel">
-            <div class="section-heading compact">
-              <div>
-                <div class="text-muted small mb-1">QR-код</div>
-                <h2 class="h5 mb-0">Для печати</h2>
-              </div>
-            </div>
-
-            <div class="qr-preview">
-              <%= image_tag qr_pet_pet_tag_path(@pet, format: :svg), alt: "QR-код PetTag для #{@pet.name}" %>
-            </div>
-
-            <div class="d-flex flex-wrap gap-2 mt-3">
-              <%= link_to "SVG", qr_pet_pet_tag_path(@pet, format: :svg), class: "btn btn-outline-primary btn-sm" %>
-              <%= link_to "PNG", qr_pet_pet_tag_path(@pet, format: :png), class: "btn btn-outline-primary btn-sm" %>
-            </div>
+          <div class="pj-pettag-pet__copy">
+            <h1><%= @pet.name %></h1>
+            <p><%= @pet.breed.presence || @pet.species.presence || "Питомец" %></p>
+            <small>ID: <%= @pet_tag.tag_code %></small>
           </div>
         </div>
 
-        <div class="action-panel mb-4">
-          <div class="section-heading compact">
-            <div>
-              <div class="text-muted small mb-1">Режим потери</div>
-              <h2 class="h5 mb-0"><%= pet_tag_status_label(@pet_tag) %></h2>
-            </div>
-            <span class="<%= pet_tag_status_class(@pet_tag) %>"><%= pet_tag_status_label(@pet_tag) %></span>
-          </div>
-
+        <div class="pj-pettag-hero__status">
+          <span class="pj-pettag-status is-<%= status_tone %>"><%= pet_tag_status_label(@pet_tag) %></span>
           <% if @pet_tag.status_lost? %>
-            <div class="lost-mode-summary">
-              <p><%= @pet_tag.lost_message.presence || "Сообщение при потере не заполнено." %></p>
-              <div class="text-muted small">Последнее место: <%= @pet_tag.last_seen_location.presence || "не указано" %></div>
-            </div>
+            <small>Режим потери активен</small>
           <% elsif @pet_tag.status_found? %>
-            <div class="lost-mode-summary">
-              <p><%= @pet_tag.found_message.presence || "Питомца нашли. Проверьте последние сканы и контакты." %></p>
-            </div>
+            <small>Питомца отметили как найденного</small>
           <% elsif @pet_tag.status_reunited? %>
-            <p class="text-muted mb-3">Питомец отмечен как вернувшийся домой<%= @pet_tag.reunited_at.present? ? " #{@pet_tag.reunited_at.strftime("%d.%m.%Y %H:%M")}" : "" %>.</p>
+            <small>Питомец вернулся домой</small>
           <% else %>
-            <p class="text-muted mb-3">Включайте режим потери только когда питомец действительно потерялся. Публичная страница станет заметнее, а уведомления можно получать при каждом открытии.</p>
+            <small><%= @pet_tag.enabled? ? "Публичный QR-профиль доступен" : "Публичный профиль отключён" %></small>
           <% end %>
-
-          <div class="d-flex flex-wrap gap-2">
-            <%= button_to "Потерялся", mark_lost_pet_pet_tag_path(@pet), method: :patch, class: "btn btn-outline-danger btn-sm" unless @pet_tag.status_lost? %>
-            <%= button_to "Найден", mark_found_pet_pet_tag_path(@pet), method: :patch, class: "btn btn-outline-primary btn-sm" unless @pet_tag.status_found? %>
-            <%= button_to "Дома", mark_reunited_pet_pet_tag_path(@pet), method: :patch, class: "btn btn-primary btn-sm" unless @pet_tag.status_reunited? %>
-            <%= link_to "Настроить", edit_pet_pet_tag_path(@pet), class: "btn btn-outline-secondary btn-sm" %>
-          </div>
         </div>
 
-        <div class="action-panel mb-4">
-          <div class="section-heading compact">
-            <div>
-              <div class="text-muted small mb-1">Сканирования</div>
-              <h2 class="h5 mb-0">История безопасности</h2>
-            </div>
-          </div>
-
-          <%= form_with url: pet_pet_tag_path(@pet), method: :get, class: "journal-filter-form mb-3" do |form| %>
-            <div class="journal-filter-fields">
-              <div class="journal-filter-field">
-                <%= label_tag :scan_status, "Статус сканирования" %>
-                <%= select_tag :scan_status,
-                               options_for_select(
-                                 [["Все", "all"], ["Сканы", "scanned"], ["С геолокацией", "location_shared"], ["Нашедшие", "found_reported"]],
-                                 @selected_scan_status
-                               ),
-                               class: "form-select" %>
-              </div>
-            </div>
-
-            <div class="d-flex flex-wrap gap-2 align-items-center">
-              <%= form.submit "Применить", class: "btn btn-outline-primary" %>
-              <% if @selected_scan_status != "all" %>
-                <%= link_to "Сбросить фильтры", pet_pet_tag_path(@pet), class: "journal-filter-reset" %>
-              <% end %>
-            </div>
-          <% end %>
-
-          <% if @recent_scans.any? %>
-            <div class="scan-list">
-              <% @recent_scans.each do |scan| %>
-                <div class="scan-item">
-                  <div>
-                    <div class="fw-semibold"><%= scan_time_label(scan) %></div>
-                    <div class="text-muted small"><%= scan.user_agent.presence || "Браузер не определен" %></div>
-                    <% if scan.finder_contact_present? %>
-                      <div class="text-muted small">
-                        <%= [scan.finder_name.presence, scan.finder_contact.presence].compact.join(" · ") %>
-                      </div>
-                      <% if scan.finder_message.present? %>
-                        <div class="text-muted small"><%= scan.finder_message %></div>
-                      <% end %>
-                    <% end %>
-                    <% if scan.notification_error.present? %>
-                      <div class="text-danger small"><%= scan.notification_error %></div>
-                    <% elsif scan.owner_notified_at.present? %>
-                      <div class="text-muted small">Владелец уведомлен <%= scan.owner_notified_at.strftime("%d.%m.%Y %H:%M") %></div>
-                    <% end %>
-                  </div>
-
-                  <span class="<%= scan_status_class(scan) %>"><%= scan_status_label(scan) %></span>
-                </div>
-
-                <% if scan.location_shared? %>
-                  <div class="scan-location">
-                    <%= scan.location_label %>
-                  </div>
-                <% end %>
-              <% end %>
-            </div>
-          <% else %>
-            <div class="empty-state-inline">
-              <div class="fw-semibold mb-1">Сканов пока нет</div>
-              <div class="text-muted">После открытия QR-профиля здесь появятся дата, браузер и добровольно переданная геолокация.</div>
-            </div>
+        <div class="pj-pettag-hero__actions">
+          <%= link_to edit_pet_pet_tag_path(@pet), class: "pj-pettag-icon-action", aria: { label: "Настроить PetTag" }, title: "Настроить" do %>
+            <%= pj_icon(:settings) %>
           <% end %>
         </div>
       </section>
 
-      <aside class="col-lg-5">
-        <div class="action-panel mb-4">
-          <div class="text-muted small mb-1">Публичный предпросмотр</div>
-          <h2 class="h4 mb-3">Что увидит человек с QR</h2>
-
-          <div class="preview-stack">
+      <% if @pet_tag.status_lost? %>
+        <section class="pj-pettag-lost-alert">
+          <div>
+            <span class="pj-pettag-lost-alert__icon">!</span>
             <div>
-              <div class="fw-semibold">Сообщение</div>
-              <p class="text-muted mb-0"><%= @pet_tag.public_message.presence || "Сообщение не заполнено" %></p>
+              <h2><%= @pet.name %> потерялся!</h2>
+              <p><%= @pet_tag.lost_message.presence || "Если питомца нашли, пожалуйста, свяжитесь со мной как можно скорее." %></p>
+              <% if @pet_tag.last_seen_location.present? %>
+                <small>Последнее место: <%= @pet_tag.last_seen_location %></small>
+              <% end %>
+            </div>
+          </div>
+
+          <%= link_to "Открыть публичную страницу",
+                      public_pet_tag_path(@pet_tag.public_token),
+                      class: "pj-pettag-lost-alert__button",
+                      target: "_blank",
+                      rel: "noopener" %>
+        </section>
+      <% end %>
+
+      <div class="pj-pettag-primary-grid">
+        <section class="pj-pettag-card pj-pettag-qr-card">
+          <div class="pj-pettag-card__heading">
+            <div>
+              <h2><span class="pj-pettag-heading-regular">QR</span>-код и токен</h2>
+              <p>Этот QR ведёт на безопасную публичную страницу питомца.</p>
+            </div>
+          </div>
+
+          <div class="pj-pettag-qr-layout">
+            <div class="pj-pettag-qr-preview">
+              <%= image_tag qr_pet_pet_tag_path(@pet, format: :svg), alt: "QR-код PetTag для #{@pet.name}" %>
             </div>
 
-            <% if @pet_tag.lost_mode_enabled? %>
-              <div>
-                <div class="fw-semibold">Режим потери</div>
-                <p class="text-muted mb-0"><%= @pet_tag.lost_message.presence || "Питомец потерялся. Сообщение не заполнено." %></p>
-              </div>
+            <div class="pj-pettag-token">
+              <span>PetTag ID</span>
+              <strong><%= @pet_tag.tag_code %></strong>
+              <small>Постоянный ID PetTag не меняется при обновлении публичной ссылки</small>
+            </div>
+          </div>
 
-              <div>
-                <div class="fw-semibold">Последнее место</div>
-                <p class="text-muted mb-0"><%= @pet_tag.last_seen_location.presence || "Не указано" %></p>
-              </div>
+          <div class="pj-pettag-qr-actions">
+            <%= link_to qr_pet_pet_tag_path(@pet, format: :png), class: "pj-pettag-primary-button" do %>
+              <span>Скачать PNG</span>
             <% end %>
+            <%= link_to qr_pet_pet_tag_path(@pet, format: :svg), class: "pj-pettag-secondary-button" do %>
+              <span>SVG</span>
+            <% end %>
+          </div>
 
-            <div>
-              <div class="fw-semibold">Поведение</div>
-              <p class="text-muted mb-0"><%= @pet_tag.behavior_notes.presence || "Особенности не указаны" %></p>
+          <div class="pj-pettag-public-link">
+            <span>Публичная ссылка</span>
+            <div class="pj-pettag-public-link__row">
+              <%= link_to public_pet_tag_url(@pet_tag.public_token), public_pet_tag_path(@pet_tag.public_token), target: "_blank", rel: "noopener" %>
+              <%= button_tag type: "button",
+                             class: "pj-pettag-copy-icon pj-public-access-copy-icon",
+                             data: { copy_url: public_pet_tag_url(@pet_tag.public_token) },
+                             aria: { label: "Скопировать публичную ссылку" },
+                             title: "Скопировать ссылку" do %>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="9" y="9" width="10" height="10" rx="2"/>
+                  <path d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/>
+                </svg>
+              <% end %>
             </div>
+          </div>
+        </section>
 
+        <section class="pj-pettag-card pj-pettag-info-card">
+          <div class="pj-pettag-card__heading">
             <div>
-              <div class="fw-semibold">Медицинское</div>
-              <p class="text-muted mb-0">
-                <% if @pet_tag.show_medical_notes? %>
-                  <%= @pet_tag.medical_notes.presence || "Медицинские заметки не указаны" %>
-                <% else %>
-                  Скрыто на публичной странице
-                <% end %>
-              </p>
+              <h2>Ключевая информация</h2>
+              <p>Данные питомца, которые помогают быстро его узнать.</p>
             </div>
+          </div>
 
-            <div>
-              <div class="fw-semibold">Телефон</div>
-              <p class="text-muted mb-0">
-                <% if @pet_tag.show_phone? && @pet_tag.contact_phone.present? %>
-                  Показывается на публичной странице
-                <% else %>
-                  Скрыт
-                <% end %>
-              </p>
-            </div>
+          <dl class="pj-pettag-info-list">
+            <div><dt>Кличка</dt><dd><%= @pet.name %></dd></div>
+            <div><dt>Порода</dt><dd><%= @pet.breed.presence || "—" %></dd></div>
+            <div><dt>Вид</dt><dd><%= @pet.species.presence || "—" %></dd></div>
+            <div><dt>Вес</dt><dd><%= @pet.weight.present? ? "#{@pet.weight} кг" : "—" %></dd></div>
+            <div><dt>Окрас</dt><dd><%= @pet.color.presence || "—" %></dd></div>
+            <div><dt>Особые приметы</dt><dd><%= @pet_tag.behavior_notes.presence || "Не указаны" %></dd></div>
+          </dl>
 
-            <div>
-              <div class="fw-semibold">Уведомления</div>
-              <p class="text-muted mb-0">
-                <%= notification_label(@pet_tag.notification_preference) %>
-                <% if @pet_tag.notification_channels.any? %>
-                  · <%= @pet_tag.notification_channels.map(&:name).to_sentence %>
-                <% end %>
-              </p>
-            </div>
+          <%= link_to "Изменить", edit_pet_pet_tag_path(@pet), class: "pj-pettag-secondary-button is-full" %>
+        </section>
+      </div>
+
+      <section class="pj-pettag-quick-section">
+        <div class="pj-pettag-section-heading">
+          <div>
+            <h2>Быстрые действия</h2>
+            <p>Главные сценарии PetTag всегда под рукой.</p>
           </div>
         </div>
 
-        <div class="action-panel">
-          <div class="text-muted small mb-1">Приватность</div>
-          <h2 class="h4 mb-3">Публичные данные</h2>
+        <div class="pj-pettag-quick-grid">
+          <% if @pet_tag.status_lost? %>
+            <%= button_to mark_found_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-quick-action is-warning" do %>
+              <span class="pj-pettag-quick-action__icon">✓</span>
+              <span><strong>Питомца нашли</strong><small>Отметить, что с владельцем уже связались</small></span>
+            <% end %>
+          <% elsif @pet_tag.status_found? %>
+            <%= button_to mark_reunited_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-quick-action" do %>
+              <span class="pj-pettag-quick-action__icon">⌂</span>
+              <span><strong>Питомец дома</strong><small>Отметить возвращение питомца домой</small></span>
+            <% end %>
+          <% elsif @pet_tag.status_reunited? %>
+            <%= button_to mark_safe_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-quick-action" do %>
+              <span class="pj-pettag-quick-action__icon">✓</span>
+              <span><strong>Завершить инцидент</strong><small>Вернуть PetTag в обычное состояние</small></span>
+            <% end %>
+          <% else %>
+            <%= button_to mark_lost_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-quick-action is-danger" do %>
+              <span class="pj-pettag-quick-action__icon">!</span>
+              <span><strong>Питомец потерялся</strong><small>Включить режим потери и усилить публичную страницу</small></span>
+            <% end %>
+          <% end %>
 
-          <div class="privacy-list">
-            <% pet_tag_visibility_rows(@pet_tag).each do |label, value| %>
-              <div>
-                <span><%= label %></span>
-                <strong><%= value %></strong>
-              </div>
+          <%= link_to public_pet_tag_path(@pet_tag.public_token), class: "pj-pettag-quick-action", target: "_blank", rel: "noopener" do %>
+            <span class="pj-pettag-quick-action__icon"><%= pj_icon(:share) %></span>
+            <span><strong>Открыть PetTag</strong><small>Проверить публичную страницу глазами нашедшего</small></span>
+          <% end %>
+
+          <%= link_to edit_pet_pet_tag_path(@pet), class: "pj-pettag-quick-action" do %>
+            <span class="pj-pettag-quick-action__icon"><%= pj_icon(:settings) %></span>
+            <span><strong>Настройки</strong><small>Контакты, приватность и уведомления</small></span>
+          <% end %>
+        </div>
+      </section>
+
+      <section class="pj-pettag-card pj-pettag-safety-card">
+        <div class="pj-pettag-card__heading">
+          <div>
+            <h2>Статус безопасности</h2>
+            <% if @pet_tag.status_safe? %>
+              <p>Обычное состояние PetTag. Сценарий потери сейчас не активен.</p>
+            <% else %>
+              <p>Этап активного инцидента: от потери питомца до возвращения домой.</p>
             <% end %>
           </div>
         </div>
-      </aside>
-    </div>
-  <% else %>
-    <div class="empty-panel mb-4">
-      <h2 class="h4 mb-2">QR-профиль еще не создан</h2>
-      <p class="text-muted mb-0">
-        Создайте публичную страницу с безопасным минимумом данных: фото и имя питомца, особенности поведения,
-        медицинские заметки и контакт для связи.
-      </p>
-    </div>
 
-    <%= render "form" %>
-  <% end %>
+        <% if @pet_tag.status_safe? %>
+          <div class="pj-pettag-safe-state">
+            <span class="pj-pettag-safe-state__icon">✓</span>
+            <span>
+              <strong>В безопасности</strong>
+              <small>Питомец не отмечен как потерявшийся. PetTag работает в обычном режиме.</small>
+            </span>
+          </div>
+        <% else %>
+          <div class="pj-pettag-status-flow">
+            <div class="pj-pettag-status-step <%= "is-current" if @pet_tag.status_lost? %> is-danger">
+              <span>1</span><strong>Потерялся</strong><small>Экстренный режим</small>
+            </div>
+            <div class="pj-pettag-status-step <%= "is-current" if @pet_tag.status_found? %> is-warning">
+              <span>2</span><strong>Найден</strong><small>Есть контакт с нашедшим</small>
+            </div>
+            <div class="pj-pettag-status-step <%= "is-current" if @pet_tag.status_reunited? %> is-success">
+              <span>3</span><strong>Дома</strong><small>Питомец вернулся</small>
+            </div>
+          </div>
+
+          <% if @pet_tag.status_found? %>
+            <%= button_to "Отметить, что питомец дома", mark_reunited_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-primary-button pj-pettag-status-action" %>
+          <% elsif @pet_tag.status_lost? %>
+            <div class="pj-pettag-status-buttons">
+              <%= button_to "Найден", mark_found_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-secondary-button" %>
+              <%= button_to "Уже дома", mark_reunited_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-primary-button" %>
+            </div>
+          <% elsif @pet_tag.status_reunited? %>
+            <div class="pj-pettag-incident-complete">
+              <div>
+                <strong>Вернулся домой</strong>
+                <small><%= @pet_tag.reunited_at.present? ? @pet_tag.reunited_at.strftime("%d.%m.%Y в %H:%M") : "Инцидент можно завершить" %></small>
+              </div>
+              <%= button_to "Завершить инцидент", mark_safe_pet_pet_tag_path(@pet), method: :patch, class: "pj-pettag-primary-button" %>
+            </div>
+          <% end %>
+        <% end %>
+      </section>
+
+      <section class="pj-pettag-card pj-pettag-settings-card">
+        <div class="pj-pettag-card__heading">
+          <div>
+            <h2>Настройки <span class="pj-pettag-heading-regular">PetTag</span></h2>
+            <p>Только реальные настройки, которые уже поддерживаются сервисом.</p>
+          </div>
+          <%= link_to "Изменить", edit_pet_pet_tag_path(@pet), class: "pj-pettag-text-link" %>
+        </div>
+
+        <div class="pj-pettag-settings-list">
+          <div>
+            <span class="pj-pettag-settings-icon"><%= pj_icon(:bell) %></span>
+            <span><strong>Уведомления о сканах</strong><small><%= notification_label(@pet_tag.notification_preference) %></small></span>
+            <em><%= @pet_tag.notification_channels.any? ? "#{@pet_tag.notification_channels.count} кан." : "Email" %></em>
+          </div>
+          <div>
+            <span class="pj-pettag-settings-icon"><%= pj_icon(:share) %></span>
+            <span><strong>Публичный профиль</strong><small>QR-страница PetTag</small></span>
+            <em><%= @pet_tag.enabled? ? "Опубликован" : "Отключён" %></em>
+          </div>
+          <div>
+            <span class="pj-pettag-settings-icon"><%= pj_icon(:user) %></span>
+            <span><strong>Контакт владельца</strong><small><%= @pet_tag.contact_phone.presence || "Телефон не указан" %></small></span>
+            <em><%= @pet_tag.show_phone? && @pet_tag.contact_phone.present? ? "Публичный" : "Скрыт" %></em>
+          </div>
+          <div>
+            <span class="pj-pettag-settings-icon"><%= pj_icon(:file) %></span>
+            <span><strong>Медицинские заметки</strong><small>Показывать важную информацию нашедшему</small></span>
+            <em><%= @pet_tag.show_medical_notes? ? "Видимы" : "Скрыты" %></em>
+          </div>
+        </div>
+      </section>
+
+      <section class="pj-pettag-card pj-pettag-scans-card">
+        <div class="pj-pettag-card__heading pj-pettag-scans-heading">
+          <div>
+            <h2>История сканирований</h2>
+            <p><%= @scan_counts[:total] %> <%= russian_plural(@scan_counts[:total], "сканирование", "сканирования", "сканирований") %> · <%= @scan_counts[:locations] %> с геолокацией · <%= @scan_counts[:found] %> сообщений о находке</p>
+          </div>
+
+          <%= form_with url: pet_pet_tag_path(@pet), method: :get, class: "pj-pettag-scan-filter" do %>
+            <%= select_tag :scan_status,
+                           options_for_select(
+                             [["Все события", "all"], ["Сканы", "scanned"], ["С геолокацией", "location_shared"], ["Нашедшие", "found_reported"]],
+                             @selected_scan_status
+                           ),
+                           aria: { label: "Фильтр истории сканирований" },
+                           onchange: "this.form.requestSubmit()" %>
+          <% end %>
+        </div>
+
+        <% if @recent_scans.any? %>
+          <div class="pj-pettag-scan-table">
+            <div class="pj-pettag-scan-head">
+              <span>Дата и время</span><span>Место</span><span>Сообщение / контакт</span><span>Статус</span>
+            </div>
+
+            <% @recent_scans.each do |scan| %>
+              <div class="pj-pettag-scan-row">
+                <span><strong><%= scan.created_at.strftime("%d.%m.%Y") %></strong><small><%= scan.created_at.strftime("%H:%M") %></small></span>
+                <span><%= scan.location_label.presence || "Место не передано" %></span>
+                <span>
+                  <strong><%= [scan.finder_name.presence, scan.finder_contact.presence].compact.join(" · ").presence || "—" %></strong>
+                  <small><%= scan.finder_message.presence || (scan.owner_notified_at.present? ? "Владелец уведомлён" : "Без сообщения") %></small>
+                </span>
+                <span><em class="pj-pettag-scan-status"><%= scan_status_label(scan) %></em></span>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="pj-pettag-empty-scans">
+            <span><%= pj_icon(:tag) %></span>
+            <strong>Сканирований пока нет</strong>
+            <p>После открытия QR-профиля здесь появятся события, добровольно переданная геолокация и сообщения нашедшего.</p>
+          </div>
+        <% end %>
+      </section>
+
+      <section class="pj-pettag-usage-note">
+        <span><%= pj_icon(:tag) %></span>
+        <div>
+          <strong>PetTag остаётся цифровым продуктом</strong>
+          <p>Скачайте QR-код и разместите его на любом удобном жетоне, карточке или наклейке. PetJournal не требует фирменного физического жетона.</p>
+        </div>
+      </section>
+    <% else %>
+      <section class="pj-pettag-empty-state">
+        <span class="pj-pettag-empty-state__icon"><%= pj_icon(:tag) %></span>
+        <h1>Создайте PetTag для <%= @pet.name %></h1>
+        <p>QR-профиль поможет быстро связаться с вами, если питомца найдут. Вы сами решаете, какие данные будут публичными.</p>
+      </section>
+
+      <div class="pj-pettag-inline-form">
+        <%= render "form" %>
+      </div>
+    <% end %>
+  </div>
 </div>

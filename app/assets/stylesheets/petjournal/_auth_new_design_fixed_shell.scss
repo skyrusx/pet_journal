@@ -1,0 +1,14 @@
+/* Keep the approved desktop auth shell stable while only the form content changes. */
+
+@media (min-width: 821px) {
+  .pj-auth-v2 .pj-auth-v2-stage,
+  .pj-auth-v2 .pj-auth-v2-visual {
+    height: 570px;
+    min-height: 570px;
+  }
+
+  /* Registration has the tallest form, so use the shell space instead of growing the whole block. */
+  .pj-auth-v2--registration .pj-auth-v2-form-side {
+    padding-block: 14px;
+  }
+}

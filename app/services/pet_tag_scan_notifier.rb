@@ -16,6 +16,8 @@ class PetTagScanNotifier
   end
 
   def notify
+    create_in_app_notification
+
     channels = notification_channels
     channels.each { |channel| deliver_to_channel(channel) }
     scan.update!(owner_notified_at: Time.current, notification_error: nil)
@@ -26,6 +28,12 @@ class PetTagScanNotifier
   private
 
   attr_reader :scan, :pet_tag, :pet, :user, :event
+
+  def create_in_app_notification
+    InAppNotification.for_pet_tag_scan!(scan, event:)
+  rescue StandardError => error
+    Rails.logger.error("in-app PetTag notification failed for scan #{scan.id}: #{error.class}: #{error.message}")
+  end
 
   def notification_channels
     channels = pet_tag.notification_channels.enabled.to_a

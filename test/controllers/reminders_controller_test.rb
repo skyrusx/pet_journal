@@ -8,21 +8,42 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
     sign_in @user
   end
 
-  test "should get index" do
-    get pet_reminders_url(@pet)
+  test "should get global index for all pets" do
+    second_pet = @user.pets.create!(name: "Луна")
+    second_pet.reminders.create!(
+      title: "Осмотр",
+      reminder_type: :visit,
+      remind_at: 2.days.from_now,
+      repeat_rule: :once
+    )
+
+    get reminders_overview_url(status: "all")
 
     assert_response :success
-    assert_select ".reminders-hero"
-    assert_select ".reminders-filter-panel"
-    assert_select ".reminders-metrics > div", count: 6
+    assert_select ".pj-reminders-pet-switcher", text: /Все питомцы/
+    assert_select ".pj-reminders-row__pet", text: second_pet.name
+  end
+
+  test "should filter global index by pet" do
+    get reminders_overview_url(pet_id: @pet.id, status: "all")
+
+    assert_response :success
+    assert_select ".pj-reminders-pet-switcher", text: /#{Regexp.escape(@pet.name)}/
+    assert_select ".pj-reminders-row__pet", text: @pet.name
+  end
+
+  test "legacy nested index selects the requested pet" do
+    get pet_reminders_url(@pet, status: "all")
+
+    assert_response :success
+    assert_select ".pj-reminders-pet-switcher", text: /#{Regexp.escape(@pet.name)}/
   end
 
   test "should show reminder" do
     get pet_reminder_url(@pet, @reminder)
 
     assert_response :success
-    assert_select ".reminder-detail-page"
-    assert_select ".reminders-metrics > div", count: 6
+    assert_select ".pj-reminder-detail-grid"
   end
 
   test "should get new with preset type" do
@@ -30,6 +51,7 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "select[name='reminder[reminder_type]'] option[selected='selected']", text: /Прививка/
+    assert_select "input[type='submit'][value='Сохранить']"
   end
 
   test "should get new with event prefill" do
@@ -62,7 +84,26 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
       }
     end
 
-    assert_redirected_to pet_reminders_url(@pet)
+    assert_redirected_to reminders_overview_url(pet_id: @pet.id)
+  end
+
+  test "interprets browser reminder time in the user's notification time zone" do
+    @user.update!(notifications_time_zone: "Novosibirsk")
+
+    travel_to Time.utc(2026, 8, 24, 15, 30) do
+      post pet_reminders_url(@pet), params: {
+        reminder: {
+          title: "Дать таблетку",
+          reminder_type: "medication",
+          remind_at: "2026-08-24T22:35",
+          repeat_rule: "once"
+        }
+      }
+    end
+
+    reminder = Reminder.order(:created_at).last
+    assert_equal Time.utc(2026, 8, 24, 15, 35), reminder.remind_at.utc
+    assert_equal reminder.remind_at, reminder.next_run_at
   end
 
   test "should create reminder with selected channels" do
@@ -87,7 +128,7 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
       patch complete_pet_reminder_url(@pet, @reminder, create_event: "1")
     end
 
-    assert_redirected_to pet_reminders_url(@pet)
+    assert_redirected_to reminders_overview_url(pet_id: @pet.id)
     assert @reminder.reload.status_completed?
     assert @reminder.reminder_completions.last.pet_event.present?
   end
@@ -99,20 +140,65 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
       end
     end
 
-    assert_redirected_to pet_reminders_url(@pet)
+    assert_redirected_to reminders_overview_url(pet_id: @pet.id)
   end
 
   test "should snooze reminder" do
     patch snooze_pet_reminder_url(@pet, @reminder, preset: "hour")
 
-    assert_redirected_to pet_reminders_url(@pet)
+    assert_redirected_to reminders_overview_url(pet_id: @pet.id)
     assert @reminder.reload.next_run_at.future?
   end
 
   test "should filter reminders by status" do
-    get pet_reminders_url(@pet, status: "overdue")
+    get reminders_overview_url(pet_id: @pet.id, status: "overdue")
 
     assert_response :success
-    assert_select ".filter-chip.active", text: /Просроченные/
+    assert_select "select[name='status'] option[selected='selected'][value='overdue']"
+  end
+
+  test "navigation badge matches the total number of active reminders" do
+    @user.reminders.update_all(status: Reminder.statuses.fetch("completed"))
+    @pet.reminders.create!(
+      title: "Просроченное",
+      reminder_type: :other,
+      remind_at: 1.hour.ago,
+      repeat_rule: :once
+    )
+    @pet.reminders.create!(
+      title: "Будущее",
+      reminder_type: :other,
+      remind_at: 1.day.from_now,
+      repeat_rule: :once
+    )
+
+    get reminders_overview_url(pet_id: @pet.id)
+
+    assert_response :success
+    assert_select ".pj-reminders-summary span", text: /2\s+активно/
+    assert_select ".pj-dash-nav__badge", text: "2"
+  end
+
+  test "should progressively load reminders in batches of 25" do
+    26.times do |index|
+      @pet.reminders.create!(
+        title: "Напоминание #{index + 1}",
+        reminder_type: :other,
+        remind_at: (index + 1).hours.from_now,
+        repeat_rule: :once
+      )
+    end
+
+    get reminders_overview_url(pet_id: @pet.id, status: "all")
+
+    assert_response :success
+    assert_select ".pj-reminders-row-wrap", count: 25
+    assert_select ".pj-reminders-load-more", count: 1
+
+    get reminders_overview_url(pet_id: @pet.id, status: "all", page: 2)
+
+    assert_response :success
+    assert_select ".pj-reminders-row-wrap", count: 28
+    assert_select ".pj-reminders-load-more", count: 0
   end
 end

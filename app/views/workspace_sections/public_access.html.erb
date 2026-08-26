@@ -1,0 +1,54 @@
+<% content_for :title, "Публичный доступ — PetJournal" %>
+
+<div class="pj-public-access-page pj-public-access-overview-page">
+  <header class="pj-workspace-topbar">
+    <h1>Публичный доступ</h1>
+    <%= render "shared/workspace_notification_link" %>
+  </header>
+
+  <div class="pj-public-access-content">
+    <div class="pj-public-access-intro">
+      <div>
+        <p>Выберите питомца, чтобы создать или управлять его публичными ссылками.</p>
+      </div>
+    </div>
+
+    <div class="pj-public-access-overview-grid">
+      <% @pets.each do |pet| %>
+        <% shares = pet.pet_profile_shares.to_a %>
+        <% active_shares_count = shares.count(&:active?) %>
+
+        <%= link_to pet_profile_shares_path(pet), class: "pj-public-access-overview-card" do %>
+          <span class="pj-public-access-overview-card__avatar">
+            <% if pet.photo.attached? %>
+              <%= image_tag pet.photo, alt: "" %>
+            <% else %>
+              <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
+            <% end %>
+          </span>
+
+          <span class="pj-public-access-overview-card__body">
+            <span class="pj-public-access-overview-card__title-row">
+              <strong><%= pet.name %></strong>
+              <span class="pj-public-access-card__status <%= active_shares_count.positive? ? "is-active" : "is-muted" %>">
+                <%= if active_shares_count.positive?
+                      "Есть доступ"
+                    elsif shares.any?
+                      "Нет активного"
+                    else
+                      "Нет ссылок"
+                    end %>
+              </span>
+            </span>
+            <small><%= pet.breed.presence || pet.species.presence || "Питомец" %></small>
+            <span class="pj-public-access-overview-card__signal <%= "is-muted" if shares.empty? %>">
+              <%= "#{shares.size} #{russian_plural(shares.size, "ссылка", "ссылки", "ссылок")}" %>
+            </span>
+          </span>
+
+          <span class="pj-public-access-overview-card__chevron" aria-hidden="true"><%= pj_icon(:chevron) %></span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

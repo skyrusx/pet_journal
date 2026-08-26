@@ -8,8 +8,10 @@ class NotificationDispatcherTest < ActiveSupport::TestCase
     reminders(:weekly).update!(last_notified_at: Time.current)
     dispatcher = NotificationDispatcher.new
 
-    assert_enqueued_jobs 1 do
-      dispatcher.dispatch_reminder(reminder)
+    assert_difference("InAppNotification.count", 1) do
+      assert_enqueued_jobs 1 do
+        dispatcher.dispatch_reminder(reminder)
+      end
     end
 
     assert_not_nil reminder.reload.last_notified_at
@@ -21,7 +23,7 @@ class NotificationDispatcherTest < ActiveSupport::TestCase
     end
   end
 
-  test "does not dispatch during quiet hours" do
+  test "creates inbox notification but does not send external channels during quiet hours" do
     user = users(:one)
     user.update!(
       notifications_quiet_hours_enabled: true,
@@ -30,8 +32,10 @@ class NotificationDispatcherTest < ActiveSupport::TestCase
       notifications_time_zone: "UTC"
     )
 
-    assert_no_enqueued_jobs do
-      NotificationDispatcher.new(now: Time.zone.parse("2026-07-23 23:00")).dispatch_reminder(reminders(:one))
+    assert_difference("InAppNotification.count", 1) do
+      assert_no_enqueued_jobs do
+        NotificationDispatcher.new(now: Time.zone.parse("2026-07-23 23:00")).dispatch_reminder(reminders(:one))
+      end
     end
 
     assert_nil reminders(:one).reload.last_notified_at
@@ -58,7 +62,7 @@ class NotificationDispatcherTest < ActiveSupport::TestCase
 
     delivery = reminder.notification_deliveries.order(:created_at).last
     assert delivery.status_skipped?
-    assert_match "TELEGRAM_BOT_TOKEN", delivery.error_message
+    assert_match "Telegram", delivery.error_message
     assert_not_nil reminder.reload.last_notified_at
   end
 

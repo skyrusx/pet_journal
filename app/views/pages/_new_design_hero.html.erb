@@ -1,0 +1,73 @@
+<section class="pj-nd-hero" aria-labelledby="pj-nd-hero-title">
+  <div class="pj-nd-shell">
+    <div class="pj-nd-hero__panel">
+      <div class="pj-nd-hero__copy">
+        <div class="pj-nd-hero__eyebrow">
+          <span>Забота. Память. Спокойствие.</span>
+          <svg class="pj-nd-hero__eyebrow-paw" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="7" cy="6" r="2.2" fill="currentColor" />
+            <circle cx="12" cy="4.5" r="2.2" fill="currentColor" />
+            <circle cx="17" cy="6" r="2.2" fill="currentColor" />
+            <circle cx="19" cy="10.5" r="2" fill="currentColor" />
+            <path d="M12 9.2c-3.7 0-6.5 3.1-6.5 6.2 0 2.7 2.2 4.1 4.3 3.3.8-.3 1.4-.8 2.2-.8s1.4.5 2.2.8c2.1.8 4.3-.6 4.3-3.3 0-3.1-2.8-6.2-6.5-6.2Z" fill="currentColor" />
+          </svg>
+        </div>
+
+        <h1 id="pj-nd-hero-title">Вся забота<br>о питомце<br>в одном месте</h1>
+
+        <p class="pj-nd-hero__lead">
+          Журнал здоровья, напоминания, документы<br class="pj-nd-hero__desktop-break">
+          и PetTag — чтобы всё важное было рядом,<br class="pj-nd-hero__desktop-break">
+          когда это действительно нужно.
+        </p>
+
+        <div class="pj-nd-hero__actions">
+          <%= link_to "Создать журнал", new_user_registration_path, class: "pj-nd-hero__primary" %>
+          <a class="pj-nd-hero__secondary" href="#features">
+            <span class="pj-nd-hero__play" aria-hidden="true">
+              <svg viewBox="0 0 20 20" role="img"><path d="M7.4 5.7 14 10l-6.6 4.3V5.7Z" /></svg>
+            </span>
+            <span>Узнать больше</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="pj-nd-hero__visual"
+           aria-hidden="true"
+           style="background-image: url('/new_design/hero-pets-phone.png');">
+      </div>
+    </div>
+
+    <div class="pj-nd-benefits" id="features" aria-label="Преимущества PetJournal">
+      <article class="pj-nd-benefit">
+        <div class="pj-nd-benefit__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><path d="M16 27S5 20.4 5 12.6C5 8.7 7.5 6 11 6c2.4 0 4 1.3 5 3 1-1.7 2.6-3 5-3 3.5 0 6 2.7 6 6.6C27 20.4 16 27 16 27Z" /></svg>
+        </div>
+        <div>
+          <h2>Здоровье под контролем</h2>
+          <p>История здоровья, прививки,<br>анализы и осмотры — всё в одном месте.</p>
+        </div>
+      </article>
+
+      <article class="pj-nd-benefit">
+        <div class="pj-nd-benefit__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><path d="M10 24h12M12 24v2h8v-2M9 20h14l-2-3v-5a5 5 0 0 0-10 0v5l-2 3Z" /></svg>
+        </div>
+        <div>
+          <h2>Ничего не забыть</h2>
+          <p>Напоминания о событиях и приёмах<br>вовремя, чтобы не пропустить важное.</p>
+        </div>
+      </article>
+
+      <article class="pj-nd-benefit">
+        <div class="pj-nd-benefit__icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><path d="M16 4 25 7v7c0 6-3.8 10.2-9 13-5.2-2.8-9-7-9-13V7l9-3Z" /><path d="m12 15 2.6 2.6L20 12" /></svg>
+        </div>
+        <div>
+          <h2>Безопасность с <span class="pj-nd-benefit__pettag">PetTag</span></h2>
+          <p>QR-профиль поможет быстрее связаться<br>с вами, если питомец потеряется.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

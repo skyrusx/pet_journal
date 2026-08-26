@@ -1,0 +1,267 @@
+/* Final workspace standardization for Public Access.
+   Desktop aligns with the approved Pets/Documents patterns. Mobile is intentionally
+   left to the dedicated public-access mobile layers so the polished mobile flow
+   remains unchanged. */
+
+/* Public profile owns the whole browser canvas. This also prevents the global app
+   gradient from showing through below the document on mobile browser overscroll. */
+html:has(body.public-profile-layout-body) {
+  background: #fdfcf8;
+}
+
+/* Public profile photos should preserve the whole pet instead of aggressively
+   cropping portrait and square images into the wide hero frame. */
+.pj-public-profile-photo-wrap img.pj-public-profile-photo {
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Keep the PetTag verification mark attached to the pet name. The existing markup
+   wraps name + description in one element, so display: contents lets the title row
+   position the name, description and badge as three deliberate grid items. */
+.pj-public-profile-identity__title {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) auto;
+  grid-template-areas:
+    "name verified"
+    "description description";
+  align-items: center;
+  justify-content: start;
+  column-gap: 10px;
+  row-gap: 6px;
+}
+
+.pj-public-profile-identity__title > div {
+  display: contents;
+}
+
+.pj-public-profile-identity__title h1 {
+  grid-area: name;
+  min-width: 0;
+}
+
+.pj-public-profile-identity__title > div > p {
+  grid-area: description;
+  margin: 0;
+}
+
+.pj-public-profile-verified {
+  grid-area: verified;
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 28px;
+  border-radius: 50%;
+  color: #fff;
+  background: #5d815d;
+  box-shadow: 0 4px 10px rgba(60, 91, 62, .14);
+  font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* Compact section metadata belongs beside the heading, not in a detached right-side
+   counter. This keeps journal/document capabilities readable without adding noise. */
+.pj-public-profile-heading-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pj-public-profile-heading-row h2 {
+  margin-bottom: 0;
+}
+
+.pj-public-profile-heading-badge {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 9px;
+  border-radius: 999px;
+  color: #56705c;
+  background: #edf2e3;
+  font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+  font-size: var(--pj-font-caption);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+@media (min-width: 821px) {
+  /* The primary public card is the outer frame. Its content sections use the same
+     inset card treatment, so About / Owner contact / PetTag no longer touch the
+     outer frame and all three have one visual hierarchy. */
+  .pj-public-profile-primary {
+    padding-bottom: 2px;
+  }
+
+  .pj-public-profile-primary > .pj-public-profile-section {
+    margin: 0 16px 16px;
+    padding: 20px 22px;
+    border: 1px solid #e8e3d8;
+    border-radius: 14px;
+    background: #fffefa;
+    box-shadow: 0 4px 14px rgba(55, 64, 56, .025);
+  }
+
+  .pj-public-profile-primary > .pj-public-profile-section:first-of-type {
+    margin-top: 2px;
+  }
+
+  /* Contact keeps its useful horizontal action layout, but visually is now the same
+     card as About and PetTag instead of behaving like a footer strip. */
+  .pj-public-profile-primary > .pj-public-profile-contact {
+    padding-top: 20px;
+  }
+
+  /* Form pages use the same heading rhythm as Documents and other workspace forms. */
+  .pj-public-access-form-title {
+    align-items: flex-start;
+  }
+
+  .pj-public-access-form-title h1 {
+    margin: 0;
+    color: #334038;
+    font-family: "Prata", Georgia, serif;
+    font-weight: 400;
+    line-height: var(--pj-line-heading);
+  }
+
+  .pj-public-access-form-title p {
+    margin-top: 4px;
+  }
+
+  /* Keep Public Access sections conceptually intact, but make them speak the same
+     compact form-card language as Documents/Reminders instead of a separate wizard. */
+  .pj-public-access-form-section {
+    padding: 18px;
+    border-radius: var(--pj-radius-card);
+  }
+
+  .pj-public-access-form-section__head {
+    gap: 0;
+    margin-bottom: 15px;
+  }
+
+  .pj-public-access-form-section__head > span {
+    display: none;
+  }
+
+  .pj-public-access-form-section h2 {
+    margin: 0;
+    color: #49554d;
+    font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+    font-size: var(--pj-font-card-title);
+    font-weight: 750;
+    line-height: var(--pj-line-heading);
+  }
+
+  .pj-public-access-form-section__head p {
+    margin-top: 4px;
+    color: #909690;
+    font-size: var(--pj-font-caption);
+    line-height: 1.4;
+  }
+
+  .pj-public-access-form-grid {
+    gap: 13px 12px;
+  }
+
+  .pj-public-access-field > span {
+    font-weight: 700;
+  }
+
+  /* Cancel + primary action mirror the approved Documents form footer. */
+  .pj-public-access-form-actions {
+    display: grid;
+    grid-template-columns: 130px minmax(210px, 250px);
+    justify-content: end;
+    gap: 9px;
+    margin-top: 14px;
+    padding-top: 0;
+  }
+
+  .pj-public-access-form-actions > * {
+    width: 100%;
+    margin: 0;
+  }
+
+  /* Empty states use the same visual weight as the other workspace sections. */
+  .pj-public-access-empty {
+    min-height: 360px;
+    padding: 28px;
+  }
+
+  .pj-public-access-empty h2 {
+    font-size: var(--pj-font-section-title);
+    line-height: var(--pj-line-heading);
+  }
+}
+
+/* On mobile the same three primary sections remain inset cards. Only geometry is
+   normalized here; existing mobile typography, contact stacking and actions stay intact. */
+@media (max-width: 820px) {
+  html:has(body.public-profile-layout-body),
+  body.public-profile-layout-body {
+    min-height: 100dvh;
+    background: #fdfcf8 !important;
+  }
+
+  .public-profile-layout-body > .pj-public-profile-page {
+    flex: 0 0 auto;
+    min-height: 0;
+    background: #fdfcf8;
+  }
+
+  .public-profile-layout-body > .pj-nd-footer {
+    margin-top: 0;
+    background: #fdfcf8;
+  }
+
+  .pj-public-profile-primary {
+    padding-bottom: 2px;
+  }
+
+  .pj-public-profile-primary > .pj-public-profile-section {
+    margin: 0 12px 12px;
+    padding: 18px 16px;
+    border: 1px solid #e8e3d8;
+    border-radius: 14px;
+    background: #fffefa;
+    box-shadow: 0 3px 12px rgba(55, 64, 56, .022);
+  }
+
+  .pj-public-profile-primary > .pj-public-profile-section:first-of-type {
+    margin-top: 2px;
+  }
+
+  .pj-public-profile-primary > .pj-public-profile-contact {
+    padding-top: 18px;
+  }
+}
+
+/* On desktop the public profile uses the exact shell of the current new-design
+   homepage. The secondary area is already the right column of the outer grid, so
+   its cards must stack vertically rather than creating a second three-column grid. */
+@media (min-width: 981px) {
+  .pj-public-profile-topbar__inner,
+  .pj-public-profile-shell,
+  .public-profile-layout-body > .pj-nd-footer .pj-nd-shell {
+    width: min(1240px, calc(100% - 96px));
+    margin-inline: auto;
+  }
+
+  .pj-public-profile-secondary {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 0;
+  }
+
+  .pj-public-access-share-grid > .pj-public-access-card:only-child {
+    grid-column: 1 / -1;
+  }
+}

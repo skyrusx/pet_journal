@@ -30,7 +30,6 @@
       <div class="mb-3">
         <%= f.label :email, "Эл. почта", class: "form-label" %>
         <%= f.email_field :email,
-                          autofocus: true,
                           autocomplete: "email",
                           value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email),
                           class: "form-control" %>

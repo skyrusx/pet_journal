@@ -4,7 +4,10 @@ module RemindersHelper
   end
 
   def repeat_rule_options
-    Reminder.repeat_rules.keys.map { |key| [I18n.t("reminders.repeat_rules.#{key}"), key] }
+    Reminder.repeat_rules.keys.map do |key|
+      label = key == "custom" ? "Настроить интервал" : I18n.t("reminders.repeat_rules.#{key}")
+      [label, key]
+    end
   end
 
   def repeat_unit_options
@@ -58,6 +61,62 @@ module RemindersHelper
     return "Сегодня" if reminder.due_today?
 
     I18n.t("reminders.statuses.#{reminder.status}")
+  end
+
+  def reminder_status_tone(reminder)
+    return "is-overdue" if reminder.overdue?
+    return "is-completed" if reminder.status_completed?
+    return "is-paused" if reminder.status_paused?
+
+    "is-active"
+  end
+
+  def reminder_type_tone(reminder_or_type)
+    type = reminder_or_type.respond_to?(:reminder_type) ? reminder_or_type.reminder_type : reminder_or_type.to_s
+    {
+      "vaccination" => "is-vaccination",
+      "medication" => "is-medication",
+      "treatment" => "is-treatment",
+      "visit" => "is-visit",
+      "weight" => "is-weight",
+      "other" => "is-other"
+    }.fetch(type, "is-other")
+  end
+
+  def reminder_type_icon(type)
+    path = case type.to_s
+           when "vaccination"
+             '<path d="M8 5h8M9 3v4M15 3v4M7 9h10v10H7z"/><path d="M9.5 12.5h5M12 10v5"/>'
+           when "medication"
+             '<path d="M8.2 6.2a4 4 0 0 1 5.6 0l4 4a4 4 0 0 1-5.6 5.6l-4-4a4 4 0 0 1 0-5.6z"/><path d="m10 8 6 6"/>'
+           when "treatment"
+             '<path d="M12 3v18M7 7h10M7 17h10"/><path d="m6 5 12 14M18 5 6 19"/>'
+           when "visit"
+             '<path d="M12 20s6-5.1 6-10A6 6 0 1 0 6 10c0 4.9 6 10 6 10z"/><circle cx="12" cy="10" r="2"/>'
+           when "weight"
+             '<path d="M5 7h14l-1 12H6L5 7z"/><path d="M9 7a3 3 0 0 1 6 0M12 10v3"/>'
+           else
+             '<path d="M6 5h12v14H6z"/><path d="M9 9h6M9 13h6"/>'
+           end
+
+    content_tag(
+      :svg,
+      path.html_safe,
+      viewBox: "0 0 24 24",
+      fill: "none",
+      aria: { hidden: true },
+      class: "pj-reminder-type-icon"
+    )
+  end
+
+  def reminder_channels_label(reminder)
+    return "Все включенные каналы" if reminder.notification_channels.empty?
+
+    reminder.notification_channels.map(&:channel_type_label).uniq.to_sentence(
+      words_connector: ", ",
+      two_words_connector: " и ",
+      last_word_connector: " и "
+    )
   end
 
   def reminder_completion_label(completion)

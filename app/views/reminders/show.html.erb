@@ -1,151 +1,175 @@
-<div class="reminder-detail-page py-4">
-  <section class="reminders-hero mb-4">
-    <div class="reminders-hero-main">
-      <div>
-        <div class="text-muted small mb-1"><%= @pet.name %> · <%= @reminder.reminder_type_label %></div>
-        <h1 class="h3 mb-2"><%= @reminder.title %></h1>
-        <p class="text-muted mb-0"><%= @reminder.repeat_rule_label %></p>
-      </div>
+<% content_for :title, "#{@reminder.title} — Напоминания — PetJournal" %>
 
-      <div class="reminders-current-signal <%= @reminder.overdue? ? "danger" : (@reminder.due_today? ? "warning" : "success") %>">
-        <span>Статус</span>
-        <h2><%= reminder_status_label(@reminder) %></h2>
-        <p>Следующая отправка <%= l(@reminder.next_run_at) %>.</p>
-      </div>
-    </div>
+<div class="pj-reminders-page pj-reminder-show">
+  <header class="pj-workspace-topbar pj-reminder-detail-topbar">
+    <%= link_to pet_reminders_path(@pet), class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>Назад к напоминаниям</span>
+    <% end %>
 
-    <div class="reminders-metrics">
-      <div><span><%= @completions.size %></span><small>выполнений</small></div>
-      <div><span><%= @deliveries.size %></span><small>доставок</small></div>
-      <div><span><%= @reminder.notification_channels.size %></span><small>каналов</small></div>
-      <div><span><%= @reminder.last_completed_at.present? ? @reminder.last_completed_at.strftime("%d.%m") : "—" %></span><small>выполнено</small></div>
-      <div><span><%= @reminder.last_notified_at.present? ? @reminder.last_notified_at.strftime("%d.%m") : "—" %></span><small>отправлено</small></div>
-      <div><span><%= I18n.t("reminders.statuses.#{@reminder.status}") %></span><small>режим</small></div>
-    </div>
+    <div class="pj-desktop-detail-actions" aria-label="Действия с напоминанием">
+      <%= link_to edit_pet_reminder_path(@pet, @reminder),
+                  class: "pj-desktop-detail-action",
+                  aria: { label: "Редактировать напоминание" },
+                  title: "Редактировать" do %>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4.5 19.5 5.7 15l9.9-9.9a2.15 2.15 0 0 1 3 0l.3.3a2.15 2.15 0 0 1 0 3L9 18.3l-4.5 1.2Z"/>
+          <path d="m14.3 6.4 3.3 3.3"/>
+        </svg>
+      <% end %>
 
-    <div class="reminders-quick-actions">
-      <%= link_to "Редактировать", edit_pet_reminder_path(@pet, @reminder), class: "btn btn-primary" %>
-      <%= link_to "К списку", pet_reminders_path(@pet), class: "btn btn-outline-secondary" %>
-      <% unless @reminder.status_completed? %>
-        <%= button_to "Выполнить", complete_pet_reminder_path(@pet, @reminder), method: :patch, class: "btn btn-outline-primary btn-sm" %>
-        <%= button_to "Выполнить + запись", complete_pet_reminder_path(@pet, @reminder, create_event: "1"), method: :patch, class: "btn btn-primary btn-sm" %>
-        <%= button_to "Отложить на завтра", snooze_pet_reminder_path(@pet, @reminder, preset: "tomorrow"), method: :patch, class: "btn btn-outline-secondary btn-sm" %>
+      <%= button_to pet_reminder_path(@pet, @reminder),
+                    method: :delete,
+                    class: "pj-desktop-detail-action pj-desktop-detail-action--danger",
+                    form_class: "pj-desktop-detail-action-form",
+                    form: { onsubmit: "return confirm('Удалить напоминание?')" },
+                    aria: { label: "Удалить напоминание" },
+                    title: "Удалить" do %>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+        </svg>
       <% end %>
     </div>
-  </section>
+  </header>
 
-  <div class="reminders-layout">
-    <section class="reminders-main">
-      <div class="dashboard-section">
-        <div class="section-heading compact">
-          <h2 class="h4 mb-0">Детали</h2>
-          <span class="<%= reminder_status_class(@reminder) %>"><%= reminder_status_label(@reminder) %></span>
+  <div class="pj-reminders-content pj-reminder-detail-content">
+    <div class="pj-mobile-detail-nav pj-reminder-mobile-detail-nav">
+      <%= link_to pet_reminders_path(@pet), class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К напоминаниям</span>
+      <% end %>
+
+      <div class="pj-mobile-detail-actions" aria-label="Действия с напоминанием">
+        <%= link_to edit_pet_reminder_path(@pet, @reminder),
+                    class: "pj-mobile-detail-action",
+                    aria: { label: "Редактировать напоминание" },
+                    title: "Редактировать" do %>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4.5 19.5 5.7 15l9.9-9.9a2.15 2.15 0 0 1 3 0l.3.3a2.15 2.15 0 0 1 0 3L9 18.3l-4.5 1.2Z"/>
+            <path d="m14.3 6.4 3.3 3.3"/>
+          </svg>
+        <% end %>
+
+        <%= button_to pet_reminder_path(@pet, @reminder),
+                      method: :delete,
+                      class: "pj-mobile-detail-action pj-mobile-detail-action--danger",
+                      form_class: "pj-mobile-detail-action-form",
+                      form: { onsubmit: "return confirm('Удалить напоминание?')" },
+                      aria: { label: "Удалить напоминание" },
+                      title: "Удалить" do %>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+          </svg>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="pj-reminder-detail-grid">
+      <article class="pj-reminder-detail-card">
+        <div class="pj-reminder-detail-heading">
+          <span class="pj-reminder-detail-icon <%= reminder_type_tone(@reminder) %>"><%= reminder_type_icon(@reminder.reminder_type) %></span>
+          <div>
+            <h1><%= @reminder.title %></h1>
+            <p><%= @reminder.reminder_type_label %></p>
+          </div>
+          <em class="pj-reminder-status <%= reminder_status_tone(@reminder) %>"><%= reminder_status_label(@reminder) %></em>
         </div>
 
-        <dl class="details-list dashboard-details">
-          <div><dt>Следующая отправка</dt><dd><%= l(@reminder.next_run_at) %></dd></div>
-          <div><dt>Первый срок</dt><dd><%= l(@reminder.remind_at) %></dd></div>
-          <div><dt>Повтор</dt><dd><%= @reminder.repeat_rule_label %></dd></div>
-          <div><dt>Последнее выполнение</dt><dd><%= @reminder.last_completed_at.present? ? l(@reminder.last_completed_at) : "—" %></dd></div>
-          <div><dt>Последняя отправка</dt><dd><%= @reminder.last_notified_at.present? ? l(@reminder.last_notified_at) : "—" %></dd></div>
+        <dl class="pj-reminder-detail-list">
           <div>
-            <dt>Каналы</dt>
-            <dd>
-              <% if @reminder.notification_channels.any? %>
-                <%= @reminder.notification_channels.map(&:name).to_sentence %>
-              <% else %>
-                Все включенные каналы
-              <% end %>
+            <dt>Питомец</dt>
+            <dd class="pj-reminder-pet-inline">
+              <span class="pj-reminders-pet-avatar">
+                <% if @pet.photo.attached? %><%= image_tag @pet.photo, alt: "" %><% else %><%= @pet.name.to_s.first.to_s.upcase %><% end %>
+              </span>
+              <%= @pet.name %>
             </dd>
           </div>
+          <div><dt>Тип</dt><dd><%= @reminder.reminder_type_label %></dd></div>
+          <div><dt>Дата и время</dt><dd><%= l(@reminder.next_run_at, format: :default) %></dd></div>
+          <div><dt>Первый срок</dt><dd><%= l(@reminder.remind_at, format: :default) %></dd></div>
+          <div><dt>Повтор</dt><dd><%= @reminder.repeat_rule_label %></dd></div>
+          <div><dt>Каналы</dt><dd><%= reminder_channels_label(@reminder) %></dd></div>
+          <% if @reminder.last_completed_at.present? %>
+            <div><dt>Последнее выполнение</dt><dd><%= l(@reminder.last_completed_at, format: :default) %></dd></div>
+          <% end %>
+          <% if @reminder.last_notified_at.present? %>
+            <div><dt>Последняя отправка</dt><dd><%= l(@reminder.last_notified_at, format: :default) %></dd></div>
+          <% end %>
         </dl>
 
-        <% if @reminder.note.present? %>
-          <div class="notes-box">
-            <div class="fw-semibold mb-1">Заметка</div>
-            <div class="text-muted"><%= simple_format(@reminder.note) %></div>
+        <section class="pj-reminder-note">
+          <h2>Заметка</h2>
+          <p><%= @reminder.note.presence || "Заметка не добавлена." %></p>
+        </section>
+
+        <% unless @reminder.status_completed? %>
+          <div class="pj-reminder-action-bar">
+            <%= button_to complete_pet_reminder_path(@pet, @reminder), method: :patch, class: "pj-reminder-complete-button" do %>
+              <span>✓</span> Выполнено
+            <% end %>
+
+            <%= button_to complete_pet_reminder_path(@pet, @reminder, create_event: "1"), method: :patch, class: "pj-reminder-secondary-button pj-reminder-secondary-button--journal" do %>
+              <%= pj_icon(:journal) %><span>Выполнить + запись</span>
+            <% end %>
+
+            <details class="pj-reminder-snooze">
+              <summary class="pj-reminder-secondary-button"><%= pj_icon(:clock) %><span>Отложить</span></summary>
+              <div>
+                <%= button_to "На час", snooze_pet_reminder_path(@pet, @reminder, preset: "hour"), method: :patch %>
+                <%= button_to "До завтра", snooze_pet_reminder_path(@pet, @reminder, preset: "tomorrow"), method: :patch %>
+                <%= button_to "На неделю", snooze_pet_reminder_path(@pet, @reminder, preset: "week"), method: :patch %>
+              </div>
+            </details>
+
+            <% if @reminder.status_paused? %>
+              <%= button_to resume_pet_reminder_path(@pet, @reminder), method: :patch, class: "pj-reminder-secondary-button" do %>
+                <span>▶</span> Возобновить
+              <% end %>
+            <% else %>
+              <%= button_to pause_pet_reminder_path(@pet, @reminder), method: :patch, class: "pj-reminder-secondary-button" do %>
+                <span>Ⅱ</span> Пауза
+              <% end %>
+            <% end %>
           </div>
         <% end %>
-      </div>
+      </article>
 
-      <div class="dashboard-section">
-        <div class="section-heading compact">
-          <div>
-            <div class="text-muted small mb-1">Выполнения</div>
-            <h2 class="h4 mb-0">История</h2>
-          </div>
-        </div>
-
-        <% if @completions.any? %>
-          <div class="delivery-list">
+      <aside class="pj-reminder-history-stack">
+        <section class="pj-reminder-history-card">
+          <h2>История выполнений</h2>
+          <% if @completions.any? %>
             <% @completions.each do |completion| %>
-              <div class="delivery-row">
-                <div>
-                  <div class="fw-semibold"><%= l(completion.completed_at) %></div>
-                  <div class="text-muted small"><%= reminder_completion_label(completion) %></div>
-                  <% if completion.note.present? %>
-                    <div class="text-muted small"><%= completion.note %></div>
-                  <% end %>
-                </div>
-                <span class="status-pill success">Выполнено</span>
+              <div class="pj-reminder-history-row">
+                <span></span>
+                <p>
+                  <strong>Выполнено</strong>
+                  <small><%= l(completion.completed_at, format: :default) %></small>
+                  <small><%= reminder_completion_label(completion) %></small>
+                </p>
               </div>
             <% end %>
-          </div>
-        <% else %>
-          <div class="empty-state-inline">Выполнений пока не было.</div>
-        <% end %>
-      </div>
-    </section>
-
-    <aside class="reminders-side">
-      <section class="dashboard-section">
-        <div class="section-heading compact">
-          <div>
-            <div class="text-muted small mb-1">Доставки</div>
-            <h2 class="h4 mb-0">История</h2>
-          </div>
-        </div>
-
-        <% if @deliveries.any? %>
-          <div class="delivery-list">
-            <% @deliveries.each do |delivery| %>
-              <div class="delivery-row">
-                <div>
-                  <div class="fw-semibold"><%= delivery.notification_channel.channel_type_label %></div>
-                  <div class="text-muted small"><%= l(delivery.created_at) %></div>
-                  <div class="text-muted small">Попытки: <%= delivery.attempts_label %></div>
-                  <% if delivery.next_attempt_at.present? %>
-                    <div class="text-muted small">Следующая попытка: <%= l(delivery.next_attempt_at) %></div>
-                  <% end %>
-                  <% if delivery.error_message.present? %>
-                    <div class="text-danger small"><%= delivery.error_message %></div>
-                  <% end %>
-                </div>
-                <span class="<%= notification_delivery_status_class(delivery) %>"><%= notification_delivery_status_label(delivery) %></span>
-              </div>
-            <% end %>
-          </div>
-        <% else %>
-          <p class="text-muted mb-0">Отправок пока не было.</p>
-        <% end %>
-      </section>
-
-      <section class="dashboard-section">
-        <div class="text-muted small mb-1">Управление</div>
-        <h2 class="h4 mb-3">Действия</h2>
-        <div class="d-grid gap-2">
-          <% if @reminder.status_paused? %>
-            <%= button_to "Включить", resume_pet_reminder_path(@pet, @reminder), method: :patch, class: "btn btn-outline-primary btn-sm" %>
-          <% elsif !@reminder.status_completed? %>
-            <%= button_to "Пауза", pause_pet_reminder_path(@pet, @reminder), method: :patch, class: "btn btn-outline-secondary btn-sm" %>
+          <% else %>
+            <p class="pj-reminder-history-empty">Выполнений пока не было.</p>
           <% end %>
-          <%= button_to "Удалить",
-                        pet_reminder_path(@pet, @reminder),
-                        method: :delete,
-                        class: "btn btn-outline-danger btn-sm",
-                        form: { onsubmit: "return confirm('Удалить напоминание?')" } %>
-        </div>
-      </section>
-    </aside>
+        </section>
+
+        <section class="pj-reminder-history-card">
+          <h2>История уведомлений</h2>
+          <% if @deliveries.any? %>
+            <% @deliveries.each do |delivery| %>
+              <div class="pj-reminder-delivery-row">
+                <div>
+                  <strong><%= delivery.notification_channel.channel_type_label %></strong>
+                  <small><%= l(delivery.created_at, format: :default) %></small>
+                  <% if delivery.error_message.present? %><small class="is-error"><%= delivery.error_message %></small><% end %>
+                </div>
+                <em class="<%= notification_delivery_status_class(delivery) %>"><%= notification_delivery_status_label(delivery) %></em>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="pj-reminder-history-empty">Отправок пока не было.</p>
+          <% end %>
+        </section>
+      </aside>
+    </div>
   </div>
 </div>

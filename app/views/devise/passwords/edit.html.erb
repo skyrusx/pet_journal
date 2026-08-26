@@ -1,57 +1,78 @@
-<%= render "devise/shared/auth_header" %>
+<%= render "devise/shared/auth_v2_navbar" %>
 
-<div class="auth-page">
-  <section class="auth-card">
-    <div class="auth-copy">
-      <%= link_to root_path, class: "auth-brand", aria: { label: "PetJournal — главная" } do %>
-        <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 172, height: 49 %>
-      <% end %>
-      <span>Новый пароль</span>
-      <h1>Защитите доступ к PetJournal</h1>
-      <p>Задайте новый пароль для входа в дневник питомца.</p>
-      <ul>
-        <li>Используйте пароль, который не повторяется</li>
-        <li>Минимальная длина показана в форме</li>
-        <li>После смены можно войти снова</li>
-      </ul>
-      <div class="auth-pettag-art" aria-hidden="true">
-        <span class="auth-pettag-ring"></span>
-        <span class="auth-pettag-qr"></span>
-        <span class="auth-pettag-label">PetTag</span>
-      </div>
+<div class="pj-auth-v2 pj-auth-v2--reset-password">
+  <main class="pj-auth-v2-main">
+    <div class="pj-auth-v2-shell">
+      <section class="pj-auth-v2-stage" aria-labelledby="pj-auth-v2-title">
+        <div class="pj-auth-v2-visual" aria-hidden="true">
+          <div class="pj-auth-v2-brand-card">
+            <%= image_tag "petjournal/logo-horizontal.png", alt: "", class: "pj-auth-v2-brand-card__logo" %>
+            <h2>Ваш журнал заботы о питомце</h2>
+            <ul class="pj-auth-v2-brand-card__benefits">
+              <li>Напоминания о событиях</li>
+              <li>Документы в порядке</li>
+              <li>PetTag — безопасность</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pj-auth-v2-form-side">
+          <div class="pj-auth-v2-card">
+            <div class="pj-auth-v2-heading">
+              <h1 id="pj-auth-v2-title">Новый пароль</h1>
+              <p>Придумайте новый пароль<br>для входа в PetJournal.</p>
+            </div>
+
+            <%= render "devise/shared/error_messages", resource: resource %>
+
+            <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "pj-auth-v2-form" }) do |f| %>
+              <%= f.hidden_field :reset_password_token %>
+
+              <div class="pj-auth-v2-field">
+                <%= f.label :password, "Новый пароль" %>
+                <div class="pj-auth-v2-password auth-password-field">
+                  <%= f.password_field :password,
+                                       autocomplete: "new-password",
+                                       placeholder: "••••••••",
+                                       required: true,
+                                       minlength: @minimum_password_length,
+                                       aria: (@minimum_password_length ? { describedby: "pj-auth-v2-password-hint" } : {}),
+                                       class: "pj-auth-v2-input",
+                                       data: { password_input: true } %>
+                  <%= render "devise/shared/password_toggle" %>
+                </div>
+                <% if @minimum_password_length %>
+                  <p class="pj-auth-v2-password-hint" id="pj-auth-v2-password-hint">
+                    Минимум <%= @minimum_password_length %> символов
+                  </p>
+                <% end %>
+              </div>
+
+              <div class="pj-auth-v2-field">
+                <%= f.label :password_confirmation, "Повторите пароль" %>
+                <div class="pj-auth-v2-password auth-password-field">
+                  <%= f.password_field :password_confirmation,
+                                       autocomplete: "new-password",
+                                       placeholder: "••••••••",
+                                       required: true,
+                                       minlength: @minimum_password_length,
+                                       class: "pj-auth-v2-input",
+                                       data: { password_input: true } %>
+                  <%= render "devise/shared/password_toggle" %>
+                </div>
+              </div>
+
+              <%= f.submit "Сохранить новый пароль", class: "pj-auth-v2-submit" %>
+            <% end %>
+
+            <p class="pj-auth-v2-register pj-auth-v2-back-link">
+              <%= link_to "← Вернуться ко входу", new_session_path(resource_name) %>
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
+  </main>
 
-    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "auth-form" }) do |f| %>
-      <div class="auth-form-heading">
-        <span>Доступ</span>
-        <h2>Сменить пароль</h2>
-      </div>
-
-      <%= render "devise/shared/error_messages", resource: resource %>
-      <%= f.hidden_field :reset_password_token %>
-
-      <div class="mb-3">
-        <%= f.label :password, "Новый пароль", class: "form-label" %>
-        <% if @minimum_password_length %>
-          <div class="form-text">Минимум <%= @minimum_password_length %> символов.</div>
-        <% end %>
-        <div class="auth-password-field">
-          <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "form-control", data: { password_input: true } %>
-          <%= render "devise/shared/password_toggle" %>
-        </div>
-      </div>
-
-      <div class="mb-3">
-        <%= f.label :password_confirmation, "Повторите пароль", class: "form-label" %>
-        <div class="auth-password-field">
-          <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form-control", data: { password_input: true } %>
-          <%= render "devise/shared/password_toggle" %>
-        </div>
-      </div>
-
-      <%= f.submit "Сменить пароль", class: "btn btn-primary w-100 auth-submit" %>
-    <% end %>
-
-    <%= render "devise/shared/links" %>
-  </section>
+  <%= render "devise/shared/auth_v2_footer" %>
 </div>

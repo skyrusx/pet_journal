@@ -1,0 +1,106 @@
+/* Visual polish for the PetJournal showcase block. */
+.pj-nd-showcase__intro h2 {
+  color: #174f31;
+}
+
+.pj-nd-showcase__brand {
+  display: flex;
+  align-items: center;
+}
+
+.pj-nd-showcase__brand-logo {
+  display: block;
+  width: 150px;
+  height: auto;
+  object-fit: contain;
+}
+
+.pj-nd-showcase__pet-avatar {
+  width: 118px;
+  height: 118px;
+  overflow: hidden;
+  border: 4px solid #f4f0e6;
+  border-radius: 50%;
+  background: #f6f2e8;
+  box-shadow: 0 8px 18px rgba(60, 54, 41, 0.12);
+}
+
+.pj-nd-showcase__pet-avatar-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center 22%;
+}
+
+.pj-nd-showcase__pet-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+
+.pj-nd-showcase__pet-name-text {
+  color: #174f31;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.pj-nd-showcase__pet-sex {
+  width: 23px;
+  height: 23px;
+  display: inline-grid;
+  place-items: center;
+  line-height: 1;
+}
+
+.pj-nd-showcase__pet-name .pj-nd-showcase__pet-sex--male {
+  color: #4a86e8;
+}
+
+.pj-nd-showcase__pet-name .pj-nd-showcase__pet-sex--female {
+  color: #df78aa;
+}
+
+.pj-nd-showcase__pet-sex svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pj-nd-showcase__tag-image-wrap {
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding-right: 18px;
+  padding-bottom: 0;
+}
+
+.pj-nd-showcase__tag-image {
+  width: 154px;
+  height: 154px;
+  display: block;
+  object-fit: contain;
+  border-radius: 18px;
+  mix-blend-mode: multiply;
+}
+
+@media (max-width: 1100px) {
+  .pj-nd-showcase__brand-logo {
+    width: 138px;
+  }
+
+  .pj-nd-showcase__pet-avatar {
+    width: 96px;
+    height: 96px;
+  }
+
+  .pj-nd-showcase__tag-image {
+    width: 138px;
+    height: 138px;
+  }
+}

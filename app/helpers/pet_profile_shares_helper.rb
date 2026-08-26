@@ -39,7 +39,7 @@ module PetProfileSharesHelper
       ["Журнал", share.show_journal?],
       ["Документы", share.show_documents?],
       ["Напоминания", share.show_reminders?],
-      ["Жетон", share.show_pet_tag?],
+      ["PetTag", share.show_pet_tag?],
       ["Контакт владельца", share.show_owner_contact?],
       ["Скачивание файлов", share.allow_file_downloads?]
     ]

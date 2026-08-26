@@ -1,0 +1,20 @@
+/* Keep the workspace footer in normal document flow on long Public Access screens. */
+
+@media (min-width: 821px) {
+  .pj-workspace-main:has(.pj-public-access-page) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pj-workspace-main:has(.pj-public-access-page) > .pj-public-access-page {
+    flex: 0 0 auto;
+    min-height: auto;
+  }
+
+  .pj-workspace-main:has(.pj-public-access-page) > .pj-workspace-footer {
+    position: static !important;
+    inset: auto !important;
+    flex: 0 0 auto;
+    margin-top: 34px;
+  }
+}

@@ -1,0 +1,100 @@
+<section class="pj-nd-showcase" aria-labelledby="pj-nd-showcase-title">
+  <div class="pj-nd-shell">
+    <div class="pj-nd-showcase__panel">
+      <aside class="pj-nd-showcase__intro">
+        <h2 id="pj-nd-showcase-title">PetJournal<br>в действии</h2>
+
+        <ul class="pj-nd-showcase__list">
+          <% ["Карточка питомца", "Ближайшие события", "Последние записи", "Документы", "PetTag"].each do |item| %>
+            <li>
+              <span class="pj-nd-showcase__check" aria-hidden="true">
+                <svg viewBox="0 0 20 20"><path d="m4.7 10.4 3.1 3.1 7.5-7.6" /></svg>
+              </span>
+              <span><%= item %></span>
+            </li>
+          <% end %>
+        </ul>
+      </aside>
+
+      <div class="pj-nd-showcase__app" aria-label="Пример интерфейса PetJournal">
+        <header class="pj-nd-showcase__app-topbar">
+          <div class="pj-nd-showcase__brand">
+            <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", class: "pj-nd-showcase__brand-logo" %>
+          </div>
+
+          <div class="pj-nd-showcase__topbar-actions" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 4a4 4 0 0 1 4 4v2.5c0 .7.2 1.4.6 2l1 1.5H6.4l1-1.5c.4-.6.6-1.3.6-2V8a4 4 0 0 1 4-4Zm0 16a2.7 2.7 0 0 1-2.6-2h5.2A2.7 2.7 0 0 1 12 20Z" /></svg>
+            <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+          </div>
+        </header>
+
+        <div class="pj-nd-showcase__grid">
+          <article class="pj-nd-showcase__card pj-nd-showcase__card--pet">
+            <div class="pj-nd-showcase__pet-avatar">
+              <img src="/new_design/showcase-cat-face.jpg" alt="Снежок" class="pj-nd-showcase__pet-avatar-image">
+            </div>
+
+            <div class="pj-nd-showcase__pet-info">
+              <div class="pj-nd-showcase__pet-name">
+                <span class="pj-nd-showcase__pet-name-text">Снежок</span>
+                <span class="pj-nd-showcase__pet-sex pj-nd-showcase__pet-sex--male" aria-label="Самец">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="9" cy="15" r="5.2" />
+                    <path d="M12.8 11.2 20 4m-5.4 0H20v5.4" />
+                  </svg>
+                </span>
+              </div>
+              <div class="pj-nd-showcase__pet-meta">Британский короткошерстный,<br>3 года 2 месяца · 4,9 кг</div>
+              <div class="pj-nd-showcase__status">Всё под контролем</div>
+            </div>
+          </article>
+
+          <article class="pj-nd-showcase__card pj-nd-showcase__card--event">
+            <h3>Ближайшее событие</h3>
+            <div class="pj-nd-showcase__event-box">
+              <div class="pj-nd-showcase__event-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 20S4 15.2 4 9.6C4 6.8 5.8 5 8.3 5c1.7 0 2.9.9 3.7 2.2C12.8 5.9 14 5 15.7 5 18.2 5 20 6.8 20 9.6 20 15.2 12 20 12 20Z" /></svg>
+              </div>
+              <div>
+                <div class="pj-nd-showcase__event-title">Вакцинация</div>
+                <div class="pj-nd-showcase__event-date">24 мая, 11:00</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="pj-nd-showcase__card pj-nd-showcase__card--notes">
+            <h3>Последние записи</h3>
+            <div class="pj-nd-showcase__notes-list">
+              <div class="pj-nd-showcase__note">
+                <div class="pj-nd-showcase__note-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 20S4 15.2 4 9.6C4 6.8 5.8 5 8.3 5c1.7 0 2.9.9 3.7 2.2C12.8 5.9 14 5 15.7 5 18.2 5 20 6.8 20 9.6 20 15.2 12 20 12 20Z" /></svg>
+                </div>
+                <div>
+                  <div class="pj-nd-showcase__note-title">Осмотр у ветеринара</div>
+                  <div class="pj-nd-showcase__note-meta">22 мая</div>
+                </div>
+              </div>
+
+              <div class="pj-nd-showcase__note">
+                <div class="pj-nd-showcase__note-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M7 4h10v16H7zM9 2v4M15 2v4M9.5 10h5M9.5 13h5" /></svg>
+                </div>
+                <div>
+                  <div class="pj-nd-showcase__note-title">Замена корма</div>
+                  <div class="pj-nd-showcase__note-meta">18 мая</div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="pj-nd-showcase__card pj-nd-showcase__card--tag">
+            <h3>PetTag</h3>
+            <div class="pj-nd-showcase__tag-image-wrap">
+              <img src="/new_design/pettag-emerald.png" alt="PetTag" class="pj-nd-showcase__tag-image">
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

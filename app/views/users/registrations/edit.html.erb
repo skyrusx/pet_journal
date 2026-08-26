@@ -1,0 +1,206 @@
+<% content_for :title, "Профиль — PetJournal" %>
+<% display_name = resource.name.presence || resource.email.to_s.split("@").first.presence || "Профиль" %>
+<% avatar_letter = display_name.to_s.first.to_s.upcase.presence || "P" %>
+
+<div class="pj-account-page">
+  <header class="pj-workspace-topbar">
+    <h1>Профиль</h1>
+    <%= render "shared/workspace_notification_link" %>
+  </header>
+
+  <div class="pj-account-content">
+    <div class="pj-account-heading">
+      <div>
+        <h1>Профиль</h1>
+        <p>Контактные данные и безопасность аккаунта PetJournal.</p>
+      </div>
+    </div>
+
+    <% if resource.errors.any? %>
+      <div class="pj-account-errors" role="alert">
+        <strong>Не удалось сохранить изменения</strong>
+        <ul>
+          <% resource.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="pj-account-grid">
+      <section class="pj-account-card pj-account-profile-card" aria-label="Основные данные">
+        <div class="pj-account-card__head">
+          <div>
+            <span class="pj-account-card__kicker">Основные данные</span>
+            <p>Имя, телефон и фотография владельца.</p>
+          </div>
+        </div>
+
+        <%= form_for(resource,
+                     as: resource_name,
+                     url: edit_user_registration_path,
+                     html: { method: :put, id: "pj-profile-form", class: "pj-account-form", multipart: true }) do |f| %>
+          <div class="pj-account-avatar-block">
+            <div class="pj-account-avatar" data-account-avatar-preview data-account-avatar-letter="<%= avatar_letter %>">
+              <% if resource.avatar.attached? %>
+                <%= image_tag resource.avatar, alt: "Фото профиля #{display_name}" %>
+              <% else %>
+                <span data-account-avatar-fallback><%= avatar_letter %></span>
+              <% end %>
+            </div>
+
+            <div class="pj-account-avatar-copy">
+              <strong><%= display_name %></strong>
+              <span><%= resource.email %></span>
+              <div class="pj-account-avatar-actions">
+                <%= f.label :avatar, "Изменить фото", class: "pj-account-secondary-button pj-account-avatar-button" %>
+                <%= f.file_field :avatar,
+                                 accept: "image/jpeg,image/png,image/webp",
+                                 class: "pj-account-avatar-input",
+                                 data: { account_avatar_input: true } %>
+
+                <% if resource.avatar.attached? %>
+                  <button type="button"
+                          class="pj-account-avatar-remove-button"
+                          data-account-avatar-remove
+                          aria-label="Удалить фото"
+                          title="Удалить фото">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+                    </svg>
+                  </button>
+                <% end %>
+              </div>
+              <small>JPG, PNG или WebP до 5 МБ.</small>
+              <%= f.hidden_field :remove_avatar, value: "0", data: { account_avatar_remove_flag: true } %>
+            </div>
+          </div>
+
+          <div class="pj-account-fields">
+            <div class="pj-account-field">
+              <%= f.label :name, "Имя" %>
+              <%= f.text_field :name,
+                               autocomplete: "name",
+                               placeholder: "Как к вам обращаться",
+                               maxlength: 80,
+                               required: true %>
+              <small>Будет использоваться внутри PetJournal и в персонализированных сценариях.</small>
+            </div>
+
+            <div class="pj-account-field">
+              <%= f.label :phone, "Телефон" %>
+              <%= f.telephone_field :phone,
+                                    autocomplete: "tel",
+                                    placeholder: "+7 (999) 999-99-99",
+                                    maxlength: 18,
+                                    inputmode: "tel",
+                                    data: { account_phone_input: true } %>
+              <small>Телефон не публикуется автоматически. Позже его можно будет подставлять в контакт PetTag по вашему выбору.</small>
+            </div>
+          </div>
+
+          <div class="pj-account-form-actions">
+            <%= f.submit "Сохранить", class: "pj-account-primary-button" %>
+          </div>
+        <% end %>
+      </section>
+
+      <section class="pj-account-card pj-account-security-card" aria-label="Безопасность">
+        <div class="pj-account-card__head">
+          <div>
+            <span class="pj-account-card__kicker">Безопасность</span>
+            <p>Данные для входа в аккаунт.</p>
+          </div>
+          <span class="pj-account-lock" aria-hidden="true"><%= pj_icon(:settings) %></span>
+        </div>
+
+        <%= form_for(resource,
+                     as: resource_name,
+                     url: edit_user_registration_path,
+                     html: { method: :put, id: "pj-security-form", class: "pj-account-form" }) do |f| %>
+          <div class="pj-account-fields">
+            <div class="pj-account-field">
+              <%= f.label :email, "Email" %>
+              <%= f.email_field :email,
+                                autocomplete: "email",
+                                required: true %>
+              <small>Используется для входа и системных сообщений.</small>
+
+              <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                <small class="pj-account-field-warning">Ожидается подтверждение: <%= resource.unconfirmed_email %></small>
+              <% end %>
+            </div>
+
+            <div class="pj-account-password-grid">
+              <div class="pj-account-field">
+                <%= f.label :password, "Новый пароль" %>
+                <div class="pj-account-password-field auth-password-field">
+                  <%= f.password_field :password,
+                                       autocomplete: "new-password",
+                                       placeholder: "Оставьте пустым, если не меняете",
+                                       data: { password_input: true } %>
+                  <%= render "devise/shared/password_toggle" %>
+                </div>
+              </div>
+
+              <div class="pj-account-field">
+                <%= f.label :password_confirmation, "Повторите пароль" %>
+                <div class="pj-account-password-field auth-password-field">
+                  <%= f.password_field :password_confirmation,
+                                       autocomplete: "new-password",
+                                       placeholder: "Повторите новый пароль",
+                                       data: { password_input: true } %>
+                  <%= render "devise/shared/password_toggle" %>
+                </div>
+              </div>
+            </div>
+
+            <% if @minimum_password_length %>
+              <p class="pj-account-inline-hint">Новый пароль — минимум <%= @minimum_password_length %> символов.</p>
+            <% end %>
+
+            <div class="pj-account-field pj-account-current-password">
+              <%= f.label :current_password, "Текущий пароль" %>
+              <div class="pj-account-password-field auth-password-field">
+                <%= f.password_field :current_password,
+                                     autocomplete: "current-password",
+                                     placeholder: "Нужен для смены email или пароля",
+                                     data: { password_input: true } %>
+                <%= render "devise/shared/password_toggle" %>
+              </div>
+              <small>Текущий пароль требуется только при изменении email или пароля.</small>
+            </div>
+          </div>
+
+          <div class="pj-account-form-actions">
+            <%= f.submit "Сохранить", class: "pj-account-primary-button" %>
+          </div>
+        <% end %>
+      </section>
+    </div>
+
+    <section class="pj-account-card pj-account-contact-note" aria-labelledby="pj-contact-note-title">
+      <span class="pj-account-contact-note__icon" aria-hidden="true"><%= pj_icon(:tag) %></span>
+      <div>
+        <h2 id="pj-contact-note-title">Контакты и PetTag</h2>
+        <p>Имя, телефон и фотография хранятся в вашем профиле. Публичный PetTag по-прежнему показывает только те контактные данные, которые вы разрешили для конкретного питомца.</p>
+      </div>
+      <%= link_to "Открыть PetTag", pet_tags_path, class: "pj-account-secondary-button pj-account-pettag-link" %>
+    </section>
+
+    <section class="pj-account-danger" aria-labelledby="pj-danger-title">
+      <div>
+        <span class="pj-account-card__kicker">Опасная зона</span>
+        <h2 id="pj-danger-title">Удалить аккаунт</h2>
+        <p>Аккаунт и связанные данные будут удалены. Это действие нельзя отменить.</p>
+      </div>
+
+      <%= button_to "Удалить",
+                    edit_user_registration_path,
+                    method: :delete,
+                    class: "pj-account-danger-button",
+                    form_class: "pj-account-danger-form",
+                    data: { turbo_confirm: "Удалить аккаунт PetJournal и связанные данные? Это действие нельзя отменить." } %>
+    </section>
+  </div>
+</div>

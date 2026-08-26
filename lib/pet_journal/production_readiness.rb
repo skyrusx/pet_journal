@@ -33,9 +33,9 @@ module PetJournal
       def notification_warnings(env = ENV)
         warnings = []
         warnings << "Email delivery is not configured: #{missing_mail_env(env).join(', ')}" if missing_mail_env(env).any?
-        warnings << "Web Push is not configured: #{missing_push_env(env).join(', ')}" if missing_push_env(env).any?
+        warnings << "Web Push is not configured: add VAPID_PUBLIC_KEY/VAPID_PRIVATE_KEY or web_push Rails credentials" unless push_configured?(env)
         warnings << "Telegram delivery is unavailable without TELEGRAM_BOT_TOKEN" if env["TELEGRAM_BOT_TOKEN"].blank?
-        warnings << "VK delivery is unavailable without VK_GROUP_TOKEN" if env["VK_GROUP_TOKEN"].blank?
+        warnings << "VK delivery is unavailable: add VK_GROUP_TOKEN or vk.group_token Rails credentials" unless vk_configured?(env)
         warnings
       end
 
@@ -52,8 +52,16 @@ module PetJournal
         MAIL_ENV.reject { |key| env[key].present? }
       end
 
-      def missing_push_env(env)
-        PUSH_ENV.reject { |key| env[key].present? }
+      def push_configured?(env)
+        return true if PUSH_ENV.all? { |key| env[key].present? }
+
+        env.equal?(ENV) && WebPushConfiguration.configured?
+      end
+
+      def vk_configured?(env)
+        return true if env["VK_GROUP_TOKEN"].present?
+
+        env.equal?(ENV) && VkConfiguration.configured?
       end
     end
   end

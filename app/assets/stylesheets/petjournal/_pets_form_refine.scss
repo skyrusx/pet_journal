@@ -1,0 +1,358 @@
+/* Small refinements after the first visual review of the pet pages. */
+
+@media (min-width: 821px) {
+  .pj-pet-form-content {
+    --pj-form-content-max: var(--pj-form-wide-content-max);
+    width: min(930px, calc(100% - 72px));
+  }
+
+  .pj-pet-form {
+    padding: 22px;
+  }
+
+  .pj-pet-form__grid {
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 22px;
+  }
+
+  .pj-pet-photo-upload {
+    min-height: 202px;
+  }
+
+  .pj-pet-form__fields {
+    gap: 14px;
+  }
+
+  .pj-pet-form__extra {
+    margin-top: 20px;
+    padding-inline: 16px;
+  }
+
+  .pj-pet-form__extra > summary {
+    padding: 13px 0 10px;
+    font-size: 9px;
+  }
+
+  .pj-pet-form__extra > p {
+    margin-bottom: 13px;
+    font-size: 7.5px;
+  }
+
+  .pj-pet-form__extra-grid {
+    gap: 14px;
+    padding-bottom: 16px;
+  }
+
+  /* On desktop the right side becomes a compact navigation/status rail. */
+  .pj-pet-profile-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 250px;
+    grid-template-rows: auto auto;
+    column-gap: 28px;
+    align-items: start;
+  }
+
+  .pj-pet-profile-layout {
+    display: contents;
+  }
+
+  .pj-pet-profile-main {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .pj-pet-profile-side {
+    grid-column: 2;
+    grid-row: 1;
+    gap: 10px;
+  }
+
+  .pj-pet-profile-side .pj-pet-summary-card {
+    padding: 12px;
+  }
+
+  .pj-pet-profile-side .pj-pet-summary-card__label {
+    margin-bottom: 8px;
+  }
+
+  .pj-pet-profile-side .pj-pet-summary-card__button {
+    min-height: 29px;
+  }
+
+  .pj-pet-profile-content > .pj-pet-quick-section {
+    grid-column: 2;
+    grid-row: 2;
+    margin-top: 10px;
+    padding: 11px 12px;
+  }
+
+  .pj-pet-profile-content > .pj-pet-quick-section h2 {
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+
+  .pj-pet-profile-content > .pj-pet-quick-section .pj-pet-quick-grid {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  .pj-pet-profile-content > .pj-pet-quick-section .pj-pet-quick-card {
+    min-height: 46px;
+    grid-template-columns: 27px minmax(0, 1fr);
+    column-gap: 8px;
+    padding: 6px 8px;
+  }
+
+  .pj-pet-profile-content > .pj-pet-quick-section .pj-pet-quick-card > span {
+    width: 25px;
+    height: 25px;
+  }
+
+  .pj-pet-profile-content > .pj-pet-quick-section .pj-pet-quick-card .pj-nav-icon {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+/* A conventional edit pencil: clean hit area and a bottom-left to top-right stroke. */
+.pj-pet-profile-edit {
+  width: 28px;
+  height: 28px;
+  min-height: 0;
+  flex: 0 0 28px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #68766d;
+  background: transparent;
+  line-height: 1;
+  text-decoration: none;
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.pj-pet-profile-edit svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pj-pet-profile-edit:hover {
+  color: #174f34;
+  background: #f0f3e7;
+}
+
+/* Photo preview can now be cleared before saving, including an already stored photo. */
+.pj-pet-photo-control {
+  position: relative;
+}
+
+.pj-pet-photo-upload__empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  pointer-events: none;
+}
+
+.pj-pet-photo-upload__empty[hidden] {
+  display: none;
+}
+
+.pj-pet-photo-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 4;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .72);
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(71, 75, 68, .74);
+  box-shadow: 0 3px 9px rgba(34, 39, 34, .16);
+  backdrop-filter: blur(5px);
+  cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.pj-pet-photo-remove[hidden] {
+  display: none;
+}
+
+.pj-pet-photo-remove:hover {
+  background: rgba(126, 67, 59, .9);
+  transform: translateY(-1px);
+}
+
+.pj-pet-photo-remove svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Pet list cards keep the whole card clickable while exposing a direct edit action. */
+.pj-pet-list-card__main {
+  min-height: 250px;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+}
+
+.pj-pet-list-card__main:hover {
+  color: inherit;
+}
+
+.pj-pet-list-card__edit {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .7);
+  border-radius: 50%;
+  color: #375746;
+  background: rgba(255, 254, 250, .88);
+  box-shadow: 0 3px 9px rgba(36, 46, 38, .12);
+  backdrop-filter: blur(5px);
+  text-decoration: none;
+  transition: color 150ms ease, background 150ms ease, transform 150ms ease;
+}
+
+.pj-pet-list-card__edit:hover {
+  color: #174f34;
+  background: #fffefa;
+  transform: translateY(-1px);
+}
+
+.pj-pet-list-card__edit svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The journal state belongs on the same line as the event title. */
+.pj-pet-summary-card__row .pj-pet-summary-card__title-line {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px;
+}
+
+.pj-pet-summary-card__title-line strong {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.pj-pet-summary-status--inline {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 3px 6px;
+  white-space: nowrap;
+}
+
+.pj-pet-summary-card__button--compact {
+  margin-top: 9px;
+}
+
+@media (max-width: 820px) {
+  /* Match the Dashboard mobile gutter exactly: one 16px inset, not an outer
+     16px width reduction plus another 16px of content padding. The more specific
+     workspace selector intentionally wins over the final generic sizing layer. */
+  .pj-dashboard-body .pj-pets-content,
+  .pj-dashboard-body .pj-pet-form-content {
+    width: 100%;
+    margin-inline: 0;
+    padding-inline: var(--pj-workspace-mobile-side);
+    box-sizing: border-box;
+  }
+
+  .pj-pet-profile-name-row {
+    flex-wrap: wrap;
+  }
+
+  .pj-pet-profile-edit {
+    width: 28px;
+    height: 28px;
+    flex-basis: 28px;
+  }
+
+  .pj-pet-form__extra {
+    margin-top: 16px;
+  }
+
+  /* Give the selected photo enough room to be meaningfully reviewed on a phone. */
+  .pj-pet-photo-upload {
+    min-height: 220px;
+    aspect-ratio: 4 / 3;
+  }
+
+  .pj-pet-photo-upload__preview {
+    object-fit: contain;
+    background: #f4f2ec;
+  }
+
+  /* On mobile editing is a dedicated trailing action instead of an overlay on the card. */
+  .pj-pet-list-card {
+    grid-template-columns: 56px minmax(0, 1fr) 34px;
+  }
+
+  .pj-pet-list-card__main {
+    display: contents;
+  }
+
+  .pj-pet-list-card__chevron {
+    display: none;
+  }
+
+  .pj-pet-list-card__edit {
+    position: static;
+    grid-column: 3;
+    grid-row: 1;
+    align-self: center;
+    justify-self: end;
+    width: 30px;
+    height: 30px;
+    border-color: #e2ded4;
+    color: #657169;
+    background: #f8f7f2;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
+  .pj-pet-list-card__edit:hover {
+    color: #174f34;
+    background: #eef2e4;
+    transform: none;
+  }
+
+  .pj-pet-list-card__edit svg {
+    width: 14px;
+    height: 14px;
+  }
+}

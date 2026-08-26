@@ -35,6 +35,17 @@ module PetJournal
     #
     config.i18n.default_locale = :ru
     config.i18n.available_locales = %i[ru en]
+
+    # Signed-in users keep the workspace chrome when Rails handles an error.
+    # If rendering that workspace fails as well (for example because the DB is
+    # unavailable), fall back to the static files from public/.
+    config.exceptions_app = lambda do |env|
+      ErrorsController.action(:show).call(env)
+    rescue StandardError => error
+      Rails.logger.error("Error page rendering failed: #{error.class}: #{error.message}")
+      ActionDispatch::PublicExceptions.new(Rails.public_path.to_s).call(env)
+    end
+
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
   end

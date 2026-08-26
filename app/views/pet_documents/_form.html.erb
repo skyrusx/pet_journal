@@ -1,126 +1,133 @@
 <% if document.errors.any? %>
-  <div class="flash-stack inline" aria-live="polite" aria-atomic="true">
-    <div class="flash-toast alert" role="alert" data-flash-toast>
-      <div>
-        <strong>Проверьте форму</strong>
-        <p><%= document.errors.full_messages.to_sentence %></p>
-      </div>
-      <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
-    </div>
+  <div class="pj-document-form-errors" role="alert">
+    <strong>Проверьте форму</strong>
+    <span><%= document.errors.full_messages.to_sentence %></span>
   </div>
 <% end %>
 
-<%= form_with(model: [pet, document], class: "structured-form") do |form| %>
-  <section class="form-section">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Документ</h2>
-        <p class="text-muted mb-0">Название, тип и основные реквизиты.</p>
-      </div>
-      <span class="required-pill">Название обязательно</span>
-    </div>
-
-    <div class="row g-3">
-      <div class="col-md-5">
-        <%= form.label :document_type, class: "form-label" %>
-        <%= form.select :document_type, document_type_options, {}, class: "form-select" %>
+<%= form_with(model: [pet, document], class: "pj-document-form") do |form| %>
+  <div class="pj-document-form-grid">
+    <section class="pj-document-form-card">
+      <div class="pj-document-form-card__heading">
+        <h2>Основная информация</h2>
+        <p>Тип документа, питомец и реквизиты.</p>
       </div>
 
-      <div class="col-md-7">
-        <%= form.label :title, class: "form-label" %>
-        <%= form.text_field :title, class: "form-control", placeholder: "Например: ветпаспорт или анализ крови" %>
-      </div>
+      <div class="pj-document-form-fields">
+        <div class="pj-document-field">
+          <%= form.label :document_type, "Тип документа" %>
+          <%= form.select :document_type, document_type_options, {}, aria: { label: "Тип документа" } %>
+        </div>
 
-      <div class="col-md-6">
-        <%= form.label :issuer, class: "form-label" %>
-        <%= form.text_field :issuer, class: "form-control", placeholder: "Клиника, лаборатория, страховая" %>
-      </div>
+        <div class="pj-document-field">
+          <%= form.label :title, "Название документа" %>
+          <%= form.text_field :title, placeholder: "Например, Анализ крови", required: true %>
+        </div>
 
-      <div class="col-md-6">
-        <%= form.label :number, class: "form-label" %>
-        <%= form.text_field :number, class: "form-control", placeholder: "Номер документа, полиса или справки" %>
-      </div>
-    </div>
-  </section>
+        <div class="pj-document-field">
+          <%= form.label :pet_id, "Питомец" %>
+          <%= form.select :pet_id,
+                          options_for_select(@document_pets.map { |candidate| [candidate.name, candidate.id] }, document.pet_id || pet.id),
+                          {},
+                          aria: { label: "Питомец" } %>
+        </div>
 
-  <section class="form-section">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Сроки</h2>
-        <p class="text-muted mb-0">Дата выдачи, срок действия и напоминание до окончания.</p>
-      </div>
-    </div>
+        <div class="pj-document-field">
+          <%= form.label :issued_on, "Дата выдачи" %>
+          <%= form.date_field :issued_on %>
+        </div>
 
-    <div class="row g-3">
-      <div class="col-md-4">
-        <%= form.label :issued_on, class: "form-label" %>
-        <%= form.date_field :issued_on, class: "form-control" %>
-      </div>
+        <div class="pj-document-field">
+          <%= form.label :expires_on, "Срок действия" %>
+          <%= form.date_field :expires_on %>
+          <small>Оставьте пустым, если документ бессрочный.</small>
+        </div>
 
-      <div class="col-md-4">
-        <%= form.label :expires_on, class: "form-label" %>
-        <%= form.date_field :expires_on, class: "form-control" %>
-      </div>
+        <div class="pj-document-field">
+          <%= form.label :issuer, "Кем выдан" %>
+          <%= form.text_field :issuer, placeholder: "Название клиники или организации" %>
+        </div>
 
-      <div class="col-md-4">
-        <%= form.label :expiry_reminder_days, class: "form-label" %>
-        <div class="input-group">
-          <%= form.number_field :expiry_reminder_days, min: 0, max: 365, class: "form-control" %>
-          <span class="input-group-text">дней</span>
+        <div class="pj-document-field">
+          <%= form.label :number, "Номер документа" %>
+          <%= form.text_field :number, placeholder: "Если есть" %>
+        </div>
+
+        <div class="pj-document-field">
+          <%= form.label :notes, "Комментарий" %>
+          <%= form.text_area :notes, rows: 4, placeholder: "Дополнительная информация" %>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="form-section">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Файлы и заметки</h2>
-        <p class="text-muted mb-0">Можно прикрепить несколько файлов: PDF, фото, сканы или изображения.</p>
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <%= form.label :files, class: "form-label" %>
-      <%= form.file_field :files, multiple: true, class: "form-control" %>
-    </div>
-
-    <% if document.persisted? && document.files.attached? %>
-      <div class="attached-files mb-3">
-        <div class="fw-semibold mb-2">Уже прикреплено</div>
-        <div class="d-flex flex-column gap-2">
-          <% document.files.each do |file| %>
-            <%= link_to file.filename.to_s, url_for(file), target: "_blank", rel: "noopener" %>
-          <% end %>
+    <div class="pj-document-form-side">
+      <section class="pj-document-form-card pj-document-upload-card" data-document-file-control>
+        <div class="pj-document-form-card__heading">
+          <h2>Файлы</h2>
+          <p>PDF, фото, сканы и другие файлы. Можно выбрать несколько.</p>
         </div>
-      </div>
-    <% end %>
 
-    <%= form.label :notes, class: "form-label" %>
-    <%= form.text_area :notes, rows: 5, class: "form-control", placeholder: "Что важно помнить по документу" %>
-  </section>
+        <% if document.persisted? && document.files.attached? %>
+          <div class="pj-document-existing-files">
+            <% document.files.each do |file| %>
+              <div class="pj-document-existing-file-wrap">
+                <%= link_to url_for(file), target: "_blank", rel: "noopener", class: "pj-document-existing-file" do %>
+                  <span><%= pj_icon(:file) %></span>
+                  <span><strong><%= file.filename.to_s %></strong><small><%= number_to_human_size(file.byte_size) %></small></span>
+                <% end %>
+                <%= link_to "×",
+                            file_pet_pet_document_path(pet, document, file),
+                            class: "pj-document-existing-file__remove",
+                            aria: { label: "Удалить #{file.filename}" },
+                            title: "Удалить файл",
+                            data: { turbo_method: :delete, turbo_confirm: "Удалить файл?" } %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
 
-  <section class="form-section">
-    <div class="form-section-heading">
-      <div>
-        <h2 class="h5 mb-1">Связанные действия</h2>
-        <p class="text-muted mb-0">PetJournal может сам создать запись в журнале и напоминание о сроке действия.</p>
-      </div>
+        <label class="pj-document-dropzone" data-document-file-dropzone>
+          <span class="pj-document-dropzone__icon"><%= pj_icon(:file) %></span>
+          <strong><%= document.files.attached? ? "Добавить ещё файлы" : "Перетащите файлы сюда" %></strong>
+          <small>или выберите их с устройства</small>
+          <span class="pj-document-dropzone__button">Выбрать файлы</span>
+          <%= form.file_field :files, multiple: true, class: "pj-document-dropzone__input" %>
+        </label>
+
+        <div class="pj-document-selected-files" data-document-file-previews hidden aria-live="polite"></div>
+      </section>
+
+      <section class="pj-document-form-card pj-document-related-settings">
+        <div class="pj-document-form-card__heading">
+          <h2>Связанные действия</h2>
+          <p>Можно автоматически поддерживать запись в журнале и напоминание о сроке действия.</p>
+        </div>
+
+        <div class="pj-document-field">
+          <%= form.label :expiry_reminder_days, "Напомнить до окончания" %>
+          <div class="pj-document-number-control">
+            <%= form.number_field :expiry_reminder_days, min: 0, max: 365 %>
+            <span>дней</span>
+          </div>
+        </div>
+
+        <label class="pj-document-toggle">
+          <%= check_box_tag :create_journal_event, "1", true %>
+          <span><strong>Запись в журнале</strong><small>Создать или обновить связанную запись</small></span>
+        </label>
+
+        <label class="pj-document-toggle">
+          <%= check_box_tag :create_expiry_reminder, "1", document.expires_on.present? || document.reminder.present? %>
+          <span><strong>Напоминание о сроке</strong><small>Создать или обновить напоминание</small></span>
+        </label>
+      </section>
     </div>
+  </div>
 
-    <div class="form-check form-switch mb-3">
-      <%= check_box_tag :create_journal_event, "1", true, class: "form-check-input", role: "switch" %>
-      <%= label_tag :create_journal_event, "Создать или обновить запись в журнале", class: "form-check-label" %>
-    </div>
-
-    <div class="form-check form-switch">
-      <%= check_box_tag :create_expiry_reminder, "1", document.expires_on.present?, class: "form-check-input", role: "switch" %>
-      <%= label_tag :create_expiry_reminder, "Создать или обновить напоминание о сроке действия", class: "form-check-label" %>
-    </div>
-  </section>
-
-  <div class="form-actions">
-    <%= form.submit document.persisted? ? "Сохранить" : "Добавить документ", class: "btn btn-primary" %>
-    <%= link_to "Отмена", pet_pet_documents_path(pet), class: "btn btn-outline-secondary" %>
+  <div class="pj-document-form-actions">
+    <%= link_to "Отмена",
+                document.persisted? ? pet_pet_document_path(document.pet, document) : documents_overview_path(pet_id: pet.id),
+                class: "pj-document-form-cancel" %>
+    <%= form.submit "Сохранить", class: "pj-documents-primary-button" %>
   </div>
 <% end %>

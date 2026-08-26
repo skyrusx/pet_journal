@@ -2,10 +2,30 @@ module PetsHelper
   def pet_age(pet)
     return "Возраст не указан" if pet.birth_date.blank?
 
-    years = ((Date.current - pet.birth_date).to_i / 365.25).floor
-    return "Младше года" if years.zero?
+    today = Date.current
+    birth_date = pet.birth_date
+    return "Дата рождения некорректна" if birth_date > today
 
-    "#{years} #{russian_plural(years, "год", "года", "лет")}"
+    total_months = (today.year - birth_date.year) * 12 + today.month - birth_date.month
+    total_months -= 1 if today.day < birth_date.day
+
+    years = total_months / 12
+    months = total_months % 12
+
+    if years.positive?
+      parts = ["#{years} #{russian_plural(years, "год", "года", "лет")}"]
+      parts << "#{months} #{russian_plural(months, "месяц", "месяца", "месяцев")}" if months.positive?
+      return parts.join(" ")
+    end
+
+    if months.positive?
+      return "#{months} #{russian_plural(months, "месяц", "месяца", "месяцев")}"
+    end
+
+    days = (today - birth_date).to_i
+    return "Сегодня" if days.zero?
+
+    "#{days} #{russian_plural(days, "день", "дня", "дней")}"
   end
 
   def pet_short_description(pet)

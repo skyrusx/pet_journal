@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "PetJournal" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= yield :head %>
+
+    <link rel="manifest" href="/manifest.json">
+    <%= favicon_link_tag "petjournal/favicon.ico" %>
+    <%= favicon_link_tag "petjournal/favicon-32.png", rel: "icon", type: "image/png" %>
+    <%= favicon_link_tag "petjournal/favicon-512.png", rel: "apple-touch-icon", type: "image/png" %>
+
+    <%= stylesheet_link_tag "application" %>
+    <%= javascript_importmap_tags %>
+    <%= javascript_import_module_tag "dashboard_sidebar" %>
+  </head>
+
+  <body class="<%= class_names('pj-dashboard-body', current_user&.interface_text_size_css_class) %>">
+    <%= yield %>
+    <%= render "shared/dashboard_mobile_chrome" if user_signed_in? %>
+
+    <% if notice.present? || alert.present? %>
+      <div class="flash-stack" aria-live="polite" aria-atomic="true">
+        <% if notice.present? %>
+          <div class="flash-toast notice" role="status" data-flash-toast>
+            <div>
+              <strong>Готово</strong>
+              <p><%= notice %></p>
+            </div>
+            <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
+          </div>
+        <% end %>
+
+        <% if alert.present? %>
+          <div class="flash-toast alert" role="alert" data-flash-toast>
+            <div>
+              <strong>Внимание</strong>
+              <p><%= alert %></p>
+            </div>
+            <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </body>
+</html>

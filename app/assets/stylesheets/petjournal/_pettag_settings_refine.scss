@@ -1,0 +1,182 @@
+/* Keep PetTag settings aligned with the standard PetJournal workspace width. */
+.pj-pettag-form-content {
+  max-width: 1180px;
+}
+
+/* The first-time PetTag form is rendered inline on the PetTag page. It used to
+   keep the old 980px mockup width, making creation narrower than the rest of
+   the workspace. Let the parent 1180px content rail own its width. */
+.pj-pettag-inline-form {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
+.pj-pettag-token-management {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid #ead9d4;
+  border-radius: 10px;
+  background: #fff9f7;
+}
+
+.pj-pettag-token-management > div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.pj-pettag-token-management strong {
+  color: #5d504d;
+  font-size: var(--pj-font-meta);
+}
+
+.pj-pettag-token-management small {
+  color: #94817c;
+  font-size: var(--pj-font-caption);
+  line-height: 1.4;
+}
+
+.pj-pettag-token-rotate {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border: 1px solid #e5c9c3;
+  border-radius: 9px;
+  color: #9a5149;
+  background: #fff;
+  font-size: var(--pj-font-caption);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Latin glyphs in these mixed-script headings render visually heavier than
+   the Cyrillic text at the same nominal weight. Slightly reduce only the
+   Latin fragment so QR-код и токен / Настройки PetTag read as one weight. */
+.pj-pettag-card__heading h2 .pj-pettag-heading-regular {
+  font-family: inherit;
+  font-weight: 600;
+}
+
+.pj-pettag-safe-state {
+  min-height: 76px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #d8e2c6;
+  border-radius: 11px;
+  background: #f3f7e9;
+}
+
+.pj-pettag-safe-state__icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: #66834f;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.pj-pettag-safe-state > span:last-child,
+.pj-pettag-incident-complete > div,
+.pj-pettag-status-readonly {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.pj-pettag-safe-state strong,
+.pj-pettag-incident-complete strong,
+.pj-pettag-status-readonly strong {
+  color: #42533e;
+  font-size: var(--pj-font-meta);
+}
+
+.pj-pettag-safe-state small,
+.pj-pettag-incident-complete small,
+.pj-pettag-status-readonly small {
+  color: #7e8c78;
+  font-size: var(--pj-font-caption);
+  line-height: 1.4;
+}
+
+.pj-pettag-incident-complete {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 11px 12px;
+  border: 1px solid #d8e2c6;
+  border-radius: 10px;
+  background: #f7f9f1;
+}
+
+.pj-pettag-status-readonly {
+  min-height: 44px;
+  justify-content: center;
+  padding: 10px 11px;
+  border: 1px solid #ded9cf;
+  border-radius: 9px;
+  background: #f8f7f2;
+}
+
+@media (max-width: 820px) {
+  .pj-pettag-token-management {
+    grid-template-columns: 1fr;
+  }
+
+  .pj-pettag-token-rotate {
+    min-height: 44px;
+    width: 100%;
+  }
+
+  .pj-pettag-safe-state {
+    grid-template-columns: 40px minmax(0, 1fr);
+    padding: 12px;
+  }
+
+  .pj-pettag-safe-state__icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .pj-pettag-incident-complete {
+    grid-template-columns: 1fr;
+  }
+
+  .pj-pettag-incident-complete .pj-pettag-primary-button {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .pj-pettag-scans-card .pj-pettag-scans-heading {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pj-pettag-scans-card .pj-pettag-scan-filter {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .pj-pettag-scans-card .pj-pettag-scan-filter select {
+    display: block;
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+  }
+}

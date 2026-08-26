@@ -10,6 +10,14 @@ class NotificationChannel < ApplicationRecord
 
   validates :channel_type, :name, presence: true
   validates :address, presence: true, unless: :channel_web_push?
+  validates :address,
+            uniqueness: {
+              scope: %i[user_id channel_type],
+              case_sensitive: false,
+              message: "уже подключён для этого канала"
+            },
+            allow_blank: true,
+            unless: :channel_web_push?
   validate :web_push_settings_present, if: :channel_web_push?
 
   scope :enabled, -> { where(enabled: true) }
@@ -54,25 +62,23 @@ class NotificationChannel < ApplicationRecord
 
   def telegram_configuration_issues
     issues = []
-    issues << "Укажите chat_id Telegram" if address.blank?
-    issues << "Задайте TELEGRAM_BOT_TOKEN в окружении" if ENV["TELEGRAM_BOT_TOKEN"].blank?
+    issues << "Подключите Telegram через бота PetJournal" if address.blank?
+    issues << "Telegram пока в разработке и недоступен для подключения." unless TelegramConfiguration.configured?
     issues
   end
 
   def vk_configuration_issues
     issues = []
-    issues << "Укажите peer_id VK" if address.blank?
-    issues << "Задайте VK_GROUP_TOKEN в окружении" if ENV["VK_GROUP_TOKEN"].blank?
+    issues << "Подключите профиль ВКонтакте" if address.blank?
+    issues << "ВКонтакте временно недоступен. Попробуйте позже." unless VkConfiguration.configured?
     issues
   end
 
   def web_push_configuration_issues
     issues = []
-    issues << "Нет endpoint push-подписки" if settings["endpoint"].blank?
-    issues << "Нет ключа p256dh push-подписки" if settings["p256dh"].blank?
-    issues << "Нет ключа auth push-подписки" if settings["auth"].blank?
-    issues << "Задайте VAPID_PUBLIC_KEY в окружении" if ENV["VAPID_PUBLIC_KEY"].blank?
-    issues << "Задайте VAPID_PRIVATE_KEY в окружении" if ENV["VAPID_PRIVATE_KEY"].blank?
-    issues
+    issues << "Push для этого браузера нужно подключить заново" if settings["endpoint"].blank? || settings["p256dh"].blank? || settings["auth"].blank?
+    issues << "Push-подписка браузера истекла. Подключите push заново." if settings["invalidated_at"].present?
+    issues << "Push временно недоступен. На сервере не настроены VAPID-ключи." unless WebPushConfiguration.configured?
+    issues.uniq
   end
 end

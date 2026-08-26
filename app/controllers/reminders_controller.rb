@@ -1,21 +1,40 @@
 class RemindersController < ApplicationController
+  PAGE_SIZE = 25
+  MOBILE_PAGE_SIZE = 10
+
   before_action :authenticate_user!
-  before_action :set_pet
+  before_action :set_pet, except: :index
   before_action :set_reminder, only: %i[show edit update destroy complete pause resume snooze]
   before_action :set_notification_channels, only: %i[new create edit update show]
+  before_action :set_reminder_pets, only: %i[index new create edit update]
+
+  layout "workspace_new_design"
 
   def index
     @selected_status = params[:status].presence_in(%w[all active today overdue paused completed]) || "active"
     @selected_type = params[:type].presence_in(Reminder.reminder_types.keys)
-    @reminders = filtered_reminders
-    @total_count = @pet.reminders.count
-    @active_count = @pet.reminders.status_active.count
-    @today_count = @pet.reminders.status_active.where(next_run_at: Time.current.beginning_of_day..Time.current.end_of_day).count
-    @overdue_count = @pet.reminders.overdue.count
-    @paused_count = @pet.reminders.status_paused.count
-    @completed_count = @pet.reminders.status_completed.count
-    @next_reminder = @pet.reminders.status_active.order(:next_run_at).first
-    @completed_reminders = @pet.reminders.status_completed.order(last_completed_at: :desc).limit(10)
+    @query = params[:q].to_s.strip
+    @selected_pet = selected_index_pet
+    @pet = @selected_pet
+
+    summary_scope = reminders_scope
+    @total_count = summary_scope.count
+    @active_count = summary_scope.status_active.count
+    @today_count = summary_scope.status_active.where(next_run_at: Time.current.beginning_of_day..Time.current.end_of_day).count
+    @overdue_count = summary_scope.overdue.count
+    @paused_count = summary_scope.status_paused.count
+    @completed_count = summary_scope.status_completed.count
+
+    filtered_scope = filtered_reminders(summary_scope)
+    @page = [params[:page].to_i, 1].max
+    @page_size = mobile_request? ? MOBILE_PAGE_SIZE : PAGE_SIZE
+    @reminders_limit = @page_size * @page
+    @matching_reminders_count = filtered_scope.count
+    @has_more_reminders = @matching_reminders_count > @reminders_limit
+
+    @reminders = ordered_reminders(filtered_scope)
+                 .includes(:pet)
+                 .limit(@reminders_limit)
   end
 
   def show
@@ -28,11 +47,12 @@ class RemindersController < ApplicationController
   end
 
   def create
-    @reminder = @pet.reminders.new(reminder_params)
+    target_pet = selected_reminder_pet
+    @reminder = target_pet.reminders.new(reminder_params)
 
     if @reminder.save
       sync_notification_channels
-      redirect_to pet_reminders_path(@pet), notice: "Напоминание создано."
+      redirect_to reminders_overview_path(pet_id: target_pet.id), notice: "Напоминание создано."
     else
       render :new, status: :unprocessable_entity
     end
@@ -41,13 +61,15 @@ class RemindersController < ApplicationController
   def edit; end
 
   def update
+    target_pet = selected_reminder_pet
     @reminder.assign_attributes(reminder_params)
+    @reminder.pet = target_pet
     @reminder.next_run_at = @reminder.remind_at
     @reminder.last_notified_at = nil
 
     if @reminder.save
       sync_notification_channels
-      redirect_to pet_reminder_path(@pet, @reminder), notice: "Напоминание обновлено."
+      redirect_to pet_reminder_path(target_pet, @reminder), notice: "Напоминание обновлено."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -56,34 +78,34 @@ class RemindersController < ApplicationController
   def destroy
     @reminder.destroy
 
-    redirect_to pet_reminders_path(@pet), notice: "Напоминание удалено."
+    redirect_to reminders_overview_path(pet_id: @pet.id), notice: "Напоминание удалено."
   end
 
   def complete
     event = create_event_from_reminder if params[:create_event] == "1"
     @reminder.complete!(pet_event: event, note: params[:completion_note])
 
-    redirect_to pet_reminders_path(@pet), notice: "Напоминание выполнено."
+    redirect_to reminders_overview_path(pet_id: @pet.id), notice: "Напоминание выполнено."
   end
 
   def snooze
     @reminder.snooze_until!(snooze_time)
 
-    redirect_to pet_reminders_path(@pet), notice: "Напоминание отложено."
+    redirect_to reminders_overview_path(pet_id: @pet.id), notice: "Напоминание отложено."
   rescue ArgumentError
-    redirect_to pet_reminders_path(@pet), alert: "Не удалось определить время отложенного напоминания."
+    redirect_to reminders_overview_path(pet_id: @pet.id), alert: "Не удалось определить время отложенного напоминания."
   end
 
   def pause
     @reminder.update!(status: :paused)
 
-    redirect_to pet_reminders_path(@pet), notice: "Напоминание приостановлено."
+    redirect_to reminders_overview_path(pet_id: @pet.id), notice: "Напоминание приостановлено."
   end
 
   def resume
     @reminder.update!(status: :active, next_run_at: [@reminder.next_run_at, Time.current].max, last_notified_at: nil)
 
-    redirect_to pet_reminders_path(@pet), notice: "Напоминание включено."
+    redirect_to reminders_overview_path(pet_id: @pet.id), notice: "Напоминание включено."
   end
 
   private
@@ -100,6 +122,28 @@ class RemindersController < ApplicationController
     @notification_channels = current_user.notification_channels.enabled.order(:channel_type, :created_at)
   end
 
+  def set_reminder_pets
+    @reminder_pets = current_user.pets.with_attached_photo.order(:name).to_a
+  end
+
+  def selected_index_pet
+    return if params[:pet_id].blank?
+
+    current_user.pets.find(params[:pet_id])
+  end
+
+  def reminders_scope
+    scope = Reminder.where(pet_id: @reminder_pets.map(&:id))
+    @selected_pet.present? ? scope.where(pet_id: @selected_pet.id) : scope
+  end
+
+  def selected_reminder_pet
+    pet_id = params.dig(:reminder, :pet_id).presence
+    return @pet if pet_id.blank?
+
+    current_user.pets.find(pet_id)
+  end
+
   def reminder_params
     params.require(:reminder).permit(:title, :reminder_type, :remind_at, :repeat_rule, :repeat_interval, :repeat_unit, :note)
   end
@@ -107,7 +151,7 @@ class RemindersController < ApplicationController
   def default_reminder_attributes
     {
       reminder_type: params[:type].presence_in(Reminder.reminder_types.keys) || :other,
-      remind_at: 1.day.from_now.change(sec: 0),
+      remind_at: 1.hour.from_now.change(sec: 0),
       repeat_rule: :once
     }
   end
@@ -147,17 +191,30 @@ class RemindersController < ApplicationController
     )
   end
 
-  def filtered_reminders
-    scope = @pet.reminders.order(:next_run_at)
+  def filtered_reminders(scope)
     scope = scope.where(reminder_type: @selected_type) if @selected_type.present?
+
+    if @query.present?
+      escaped_query = ActiveRecord::Base.sanitize_sql_like(@query)
+      pattern = "%#{escaped_query}%"
+      scope = scope.where("reminders.title ILIKE :pattern OR reminders.note ILIKE :pattern", pattern: pattern)
+    end
 
     case @selected_status
     when "all" then scope
     when "today" then scope.status_active.where(next_run_at: Time.current.beginning_of_day..Time.current.end_of_day)
     when "overdue" then scope.overdue
     when "paused" then scope.status_paused
-    when "completed" then scope.status_completed.order(last_completed_at: :desc)
+    when "completed" then scope.status_completed
     else scope.status_active
+    end
+  end
+
+  def ordered_reminders(scope)
+    if @selected_status == "completed"
+      scope.order(last_completed_at: :desc, next_run_at: :desc, created_at: :desc)
+    else
+      scope.order(next_run_at: :asc, created_at: :desc)
     end
   end
 

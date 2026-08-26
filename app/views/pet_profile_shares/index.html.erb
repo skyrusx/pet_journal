@@ -1,76 +1,114 @@
-<div class="profile-shares-page py-4">
-  <div class="page-heading mb-4">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1">Публичный доступ</h1>
-      <p class="text-muted mb-0">Временные ссылки на профиль питомца для людей, которым нужно показать выбранные данные.</p>
-    </div>
+<% content_for :title, "Публичный доступ — PetJournal" %>
 
-    <div class="d-flex flex-wrap gap-2">
-      <%= link_to "Создать доступ", new_pet_profile_share_path(@pet), class: "btn btn-primary" %>
-      <%= link_to "Обзор питомца", pet_path(@pet), class: "btn btn-outline-secondary" %>
-    </div>
-  </div>
+<div class="pj-public-access-page">
+  <header class="pj-workspace-topbar pj-workspace-topbar--profile">
+    <%= link_to public_access_overview_path, class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>К питомцам</span>
+    <% end %>
+  </header>
 
-  <%= render "tabs", pet: @pet %>
-
-  <section class="profile-share-hero mb-4">
-    <div>
-      <span class="status-pill success">Приватно по умолчанию</span>
-      <h2 class="h4 mt-3 mb-2">Показывайте профиль без доступа к аккаунту</h2>
-      <p class="text-muted mb-0">Каждая ссылка имеет свой токен, срок действия, набор разделов и настройки скачивания файлов.</p>
-    </div>
-
-    <div class="pet-tag-stats">
-      <div>
-        <span><%= @shares.size %></span>
-        <small><%= russian_plural(@shares.size, "ссылка", "ссылки", "ссылок") %></small>
-      </div>
-      <div>
-        <span><%= @shares.count(&:active?) %></span>
-        <small>активно</small>
-      </div>
-    </div>
-  </section>
-
-  <% if @shares.any? %>
-    <div class="share-card-grid">
-      <% @shares.each do |share| %>
-        <article class="share-card">
-          <div class="d-flex justify-content-between gap-3 align-items-start mb-3">
-            <div>
-              <h2 class="h5 mb-1"><%= link_to share.title, pet_profile_share_path(@pet, share), class: "text-dark text-decoration-none" %></h2>
-              <div class="text-muted small"><%= profile_share_expiry_label(share) %></div>
-            </div>
-            <span class="<%= profile_share_status_class(share) %>"><%= profile_share_status_label(share) %></span>
-          </div>
-
-          <div class="share-url-box mb-3"><%= profile_share_public_url(share) %></div>
-
-          <div class="share-chip-row mb-3">
-            <% profile_share_section_rows(share).select { |_label, enabled| enabled }.first(5).each do |label, _enabled| %>
-              <span><%= label %></span>
-            <% end %>
-          </div>
-
-          <div class="compact-list mb-3">
-            <div><span>Просмотры</span><strong><%= share.pet_profile_share_views.size %></strong></div>
-            <div><span>Детализация</span><strong><%= share.detail_full? ? "Полная" : "Краткая" %></strong></div>
-          </div>
-
-          <div class="d-flex flex-wrap gap-2">
-            <%= link_to "Открыть", pet_profile_share_path(@pet, share), class: "btn btn-outline-primary btn-sm" %>
-            <%= link_to "Публичная", public_pet_profile_share_path(share.public_token), class: "btn btn-outline-secondary btn-sm", target: "_blank", rel: "noopener" %>
-            <button type="button" class="btn btn-outline-secondary btn-sm" data-copy-url="<%= profile_share_public_url(share) %>">Копировать</button>
-          </div>
-        </article>
+  <div class="pj-public-access-content">
+    <div class="pj-mobile-detail-nav pj-public-access-mobile-nav">
+      <%= link_to public_access_overview_path, class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К питомцам</span>
       <% end %>
     </div>
-  <% else %>
-    <div class="empty-panel">
-      <h2 class="h4 mb-2">Публичных ссылок пока нет</h2>
-      <p class="text-muted mb-3">Создайте отдельную ссылку для передержки, грумера, родственника или любой ситуации, где нужно показать данные без входа в аккаунт.</p>
-      <%= link_to "Создать доступ", new_pet_profile_share_path(@pet), class: "btn btn-primary" %>
+
+    <div class="pj-public-access-intro">
+      <div>
+        <p>Безопасно делитесь выбранными данными питомца по отдельной ссылке.</p>
+      </div>
+      <div class="pj-public-access-intro__actions pj-public-access-index-actions">
+        <%= link_to new_pet_profile_share_path(@pet), class: "pj-public-access-primary" do %>
+          <%= pj_icon(:plus) %>
+          <span>Создать доступ</span>
+        <% end %>
+      </div>
     </div>
-  <% end %>
+
+    <section class="pj-public-access-summary">
+      <div class="pj-public-access-summary__pet">
+        <span class="pj-public-access-summary__avatar">
+          <% if @pet.photo.attached? %>
+            <%= image_tag @pet.photo, alt: "" %>
+          <% else %>
+            <%= @pet.name.to_s.first.to_s.upcase.presence || "P" %>
+          <% end %>
+        </span>
+        <div>
+          <small>Публичные ссылки питомца</small>
+          <h2><%= @pet.name %></h2>
+          <p>Каждая ссылка имеет собственные настройки, срок действия и набор открытых разделов.</p>
+        </div>
+      </div>
+
+      <% active_shares_count = @shares.count(&:active?) %>
+      <div class="pj-public-access-summary__stats" aria-label="Статистика публичного доступа">
+        <div><strong><%= @shares.size %></strong><span><%= russian_plural(@shares.size, "ссылка", "ссылки", "ссылок") %></span></div>
+        <div><strong><%= active_shares_count %></strong><span><%= russian_plural(active_shares_count, "активная", "активные", "активных") %></span></div>
+      </div>
+    </section>
+
+    <% if @shares.any? %>
+      <div class="pj-public-access-grid pj-public-access-share-grid">
+        <% @shares.each do |share| %>
+          <article class="pj-public-access-card">
+            <div class="pj-public-access-card__head">
+              <div>
+                <span class="pj-public-access-card__status <%= share.active? ? "is-active" : "is-muted" %>"><%= profile_share_status_label(share) %></span>
+                <h2><%= link_to share.title, pet_profile_share_path(@pet, share) %></h2>
+                <p><%= profile_share_expiry_label(share) %> · <%= share.detail_full? ? "полная детализация" : "краткая детализация" %></p>
+              </div>
+              <%= link_to pet_profile_share_path(@pet, share), class: "pj-public-access-card__arrow", aria: { label: "Открыть #{share.title}" } do %>
+                <%= pj_icon(:chevron) %>
+              <% end %>
+            </div>
+
+            <div class="pj-public-access-card__url-control">
+              <input type="text" value="<%= profile_share_public_url(share) %>" readonly aria-label="Публичная ссылка <%= share.title %>">
+              <button type="button"
+                      class="pj-public-access-copy-icon"
+                      data-copy-url="<%= profile_share_public_url(share) %>"
+                      data-copy-icon="true"
+                      aria-label="Скопировать ссылку <%= share.title %>"
+                      title="Скопировать ссылку">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="8" y="8" width="11" height="11" rx="2"></rect>
+                  <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path>
+                </svg>
+              </button>
+            </div>
+
+            <div class="pj-public-access-card__chips" aria-label="Открытые разделы">
+              <% profile_share_section_rows(share).select { |_label, enabled| enabled }.first(5).each do |label, _enabled| %>
+                <span><%= label %></span>
+              <% end %>
+            </div>
+
+            <% if share.sensitive_sections? %>
+              <p class="pj-public-access-card__warning">В этой ссылке открыты чувствительные данные — передавайте её адресно.</p>
+            <% end %>
+
+            <div class="pj-public-access-card__meta">
+              <span><strong><%= share.pet_profile_share_views.size %></strong> <%= russian_plural(share.pet_profile_share_views.size, "просмотр", "просмотра", "просмотров") %></span>
+              <span><%= share.last_viewed_at.present? ? "Последний #{share.last_viewed_at.strftime("%d.%m.%Y")}" : "Ещё не открывали" %></span>
+            </div>
+
+            <div class="pj-public-access-card__actions">
+              <%= link_to "Управлять", pet_profile_share_path(@pet, share), class: "pj-public-access-secondary" %>
+              <%= link_to "Открыть", public_pet_profile_share_path(share.public_token), class: "pj-public-access-quiet", target: "_blank", rel: "noopener" %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <section class="pj-public-access-empty">
+        <%= image_tag "petjournal/new_design/empty-public-access.svg", alt: "", class: "pj-public-access-empty__illustration" %>
+        <h2>Публичных ссылок пока нет</h2>
+        <p>Создайте отдельный доступ для родственника, передержки, грумера или любой ситуации, когда нужно показать данные питомца без входа в аккаунт.</p>
+        <%= link_to "Создать публичный доступ", new_pet_profile_share_path(@pet), class: "pj-public-access-primary" %>
+        <span>Открывайте только те разделы, которые действительно нужны получателю.</span>
+      </section>
+    <% end %>
+  </div>
 </div>

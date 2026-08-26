@@ -1,0 +1,7 @@
+/* Keep Settings on the same 16px mobile content grid as the dashboard. */
+@media (max-width: 820px) {
+  .pj-settings-content {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}

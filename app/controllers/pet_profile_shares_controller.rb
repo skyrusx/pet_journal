@@ -1,7 +1,10 @@
 class PetProfileSharesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pet
+  before_action :set_pet_choices
   before_action :set_share, only: %i[show edit update destroy enable disable rotate_token qr]
+
+  layout "workspace_new_design"
 
   def index
     @shares = @pet.pet_profile_shares.recent.includes(:pet_profile_share_views)
@@ -69,7 +72,12 @@ class PetProfileSharesController < ApplicationController
 
     case params[:format]
     when "svg"
-      send_data qr_code.as_svg(module_size: 8, standalone: true, use_path: true),
+      send_data qr_code.as_svg(
+                  module_size: 8,
+                  standalone: true,
+                  use_path: false,
+                  shape_rendering: "crispEdges"
+                ),
                 filename: "#{@pet.name.parameterize.presence || "pet"}-profile-share.svg",
                 type: "image/svg+xml"
     when "png"
@@ -85,6 +93,10 @@ class PetProfileSharesController < ApplicationController
 
   def set_pet
     @pet = current_user.pets.find(params[:pet_id])
+  end
+
+  def set_pet_choices
+    @pet_choices = current_user.pets.order(:name)
   end
 
   def set_share

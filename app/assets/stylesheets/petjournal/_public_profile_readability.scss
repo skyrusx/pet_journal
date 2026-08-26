@@ -1,0 +1,304 @@
+/* Public profile readability pass: keep the approved composition, but use normal product-scale typography. */
+
+.pj-public-profile-topbar__inner,
+.pj-public-profile-shell,
+.pj-public-profile-standard-footer {
+  width: min(1180px, calc(100% - 72px));
+}
+
+.pj-public-profile-topbar__inner {
+  min-height: 74px;
+}
+
+.pj-public-profile-brand img {
+  width: 154px;
+}
+
+.pj-public-profile-share-button {
+  min-height: 42px;
+  padding-inline: 15px;
+  font-size: 13px;
+}
+
+.pj-public-profile-shell {
+  padding: 34px 0 8px;
+}
+
+.pj-public-profile-layout {
+  grid-template-columns: minmax(0, 1.55fr) minmax(360px, .85fr);
+  gap: 22px;
+}
+
+.pj-public-profile-primary,
+.pj-public-profile-side-card {
+  border-radius: 18px;
+}
+
+.pj-public-profile-identity {
+  padding: 24px 26px 21px;
+}
+
+.pj-public-profile-identity h1 {
+  font-size: 36px;
+  line-height: 1.15;
+}
+
+.pj-public-profile-identity p {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.pj-public-profile-verified {
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+}
+
+.pj-public-profile-meta {
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.pj-public-profile-meta span {
+  padding: 7px 11px;
+  font-size: 11px;
+}
+
+.pj-public-profile-section {
+  padding: 23px 26px;
+}
+
+.pj-public-profile-section__head {
+  margin-bottom: 17px;
+}
+
+.pj-public-profile-section__head small,
+.pj-public-profile-contact small {
+  margin-bottom: 5px;
+  font-size: 10px;
+}
+
+.pj-public-profile-section h2,
+.pj-public-profile-side-card h2,
+.pj-public-profile-contact h2 {
+  font-size: 23px;
+  line-height: 1.25;
+}
+
+.pj-public-profile-details {
+  gap: 8px 24px;
+}
+
+.pj-public-profile-details div {
+  min-height: 40px;
+  padding: 10px 0;
+}
+
+.pj-public-profile-details dt {
+  font-size: 11px;
+}
+
+.pj-public-profile-details dd {
+  font-size: 12px;
+}
+
+.pj-public-profile-note {
+  margin-top: 15px;
+  padding: 14px 15px;
+}
+
+.pj-public-profile-note strong {
+  font-size: 12px;
+}
+
+.pj-public-profile-note p {
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.pj-public-profile-contact p {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.pj-public-profile-primary-action {
+  min-height: 44px;
+  padding-inline: 17px;
+  font-size: 12px;
+}
+
+.pj-public-profile-alert,
+.pj-public-profile-pettag__grid > div {
+  padding: 13px 14px;
+}
+
+.pj-public-profile-alert strong,
+.pj-public-profile-pettag__grid strong {
+  font-size: 11px;
+}
+
+.pj-public-profile-alert p,
+.pj-public-profile-pettag__grid p {
+  font-size: 11px;
+}
+
+.pj-public-profile-secondary {
+  gap: 18px;
+}
+
+.pj-public-profile-side-card {
+  padding: 21px;
+}
+
+.pj-public-profile-count {
+  padding: 6px 9px;
+  font-size: 9px;
+}
+
+.pj-public-profile-journal-list,
+.pj-public-profile-document-list,
+.pj-public-profile-reminder-list {
+  gap: 10px;
+}
+
+.pj-public-profile-journal-item,
+.pj-public-profile-document-item,
+.pj-public-profile-reminder-item {
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  gap: 11px;
+  padding: 13px;
+}
+
+.pj-public-profile-journal-item {
+  grid-template-columns: 38px minmax(0, 1fr);
+}
+
+.pj-public-profile-journal-item__icon,
+.pj-public-profile-document-item > span,
+.pj-public-profile-reminder-item > span {
+  width: 38px;
+  height: 38px;
+}
+
+.pj-public-profile-journal-item svg,
+.pj-public-profile-document-item svg,
+.pj-public-profile-reminder-item svg {
+  width: 18px;
+  height: 18px;
+}
+
+.pj-public-profile-journal-item time {
+  font-size: 10px;
+}
+
+.pj-public-profile-journal-item strong,
+.pj-public-profile-document-item strong,
+.pj-public-profile-reminder-item strong {
+  margin-top: 3px;
+  font-size: 12px;
+}
+
+.pj-public-profile-journal-item p,
+.pj-public-profile-document-item p,
+.pj-public-profile-reminder-item p,
+.pj-public-profile-document-item small,
+.pj-public-profile-reminder-item small {
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.pj-public-profile-document-item em,
+.pj-public-profile-reminder-item time {
+  font-size: 9px;
+}
+
+.pj-public-profile-inline-meta span,
+.pj-public-profile-file-list a,
+.pj-public-profile-file-list span {
+  font-size: 9px;
+}
+
+.pj-public-profile-side-empty {
+  padding: 25px 15px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* Reuse the same footer treatment as the authenticated workspace. */
+.pj-public-profile-standard-footer {
+  max-width: none;
+  margin: 34px auto 0;
+}
+
+@media (max-width: 980px) {
+  .pj-public-profile-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .pj-public-profile-secondary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .pj-public-profile-topbar__inner,
+  .pj-public-profile-shell,
+  .pj-public-profile-standard-footer {
+    width: calc(100% - 32px);
+  }
+
+  .pj-public-profile-topbar__inner {
+    min-height: 64px;
+  }
+
+  .pj-public-profile-brand img {
+    width: 132px;
+  }
+
+  .pj-public-profile-share-button {
+    min-height: 38px;
+    padding-inline: 12px;
+    font-size: 12px;
+  }
+
+  .pj-public-profile-shell {
+    padding-top: 18px;
+  }
+
+  .pj-public-profile-secondary {
+    grid-template-columns: 1fr;
+  }
+
+  .pj-public-profile-identity {
+    padding: 20px 18px 17px;
+  }
+
+  .pj-public-profile-identity h1 {
+    font-size: 30px;
+  }
+
+  .pj-public-profile-identity p {
+    font-size: 13px;
+  }
+
+  .pj-public-profile-section {
+    padding: 20px 18px;
+  }
+
+  .pj-public-profile-section h2,
+  .pj-public-profile-side-card h2,
+  .pj-public-profile-contact h2 {
+    font-size: 21px;
+  }
+
+  .pj-public-profile-side-card {
+    padding: 18px;
+  }
+
+  .pj-public-profile-standard-footer {
+    margin-top: 26px;
+    padding-bottom: 28px;
+  }
+}

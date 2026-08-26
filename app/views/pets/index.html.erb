@@ -1,69 +1,98 @@
-<div class="pets-index py-4">
-  <section class="home-hero mb-4">
-    <div>
-      <div class="text-muted small mb-1">PetJournal</div>
-      <h1 class="h3 mb-1">Мои питомцы</h1>
-      <p class="text-muted mb-0">Откройте питомца, чтобы увидеть главное и продолжить его историю.</p>
+<% content_for :title, "Питомцы — PetJournal" %>
+
+<div class="pj-pets-page pj-pets-page--index">
+  <header class="pj-workspace-topbar">
+    <h1>Питомцы</h1>
+    <div class="pj-workspace-topbar__actions">
+      <%= render "shared/workspace_notification_link" %>
     </div>
-    <div class="home-hero-actions">
-      <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
+  </header>
+
+  <div class="pj-pets-content">
+    <div class="pj-mobile-list-heading">
+      <h1>Питомцы</h1>
+      <p>Все ваши питомцы в одном месте</p>
     </div>
-  </section>
 
-  <% if @pets.any? %>
-    <div class="home-pet-grid">
-      <% @pets.each do |pet| %>
-        <% latest_event = @latest_events_by_pet_id[pet.id] %>
-        <% pet_tag = pet.pet_tag %>
-        <% next_reminder = pet.reminders.status_active.order(:next_run_at).first %>
-        <% signal = pet_overview_signal(pet, pet_tag, pet_tag&.pet_tag_scans&.order(created_at: :desc)&.first, latest_event, next_reminder) %>
-
-        <article class="home-pet-card">
-          <div class="home-pet-card-main">
-            <% if pet.photo.attached? %>
-              <%= image_tag pet.photo, class: "pet-card-photo", alt: pet.name, loading: "lazy" %>
-            <% else %>
-              <div class="pet-card-photo pet-card-photo-placeholder">
-                <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
-              </div>
-            <% end %>
-
-            <div class="pet-card-body">
-              <div class="d-flex justify-content-between gap-2 align-items-start mb-2">
-                <div>
-                  <h2 class="h5 mb-1"><%= link_to pet.name, pet_path(pet), class: "text-dark text-decoration-none" %></h2>
-                  <div class="text-muted small"><%= pet_age(pet) %> · <%= pet_short_description(pet) %></div>
-                </div>
-                <span class="signal-pill"><%= signal[:label] %></span>
-              </div>
-
-              <div class="activity-line">
-                <div class="home-card-signal mb-1"><%= signal[:title] %></div>
-                <div class="text-muted small"><%= signal[:body] %></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="pet-card-actions">
-            <%= link_to "Открыть", pet_path(pet), class: "btn btn-outline-secondary btn-sm" %>
-            <%= link_to "Добавить запись", new_pet_pet_event_path(pet), class: "btn btn-primary btn-sm" %>
-          </div>
-        </article>
+    <div class="pj-pets-heading">
+      <div>
+        <p>Все ваши питомцы в одном месте</p>
+      </div>
+      <% if @pets.any? %>
+        <%= link_to new_pet_path, class: "pj-pets-primary-button" do %>
+          <%= pj_icon(:plus) %><span>Добавить питомца</span>
+        <% end %>
       <% end %>
     </div>
-  <% else %>
-    <div class="empty-panel home-empty home-onboarding">
-      <div>
-        <div class="text-muted small mb-1">Первый шаг</div>
-        <h2 class="h4 mb-2">Добавьте первого питомца</h2>
-        <p class="text-muted mb-3">Начните с имени. Фото и остальные данные можно спокойно заполнить позже.</p>
-        <%= link_to "Добавить питомца", new_pet_path, class: "btn btn-primary" %>
+
+    <% if @pets.any? %>
+      <div class="pj-pets-grid">
+        <% @pets.each do |pet| %>
+          <% pet_tag = pet.pet_tag %>
+          <% tag_present = pet_tag&.persisted? %>
+          <% tag_active = tag_present && pet_tag.enabled? %>
+          <% tag_text = tag_present ? pet_tag_status_label(pet_tag).downcase : "не настроен" %>
+
+          <article class="pj-pet-list-card">
+            <%= link_to pet_path(pet), class: "pj-pet-list-card__main", aria: { label: "Открыть профиль #{pet.name}" } do %>
+              <span class="pj-pet-list-card__photo">
+                <% if pet.photo.attached? %>
+                  <%= image_tag pet.photo, alt: pet.name, loading: "lazy" %>
+                <% else %>
+                  <span class="pj-pet-list-card__placeholder"><%= pet.name.to_s.first.to_s.upcase.presence || "P" %></span>
+                <% end %>
+              </span>
+
+              <span class="pj-pet-list-card__body">
+                <strong class="pj-pet-list-card__name"><%= pet.name %></strong>
+                <span class="pj-pet-list-card__breed"><%= pet.breed.presence || pet.species.presence || "Данные не заполнены" %></span>
+                <span class="pj-pet-list-card__age"><%= pet_age(pet) %></span>
+                <span class="pj-pet-list-card__tag <%= "is-muted" unless tag_active %>">
+                  <span class="pj-pet-list-card__tag-dot">●</span>
+                  PetTag <%= tag_text %>
+                </span>
+              </span>
+
+              <span class="pj-pet-list-card__chevron"><%= pj_icon(:chevron) %></span>
+            <% end %>
+
+            <%= link_to edit_pet_path(pet),
+                        class: "pj-pet-list-card__edit",
+                        aria: { label: "Редактировать #{pet.name}" },
+                        title: "Редактировать" do %>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 20l4.1-1 10.8-10.8a2.1 2.1 0 0 0-3-3L5.1 16 4 20z"/>
+                <path d="m14.6 6.5 3 3"/>
+              </svg>
+            <% end %>
+          </article>
+        <% end %>
+
+        <%= link_to new_pet_path, class: "pj-pet-list-add" do %>
+          <span class="pj-pet-list-add__plus"><%= pj_icon(:plus) %></span>
+          <span>Добавить <br>питомца</span>
+        <% end %>
       </div>
-      <ol class="home-onboarding-steps" aria-label="Как начать пользоваться PetJournal">
-        <li class="active"><span>1</span><div><strong>Питомец</strong><small>Создайте карточку</small></div></li>
-        <li><span>2</span><div><strong>Первая запись</strong><small>Зафиксируйте важное</small></div></li>
-        <li><span>3</span><div><strong>Напоминание</strong><small>Запланируйте следующий шаг</small></div></li>
-      </ol>
-    </div>
-  <% end %>
+
+      <% if @has_more_pets %>
+        <div class="pj-journal-load-more pj-pets-load-more">
+          <%= link_to pets_path(page: @page + 1), class: "pj-journal-load-more__button" do %>
+            <span>Показать ещё</span>
+            <% remaining = [@matching_pets_count - @pets_limit, PetsController::PAGE_SIZE].min %>
+            <small><%= remaining %> <%= russian_plural(remaining, "питомец", "питомца", "питомцев") %></small>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <section class="pj-pets-empty pj-pets-empty--reference" aria-labelledby="pj-pets-empty-title">
+        <%= image_tag "petjournal/new_design/dashboard-empty-pets.svg",
+                      alt: "Собака и кошка рядом со знаком добавления",
+                      class: "pj-pets-empty__artwork" %>
+        <h2 id="pj-pets-empty-title">У вас пока нет питомцев</h2>
+        <p>Добавьте питомца, чтобы вести журнал его здоровья и заботы.</p>
+        <%= link_to "Добавить питомца", new_pet_path, class: "pj-pets-primary-button pj-pets-empty__button" %>
+        <span class="pj-pets-empty__hint">Начните с имени и фото — остальное можно заполнить позже</span>
+      </section>
+    <% end %>
+  </div>
 </div>

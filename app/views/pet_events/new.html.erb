@@ -1,12 +1,25 @@
-<div class="form-page py-4">
-  <div class="form-page-header">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1">Новое событие</h1>
-      <p class="text-muted mb-0">Добавьте запись в историю здоровья и ухода.</p>
-    </div>
-    <%= link_to "К журналу", pet_pet_events_path(@pet), class: "btn btn-outline-secondary" %>
-  </div>
+<% content_for :title, "Новое событие — #{@pet.name} — PetJournal" %>
 
-  <%= render "form" %>
+<div class="pj-journal-page pj-journal-form-page">
+  <header class="pj-workspace-topbar pj-journal-detail-topbar">
+    <%= link_to pet_pet_events_path(@pet), class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>Назад к журналу</span>
+    <% end %>
+    <%= render "shared/workspace_notification_link" %>
+  </header>
+
+  <div class="pj-journal-form-content">
+    <div class="pj-mobile-detail-nav pj-mobile-form-nav">
+      <%= link_to pet_pet_events_path(@pet), class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К журналу</span>
+      <% end %>
+    </div>
+
+    <div class="pj-mobile-form-heading">
+      <h1>Новое событие</h1>
+      <p>Добавьте запись в историю <%= @pet.name %>.</p>
+    </div>
+
+    <%= render "form" %>
+  </div>
 </div>

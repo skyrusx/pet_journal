@@ -1,15 +1,22 @@
 require "test_helper"
 
 class PagesControllerTest < ActionDispatch::IntegrationTest
-  test "should get guest index" do
+  test "should get new design on guest index" do
     get root_url
 
     assert_response :success
-    assert_select ".pj-landing"
-    assert_select ".pj-hero h1", text: /Помните всё важное/
-    assert_select ".pj-feature-grid article", count: 6
-    assert_select "#pettag"
-    assert_select "#faq"
+    assert_select ".pj-new-design"
+    assert_select ".pj-nd-hero h1", text: /Вся забота.*о питомце.*в одном месте/m
+    assert_select 'meta[name="description"]', count: 1
+    assert_select 'meta[name="robots"][content*="noindex"]', count: 0
+    assert_select 'link[rel="canonical"][href=?]', root_url
+  end
+
+  test "old new design preview should redirect to main page" do
+    get new_design_url
+
+    assert_response :moved_permanently
+    assert_redirected_to root_url
   end
 
   test "should get signed in dashboard" do

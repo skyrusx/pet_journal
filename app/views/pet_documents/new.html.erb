@@ -1,11 +1,25 @@
-<div class="py-4">
-  <div class="page-heading mb-4">
-    <div>
-      <div class="text-muted small mb-1"><%= @pet.name %></div>
-      <h1 class="h3 mb-1">Новый документ</h1>
-      <p class="text-muted mb-0">Загрузите файл, задайте тип и срок действия.</p>
-    </div>
-  </div>
+<% content_for :title, "Новый документ — PetJournal" %>
 
-  <%= render "form", pet: @pet, document: @document %>
+<div class="pj-documents-page pj-document-form-page">
+  <header class="pj-workspace-topbar pj-workspace-topbar--form">
+    <%= link_to documents_overview_path(pet_id: @pet.id), class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>Назад к документам</span>
+    <% end %>
+    <%= render "shared/workspace_notification_link" %>
+  </header>
+
+  <div class="pj-documents-content pj-document-form-content">
+    <div class="pj-mobile-detail-nav pj-mobile-form-nav pj-document-form-mobile-nav">
+      <%= link_to documents_overview_path(pet_id: @pet.id), class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К документам</span>
+      <% end %>
+    </div>
+
+    <div class="pj-document-form-heading">
+      <h1>Новый документ</h1>
+      <p>Добавьте основные данные, файлы и при необходимости настройте связанные действия.</p>
+    </div>
+
+    <%= render "form", pet: @pet, document: @document %>
+  </div>
 </div>

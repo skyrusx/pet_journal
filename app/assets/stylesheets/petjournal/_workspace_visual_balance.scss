@@ -1,0 +1,194 @@
+/* Visual balance pass after reviewing the real desktop workspace at full size. */
+
+/* Pet profile: keep the additional-data hierarchy proportional to the rest of the page. */
+.pj-pet-extra-details > summary {
+  font-size: var(--pj-font-meta) !important;
+  line-height: 1.35;
+}
+
+.pj-pet-extra-details__grid > div > span,
+.pj-pet-extra-details__notes > span {
+  color: #858c86;
+  font-size: .6875rem !important; /* 11px */
+  line-height: 1.35;
+}
+
+.pj-pet-extra-details__grid strong {
+  font-size: var(--pj-font-meta) !important;
+  line-height: 1.4;
+}
+
+.pj-pet-extra-details__notes p {
+  font-size: var(--pj-font-meta) !important;
+  line-height: 1.5;
+}
+
+/* Pet forms: use the same workspace width as the profile and keep field labels readable. */
+@media (min-width: 821px) {
+  .pj-pet-form-content {
+    width: min(1180px, calc(100% - 72px));
+  }
+
+  .pj-pet-form {
+    padding: 24px;
+  }
+
+  .pj-pet-form__grid {
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .pj-pet-photo-upload {
+    min-height: 238px;
+  }
+
+  .pj-pet-form__fields {
+    gap: 16px;
+  }
+}
+
+.pj-pet-form__label,
+.pj-pet-sex-toggle label {
+  font-size: var(--pj-font-meta) !important;
+  line-height: 1.35;
+}
+
+.pj-pet-neutered-control strong {
+  font-size: var(--pj-font-meta) !important;
+  line-height: 1.35;
+}
+
+.pj-pet-neutered-control small,
+.pj-pet-form__extra > p {
+  font-size: var(--pj-font-caption) !important;
+  line-height: 1.4;
+}
+
+.pj-pet-weight-control > span {
+  font-size: var(--pj-font-caption) !important;
+}
+
+/* Make interactive profile shortcuts feel interactive. */
+.pj-pet-quick-card,
+.pj-pet-summary-card__button,
+.pj-journal-add {
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+
+.pj-pet-quick-card:hover {
+  transform: translateY(-2px);
+  border-color: #cfd8cb;
+  color: #174f34;
+  background: #fbfcf6;
+  box-shadow: 0 8px 18px rgba(53, 67, 57, .07);
+}
+
+.pj-pet-quick-card:hover > span {
+  color: #174f34;
+  background: #eef3e3;
+  border-radius: 8px;
+}
+
+.pj-pet-summary-card__button:hover {
+  transform: translateY(-1px);
+  color: #174f34;
+  background: #edf2e5;
+  box-shadow: 0 5px 12px rgba(53, 67, 57, .06);
+}
+
+.pj-journal-add:hover {
+  transform: translateY(-2px);
+  background: #154d34;
+  box-shadow: 0 9px 20px rgba(25, 90, 60, .18);
+}
+
+/* Journal create/edit: match the same wide workspace proportions as pet forms. */
+@media (min-width: 821px) {
+  .pj-journal-form-content {
+    width: min(1180px, calc(100% - 72px));
+  }
+
+  .pj-journal-form-layout {
+    grid-template-columns: 180px minmax(0, 1fr);
+  }
+
+  .pj-journal-form-main {
+    padding: 26px 28px;
+  }
+
+  .pj-journal-type-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .pj-journal-type-option {
+    min-height: 126px;
+    padding: 14px 12px;
+  }
+
+  .pj-journal-fields {
+    gap: 14px 16px;
+  }
+}
+
+/* Event action menu: editing and destructive action live in one predictable place. */
+.pj-journal-more > div {
+  min-width: 190px;
+  padding: 6px;
+}
+
+.pj-journal-more__form {
+  margin: 0;
+}
+
+.pj-journal-more__item {
+  width: 100%;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 7px;
+  color: #56635a;
+  background: transparent;
+  font: inherit;
+  font-size: var(--pj-font-meta);
+  font-weight: 650;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.pj-journal-more__item:hover {
+  color: #174f34;
+  background: #f1f3e7;
+}
+
+.pj-journal-more__item--danger {
+  color: #98544d;
+}
+
+.pj-journal-more__item--danger:hover {
+  color: #87453f;
+  background: #fbefec;
+}
+
+@media (max-width: 820px) {
+  .pj-pet-extra-details__grid > div > span,
+  .pj-pet-extra-details__notes > span {
+    font-size: var(--pj-font-caption) !important;
+  }
+
+  .pj-pet-extra-details__grid strong,
+  .pj-pet-extra-details__notes p {
+    font-size: var(--pj-font-body) !important;
+  }
+
+  .pj-pet-quick-card:hover,
+  .pj-pet-summary-card__button:hover,
+  .pj-journal-add:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}

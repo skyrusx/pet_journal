@@ -1,0 +1,83 @@
+<% content_for :title, "PetTag — PetJournal" %>
+
+<div class="pj-pettag-page <%= @pets.empty? ? "pj-section-empty-page pj-section-empty-page--pettag" : "pj-pettag-overview-page" %>">
+  <header class="pj-workspace-topbar">
+    <h1>PetTag</h1>
+    <%= render "shared/workspace_notification_link" %>
+  </header>
+
+  <% if @pets.any? %>
+    <div class="pj-pettag-content pj-pettag-overview-content">
+      <div class="pj-pettag-pet-grid">
+        <% @pets.each do |pet| %>
+          <% pet_tag = pet.pet_tag %>
+          <% status_tone = if pet_tag&.status_lost?
+                             "danger"
+                           elsif pet_tag&.status_found?
+                             "warning"
+                           elsif pet_tag&.status_reunited?
+                             "success"
+                           elsif pet_tag&.enabled?
+                             "success"
+                           else
+                             "muted"
+                           end %>
+
+          <%= link_to pet_pet_tag_path(pet), class: "pj-pettag-pet-card" do %>
+            <span class="pj-pettag-pet-card__avatar">
+              <% if pet.photo.attached? %>
+                <%= image_tag pet.photo, alt: "" %>
+              <% else %>
+                <%= pet.name.to_s.first.to_s.upcase.presence || "P" %>
+              <% end %>
+            </span>
+
+            <span class="pj-pettag-pet-card__body">
+              <span class="pj-pettag-pet-card__title-row">
+                <strong><%= pet.name %></strong>
+                <em class="pj-pettag-status is-<%= status_tone %>">
+                  <%= pet_tag&.persisted? ? pet_tag_status_label(pet_tag) : "Не создан" %>
+                </em>
+              </span>
+
+              <small><%= pet.breed.presence || pet.species.presence || "Питомец" %></small>
+
+              <% if pet_tag&.persisted? %>
+                <span class="pj-pettag-pet-card__id"><%= pet_tag.tag_code %></span>
+                <% if pet_tag.status_lost? %>
+                  <span class="pj-pettag-pet-card__signal is-danger">Режим потери активен</span>
+                <% elsif pet_tag.status_found? %>
+                  <span class="pj-pettag-pet-card__signal is-warning">Питомца отметили как найденного</span>
+                <% elsif pet_tag.status_reunited? %>
+                  <span class="pj-pettag-pet-card__signal">Питомец вернулся домой — завершите инцидент</span>
+                <% elsif pet_tag.enabled? %>
+                  <span class="pj-pettag-pet-card__signal">Публичный QR-профиль доступен</span>
+                <% else %>
+                  <span class="pj-pettag-pet-card__signal is-muted">Публичный профиль отключён</span>
+                <% end %>
+              <% else %>
+                <span class="pj-pettag-pet-card__signal is-muted">Создайте PetTag для этого питомца</span>
+              <% end %>
+            </span>
+
+            <span class="pj-pettag-pet-card__chevron"><%= pj_icon(:chevron) %></span>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="pj-section-empty-content">
+      <div class="pj-section-empty-heading">
+        <p>Цифровой QR-профиль питомца, который помогает быстро связаться с владельцем.</p>
+      </div>
+
+      <section class="pj-section-empty-card" aria-labelledby="pj-pettag-empty-title">
+        <%= image_tag "petjournal/new_design/empty-pettag.svg", alt: "", class: "pj-section-empty-card__illustration" %>
+        <h2 id="pj-pettag-empty-title">Сначала добавьте питомца</h2>
+        <p>PetTag создаётся отдельно для каждого питомца и использует его профиль.</p>
+        <%= link_to "Добавить питомца", new_pet_path, class: "pj-section-empty-card__button" %>
+        <span class="pj-section-empty-card__hint">Сначала создайте профиль питомца</span>
+      </section>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,157 @@
+/* Smooth desktop sidebar transitions without changing the approved layout. */
+
+@media (min-width: 821px) {
+  .pj-dash-shell {
+    transition: grid-template-columns 480ms cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .pj-dash-sidebar {
+    transition: padding 480ms cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .pj-dash-sidebar__top {
+    transition: gap 430ms cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .pj-dash-brand {
+    position: relative;
+    width: 132px;
+    height: 42px;
+    flex: 0 1 auto;
+    overflow: visible;
+    transition: width 460ms cubic-bezier(.4, 0, .2, 1), margin 460ms cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .pj-dash-brand__full,
+  .pj-dash-brand__compact {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    transform-origin: left center;
+    transition: opacity 250ms ease, transform 440ms cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .pj-dash-brand__full {
+    width: 132px;
+    opacity: 1;
+  }
+
+  .pj-dash-brand__compact {
+    width: 32px !important;
+    height: 32px !important;
+    display: block !important;
+    opacity: 0;
+    transform: translateY(-50%) scale(.9);
+    pointer-events: none;
+  }
+
+  .pj-dash-sidebar-toggle {
+    transition:
+      color 180ms ease,
+      background 180ms ease,
+      border-color 180ms ease,
+      width 440ms cubic-bezier(.4, 0, .2, 1),
+      height 440ms cubic-bezier(.4, 0, .2, 1),
+      flex-basis 440ms cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .pj-dash-sidebar-toggle .pj-nav-icon {
+    transition: transform 460ms cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .pj-dash-nav__item {
+    transition:
+      width 460ms cubic-bezier(.4, 0, .2, 1),
+      min-height 300ms ease,
+      padding 460ms cubic-bezier(.4, 0, .2, 1),
+      gap 360ms ease,
+      background 180ms ease,
+      color 180ms ease;
+  }
+
+  .pj-dash-nav__item span {
+    display: inline-block !important;
+    max-width: 150px;
+    overflow: hidden;
+    opacity: 1;
+    transform: translateX(0);
+    white-space: nowrap;
+    transition:
+      max-width 390ms cubic-bezier(.4, 0, .2, 1),
+      opacity 240ms ease 90ms,
+      transform 340ms cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .pj-dash-account {
+    transition:
+      width 460ms cubic-bezier(.4, 0, .2, 1),
+      padding 460ms cubic-bezier(.4, 0, .2, 1),
+      color 180ms ease,
+      background 180ms ease,
+      border-color 180ms ease;
+  }
+
+  .pj-dash-account__copy {
+    opacity: 1;
+    transition: opacity 240ms ease 90ms, transform 340ms cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .pj-dash-account > .pj-nav-icon {
+    transition: transform 300ms cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .pj-dash.is-sidebar-collapsed .pj-dash-brand {
+    width: 32px;
+    margin: 0;
+  }
+
+  .pj-dash.is-sidebar-collapsed .pj-dash-brand__full {
+    display: block !important;
+    opacity: 0;
+    transform: translateY(-50%) scale(.94);
+    pointer-events: none;
+  }
+
+  .pj-dash.is-sidebar-collapsed .pj-dash-brand__compact {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+    pointer-events: auto;
+  }
+
+  .pj-dash.is-sidebar-collapsed .pj-dash-nav__item span {
+    display: inline-block !important;
+    max-width: 0;
+    opacity: 0;
+    transform: translateX(-5px);
+    transition-delay: 0ms;
+  }
+
+  .pj-dash.is-sidebar-collapsed .pj-dash-account__copy {
+    display: grid;
+    width: 0;
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(-5px);
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pj-dash-shell,
+  .pj-dash-sidebar,
+  .pj-dash-sidebar__top,
+  .pj-dash-brand,
+  .pj-dash-brand__full,
+  .pj-dash-brand__compact,
+  .pj-dash-sidebar-toggle,
+  .pj-dash-sidebar-toggle .pj-nav-icon,
+  .pj-dash-nav__item,
+  .pj-dash-nav__item span,
+  .pj-dash-account,
+  .pj-dash-account__copy,
+  .pj-dash-account > .pj-nav-icon {
+    transition: none !important;
+  }
+}

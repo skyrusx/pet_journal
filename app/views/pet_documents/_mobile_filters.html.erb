@@ -1,0 +1,83 @@
+<% active_filter_count = (@selected_status != "all" ? 1 : 0) + (@selected_type.present? ? 1 : 0) + (@selected_scope != "all" ? 1 : 0) %>
+
+<%= form_with url: documents_overview_path,
+              method: :get,
+              class: "pj-journal-mobile-filters pj-documents-mobile-filters",
+              data: { mobile_sheet_root: true } do |form| %>
+  <%= hidden_field_tag :pet_id, @selected_pet.id, id: "documents_mobile_pet_id" if @selected_pet.present? %>
+
+  <div class="pj-journal-mobile-filters__search">
+    <span aria-hidden="true">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+    </span>
+    <%= form.search_field :q,
+                          id: "documents_mobile_q",
+                          value: @query,
+                          placeholder: "Поиск по документам",
+                          aria: { label: "Поиск по документам" } %>
+  </div>
+
+  <button type="submit" class="pj-journal-mobile-filters__search-button" aria-label="Найти документы" title="Найти">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.75"/><path d="m15 15 4.25 4.25"/></svg>
+  </button>
+
+  <button type="button"
+          class="pj-journal-mobile-filters__trigger <%= "is-active" if active_filter_count.positive? %>"
+          data-mobile-sheet-open
+          aria-controls="documents-mobile-filter-sheet"
+          aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+    <span>Фильтры</span>
+    <% if active_filter_count.positive? %><em><%= active_filter_count %></em><% end %>
+  </button>
+
+  <button type="button"
+          class="pj-journal-mobile-filter-backdrop"
+          data-mobile-sheet-backdrop
+          hidden
+          aria-label="Закрыть фильтры"></button>
+
+  <section id="documents-mobile-filter-sheet"
+           class="pj-journal-mobile-filter-sheet"
+           data-mobile-sheet
+           hidden
+           aria-hidden="true"
+           tabindex="-1"
+           aria-labelledby="documents-mobile-filter-title">
+    <header class="pj-journal-mobile-filter-sheet__header">
+      <div>
+        <h2 id="documents-mobile-filter-title">Фильтры</h2>
+        <p>Уточните список документов</p>
+      </div>
+      <button type="button" class="pj-journal-mobile-filter-sheet__close" data-mobile-sheet-close aria-label="Закрыть фильтры">×</button>
+    </header>
+
+    <div class="pj-journal-mobile-filter-sheet__fields">
+      <label class="pj-journal-mobile-filter-field" for="documents_mobile_status">
+        <span>Статус</span>
+        <%= select_tag :status,
+                       options_for_select([["Все статусы", "all"], ["Актуальные", "active"], ["Скоро истекают", "expiring"], ["Просрочены", "expired"], ["Без срока", "no_expiry"]], @selected_status),
+                       id: "documents_mobile_status" %>
+      </label>
+
+      <label class="pj-journal-mobile-filter-field" for="documents_mobile_type">
+        <span>Тип документа</span>
+        <%= select_tag :type,
+                       options_for_select([["Все типы", ""]] + document_type_options, @selected_type),
+                       id: "documents_mobile_type" %>
+      </label>
+
+      <label class="pj-journal-mobile-filter-field" for="documents_mobile_scope">
+        <span>Дополнительно</span>
+        <%= select_tag :scope,
+                       options_for_select([["Все документы", "all"], ["С файлами", "with_files"], ["С напоминанием", "with_reminder"]], @selected_scope),
+                       id: "documents_mobile_scope" %>
+      </label>
+    </div>
+
+    <footer class="pj-journal-mobile-filter-sheet__actions">
+      <%= link_to "Сбросить", documents_overview_path(pet_id: @selected_pet&.id), class: "pj-journal-mobile-filter-sheet__reset" %>
+      <button type="submit" class="pj-journal-mobile-filter-sheet__apply">Применить</button>
+    </footer>
+  </section>
+<% end %>
