@@ -33,7 +33,14 @@ class PwaControllerTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'const OFFLINE_URL = "/offline.html"'
     assert_includes response.body, 'request.mode === "navigate"'
     assert_includes response.body, 'url.pathname.startsWith("/assets/")'
-    assert_not_includes response.body, "cache.put(request, response.clone());\n  }\n  return response;\n}\n\nasync function navigationResponse"
+
+    navigation_source = response.body
+      .split("async function navigationResponse", 2)
+      .last
+      .split('self.addEventListener("fetch"', 2)
+      .first
+
+    assert_not_includes navigation_source, "cache.put"
   end
 
   test "application shell advertises standalone metadata" do
