@@ -57,7 +57,24 @@ function removeOffer(kind) {
   document.querySelector(`[data-pwa-offer="${kind}"]`)?.remove();
 }
 
-function createOffer({ kind, eyebrow, title, text, primaryLabel, primaryAction, secondaryLabel = "Не сейчас", secondaryAction }) {
+function createBrandMark() {
+  const mark = document.createElement("div");
+  mark.className = "pwa-offer__mark";
+  mark.setAttribute("aria-hidden", "true");
+
+  const image = document.createElement("img");
+  image.src = "/pwa/icon-512.png";
+  image.alt = "";
+  image.width = 46;
+  image.height = 46;
+  image.decoding = "async";
+  image.loading = "eager";
+
+  mark.append(image);
+  return mark;
+}
+
+function createOffer({ kind, eyebrow, title, text, primaryLabel, primaryAction, secondaryLabel = "Позже", secondaryAction }) {
   if (document.querySelector(`[data-pwa-offer="${kind}"]`)) return;
 
   const card = document.createElement("aside");
@@ -66,10 +83,7 @@ function createOffer({ kind, eyebrow, title, text, primaryLabel, primaryAction, 
   card.setAttribute("role", "region");
   card.setAttribute("aria-label", title);
 
-  const mark = document.createElement("div");
-  mark.className = "pwa-offer__mark";
-  mark.textContent = "🐾";
-  mark.setAttribute("aria-hidden", "true");
+  const mark = createBrandMark();
 
   const content = document.createElement("div");
   content.className = "pwa-offer__content";
@@ -151,10 +165,10 @@ function showIosGuide() {
   label.textContent = "Установка PetJournal";
 
   const title = document.createElement("h2");
-  title.textContent = "Два шага — и готово";
+  title.textContent = "Добавьте PetJournal на экран «Домой»";
 
   const copy = document.createElement("p");
-  copy.textContent = "PetJournal появится среди приложений и будет открываться отдельно от браузера.";
+  copy.textContent = "Так PetJournal будет открываться быстрее и работать как отдельное приложение.";
 
   const steps = document.createElement("ol");
   steps.className = "pwa-guide__steps";
@@ -195,20 +209,22 @@ function showInstallOffer() {
     createOffer({
       kind: "install",
       eyebrow: "PetJournal на устройстве",
-      title: "Всегда рядом",
-      text: "Установите PetJournal как приложение — без адресной строки и с быстрым запуском с главного экрана.",
+      title: "Установите PetJournal",
+      text: "Добавьте PetJournal на устройство, чтобы открывать его в один клик и держать всё важное о питомце под рукой.",
       primaryLabel: "Установить",
       primaryAction: runBrowserInstall,
+      secondaryLabel: "Позже",
       secondaryAction: dismissInstallOffer
     });
   } else if (ios()) {
     createOffer({
       kind: "install",
       eyebrow: "PetJournal на iPhone",
-      title: "Добавьте на экран «Домой»",
-      text: "Покажем короткую инструкцию для установки приложения.",
+      title: "Добавьте PetJournal на экран «Домой»",
+      text: "Покажем короткую инструкцию — установка займёт всего пару шагов.",
       primaryLabel: "Как установить",
       primaryAction: showIosGuide,
+      secondaryLabel: "Позже",
       secondaryAction: dismissInstallOffer
     });
   }
@@ -230,7 +246,7 @@ function showUpdateOffer(currentRegistration = registration) {
     kind: "update",
     eyebrow: "Новая версия PetJournal",
     title: "Обновление готово",
-    text: "Обновитесь одним нажатием — без очистки кэша и ручного перезапуска.",
+    text: "Доступна свежая версия приложения. Обновите PetJournal одним нажатием.",
     primaryLabel: "Обновить",
     primaryAction: () => {
       reloadAfterUpdate = true;

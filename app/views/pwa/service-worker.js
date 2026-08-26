@@ -1,10 +1,11 @@
-const CACHE_VERSION = "2026-08-26-v1";
+const CACHE_VERSION = "2026-08-26-v2";
 const STATIC_CACHE = `petjournal-static-${CACHE_VERSION}`;
 const OFFLINE_URL = "/offline.html";
 const PRECACHE_URLS = [
   OFFLINE_URL,
-  "/pwa/icon.svg",
-  "/pwa/icon-maskable.svg"
+  "/pwa/icon-192.png",
+  "/pwa/icon-512.png",
+  "/pwa/icon-maskable-512.png"
 ];
 
 self.addEventListener("install", (event) => {
@@ -94,8 +95,8 @@ self.addEventListener("push", (event) => {
 
   const notificationOptions = {
     body: payload.body,
-    icon: "/pwa/icon.svg",
-    badge: "/pwa/icon.svg",
+    icon: "/pwa/icon-512.png",
+    badge: "/pwa/icon-192.png",
     data: { path: payload.path || "/pets" },
     silent: false
   };
