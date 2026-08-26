@@ -74,7 +74,17 @@ function createBrandMark() {
   return mark;
 }
 
-function createOffer({ kind, eyebrow, title, text, primaryLabel, primaryAction, secondaryLabel = "Позже", secondaryAction }) {
+function createOffer({
+  kind,
+  eyebrow = null,
+  title,
+  text,
+  primaryLabel,
+  primaryAction,
+  secondaryLabel = "Позже",
+  secondaryAction,
+  showClose = true
+}) {
   if (document.querySelector(`[data-pwa-offer="${kind}"]`)) return;
 
   const card = document.createElement("aside");
@@ -88,9 +98,12 @@ function createOffer({ kind, eyebrow, title, text, primaryLabel, primaryAction, 
   const content = document.createElement("div");
   content.className = "pwa-offer__content";
 
-  const small = document.createElement("span");
-  small.className = "pwa-offer__eyebrow";
-  small.textContent = eyebrow;
+  if (eyebrow) {
+    const small = document.createElement("span");
+    small.className = "pwa-offer__eyebrow";
+    small.textContent = eyebrow;
+    content.append(small);
+  }
 
   const heading = document.createElement("strong");
   heading.className = "pwa-offer__title";
@@ -103,14 +116,17 @@ function createOffer({ kind, eyebrow, title, text, primaryLabel, primaryAction, 
   const actions = document.createElement("div");
   actions.className = "pwa-offer__actions";
   actions.append(
-    makeButton(primaryLabel, "pwa-offer__button pwa-offer__button--primary", primaryAction),
-    makeButton(secondaryLabel, "pwa-offer__button pwa-offer__button--secondary", secondaryAction)
+    makeButton(secondaryLabel, "pwa-offer__button pwa-offer__button--secondary", secondaryAction),
+    makeButton(primaryLabel, "pwa-offer__button pwa-offer__button--primary", primaryAction)
   );
 
-  const close = makeButton("", "pwa-offer__close", secondaryAction, "Закрыть");
+  content.append(heading, copy, actions);
+  card.append(mark, content);
 
-  content.append(small, heading, copy, actions);
-  card.append(mark, content, close);
+  if (showClose) {
+    card.append(makeButton("", "pwa-offer__close", secondaryAction, "Закрыть"));
+  }
+
   document.body.append(card);
   requestAnimationFrame(() => card.classList.add("is-visible"));
 }
@@ -208,24 +224,24 @@ function showInstallOffer() {
   if (deferredInstallPrompt) {
     createOffer({
       kind: "install",
-      eyebrow: "PetJournal на устройстве",
-      title: "Установите PetJournal",
-      text: "Добавьте PetJournal на устройство, чтобы открывать его в один клик и держать всё важное о питомце под рукой.",
+      title: "Установить PetJournal",
+      text: "Всё о здоровье питомца — в одном месте",
       primaryLabel: "Установить",
       primaryAction: runBrowserInstall,
-      secondaryLabel: "Позже",
-      secondaryAction: dismissInstallOffer
+      secondaryLabel: "Отмена",
+      secondaryAction: dismissInstallOffer,
+      showClose: false
     });
   } else if (ios()) {
     createOffer({
       kind: "install",
-      eyebrow: "PetJournal на iPhone",
-      title: "Добавьте PetJournal на экран «Домой»",
-      text: "Покажем короткую инструкцию — установка займёт всего пару шагов.",
+      title: "Установить PetJournal",
+      text: "Всё о здоровье питомца — в одном месте",
       primaryLabel: "Как установить",
       primaryAction: showIosGuide,
-      secondaryLabel: "Позже",
-      secondaryAction: dismissInstallOffer
+      secondaryLabel: "Отмена",
+      secondaryAction: dismissInstallOffer,
+      showClose: false
     });
   }
 }
