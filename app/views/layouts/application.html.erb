@@ -1,21 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
   <head>
-    <title><%= content_for(:title) || "Pet Journal" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title><%= content_for(:title) || "PetJournal" %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#07392f">
+    <meta name="color-scheme" content="light">
+    <meta name="application-name" content="PetJournal">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="PetJournal">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
 
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="<%= pwa_manifest_path(format: :json) %>">
     <%= favicon_link_tag "petjournal/favicon.ico" %>
     <%= favicon_link_tag "petjournal/favicon-32.png", rel: "icon", type: "image/png" %>
     <%= favicon_link_tag "petjournal/favicon-512.png", rel: "apple-touch-icon", type: "image/png" %>
 
     <%= stylesheet_link_tag "application" %>
     <%= javascript_importmap_tags %>
+    <%= javascript_import_module_tag "pwa" %>
   </head>
 
   <% landing_page = controller_name == "pages" && action_name == "index" && !user_signed_in? %>
@@ -261,6 +269,7 @@
               <div>Поддержка</div>
               <%= mail_to "support@pet-journal.ru" %>
               <%= link_to "VK PetJournal", "https://vk.ru/petjournal", target: "_blank", rel: "noopener" %>
+              <button type="button" class="pwa-install-link" data-pwa-install-button hidden>Установить PetJournal</button>
             </div>
           </div>
 

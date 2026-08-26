@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
   <head>
     <title><%= content_for(:title) || "PetJournal" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
+    <%= render "shared/pwa_head" %>
 
-    <link rel="manifest" href="/manifest.json">
     <%= favicon_link_tag "petjournal/favicon.ico" %>
     <%= favicon_link_tag "petjournal/favicon-32.png", rel: "icon", type: "image/png" %>
     <%= favicon_link_tag "petjournal/favicon-512.png", rel: "apple-touch-icon", type: "image/png" %>
@@ -24,6 +24,7 @@
     <%= stylesheet_link_tag "new_design_cta" %>
     <%= stylesheet_link_tag "new_design_footer" %>
     <%= stylesheet_link_tag "new_design_mobile" %>
+    <%= javascript_importmap_tags "pwa" %>
   </head>
 
   <body class="pj-new-design-body">
