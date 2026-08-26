@@ -62,9 +62,9 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Render dynamic PWA files from app/views/pwa/*
-  get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-  get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+  # Render dynamic PWA files from app/views/pwa/* with explicit response formats.
+  get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker, defaults: { format: :js }
+  get "manifest" => "rails/pwa#manifest", as: :pwa_manifest, defaults: { format: :json }
 
   resources :pets, only: %i[index show new create edit update] do
     resource :pet_tag, path: :tag, only: %i[show create edit update] do
