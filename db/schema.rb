@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_22_144500) do
+ActiveRecord::Schema[7.2].define(version: 2026_08_24_170000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,24 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_22_144500) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "in_app_notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "kind", null: false
+    t.string "title", null: false
+    t.text "body"
+    t.string "target_path"
+    t.string "source_key", null: false
+    t.datetime "occurred_at", null: false
+    t.datetime "read_at"
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "occurred_at"], name: "index_in_app_notifications_on_user_id_and_occurred_at"
+    t.index ["user_id", "read_at"], name: "index_in_app_notifications_on_user_id_and_read_at"
+    t.index ["user_id", "source_key"], name: "index_in_app_notifications_on_user_id_and_source_key", unique: true
+    t.index ["user_id"], name: "index_in_app_notifications_on_user_id"
   end
 
   create_table "notification_channels", force: :cascade do |t|
@@ -119,8 +137,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_22_144500) do
     t.integer "severity"
     t.date "symptom_started_on"
     t.date "symptom_ended_on"
+    t.time "event_time"
+    t.integer "status", default: 1, null: false
     t.index ["next_action_at"], name: "index_pet_events_on_next_action_at"
     t.index ["pet_id", "event_type", "event_date"], name: "index_pet_events_on_pet_id_and_event_type_and_event_date"
+    t.index ["pet_id", "status", "event_date"], name: "index_pet_events_on_pet_id_and_status_and_event_date"
     t.index ["pet_id"], name: "index_pet_events_on_pet_id"
     t.index ["valid_until"], name: "index_pet_events_on_valid_until"
   end
@@ -155,8 +176,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_22_144500) do
     t.datetime "last_viewed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["expires_at"], name: "index_profile_shares_on_expires_at"
-    t.index ["pet_id", "enabled"], name: "index_profile_shares_on_pet_id_and_enabled"
+    t.index ["expires_at"], name: "index_pet_profile_shares_on_expires_at"
+    t.index ["pet_id", "enabled"], name: "index_pet_profile_shares_on_pet_id_and_enabled"
     t.index ["pet_id"], name: "index_pet_profile_shares_on_pet_id"
     t.index ["public_token"], name: "index_pet_profile_shares_on_public_token", unique: true
   end
@@ -214,8 +235,10 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_22_144500) do
     t.boolean "show_medical_notes", default: true, null: false
     t.text "found_message"
     t.datetime "reunited_at"
+    t.string "tag_code", null: false
     t.index ["pet_id"], name: "index_pet_tags_on_pet_id", unique: true
     t.index ["public_token"], name: "index_pet_tags_on_public_token", unique: true
+    t.index ["tag_code"], name: "index_pet_tags_on_tag_code", unique: true
   end
 
   create_table "pets", force: :cascade do |t|
@@ -294,12 +317,14 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_22_144500) do
     t.string "notifications_time_zone", default: "UTC", null: false
     t.string "name"
     t.string "phone"
+    t.string "interface_text_size", default: "standard", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "in_app_notifications", "users"
   add_foreign_key "notification_channels", "users"
   add_foreign_key "notification_deliveries", "notification_channels"
   add_foreign_key "notification_deliveries", "reminders"
