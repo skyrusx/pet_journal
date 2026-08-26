@@ -18,6 +18,10 @@ function ios() {
   return /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 }
 
+function installAutopromptEnabled() {
+  return document.body?.dataset.pwaInstallAutoprompt === "true";
+}
+
 function readDismissedAt() {
   try {
     return Number(localStorage.getItem(INSTALL_DISMISS_KEY)) || 0;
@@ -185,7 +189,7 @@ function showIosGuide() {
 }
 
 function showInstallOffer() {
-  if (standalone() || recentlyDismissed()) return;
+  if (!installAutopromptEnabled() || standalone() || recentlyDismissed()) return;
 
   if (deferredInstallPrompt) {
     createOffer({
@@ -211,7 +215,7 @@ function showInstallOffer() {
 }
 
 function scheduleInstallOffer(delay = 7000) {
-  if (standalone() || recentlyDismissed() || installTimer) return;
+  if (!installAutopromptEnabled() || standalone() || recentlyDismissed() || installTimer) return;
   installTimer = window.setTimeout(() => {
     installTimer = null;
     showInstallOffer();
@@ -317,6 +321,10 @@ function bindInstallButtons() {
 function initPage() {
   bindInstallButtons();
   setNetworkState();
+
+  if (installAutopromptEnabled() && (deferredInstallPrompt || ios())) {
+    scheduleInstallOffer(5000);
+  }
 }
 
 window.addEventListener("beforeinstallprompt", (event) => {
@@ -353,5 +361,5 @@ document.addEventListener("turbo:load", initPage);
 
 window.addEventListener("load", () => {
   registerServiceWorker();
-  if (ios() && !standalone()) scheduleInstallOffer(9000);
+  if (installAutopromptEnabled() && ios() && !standalone()) scheduleInstallOffer(9000);
 }, { once: true });
