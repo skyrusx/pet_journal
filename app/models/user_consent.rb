@@ -60,10 +60,10 @@ class UserConsent < ApplicationRecord
     relation = relation.where.not(id: id) if persisted?
 
     relation = if consent_type == PET_TAG_PHONE_DISTRIBUTION
-                 relation.where(consentable_type: consentable_type, consentable_id: consentable_id)
-               else
-                 relation.where(document_version: document_version, consentable_type: nil, consentable_id: nil)
-               end
+      relation.where(consentable_type: consentable_type, consentable_id: consentable_id)
+    else
+      relation.where(document_version: document_version, consentable_type: nil, consentable_id: nil)
+    end
 
     errors.add(:consent_type, "уже имеет действующее согласие") if relation.exists?
   end
