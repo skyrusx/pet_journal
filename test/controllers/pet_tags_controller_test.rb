@@ -143,6 +143,23 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
     assert consent.reload.revoked_at.present?
   end
 
+  test "rotating public token revokes phone consent and hides phone" do
+    @pet_tag.update_columns(show_phone: false)
+    post publish_phone_pet_pet_tag_url(@pet), params: {
+      subject_full_name: "Иванов Иван Иванович",
+      phone_distribution_consent: "1"
+    }
+    old_token = @pet_tag.reload.public_token
+    consent = @pet_tag.active_phone_distribution_consent
+
+    patch rotate_token_pet_pet_tag_url(@pet)
+
+    assert_redirected_to pet_pet_tag_url(@pet)
+    assert_not_equal old_token, @pet_tag.reload.public_token
+    assert_not @pet_tag.show_phone?
+    assert consent.reload.revoked_at.present?
+  end
+
   test "should update pet tag notification channels" do
     assert_difference("PetTagNotificationChannel.count") do
       patch pet_pet_tag_url(@pet), params: {
