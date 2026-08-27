@@ -1,10 +1,18 @@
 require "test_helper"
 
 class LegalControllerTest < ActionDispatch::IntegrationTest
-  test "privacy policy is public and versioned" do
+  test "privacy policy is public, versioned and uses landing shell" do
     get privacy_path
 
     assert_response :success
+    assert_select ".pj-new-design.pj-legal-page"
+    assert_select "header.pj-nd-navbar" do
+      assert_select ".pj-nd-shell"
+      assert_select "a[href=?]", root_path(anchor: "features"), text: "Возможности"
+      assert_select "a[href=?]", root_path(anchor: "how-it-works"), text: "Как это работает"
+    end
+    assert_select ".pj-legal-main > .pj-nd-shell"
+    assert_select "footer.pj-nd-footer > .pj-nd-shell"
     assert_select "h1", text: "Политика в отношении обработки персональных данных"
     assert_select ".pj-legal-meta", text: /Версия #{Regexp.escape(LegalDocuments.version(:privacy_policy))}/
     assert_select "a[href=?]", personal_data_consent_path
