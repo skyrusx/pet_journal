@@ -72,14 +72,38 @@
                               autocomplete: "tel",
                               inputmode: "tel",
                               data: { account_phone_input: true } %>
-        <small>Телефон сохраняется в настройках PetTag, но сейчас не публикуется на QR-странице.</small>
+        <small>Телефон можно хранить только для настроек PetTag или отдельно разрешить его публикацию на QR-странице.</small>
       </div>
 
-      <%= f.hidden_field :show_phone, value: "0" %>
-      <div class="pj-pettag-toggle" aria-disabled="true">
-        <input type="checkbox" disabled>
-        <span><strong>Публичный телефон отключён</strong><small>Для публикации персонального контакта нужен отдельный юридический сценарий согласия. Связь с владельцем работает через защищённую форму PetTag.</small></span>
-      </div>
+      <% if @pet_tag.persisted? && @pet_tag.phone_publication_allowed? %>
+        <div class="pj-pettag-token-management">
+          <div>
+            <strong>Телефон опубликован</strong>
+            <small><%= @pet_tag.contact_phone %> доступен на публичной странице PetTag по отдельному согласию.</small>
+            <small>Если номер изменить, публикация автоматически отключится и потребуется новое согласие.</small>
+          </div>
+          <%= link_to "Скрыть телефон",
+                      revoke_phone_pet_pet_tag_path(@pet),
+                      class: "pj-pettag-token-rotate",
+                      data: { turbo_method: :delete, turbo_confirm: "Скрыть телефон на публичной странице PetTag и отозвать действующее согласие?" } %>
+        </div>
+      <% else %>
+        <div class="pj-pettag-token-management">
+          <div>
+            <strong>Телефон скрыт</strong>
+            <% if @pet_tag.persisted? && @pet_tag.contact_phone.present? %>
+              <small>Номер не виден на публичной странице. Для публикации нужно отдельное согласие на распространение персональных данных.</small>
+            <% else %>
+              <small>Сначала укажите и сохраните номер телефона. После этого его можно будет отдельно разрешить для публикации.</small>
+            <% end %>
+          </div>
+          <% if @pet_tag.persisted? && @pet_tag.contact_phone.present? %>
+            <%= link_to "Разрешить публикацию",
+                        phone_consent_pet_pet_tag_path(@pet),
+                        class: "pj-pettag-token-rotate" %>
+          <% end %>
+        </div>
+      <% end %>
 
       <div class="pj-pettag-field">
         <%= f.label :notification_preference, "Уведомления о сканах" %>

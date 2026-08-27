@@ -18,6 +18,7 @@ Rails.application.config.filter_parameters += [
   :auth,
   :p256dh,
   :endpoint,
+  :subject_full_name,
   :finder_name,
   :finder_contact,
   :finder_message,

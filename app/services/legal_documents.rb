@@ -14,6 +14,11 @@ class LegalDocuments
       version: "1.0",
       effective_on: Date.new(2026, 8, 27),
       title: "Согласие на обработку данных отправителя PetTag"
+    },
+    pet_tag_phone_distribution_consent: {
+      version: "1.0",
+      effective_on: Date.new(2026, 8, 27),
+      title: "Согласие на обработку персональных данных, разрешённых для распространения через PetTag"
     }
   }.freeze
 

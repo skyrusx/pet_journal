@@ -1,9 +1,12 @@
 require "test_helper"
 
 class PublicPetTagsControllerTest < ActionDispatch::IntegrationTest
-  test "shows enabled public PetTag without human owner contacts" do
+  test "does not show owner phone without scoped distribution consent even if legacy flag is true" do
     pet_tag = pet_tags(:one)
     owner = pet_tag.pet.user
+
+    assert pet_tag.show_phone?
+    assert_nil pet_tag.active_phone_distribution_consent
 
     assert_difference("PetTagScan.count") do
       get public_pet_tag_url(pet_tag.public_token)
@@ -15,6 +18,51 @@ class PublicPetTagsControllerTest < ActionDispatch::IntegrationTest
     assert_no_match Regexp.new(Regexp.escape(owner.email)), response.body
     assert_no_match Regexp.new(Regexp.escape(owner.name)), response.body if owner.name.present?
     assert_equal "noindex, nofollow", response.headers["X-Robots-Tag"]
+  end
+
+  test "shows phone when owner has an active scoped distribution consent" do
+    pet_tag = pet_tags(:one)
+    owner = pet_tag.pet.user
+    pet_tag.update_columns(show_phone: false)
+    pet_tag.publish_phone!(
+      user: owner,
+      subject_full_name: "Иванов Иван Иванович",
+      subject_contact: owner.email,
+      ip_address: "127.0.0.1",
+      user_agent: "PetJournal test",
+      public_url: public_pet_tag_url(pet_tag.public_token)
+    )
+
+    get public_pet_tag_url(pet_tag.public_token)
+
+    assert_response :success
+    assert_select "a[href^='tel:']", minimum: 1
+    assert_match pet_tag.contact_phone, response.body
+    assert_no_match Regexp.new(Regexp.escape(owner.email)), response.body
+    assert_no_match Regexp.new(Regexp.escape(owner.name)), response.body if owner.name.present?
+    assert_match(/отдельно разрешил публикацию/, response.body)
+  end
+
+  test "does not show phone when consent belongs to an old phone value" do
+    pet_tag = pet_tags(:one)
+    owner = pet_tag.pet.user
+    pet_tag.update_columns(show_phone: false)
+    pet_tag.publish_phone!(
+      user: owner,
+      subject_full_name: "Иванов Иван Иванович",
+      subject_contact: owner.email,
+      ip_address: "127.0.0.1",
+      user_agent: "PetJournal test",
+      public_url: public_pet_tag_url(pet_tag.public_token)
+    )
+
+    pet_tag.update_columns(contact_phone: "+79990000999", show_phone: true)
+
+    get public_pet_tag_url(pet_tag.public_token)
+
+    assert_response :success
+    assert_select "a[href^='tel:']", count: 0
+    assert_no_match(/\+79990000999/, response.body)
   end
 
   test "does not persist browser fingerprinting fields for a plain scan" do
@@ -136,7 +184,7 @@ class PublicPetTagsControllerTest < ActionDispatch::IntegrationTest
   test "does not overwrite already shared finder data" do
     pet_tag = pet_tags(:one)
     get public_pet_tag_url(pet_tag.public_token)
-    scan = PetTagScan.order(:created_at).last
+    scan = pet_tag.pet_tag_scans.order(:created_at).last
 
     post public_pet_tag_location_url(pet_tag.public_token), params: {
       scan_token: scan.public_token,

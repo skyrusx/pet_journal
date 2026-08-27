@@ -1,6 +1,6 @@
 <% content_for :title, "#{@pet.name} — PetTag — PetJournal" %>
 <% owner_name = "Владелец питомца" %>
-<% phone = nil %>
+<% phone = @pet_tag.public_phone %>
 <% status_class = @pet_tag.status_lost? ? "is-danger" : (@pet_tag.status_found? ? "is-warning" : "is-success") %>
 <% hero_title = if @pet_tag.status_lost?
                   "Я потерялся, но обо мне уже позаботились"
@@ -34,7 +34,7 @@
           <h1><%= hero_title %> <span aria-hidden="true">💚</span></h1>
           <p>
             <% if @pet_tag.status_lost? %>
-              Если вы нашли питомца, пожалуйста, отправьте сообщение владельцу ниже.
+              Если вы нашли питомца, пожалуйста, <%= phone.present? ? "позвоните владельцу или " : "" %>отправьте сообщение ниже.
             <% elsif @pet_tag.status_found? %>
               Владелец уже получил информацию о находке. Дополнительное сообщение всё ещё может помочь.
             <% else %>
@@ -94,27 +94,44 @@
 
       <section class="pj-public-tag-contact-grid">
         <article class="pj-public-tag-panel pj-public-tag-owner">
-          <span class="pj-public-tag-panel__label">Связь с владельцем</span>
+          <span class="pj-public-tag-panel__label"><%= phone.present? ? "Экстренный контакт" : "Связь с владельцем" %></span>
           <div class="pj-public-tag-owner__identity">
             <span class="pj-public-tag-owner__avatar"><%= owner_name.first.to_s.upcase %></span>
             <div>
               <strong><%= owner_name %></strong>
+              <% if phone.present? %>
+                <%= link_to phone,
+                            "tel:#{phone.gsub(/[^\d+]/, "")}",
+                            class: "pj-public-tag-owner__phone",
+                            aria: { label: "Позвонить владельцу по номеру #{phone}" } %>
+              <% end %>
             </div>
           </div>
-          <p class="pj-public-tag-muted">Прямые персональные контакты не публикуются. Используйте защищённую форму сообщения.</p>
+          <% if phone.present? %>
+            <p class="pj-public-tag-muted">Владелец отдельно разрешил публикацию этого номера на странице PetTag.</p>
+          <% else %>
+            <p class="pj-public-tag-muted">Прямой телефон скрыт. Используйте защищённую форму сообщения.</p>
+          <% end %>
         </article>
 
         <article class="pj-public-tag-panel pj-public-tag-contact-actions">
           <span class="pj-public-tag-panel__label">Связаться с владельцем</span>
+          <% if phone.present? %>
+            <%= link_to "Позвонить", "tel:#{phone.gsub(/[^\d+]/, "")}", class: "pj-public-tag-outline-button" %>
+          <% end %>
           <a href="#found-form" class="pj-public-tag-outline-button">Написать владельцу</a>
-          <small>Ваш контакт попадёт только владельцу вместе с сообщением.</small>
+          <small>Контакт из формы попадёт только владельцу вместе с сообщением.</small>
         </article>
 
         <article class="pj-public-tag-panel pj-public-tag-trust">
           <span class="pj-public-tag-panel__label">Безопасность и приватность</span>
           <ul>
             <li>Показываются только данные, которыми владелец решил поделиться о питомце</li>
-            <li>Прямые персональные контакты владельца не публикуются</li>
+            <% if phone.present? %>
+              <li>Номер телефона опубликован по отдельному действующему согласию владельца</li>
+            <% else %>
+              <li>Прямые персональные контакты владельца не публикуются без отдельного согласия</li>
+            <% end %>
             <li>Геолокация отправляется только после разрешения браузера и вашего согласия</li>
             <li>Публичная страница не индексируется поисковиками</li>
           </ul>

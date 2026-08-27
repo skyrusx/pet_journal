@@ -1,7 +1,10 @@
 class PetTagsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pet, except: :index
-  before_action :set_pet_tag, only: %i[show edit update rotate_token qr mark_lost mark_found mark_reunited mark_safe]
+  before_action :set_pet_tag, only: %i[
+    show edit update rotate_token qr mark_lost mark_found mark_reunited mark_safe
+    phone_consent publish_phone revoke_phone
+  ]
   before_action :set_notification_channels, only: %i[show edit update]
 
   layout "workspace_new_design"
@@ -45,11 +48,83 @@ class PetTagsController < ApplicationController
     end
   end
 
+  def phone_consent
+    unless @pet_tag.persisted?
+      redirect_to pet_pet_tag_path(@pet), alert: "Сначала создайте PetTag."
+      return
+    end
+
+    unless @pet_tag.contact_phone.present?
+      redirect_to edit_pet_pet_tag_path(@pet), alert: "Сначала укажите и сохраните телефон владельца."
+      return
+    end
+
+    prepare_phone_consent_page
+  end
+
+  def publish_phone
+    unless @pet_tag.persisted? && @pet_tag.contact_phone.present?
+      redirect_to edit_pet_pet_tag_path(@pet), alert: "Сначала укажите и сохраните телефон владельца."
+      return
+    end
+
+    @subject_full_name = params[:subject_full_name].to_s.squish
+    prepare_phone_consent_page
+
+    unless @operator_ready
+      @consent_error = "Публикация телефона недоступна, пока не заполнены сведения об операторе."
+      render :phone_consent, status: :unprocessable_entity
+      return
+    end
+
+    unless valid_distribution_subject_name?(@subject_full_name)
+      @consent_error = "Укажите фамилию и имя субъекта персональных данных. Отчество — при наличии."
+      render :phone_consent, status: :unprocessable_entity
+      return
+    end
+
+    unless params[:phone_distribution_consent].to_s == "1"
+      @consent_error = "Чтобы опубликовать телефон, подтвердите отдельное согласие на его распространение."
+      render :phone_consent, status: :unprocessable_entity
+      return
+    end
+
+    @pet_tag.publish_phone!(
+      user: current_user,
+      subject_full_name: @subject_full_name,
+      subject_contact: current_user.email,
+      ip_address: request.remote_ip,
+      user_agent: request.user_agent,
+      public_url: @public_pet_tag_url
+    )
+
+    redirect_to edit_pet_pet_tag_path(@pet), notice: "Телефон опубликован на странице PetTag. Согласие зафиксировано."
+  rescue ActiveRecord::RecordInvalid => e
+    @consent_error = e.record.errors.full_messages.to_sentence.presence || "Не удалось зафиксировать согласие."
+    prepare_phone_consent_page
+    render :phone_consent, status: :unprocessable_entity
+  end
+
+  def revoke_phone
+    unless @pet_tag.persisted?
+      redirect_to pet_pet_tag_path(@pet), alert: "PetTag не найден."
+      return
+    end
+
+    @pet_tag.revoke_phone_publication!
+    redirect_to edit_pet_pet_tag_path(@pet), notice: "Публикация телефона отключена, согласие отозвано."
+  end
+
   def rotate_token
+    phone_consent_revoked = @pet_tag.active_phone_distribution_consent.present?
+    @pet_tag.revoke_phone_publication! if phone_consent_revoked
+
     @pet_tag.regenerate_public_token
     @pet_tag.update!(token_rotated_at: Time.current)
 
-    redirect_to pet_pet_tag_path(@pet), notice: "Публичная ссылка жетона обновлена. PetTag ID не изменился."
+    notice = "Публичная ссылка жетона обновлена. PetTag ID не изменился."
+    notice += " Публикация телефона отключена — для новой публичной ссылки нужно подтвердить согласие заново." if phone_consent_revoked
+    redirect_to pet_pet_tag_path(@pet), notice: notice
   end
 
   def mark_lost
@@ -104,11 +179,9 @@ class PetTagsController < ApplicationController
   end
 
   def pet_tag_params
-    permitted = params.require(:pet_tag).permit(:enabled, :public_message, :behavior_notes, :medical_notes, :contact_phone,
-                                                 :show_phone, :lost_mode_enabled, :lost_message, :last_seen_location,
-                                                 :notification_preference, :show_medical_notes, :found_message)
-    permitted[:show_phone] = false
-    permitted
+    params.require(:pet_tag).permit(:enabled, :public_message, :behavior_notes, :medical_notes, :contact_phone,
+                                    :lost_mode_enabled, :lost_message, :last_seen_location,
+                                    :notification_preference, :show_medical_notes, :found_message)
   end
 
   def set_notification_channels
@@ -140,5 +213,20 @@ class PetTagsController < ApplicationController
       found: scans.status_found_reported.count,
       notified: scans.where.not(owner_notified_at: nil).count
     }
+  end
+
+  def prepare_phone_consent_page
+    @legal_document = LegalDocuments.fetch(:pet_tag_phone_distribution_consent)
+    @operator_name = LegalOperatorConfiguration.name
+    @operator_email = LegalOperatorConfiguration.email
+    @operator_details = LegalOperatorConfiguration.details
+    @operator_ready = !Rails.env.production? || @operator_details.present?
+    @subject_full_name ||= current_user.name.to_s.squish
+    @subject_contact = current_user.email
+    @public_pet_tag_url = public_pet_tag_url(@pet_tag.public_token)
+  end
+
+  def valid_distribution_subject_name?(value)
+    value.length <= 200 && value.split(/\s+/).size >= 2
   end
 end

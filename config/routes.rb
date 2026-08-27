@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get "privacy" => "legal#privacy", as: :privacy
   get "personal-data-consent" => "legal#personal_data_consent", as: :personal_data_consent
   get "pet-tag-data-consent" => "legal#pet_tag_finder_consent", as: :pet_tag_data_consent
+  get "pet-tag-phone-distribution-consent" => "legal#pet_tag_phone_distribution_consent", as: :pet_tag_phone_distribution_consent
 
   if Rails.env.development?
     get "error-preview/:status" => "errors#show",
@@ -76,6 +77,9 @@ Rails.application.routes.draw do
       patch :mark_found
       patch :mark_reunited
       patch :mark_safe
+      get :phone_consent, path: "phone-consent"
+      post :publish_phone, path: "phone-consent"
+      delete :revoke_phone, path: "phone-consent"
       get "qr.:format" => "pet_tags#qr", as: :qr, constraints: { format: /svg|png/ }
     end
     resources :pet_events, path: :events

@@ -35,4 +35,14 @@ class LegalControllerTest < ActionDispatch::IntegrationTest
     assert_select ".pj-legal-meta", text: /Версия #{Regexp.escape(LegalDocuments.version(:pet_tag_finder_consent))}/
     assert_select "a[href=?]", privacy_path
   end
+
+  test "PetTag phone distribution consent is public and versioned" do
+    get pet_tag_phone_distribution_consent_path
+
+    assert_response :success
+    assert_select "h1", text: "Согласие на обработку персональных данных, разрешённых для распространения через PetTag"
+    assert_select ".pj-legal-meta", text: /Версия #{Regexp.escape(LegalDocuments.version(:pet_tag_phone_distribution_consent))}/
+    assert_select "a[href=?]", privacy_path
+    assert_match(/номер телефона/, response.body)
+  end
 end

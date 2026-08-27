@@ -3,16 +3,13 @@ class PublicPetTagsController < ApplicationController
   before_action :prevent_public_indexing
 
   def show
-    @pet_tag = PetTag.includes(pet: { photo_attachment: :blob }).find_by(public_token: params[:token])
+    @pet_tag = PetTag.includes(:user_consents, pet: { photo_attachment: :blob }).find_by(public_token: params[:token])
 
     unless @pet_tag&.enabled?
       render :unavailable, status: :not_found
       return
     end
 
-    # Human contact publication is intentionally fail-closed until PetJournal
-    # has the dedicated dissemination-consent flow required for that feature.
-    @pet_tag.show_phone = false
     @pet = @pet_tag.pet
     @pet_tag_scan = record_scan(@pet_tag)
   end

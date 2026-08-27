@@ -31,9 +31,10 @@ Animal health data is not a special category of the human user's personal data m
 - public pet information, safety/lost status and notes selected by the owner;
 - scan timestamps;
 - finder-provided name/contact/message/location and optional geolocation after separate consent;
-- notification delivery state.
+- notification delivery state;
+- optional public owner phone only after a separate, scoped consent for dissemination tied to the exact PetTag and phone value.
 
-Plain PetTag scans no longer persist User-Agent or referrer. Human owner name/phone are not published by PetTag in this compliance baseline.
+Plain PetTag scans no longer persist User-Agent or referrer. The owner's account name/email are not published by the PetTag phone-consent flow.
 
 ### Temporary public profile sharing
 
@@ -43,7 +44,7 @@ Plain PetTag scans no longer persist User-Agent or referrer. Human owner name/ph
 - anonymized viewer IP;
 - optional pet journal/documents/reminders according to the owner's share settings.
 
-The owner's account email and PetTag phone are fail-closed and are not exposed by public sharing until a dedicated lawful public-contact disclosure flow exists.
+The owner's account email remains fail-closed in public profile sharing. The PetTag phone is exposed only through the dedicated PetTag dissemination-consent flow described below.
 
 ### Notification channels
 
@@ -55,17 +56,32 @@ Public pages:
 
 - `/privacy` — policy in relation to personal data processing;
 - `/personal-data-consent` — separate registration consent;
-- `/pet-tag-data-consent` — separate consent for a finder who submits data through PetTag.
+- `/pet-tag-data-consent` — separate consent for a finder who submits data through PetTag;
+- `/pet-tag-phone-distribution-consent` — versioned text for dissemination of an owner phone through a specific PetTag.
 
-Registered-user consent evidence is stored in `user_consents` with document version, acceptance time, source, IP address and User-Agent. PetTag finder consent evidence is stored on the corresponding `pet_tag_scans` record with consent version, policy version and acceptance time.
+Registered-user consent evidence is stored in `user_consents` with document version, acceptance time, source, IP address and User-Agent. Scoped consents additionally reference the concrete resource through `consentable_type` / `consentable_id` and store the exact accepted context in metadata. PetTag finder consent evidence is stored on the corresponding `pet_tag_scans` record with consent version, policy version and acceptance time.
 
 Document versions are defined in `LegalDocuments`. A material change that affects the substance of a consent must receive a new document version; do not silently edit the meaning of an already accepted version.
 
-## Public contact disclosure
+## Public PetTag phone disclosure
 
-The old `show_phone` and `show_owner_contact` flags were not sufficient evidence of a separate consent for personal data intended for dissemination. Deployment therefore resets those flags to false and controllers reject attempts to re-enable them.
+The old `show_phone` flag by itself is not treated as legal evidence. Ordinary PetTag create/update parameters cannot enable public phone disclosure, and the public view checks both the flag and a matching active scoped consent.
 
-Do not restore public owner phone/name/email with a simple checkbox. A future implementation must be designed specifically around Article 10.1 of Federal Law No. 152-FZ and the then-current Roskomnadzor requirements for consent to dissemination, including exact operator/resource/data details and the subject's ability to set restrictions and conditions.
+The implemented flow works as follows:
+
+1. The owner saves a phone number in PetTag settings.
+2. The owner opens a separate publication-consent screen.
+3. The screen identifies the subject, operator, exact phone, exact PetTag/public resource, purpose, conditions and consent term.
+4. The owner explicitly checks a separate dissemination-consent checkbox.
+5. PetJournal stores a `UserConsent` of type `pet_tag_phone_distribution` scoped to that PetTag, including the exact phone and legal-context snapshot.
+6. Only after the consent record is created is `show_phone` enabled.
+7. Changing the phone automatically revokes the active dissemination consent and hides the phone.
+8. “Скрыть телефон” records `revoked_at` and disables publication immediately.
+9. The public PetTag exposes the phone only when `show_phone` is enabled, the scoped consent is active and the phone stored in consent metadata exactly matches the current PetTag phone.
+
+The flow does not publish the owner's account name or email. A separate consent/lawful basis would be required before exposing additional human personal data.
+
+Roskomnadzor Order No. 18 requires the dissemination consent to contain identifying/contact information for the subject, operator information, information resource, purpose, data categories/list, optional restrictions/conditions and consent term. Before production use of the public-phone feature, `LEGAL_OPERATOR_DETAILS` must contain the operator details appropriate to the actual legal form. Production UI blocks new phone-publication consent while those details are absent.
 
 ## Production configuration
 
@@ -74,9 +90,9 @@ Required by `bin/rails release:check`:
 - `LEGAL_OPERATOR_NAME` — actual operator name/FIO;
 - `LEGAL_OPERATOR_EMAIL` — real address for personal-data requests.
 
-Optional:
+Operationally required before enabling public PetTag phone publication:
 
-- `LEGAL_OPERATOR_DETAILS` — public operator details that are appropriate for the operator's legal form.
+- `LEGAL_OPERATOR_DETAILS` — operator details required for the actual legal form (for example address and registration details where applicable). The dissemination-consent screen is fail-closed in production when this value is missing.
 
 Never deploy the legal pages with placeholder operator information.
 
@@ -87,10 +103,11 @@ Before treating this work as operationally complete:
 1. Determine the exact operator identity and legal form.
 2. Submit or update the notification of personal-data processing under Article 22 of Federal Law No. 152-FZ. PetJournal is an automated public internet service; do not rely on the historical exceptions repealed in 2022.
 3. Describe each processing purpose separately and, for each purpose, list subject categories, data categories, legal grounds, actions and processing method.
-4. Record the location of databases containing personal data of Russian citizens.
-5. Provide the security information required by the current notification form.
-6. If any configured provider creates a cross-border transfer, complete the separate Article 12 assessment/notification before the transfer starts.
-7. Keep the Roskomnadzor notification current when processing purposes, locations, processors or cross-border transfers materially change.
+4. Include the PetTag public-phone dissemination purpose and public resource in the operator's documentation/notification where the applicable form requires it.
+5. Record the location of databases containing personal data of Russian citizens.
+6. Provide the security information required by the current notification form.
+7. If any configured provider creates a cross-border transfer, complete the separate Article 12 assessment/notification before the transfer starts.
+8. Keep the Roskomnadzor notification current when processing purposes, locations, processors or cross-border transfers materially change.
 
 ## NetAngels / infrastructure verification
 
@@ -116,13 +133,15 @@ Obtain written or account-level confirmation for production that:
 - registration consent is recorded in the same user-creation transaction;
 - public legal pages are available without authentication;
 - public PetTag/profile-share pages set `X-Robots-Tag: noindex, nofollow`;
-- legacy public human contact flags are disabled fail-closed;
 - PetTag finder data requires a separate consent before persistence;
-- plain PetTag scanning was reduced to data needed for the scan event rather than browser-identifying metadata.
+- plain PetTag scanning was reduced to data needed for the scan event rather than browser-identifying metadata;
+- PetTag phone disclosure is fail-closed without a matching active scoped consent;
+- changing the public phone invalidates the previous consent automatically;
+- withdrawal of PetTag phone consent is recorded and publication stops immediately.
 
 ## Follow-up work intentionally outside this baseline
 
-- a compliant public-contact dissemination consent flow for PetTag/profile sharing;
+- a separate dissemination-consent flow if owner email/name or other human personal data is ever added to public profile sharing;
 - cookie/analytics consent if non-essential analytics or advertising technologies are added;
 - per-provider cross-border assessment for Telegram/Web Push or future external services;
 - a formal retention schedule and automated cleanup for logs, finder contacts and backups;
