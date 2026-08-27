@@ -64,37 +64,51 @@
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 2px;
+  transition: color 150ms ease;
+}
+
+.pj-auth-v2--registration .pj-auth-v2-card a:hover,
+.pj-auth-v2--registration .pj-auth-v2-card a:focus-visible {
+  color: #1d5a37;
+  text-decoration: none;
 }
 
 /* The desktop auth shell is intentionally fixed at 570px. Keep only the
    registration form denser instead of changing the shared shell height. */
 @media (min-width: 821px) {
   .pj-auth-v2--registration .pj-auth-v2-card {
-    padding: 24px 30px 22px;
+    max-width: 400px;
+    padding: var(--pj-space-4) var(--pj-space-7) var(--pj-space-3);
   }
 
   .pj-auth-v2--registration .pj-auth-v2-heading {
-    margin-bottom: 16px;
+    margin-bottom: var(--pj-space-2);
   }
 
   .pj-auth-v2--registration .pj-auth-v2-registration-form {
-    gap: 10px;
+    gap: var(--pj-space-2);
   }
 
   .pj-auth-v2--registration .pj-auth-v2-field {
-    gap: 5px;
+    gap: var(--pj-space-1);
   }
 
   .pj-auth-v2--registration .pj-auth-v2-input {
-    min-height: 44px;
+    min-height: var(--pj-size-control);
   }
 
   .pj-auth-v2--registration .pj-auth-v2-submit {
-    min-height: 45px;
+    min-height: 42px;
   }
 
   .pj-auth-v2--registration .pj-auth-v2-register {
-    margin-top: 13px;
+    margin-top: var(--pj-space-2);
+  }
+
+  .pj-auth-v2--registration .pj-auth-v2-consent {
+    gap: var(--pj-space-1);
+    margin-top: 0;
+    line-height: 1.4;
   }
 }
 
