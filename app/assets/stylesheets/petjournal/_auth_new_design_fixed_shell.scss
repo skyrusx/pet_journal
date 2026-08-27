@@ -1,14 +1,15 @@
-/* Keep the approved desktop auth shell stable while only the form content changes. */
+/* Keep one shared desktop auth shell for login, registration and recovery flows. */
 
 @media (min-width: 821px) {
   .pj-auth-v2 .pj-auth-v2-stage,
   .pj-auth-v2 .pj-auth-v2-visual {
-    height: 570px;
-    min-height: 570px;
+    height: 610px;
+    min-height: 610px;
   }
 
-  /* Registration has the tallest form, so use the shell space instead of growing the whole block. */
+  /* The registration form is the tallest auth flow; keep it centered with
+     enough breathing room without changing the shared shell geometry. */
   .pj-auth-v2--registration .pj-auth-v2-form-side {
-    padding-block: 14px;
+    padding-block: 20px;
   }
 }
