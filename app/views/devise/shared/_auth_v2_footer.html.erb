@@ -1,7 +1,13 @@
 <footer class="pj-auth-v2-footer" aria-label="Подвал PetJournal">
   <div class="pj-auth-v2-shell">
     <div class="pj-auth-v2-footer__inner">
-      <p>© <%= Time.current.year %> PetJournal. Все права защищены.</p>
+      <div class="pj-auth-v2-footer__meta">
+        <p>© <%= Time.current.year %> PetJournal. Все права защищены.</p>
+        <nav class="pj-auth-v2-footer__legal" aria-label="Юридическая информация">
+          <%= link_to "Политика конфиденциальности", privacy_path %>
+          <%= link_to "Согласие на ПДн", personal_data_consent_path %>
+        </nav>
+      </div>
       <p class="pj-auth-v2-footer__care">Сделано с заботой о тех, кто рядом ♡</p>
     </div>
   </div>

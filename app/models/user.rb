@@ -8,15 +8,21 @@ class User < ApplicationRecord
   has_many :pets, dependent: :destroy
   has_many :notification_channels, dependent: :destroy
   has_many :in_app_notifications, dependent: :destroy
+  has_many :user_consents, dependent: :destroy
   has_many :reminders, through: :pets
 
-  attr_accessor :remove_avatar
+  attr_accessor :remove_avatar, :personal_data_consent
 
   validates :name, length: { maximum: 80 }, allow_blank: true
   validates :phone, length: { maximum: 32 }, allow_blank: true
   validates :interface_text_size, inclusion: { in: INTERFACE_TEXT_SIZES }
   validates :notifications_time_zone, inclusion: { in: ->(_) { ActiveSupport::TimeZone.all.map(&:name) } }
+  validates :personal_data_consent,
+            acceptance: { accept: "1", message: "необходимо для создания аккаунта" },
+            if: :personal_data_consent_required?
   validate :acceptable_avatar
+
+  after_create :record_personal_data_consent!, if: :personal_data_consent_required?
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -50,7 +56,33 @@ class User < ApplicationRecord
     end
   end
 
+  def prepare_personal_data_consent!(value:, ip_address:, user_agent:)
+    self.personal_data_consent = value
+    @personal_data_consent_context = {
+      ip_address: ip_address,
+      user_agent: user_agent.to_s.truncate(500)
+    }
+  end
+
   private
+
+  def personal_data_consent_required?
+    @personal_data_consent_context.present?
+  end
+
+  def record_personal_data_consent!
+    user_consents.create!(
+      consent_type: UserConsent::PERSONAL_DATA,
+      document_version: LegalDocuments.version(:personal_data_consent),
+      accepted_at: Time.current,
+      source: "registration",
+      ip_address: @personal_data_consent_context[:ip_address],
+      user_agent: @personal_data_consent_context[:user_agent],
+      metadata: {
+        "privacy_policy_version" => LegalDocuments.version(:privacy_policy)
+      }
+    )
+  end
 
   def acceptable_avatar
     return unless avatar.attached?

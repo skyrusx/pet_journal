@@ -22,12 +22,12 @@ class DeviseRoutesAndNavigationTest < ActionDispatch::IntegrationTest
     assert_routing({ method: "get", path: "/login" }, controller: "devise/sessions", action: "new")
     assert_routing({ method: "post", path: "/login" }, controller: "devise/sessions", action: "create")
     assert_routing({ method: "delete", path: "/logout" }, controller: "devise/sessions", action: "destroy")
-    assert_routing({ method: "get", path: "/register" }, controller: "devise/registrations", action: "new")
-    assert_routing({ method: "post", path: "/register" }, controller: "devise/registrations", action: "create")
-    assert_routing({ method: "get", path: "/account" }, controller: "devise/registrations", action: "edit")
-    assert_routing({ method: "patch", path: "/account" }, controller: "devise/registrations", action: "update")
-    assert_routing({ method: "put", path: "/account" }, controller: "devise/registrations", action: "update")
-    assert_routing({ method: "delete", path: "/account" }, controller: "devise/registrations", action: "destroy")
+    assert_routing({ method: "get", path: "/register" }, controller: "users/registrations", action: "new")
+    assert_routing({ method: "post", path: "/register" }, controller: "users/registrations", action: "create")
+    assert_routing({ method: "get", path: "/account" }, controller: "users/registrations", action: "edit")
+    assert_routing({ method: "patch", path: "/account" }, controller: "users/registrations", action: "update")
+    assert_routing({ method: "put", path: "/account" }, controller: "users/registrations", action: "update")
+    assert_routing({ method: "delete", path: "/account" }, controller: "users/registrations", action: "destroy")
     assert_routing({ method: "get", path: "/password/new" }, controller: "devise/passwords", action: "new")
     assert_routing({ method: "post", path: "/password" }, controller: "devise/passwords", action: "create")
     assert_routing({ method: "get", path: "/password/edit" }, controller: "devise/passwords", action: "edit")
@@ -64,7 +64,8 @@ class DeviseRoutesAndNavigationTest < ActionDispatch::IntegrationTest
         user: {
           email: "route-user@example.test",
           password: "password123",
-          password_confirmation: "password123"
+          password_confirmation: "password123",
+          personal_data_consent: "1"
         }
       }
     end
@@ -82,7 +83,7 @@ class DeviseRoutesAndNavigationTest < ActionDispatch::IntegrationTest
         current_password: "password123"
       }
     }
-    assert_redirected_to root_path
+    assert_redirected_to edit_user_registration_path
 
     disposable = User.create!(email: "delete-account@example.test", password: "password123", password_confirmation: "password123")
     sign_in disposable

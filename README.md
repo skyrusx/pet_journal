@@ -34,11 +34,17 @@ Required environment:
 - `APP_HOST`
 - `SECRET_KEY_BASE`
 - `DATABASE_URL` or `PET_JOURNAL_DATABASE_PASSWORD`
+- `LEGAL_OPERATOR_NAME`
+- `LEGAL_OPERATOR_EMAIL`
 - `MAIL_FROM`
 - `SMTP_ADDRESS`
 - `SMTP_DOMAIN`
 - `SMTP_USER_NAME`
 - `SMTP_PASSWORD`
+
+Optional legal environment:
+
+- `LEGAL_OPERATOR_DETAILS` — additional operator details rendered on legal pages when needed
 
 Optional notification environment:
 
@@ -61,6 +67,14 @@ Validate production configuration:
 ```sh
 bin/rails release:check
 ```
+
+The release check treats the legal operator name and privacy contact as required production configuration so a deployment cannot silently publish placeholder operator details.
+
+## Legal and privacy documents
+
+The current document versions and effective dates are defined centrally in `LegalDocuments` (`app/services/legal_documents.rb`). A registration consent record stores the exact consent version together with the privacy policy version that was current when the account was created.
+
+Do not hardcode real operator identity or private contact details into templates. Configure them through the production environment and update the document version whenever a change requires a new legal version.
 
 ## Web Push
 

@@ -4,6 +4,17 @@ module Users
 
     protected
 
+    def build_resource(hash = {})
+      super
+      return unless action_name == "create"
+
+      resource.prepare_personal_data_consent!(
+        value: params.dig(:user, :personal_data_consent),
+        ip_address: request.remote_ip,
+        user_agent: request.user_agent
+      )
+    end
+
     def update_resource(resource, params)
       remove_avatar = ActiveModel::Type::Boolean.new.cast(params[:remove_avatar])
       account_params = params.except(:remove_avatar)
