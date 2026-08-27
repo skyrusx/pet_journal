@@ -90,6 +90,45 @@
   color: #9a5149;
 }
 
+.pj-public-tag-consent {
+  display: grid;
+  gap: var(--pj-space-2);
+  padding: var(--pj-space-4);
+  border: 1px solid var(--pj-border);
+  border-radius: var(--pj-radius-card);
+  background: var(--pj-soft);
+  color: var(--pj-muted);
+  font-size: var(--pj-font-meta);
+  line-height: var(--pj-line-body);
+}
+
+.pj-public-tag-consent__check {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: var(--pj-space-2);
+  align-items: start;
+  margin: 0;
+  cursor: pointer;
+}
+
+.pj-public-tag-consent__check input {
+  width: 20px;
+  height: 20px;
+  margin: 1px 0 0;
+  accent-color: var(--pj-green);
+}
+
+.pj-public-tag-consent p {
+  margin: 0 0 0 var(--pj-space-7);
+}
+
+.pj-public-tag-consent a,
+.pj-public-tag-footer a {
+  color: var(--pj-green);
+  font-weight: 700;
+  text-underline-offset: 2px;
+}
+
 /* The generic public layout inherits the workspace gradient, whose mint tail can
    become visible below the PetTag footer on mobile. Keep this standalone page on
    its own cream canvas from top to bottom. */
@@ -114,6 +153,18 @@ body.public-pettag-layout-body {
      or essential context and only extends the page after the form. */
   .pj-public-tag-footer {
     display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .pj-public-tag-consent__check {
+    grid-template-columns: var(--pj-size-touch-target) minmax(0, 1fr);
+    gap: 0;
+    align-items: center;
+  }
+
+  .pj-public-tag-consent p {
+    margin-left: var(--pj-size-touch-target);
   }
 }
 

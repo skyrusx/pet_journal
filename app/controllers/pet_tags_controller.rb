@@ -104,9 +104,11 @@ class PetTagsController < ApplicationController
   end
 
   def pet_tag_params
-    params.fetch(:pet_tag, {}).permit(:enabled, :public_message, :behavior_notes, :medical_notes, :contact_phone,
-                                      :show_phone, :lost_mode_enabled, :lost_message, :last_seen_location,
-                                      :notification_preference, :show_medical_notes, :found_message)
+    permitted = params.require(:pet_tag).permit(:enabled, :public_message, :behavior_notes, :medical_notes, :contact_phone,
+                                                 :show_phone, :lost_mode_enabled, :lost_message, :last_seen_location,
+                                                 :notification_preference, :show_medical_notes, :found_message)
+    permitted[:show_phone] = false
+    permitted
   end
 
   def set_notification_channels

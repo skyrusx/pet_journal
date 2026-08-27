@@ -1,6 +1,6 @@
 <% content_for :title, "#{@pet.name} — PetTag — PetJournal" %>
-<% owner_name = @pet.user.name.presence || "Владелец питомца" %>
-<% phone = @pet_tag.show_phone? ? @pet_tag.contact_phone.presence : nil %>
+<% owner_name = "Владелец питомца" %>
+<% phone = nil %>
 <% status_class = @pet_tag.status_lost? ? "is-danger" : (@pet_tag.status_found? ? "is-warning" : "is-success") %>
 <% hero_title = if @pet_tag.status_lost?
                   "Я потерялся, но обо мне уже позаботились"
@@ -34,7 +34,7 @@
           <h1><%= hero_title %> <span aria-hidden="true">💚</span></h1>
           <p>
             <% if @pet_tag.status_lost? %>
-              Если вы нашли питомца, пожалуйста, свяжитесь с владельцем или отправьте сообщение ниже.
+              Если вы нашли питомца, пожалуйста, отправьте сообщение владельцу ниже.
             <% elsif @pet_tag.status_found? %>
               Владелец уже получил информацию о находке. Дополнительное сообщение всё ещё может помочь.
             <% else %>
@@ -80,7 +80,7 @@
       <% if @pet_tag.status_lost? %>
         <section class="pj-public-tag-alert">
           <strong>⚠ <%= @pet.name %> потерялся!</strong>
-          <p><%= @pet_tag.lost_message.presence || "Пожалуйста, свяжитесь с владельцем как можно скорее." %></p>
+          <p><%= @pet_tag.lost_message.presence || "Пожалуйста, отправьте сообщение владельцу как можно скорее." %></p>
           <% if @pet_tag.last_seen_location.present? %>
             <small>Последнее место: <%= @pet_tag.last_seen_location %></small>
           <% end %>
@@ -94,39 +94,28 @@
 
       <section class="pj-public-tag-contact-grid">
         <article class="pj-public-tag-panel pj-public-tag-owner">
-          <span class="pj-public-tag-panel__label">Экстренный контакт</span>
+          <span class="pj-public-tag-panel__label">Связь с владельцем</span>
           <div class="pj-public-tag-owner__identity">
             <span class="pj-public-tag-owner__avatar"><%= owner_name.first.to_s.upcase %></span>
             <div>
               <strong><%= owner_name %></strong>
-              <% if phone.present? %>
-                <%= link_to phone,
-                            "tel:#{phone.gsub(/[^\d+]/, "")}",
-                            class: "pj-public-tag-owner__phone",
-                            aria: { label: "Позвонить владельцу по номеру #{phone}" } %>
-              <% end %>
             </div>
           </div>
-
-          <% unless phone.present? %>
-            <p class="pj-public-tag-muted">Телефон скрыт владельцем. Используйте форму сообщения.</p>
-          <% end %>
+          <p class="pj-public-tag-muted">Прямые персональные контакты не публикуются. Используйте защищённую форму сообщения.</p>
         </article>
 
         <article class="pj-public-tag-panel pj-public-tag-contact-actions">
           <span class="pj-public-tag-panel__label">Связаться с владельцем</span>
-          <% if phone.present? %>
-            <%= link_to "Позвонить", "tel:#{phone.gsub(/[^\d+]/, "")}", class: "pj-public-tag-outline-button" %>
-          <% end %>
           <a href="#found-form" class="pj-public-tag-outline-button">Написать владельцу</a>
-          <small>Ответить можно удобным способом — контакт попадёт владельцу вместе с сообщением.</small>
+          <small>Ваш контакт попадёт только владельцу вместе с сообщением.</small>
         </article>
 
         <article class="pj-public-tag-panel pj-public-tag-trust">
           <span class="pj-public-tag-panel__label">Безопасность и приватность</span>
           <ul>
-            <li>Показываются только данные, которыми поделился владелец</li>
-            <li>Геолокация отправляется только после вашего разрешения</li>
+            <li>Показываются только данные, которыми владелец решил поделиться о питомце</li>
+            <li>Прямые персональные контакты владельца не публикуются</li>
+            <li>Геолокация отправляется только после разрешения браузера и вашего согласия</li>
             <li>Публичная страница не индексируется поисковиками</li>
           </ul>
         </article>
@@ -153,7 +142,7 @@
         <div class="pj-public-tag-found__heading">
           <span class="pj-public-tag-eyebrow">Сообщение владельцу</span>
           <h2>Я нашёл питомца</h2>
-          <p>Укажите, где вы нашли питомца и как с вами связаться. Геолокация передаётся только после вашего согласия.</p>
+          <p>Укажите, где вы нашли питомца и как с вами связаться. Геолокация передаётся только после вашего разрешения.</p>
         </div>
 
         <%= form_with url: public_pet_tag_location_path(@pet_tag.public_token), method: :post, local: true, class: "pj-public-tag-form" do %>
@@ -188,6 +177,20 @@
           </button>
           <div class="pj-public-tag-location-status" data-location-status aria-live="polite"></div>
 
+          <div class="pj-public-tag-consent">
+            <label class="pj-public-tag-consent__check">
+              <%= check_box_tag :finder_personal_data_consent, "1", false, required: true %>
+              <span>Я даю <%= link_to "согласие на обработку переданных мной данных",
+                                      pet_tag_data_consent_path,
+                                      target: "_blank",
+                                      rel: "noopener" %>.</span>
+            </label>
+            <p>Подробнее — в <%= link_to "Политике обработки персональных данных",
+                                        privacy_path,
+                                        target: "_blank",
+                                        rel: "noopener" %>.</p>
+          </div>
+
           <%= submit_tag "Отправить владельцу", class: "pj-public-tag-primary-button" %>
           <small class="pj-public-tag-form__privacy">Контактные данные из этой формы увидит только владелец питомца.</small>
         <% end %>
@@ -197,6 +200,6 @@
 
   <footer class="pj-public-tag-footer">
     <span>Спасибо, что помогаете вернуть питомца домой.</span>
-    <span>PetJournal · безопасность и забота</span>
+    <span>PetJournal · безопасность и забота · <%= link_to "Конфиденциальность", privacy_path %></span>
   </footer>
 </div>

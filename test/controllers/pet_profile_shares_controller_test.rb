@@ -15,13 +15,15 @@ class PetProfileSharesControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", text: "Публичный доступ"
   end
 
-  test "should get new" do
+  test "should get new with owner contact publication disabled" do
     get new_pet_profile_share_url(@pet)
 
     assert_response :success
+    assert_select "input[name='pet_profile_share[show_owner_contact]'][type='hidden'][value='0']", minimum: 1
+    assert_select "[aria-disabled='true']", text: /Контакт владельца скрыт/
   end
 
-  test "should create profile share with expiration preset" do
+  test "should create profile share with owner contact forced off" do
     assert_difference("PetProfileShare.count") do
       post pet_profile_shares_url(@pet), params: {
         expires_preset: "thirty_days",
@@ -43,7 +45,7 @@ class PetProfileSharesControllerTest < ActionDispatch::IntegrationTest
     share = PetProfileShare.order(:created_at).last
     assert_redirected_to pet_profile_share_url(@pet, share)
     assert share.detail_full?
-    assert share.show_owner_contact?
+    assert_not share.show_owner_contact?
     assert share.expires_at.present?
   end
 
@@ -59,7 +61,7 @@ class PetProfileSharesControllerTest < ActionDispatch::IntegrationTest
         show_documents: "1",
         show_reminders: "0",
         show_pet_tag: "0",
-        show_owner_contact: "0",
+        show_owner_contact: "1",
         allow_file_downloads: "0"
       }
     }
@@ -68,6 +70,7 @@ class PetProfileSharesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Для семьи", @share.reload.title
     assert_nil @share.expires_at
     assert_not @share.show_journal?
+    assert_not @share.show_owner_contact?
   end
 
   test "should disable and enable profile share" do

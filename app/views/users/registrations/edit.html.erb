@@ -95,7 +95,7 @@
                                     maxlength: 18,
                                     inputmode: "tel",
                                     data: { account_phone_input: true } %>
-              <small>Телефон не публикуется автоматически. Позже его можно будет подставлять в контакт PetTag по вашему выбору.</small>
+              <small>Телефон не публикуется автоматически. Для связи через публичный PetTag используется защищённая форма сообщения.</small>
             </div>
           </div>
 
@@ -182,8 +182,9 @@
     <section class="pj-account-card pj-account-contact-note" aria-labelledby="pj-contact-note-title">
       <span class="pj-account-contact-note__icon" aria-hidden="true"><%= pj_icon(:tag) %></span>
       <div>
-        <h2 id="pj-contact-note-title">Контакты и PetTag</h2>
-        <p>Имя, телефон и фотография хранятся в вашем профиле. Публичный PetTag по-прежнему показывает только те контактные данные, которые вы разрешили для конкретного питомца.</p>
+        <h2 id="pj-contact-note-title">Контакты, PetTag и приватность</h2>
+        <p>Имя, телефон и фотография хранятся в вашем профиле. PetTag не публикует персональные контакты владельца: человек, нашедший питомца, передаёт свои данные владельцу через отдельную защищённую форму.</p>
+        <p><%= link_to "Как PetJournal обрабатывает персональные данные", privacy_path %></p>
       </div>
       <%= link_to "Открыть PetTag", pet_tags_path, class: "pj-account-secondary-button pj-account-pettag-link" %>
     </section>

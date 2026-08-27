@@ -14,13 +14,13 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should create pet tag" do
+  test "should create pet tag with public phone forced off" do
     pet = @user.pets.create!(name: "Без жетона")
 
     assert_difference("PetTag.count") do
       post pet_pet_tag_url(pet), params: {
         pet_tag: {
-          public_message: "Позвоните владельцу.",
+          public_message: "Свяжитесь с владельцем.",
           behavior_notes: "Боится шума.",
           medical_notes: "Без лекарств.",
           contact_phone: "+79990000003",
@@ -31,12 +31,15 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to pet_pet_tag_url(pet)
     assert pet.reload.pet_tag.public_token.present?
+    assert_not pet.pet_tag.show_phone?
   end
 
-  test "should get edit" do
+  test "should get edit and explain public phone restriction" do
     get edit_pet_pet_tag_url(@pet)
 
     assert_response :success
+    assert_select "input[name='pet_tag[show_phone]'][type='hidden'][value='0']", minimum: 1
+    assert_select "[aria-disabled='true']", text: /Публичный телефон отключён/
   end
 
   test "should update pet tag" do
@@ -44,7 +47,7 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
       pet_tag: {
         public_message: "Новое публичное сообщение",
         safety_status: "safe",
-        show_phone: "0",
+        show_phone: "1",
         show_medical_notes: "0",
         notification_preference: "always"
       }
@@ -76,14 +79,14 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
       pet_tag: {
         lost_mode_enabled: "1",
         safety_status: "lost",
-        lost_message: "Питомец потерялся, позвоните сразу.",
+        lost_message: "Питомец потерялся, напишите сразу.",
         last_seen_location: "Сквер у школы"
       }
     }
 
     assert_redirected_to pet_pet_tag_url(@pet)
     assert @pet_tag.reload.lost_mode_enabled?
-    assert_equal "Питомец потерялся, позвоните сразу.", @pet_tag.lost_message
+    assert_equal "Питомец потерялся, напишите сразу.", @pet_tag.lost_message
     assert_equal "Сквер у школы", @pet_tag.last_seen_location
   end
 
@@ -106,7 +109,7 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
     get pet_pet_tag_url(@pet, scan_status: "found_reported")
 
     assert_response :success
-    assert_select ".filter-chip.active", text: /Нашедшие/
+    assert_select "select[name='scan_status'] option[value='found_reported'][selected]", count: 1
   end
 
   test "should rotate public token" do

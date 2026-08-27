@@ -50,7 +50,7 @@
       </div>
       <div class="pj-pettag-field">
         <%= f.label :lost_message, "Сообщение при потере" %>
-        <%= f.text_area :lost_message, rows: 3, placeholder: "Пожалуйста, позвоните сразу — питомец может испугаться" %>
+        <%= f.text_area :lost_message, rows: 3, placeholder: "Пожалуйста, отправьте сообщение — питомец может испугаться" %>
       </div>
       <div class="pj-pettag-field">
         <%= f.label :last_seen_location, "Где видели в последний раз" %>
@@ -63,21 +63,23 @@
     </section>
 
     <section class="pj-pettag-form-card">
-      <div class="pj-pettag-form-card__heading"><h2>Контакты и уведомления</h2><p>Как связаться с владельцем и когда PetJournal должен сообщать о сканах.</p></div>
+      <div class="pj-pettag-form-card__heading"><h2>Контакты и уведомления</h2><p>Как PetJournal доставит владельцу сообщение о сканировании или находке.</p></div>
 
       <div class="pj-pettag-field">
-        <%= f.label :contact_phone, "Телефон" %>
+        <%= f.label :contact_phone, "Телефон владельца" %>
         <%= f.telephone_field :contact_phone,
                               placeholder: "+7 (999) 123-45-67",
                               autocomplete: "tel",
                               inputmode: "tel",
                               data: { account_phone_input: true } %>
+        <small>Телефон сохраняется в настройках PetTag, но сейчас не публикуется на QR-странице.</small>
       </div>
 
-      <label class="pj-pettag-toggle">
-        <%= f.check_box :show_phone %>
-        <span><strong>Показывать телефон</strong><small>Email владельца в PetTag никогда не публикуется</small></span>
-      </label>
+      <%= f.hidden_field :show_phone, value: "0" %>
+      <div class="pj-pettag-toggle" aria-disabled="true">
+        <input type="checkbox" disabled>
+        <span><strong>Публичный телефон отключён</strong><small>Для публикации персонального контакта нужен отдельный юридический сценарий согласия. Связь с владельцем работает через защищённую форму PetTag.</small></span>
+      </div>
 
       <div class="pj-pettag-field">
         <%= f.label :notification_preference, "Уведомления о сканах" %>

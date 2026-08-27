@@ -9,6 +9,10 @@ class LegalController < ApplicationController
     assign_common(:personal_data_consent)
   end
 
+  def pet_tag_finder_consent
+    assign_common(:pet_tag_finder_consent)
+  end
+
   private
 
   def assign_common(document_key)

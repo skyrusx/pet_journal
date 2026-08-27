@@ -102,15 +102,16 @@
       <span>03</span>
       <div>
         <h2>Приватность</h2>
-        <p>Чувствительные данные остаются закрытыми, пока вы явно их не разрешите.</p>
+        <p>Чувствительные данные остаются закрытыми, пока для них нет отдельного безопасного сценария.</p>
       </div>
     </div>
 
     <div class="pj-public-access-toggle-grid pj-public-access-toggle-grid--privacy">
-      <label class="pj-public-access-toggle-card pj-public-access-toggle-card--sensitive">
-        <%= form.check_box :show_owner_contact %>
+      <%= form.hidden_field :show_owner_contact, value: "0" %>
+      <label class="pj-public-access-toggle-card pj-public-access-toggle-card--sensitive" aria-disabled="true">
+        <input type="checkbox" disabled>
         <span class="pj-public-access-toggle-mark" aria-hidden="true"></span>
-        <span><strong>Контакт владельца</strong><small>На публичной странице будет доступна электронная почта аккаунта.</small></span>
+        <span><strong>Контакт владельца скрыт</strong><small>Email аккаунта не публикуется. Для персонального контакта нужен отдельный юридический сценарий согласия.</small></span>
       </label>
 
       <label class="pj-public-access-toggle-card pj-public-access-toggle-card--sensitive">

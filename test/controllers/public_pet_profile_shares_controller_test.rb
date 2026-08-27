@@ -53,10 +53,24 @@ class PublicPetProfileSharesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "should hide owner contact when disabled" do
-    get public_pet_profile_share_url(pet_profile_shares(:one).public_token)
+  test "should hide owner contact even for legacy enabled flag" do
+    share = pet_profile_shares(:one)
+    share.update_column(:show_owner_contact, true)
+
+    get public_pet_profile_share_url(share.public_token)
 
     assert_response :success
-    assert_no_match users(:one).email, response.body
+    assert_no_match Regexp.new(Regexp.escape(users(:one).email)), response.body
+  end
+
+  test "should hide PetTag phone even for legacy enabled flag" do
+    share = pet_profile_shares(:one)
+    share.update_columns(show_pet_tag: true, show_owner_contact: false)
+    share.pet.pet_tag.update_column(:show_phone, true)
+
+    get public_pet_profile_share_url(share.public_token)
+
+    assert_response :success
+    assert_select "a[href^='tel:']", count: 0
   end
 end

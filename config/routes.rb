@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get "new-design" => "pages#new_design", as: :new_design
   get "privacy" => "legal#privacy", as: :privacy
   get "personal-data-consent" => "legal#personal_data_consent", as: :personal_data_consent
+  get "pet-tag-data-consent" => "legal#pet_tag_finder_consent", as: :pet_tag_data_consent
 
   if Rails.env.development?
     get "error-preview/:status" => "errors#show",

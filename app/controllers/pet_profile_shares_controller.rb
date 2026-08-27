@@ -104,9 +104,11 @@ class PetProfileSharesController < ApplicationController
   end
 
   def share_params
-    params.require(:pet_profile_share).permit(:title, :enabled, :expires_at, :detail_level, :show_profile,
-                                              :show_journal, :show_documents, :show_reminders, :show_pet_tag,
-                                              :show_owner_contact, :allow_file_downloads)
+    permitted = params.require(:pet_profile_share).permit(:title, :enabled, :expires_at, :detail_level, :show_profile,
+                                                          :show_journal, :show_documents, :show_reminders, :show_pet_tag,
+                                                          :show_owner_contact, :allow_file_downloads)
+    permitted[:show_owner_contact] = false
+    permitted
   end
 
   def default_share_attributes

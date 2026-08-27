@@ -268,6 +268,8 @@
             <div class="app-footer-support">
               <div>Поддержка</div>
               <%= mail_to "support@pet-journal.ru" %>
+              <%= link_to "Политика конфиденциальности", privacy_path %>
+              <%= link_to "Согласие на ПДн", personal_data_consent_path %>
               <%= link_to "VK PetJournal", "https://vk.ru/petjournal", target: "_blank", rel: "noopener" %>
               <button type="button" class="pwa-install-link" data-pwa-install-button hidden>Установить PetJournal</button>
             </div>
