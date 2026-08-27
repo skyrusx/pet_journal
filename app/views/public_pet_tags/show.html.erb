@@ -1,6 +1,6 @@
 <% content_for :title, "#{@pet.name} — PetTag — PetJournal" %>
 <% owner_name = "Владелец питомца" %>
-<% phone = @pet_tag.public_phone %>
+<% phone = @pet_tag.public_phone(public_url: public_pet_tag_url(@pet_tag.public_token)) %>
 <% status_class = @pet_tag.status_lost? ? "is-danger" : (@pet_tag.status_found? ? "is-warning" : "is-success") %>
 <% hero_title = if @pet_tag.status_lost?
                   "Я потерялся, но обо мне уже позаботились"
