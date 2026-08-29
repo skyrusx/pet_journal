@@ -23,7 +23,8 @@
 
   <body class="<%= class_names("app-body", "public-body", {
     "public-profile-layout-body" => controller_name == "public_pet_profile_shares",
-    "public-pettag-layout-body" => public_pet_tag_layout
+    "public-pettag-layout-body" => public_pet_tag_layout,
+    "pj-new-design-body" => public_pet_tag_layout
   }) %>">
     <% if public_pet_tag_layout %>
       <div class="pj-new-design pj-public-pettag-site">
