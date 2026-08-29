@@ -129,12 +129,46 @@
   text-underline-offset: 2px;
 }
 
-/* The generic public layout inherits the workspace gradient, whose mint tail can
-   become visible below the PetTag footer on mobile. Keep this standalone page on
-   its own cream canvas from top to bottom. */
+/* Public PetTag uses the same public shell as the landing page. The old local
+   header/footer remain in the template for backwards-compatible markup but are
+   visually replaced by the shared landing navbar and auth footer from layout. */
 body.public-pettag-layout-body {
   margin: 0;
-  background: #f8f6f1 !important;
+  background: #fdfcf8 !important;
+}
+
+.pj-public-pettag-site {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #fdfcf8;
+}
+
+.pj-public-tag-page {
+  min-height: 0;
+  flex: 1 0 auto;
+  background: #fdfcf8;
+}
+
+.pj-public-tag-header,
+.pj-public-tag-footer {
+  display: none;
+}
+
+.pj-public-tag-main {
+  width: min(1240px, calc(100% - 96px));
+  margin-inline: auto;
+  padding: 32px 0 44px;
+}
+
+.pj-public-pettag-site > .pj-auth-v2-footer {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 1100px) {
+  .pj-public-tag-main {
+    width: min(100% - 48px, 1240px);
+  }
 }
 
 @media (max-width: 820px) {
@@ -148,15 +182,15 @@ body.public-pettag-layout-body {
     min-width: 0;
     padding-left: 14px;
   }
-
-  /* Mobile PetTag is a focused rescue/contact flow. The footer adds no action
-     or essential context and only extends the page after the form. */
-  .pj-public-tag-footer {
-    display: none;
-  }
 }
 
 @media (max-width: 560px) {
+  .pj-public-tag-main {
+    width: calc(100% - 32px);
+    padding-top: 20px;
+    padding-bottom: 32px;
+  }
+
   .pj-public-tag-consent__check {
     grid-template-columns: var(--pj-size-touch-target) minmax(0, 1fr);
     gap: 0;
