@@ -35,7 +35,7 @@
 
         <%= yield %>
 
-        <%= render "devise/shared/auth_v2_footer" %>
+        <%= render "devise/shared/auth_v2_footer", show_legal: false %>
       </div>
     <% else %>
       <%= yield %>
