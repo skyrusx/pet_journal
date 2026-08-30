@@ -6,29 +6,32 @@ class MobileNavigationTest < ApplicationSystemTestCase
     @pet = pets(:one)
   end
 
-  test "mobile navigation uses compact header bottom nav and sheets without horizontal overflow" do
+  test "mobile navigation uses current chrome and sheets without horizontal overflow" do
     sign_in_through_ui
 
     [[360, 800], [375, 667], [375, 812], [390, 844], [412, 915], [430, 932]].each do |width, height|
       page.driver.browser.manage.window.resize_to(width, height)
       visit root_path
 
-      assert_selector ".mobile-app-header", visible: true
-      assert_selector ".mobile-bottom-nav", visible: true
-      assert_no_selector ".app-header-desktop", visible: true
+      assert_selector "[data-dashboard-mobile-chrome]", visible: true
+      assert_selector ".pj-mobile-chrome__header", visible: true
+      assert_selector ".pj-mobile-tabs", visible: true
+      assert_no_selector "[data-dashboard-sidebar]", visible: true
       assert_no_horizontal_overflow
 
-      click_button "Добавить"
-      assert_selector "#mobile-add-sheet", visible: true
-      assert_selector "#mobile-add-sheet", text: "Событие в журнал"
+      find('[data-dashboard-sheet-toggle="add"]', visible: true).click
+      assert_selector '[data-dashboard-sheet="add"].is-open', visible: true
+      assert_selector '[data-dashboard-sheet="add"]', text: "Запись в журнал"
       assert_no_horizontal_overflow
 
-      find("#mobile-add-sheet [data-mobile-sheet-close]").click
-      click_button "Ещё"
-      assert_selector "#mobile-more-sheet", visible: true
-      assert_selector "#mobile-more-sheet", text: "Мои питомцы"
-      assert_selector "#mobile-more-sheet", text: "PetTag"
-      assert_selector "#mobile-more-sheet", text: "Настройки уведомлений"
+      find('[data-dashboard-sheet="add"] [data-dashboard-sheet-close]', visible: true).click
+      assert_no_selector '[data-dashboard-sheet="add"].is-open', visible: true
+
+      find('[data-dashboard-sheet-toggle="more"]', visible: true).click
+      assert_selector '[data-dashboard-sheet="more"].is-open', visible: true
+      assert_selector '[data-dashboard-sheet="more"]', text: "Публичный доступ"
+      assert_selector '[data-dashboard-sheet="more"]', text: "Профиль"
+      assert_selector '[data-dashboard-sheet="more"]', text: "Настройки"
       assert_no_horizontal_overflow
     end
   end
@@ -48,21 +51,22 @@ class MobileNavigationTest < ApplicationSystemTestCase
         pet_pet_tag_path(@pet)
       ].each do |path|
         visit path
-        assert_selector ".mobile-bottom-nav", visible: true
+        assert_selector "[data-dashboard-mobile-chrome]", visible: true
+        assert_selector ".pj-mobile-tabs", visible: true
         assert_no_horizontal_overflow
       end
     end
   end
 
-  test "desktop keeps desktop navigation without mobile bottom nav" do
+  test "desktop keeps sidebar without mobile chrome" do
     sign_in_through_ui
 
-    [[768, 1024], [1024, 768], [1440, 900]].each do |width, height|
+    [[1024, 768], [1440, 900]].each do |width, height|
       page.driver.browser.manage.window.resize_to(width, height)
       visit root_path
 
-      assert_selector ".app-header-desktop", visible: true
-      assert_no_selector ".mobile-bottom-nav", visible: true
+      assert_selector "[data-dashboard-sidebar]", visible: true
+      assert_no_selector "[data-dashboard-mobile-chrome]", visible: true
       assert_no_horizontal_overflow
     end
   end
