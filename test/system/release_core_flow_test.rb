@@ -44,8 +44,8 @@ class ReleaseCoreFlowTest < ApplicationSystemTestCase
 
   def sign_in_through_ui
     visit new_user_session_path
-    fill_in "Электронная почта", with: @user.email
-    fill_in "Пароль", with: "password123"
+    fill_in "user_email", with: @user.email
+    fill_in "user_password", with: "password123"
     click_button "Войти"
     assert_current_path root_path
   end
