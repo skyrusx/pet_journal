@@ -50,7 +50,7 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
     get new_pet_reminder_url(@pet, type: "vaccination")
 
     assert_response :success
-    assert_select "select[name='reminder[reminder_type]'] option[selected='selected']", text: /Прививка/
+    assert_select "select[name='reminder[reminder_type]'] option[selected='selected']", text: /Вакцинация/
     assert_select "input[type='submit'][value='Сохранить']"
   end
 
@@ -89,11 +89,12 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
 
   test "interprets browser reminder time in the user's notification time zone" do
     @user.update!(notifications_time_zone: "Novosibirsk")
+    title = "Лекарство по местному времени"
 
     travel_to Time.utc(2026, 8, 24, 15, 30) do
       post pet_reminders_url(@pet), params: {
         reminder: {
-          title: "Дать таблетку",
+          title: title,
           reminder_type: "medication",
           remind_at: "2026-08-24T22:35",
           repeat_rule: "once"
@@ -101,7 +102,7 @@ class RemindersControllerTest < ActionDispatch::IntegrationTest
       }
     end
 
-    reminder = Reminder.order(:created_at).last
+    reminder = @pet.reminders.find_by!(title: title)
     assert_equal Time.utc(2026, 8, 24, 15, 35), reminder.remind_at.utc
     assert_equal reminder.remind_at, reminder.next_run_at
   end

@@ -2,7 +2,6 @@ class InAppNotification < ApplicationRecord
   belongs_to :user
 
   validates :kind, :title, :source_key, :occurred_at, presence: true
-  validates :source_key, uniqueness: { scope: :user_id }
 
   scope :recent, -> { order(occurred_at: :desc, id: :desc) }
   scope :unread, -> { where(read_at: nil) }

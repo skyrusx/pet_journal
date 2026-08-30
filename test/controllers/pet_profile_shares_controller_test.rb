@@ -12,7 +12,8 @@ class PetProfileSharesControllerTest < ActionDispatch::IntegrationTest
     get pet_profile_shares_url(@pet)
 
     assert_response :success
-    assert_select "h1", text: "Публичный доступ"
+    assert_select ".pj-public-access-page"
+    assert_select ".pj-public-access-summary h2", text: @pet.name
   end
 
   test "should get new with owner contact publication disabled" do
