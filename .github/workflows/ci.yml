@@ -90,7 +90,10 @@ jobs:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
           # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:create db:migrate test test:system
+        run: |
+          bin/rails db:prepare
+          bin/rails test
+          bin/rails test:system
 
       - name: Run pre-release product scenarios
         env:
