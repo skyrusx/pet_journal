@@ -12,10 +12,7 @@ class PetTagsController < ApplicationController
   def index
     @pets = current_user.pets.includes(:pet_tag, photo_attachment: :blob).order(:name)
 
-    if @pets.one?
-      redirect_to pet_pet_tag_path(@pets.first)
-      return
-    end
+    redirect_to pet_pet_tag_path(@pets.first) if @pets.one?
   end
 
   def show
