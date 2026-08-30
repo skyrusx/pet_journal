@@ -13,6 +13,7 @@ class ReleaseCoreFlowTest < ApplicationSystemTestCase
     fill_in "pet_name", with: "Релизный питомец"
     fill_in "pet_species", with: "Кот"
     click_button "Сохранить"
+    assert_text "Питомец добавлен."
 
     pet = Pet.find_by!(user: @user, name: "Релизный питомец")
     assert_current_path pet_path(pet)
@@ -25,6 +26,7 @@ class ReleaseCoreFlowTest < ApplicationSystemTestCase
     fill_in "pet_event_title", with: "Первое наблюдение"
     click_button "Далее"
     click_button "Сохранить"
+    assert_text "Событие добавлено."
 
     event = pet.pet_events.find_by!(title: "Первое наблюдение")
     assert_current_path pet_pet_event_path(pet, event)
