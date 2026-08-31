@@ -61,28 +61,12 @@ test:
   <<: *default
   database: pet_journal_test
 
-# As with config/credentials.yml, you never want to store sensitive information,
-# like your database password, in your source code. If your source code is
-# ever seen by anyone, they now have access to your database.
-#
-# Instead, provide the password or a full connection URL as an environment
-# variable when you boot the app. For example:
-#
-#   DATABASE_URL="postgres://myuser:mypass@localhost/somedatabase"
-#
-# If the connection URL is provided in the special DATABASE_URL environment
-# variable, Rails will automatically merge its configuration values on top of
-# the values provided in this file. Alternatively, you can specify a connection
-# URL environment variable explicitly:
-#
-#   production:
-#     url: <%= ENV["MY_APP_DATABASE_URL"] %>
-#
-# Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
-# for a full overview on how database connection configuration can be specified.
-#
+# Production uses the connection string supplied by the hosting environment.
+# NetAngels exposes DB_CONNECTION_STRING for the site's PostgreSQL database.
+# DATABASE_URL remains a fallback for other hosting environments.
 production:
   <<: *default
+  url: <%= ENV["DB_CONNECTION_STRING"] || ENV["DATABASE_URL"] %>
   database: pet_journal_production
   username: pet_journal
   password: <%= ENV["PET_JOURNAL_DATABASE_PASSWORD"] %>
