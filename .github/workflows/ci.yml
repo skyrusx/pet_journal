@@ -17,6 +17,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
+          rubygems: latest
 
       - name: Resolve lockfile for target Ruby
         run: |
@@ -36,6 +37,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
+          rubygems: latest
           bundler-cache: true
 
       - name: Scan for common Rails security vulnerabilities using static analysis
@@ -52,6 +54,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
+          rubygems: latest
           bundler-cache: true
 
       - name: Scan for security vulnerabilities in JavaScript dependencies
@@ -67,6 +70,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
+          rubygems: latest
           bundler-cache: true
 
       - name: Lint code for consistent style
@@ -96,6 +100,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
+          rubygems: latest
           bundler-cache: true
 
       - name: Run tests
