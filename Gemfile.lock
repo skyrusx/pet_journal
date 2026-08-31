@@ -191,9 +191,6 @@ GEM
       letter_opener (~> 1.9)
       railties (>= 6.1)
       rexml
-    libwebsocket (0.1.8)
-      addressable
-      websocket
     lint_roller (1.1.0)
     logger (1.7.0)
     loofah (2.25.1)
@@ -212,7 +209,6 @@ GEM
     mini_mime (1.1.5)
     minitest (5.27.0)
     msgpack (1.8.0)
-    multi_json (1.19.1)
     net-imap (0.5.15)
       date
       net-protocol
@@ -351,7 +347,7 @@ GEM
     ruby-vips (2.3.0)
       ffi (~> 1.12)
       logger
-    rubyzip (3.2.2)
+    rubyzip (2.4.1)
     sass-embedded (1.97.2)
       google-protobuf (~> 4.31)
       rake (>= 13)
@@ -362,11 +358,12 @@ GEM
     sassc-embedded (1.80.8)
       sass-embedded (~> 1.80)
     securerandom (0.4.1)
-    selenium-webdriver (2.27.2)
-      childprocess (>= 0.2.5)
-      libwebsocket (~> 0.1.3)
-      multi_json (~> 1.0)
-      rubyzip
+    selenium-webdriver (4.32.0)
+      base64 (~> 0.2)
+      logger (~> 1.4)
+      rexml (~> 3.2, >= 3.2.5)
+      rubyzip (>= 1.2.2, < 3.0)
+      websocket (~> 1.0)
     sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
       logger
@@ -436,7 +433,7 @@ DEPENDENCIES
   rqrcode
   rubocop-rails-omakase
   sass-embedded (= 1.97.2)
-  selenium-webdriver
+  selenium-webdriver (~> 4.32.0)
   sprockets-rails
   tzinfo-data
   web-console
