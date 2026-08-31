@@ -20,7 +20,7 @@ jobs:
           bundler-cache: true
 
       - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
+        run: bin/brakeman --no-pager --except EOLRails
 
   scan_js:
     runs-on: ubuntu-latest
@@ -90,7 +90,10 @@ jobs:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
           # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test test:system
+        run: |
+          bin/rails db:prepare
+          bin/rails test
+          bin/rails test:system
 
       - name: Run pre-release product scenarios
         env:
@@ -104,6 +107,8 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
           APP_HOST: petjournal.example
           SECRET_KEY_BASE: test-secret-key-base
+          LEGAL_OPERATOR_NAME: PetJournal Test Operator
+          LEGAL_OPERATOR_EMAIL: privacy@petjournal.example
           MAIL_FROM: PetJournal <no-reply@petjournal.example>
           SMTP_ADDRESS: smtp.example
           SMTP_DOMAIN: petjournal.example

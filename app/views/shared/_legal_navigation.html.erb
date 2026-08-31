@@ -1,0 +1,21 @@
+<header class="pj-auth-v2-navbar pj-legal-navbar">
+  <div class="pj-auth-v2-shell pj-auth-v2-navbar__inner">
+    <%= link_to root_path, class: "pj-auth-v2-navbar__brand", aria: { label: "PetJournal — главная" } do %>
+      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", class: "pj-auth-v2-navbar__logo" %>
+    <% end %>
+
+    <nav class="pj-auth-v2-navbar__nav" aria-label="Юридические документы">
+      <%= link_to "Политика", privacy_path, class: class_names(active: current_page?(privacy_path)) %>
+      <%= link_to "Согласие", personal_data_consent_path, class: class_names(active: current_page?(personal_data_consent_path)) %>
+      <%= link_to "PetTag", pet_tag_data_consent_path, class: class_names(active: current_page?(pet_tag_data_consent_path)) %>
+    </nav>
+
+    <div class="pj-auth-v2-navbar__actions">
+      <% if user_signed_in? %>
+        <%= link_to "В журнал", root_path, class: "pj-auth-v2-navbar__cta" %>
+      <% else %>
+        <%= link_to "Создать журнал", new_user_registration_path, class: "pj-auth-v2-navbar__cta" %>
+      <% end %>
+    </div>
+  </div>
+</header>

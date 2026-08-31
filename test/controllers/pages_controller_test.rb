@@ -25,8 +25,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     get root_url
 
     assert_response :success
-    assert_select ".home-dashboard"
-    assert_select ".home-pet-card", minimum: 1
-    assert_select ".dashboard-section", text: /Напоминания/
+    assert_select ".pj-dash"
+    assert_select ".pj-dash-pet-card", minimum: 1
+    assert_select "a.pj-dash-nav__item.active[href=?]", root_path, text: /Главная/
   end
 end

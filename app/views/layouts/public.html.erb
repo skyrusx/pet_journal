@@ -1,3 +1,4 @@
+<% public_pet_tag_layout = controller_name == "public_pet_tags" %>
 <!DOCTYPE html>
 <html>
   <head>
@@ -11,6 +12,10 @@
     <%= favicon_link_tag "petjournal/favicon-512.png", rel: "apple-touch-icon", type: "image/png" %>
 
     <%= stylesheet_link_tag "application" %>
+    <% if public_pet_tag_layout %>
+      <%= stylesheet_link_tag "new_design" %>
+      <%= stylesheet_link_tag "new_design_mobile" %>
+    <% end %>
     <%= stylesheet_link_tag "new_design_footer" %>
     <%= javascript_importmap_tags %>
     <%= javascript_include_tag "public_pettag_location", defer: true %>
@@ -18,10 +23,24 @@
 
   <body class="<%= class_names("app-body", "public-body", {
     "public-profile-layout-body" => controller_name == "public_pet_profile_shares",
-    "public-pettag-layout-body" => controller_name == "public_pet_tags"
+    "public-pettag-layout-body" => public_pet_tag_layout,
+    "pj-new-design-body" => public_pet_tag_layout
   }) %>">
-    <%= yield %>
-    <%= render "pages/new_design_footer" if controller_name == "public_pet_profile_shares" %>
+    <% if public_pet_tag_layout %>
+      <div class="pj-new-design pj-public-pettag-site">
+        <%= render "pages/new_design_navbar",
+                   brand_path: root_path,
+                   features_path: root_path(anchor: "features"),
+                   how_it_works_path: root_path(anchor: "how-it-works") %>
+
+        <%= yield %>
+
+        <%= render "devise/shared/auth_v2_footer", show_legal: false %>
+      </div>
+    <% else %>
+      <%= yield %>
+      <%= render "pages/new_design_footer" if controller_name == "public_pet_profile_shares" %>
+    <% end %>
 
     <% if notice.present? || alert.present? %>
       <div class="flash-stack" aria-live="polite" aria-atomic="true">

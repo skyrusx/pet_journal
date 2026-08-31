@@ -8,7 +8,12 @@ class PublicPetProfileSharesController < ApplicationController
     @share = PetProfileShare.includes(pet: [{ photo_attachment: :blob }, :user, :pet_tag]).find_by!(public_token: params[:token])
     raise ActiveRecord::RecordNotFound unless @share.active?
 
+    # Public human contact disclosure is fail-closed until a dedicated
+    # dissemination-consent flow is implemented. Keep this guard even for
+    # legacy rows that still contain an old true flag before migrations run.
+    @share.show_owner_contact = false
     @pet = @share.pet
+    @pet.pet_tag.show_phone = false if @pet.pet_tag.present?
     record_view(@share)
     load_shared_sections
   end

@@ -1,0 +1,147 @@
+<% content_for :title, "Публикация телефона PetTag — #{@pet.name} — PetJournal" %>
+
+<div class="pj-pettag-page pj-pettag-form-page">
+  <header class="pj-workspace-topbar pj-workspace-topbar--form">
+    <%= link_to edit_pet_pet_tag_path(@pet), class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span>Назад к настройкам PetTag</span>
+    <% end %>
+  </header>
+
+  <div class="pj-pettag-content pj-pettag-form-content">
+    <div class="pj-mobile-detail-nav pj-mobile-form-nav">
+      <%= link_to edit_pet_pet_tag_path(@pet), class: "pj-mobile-context-back" do %>
+        <%= pj_icon(:chevron) %><span>К настройкам PetTag</span>
+      <% end %>
+    </div>
+
+    <div class="pj-pettag-form-heading">
+      <h1>Разрешить публикацию телефона</h1>
+      <p>Отдельное согласие нужно только для номера, который будет виден любому человеку, открывшему публичную страницу PetTag.</p>
+    </div>
+
+    <% if @consent_error.present? %>
+      <div class="pj-pettag-form-errors" role="alert">
+        <strong>Не удалось подтвердить согласие</strong>
+        <span><%= @consent_error %></span>
+      </div>
+    <% end %>
+
+    <%= form_with url: publish_phone_pet_pet_tag_path(@pet), method: :post, local: true, class: "pj-pettag-form" do %>
+      <section class="pj-pettag-form-card">
+        <div class="pj-pettag-form-card__heading">
+          <h2>Что именно станет публичным</h2>
+          <p>Согласие относится только к указанному номеру и только к этому PetTag.</p>
+        </div>
+
+        <div class="pj-pettag-field">
+          <span class="pj-pettag-field-label">Номер телефона</span>
+          <div class="pj-pettag-status-readonly">
+            <strong><%= @pet_tag.contact_phone %></strong>
+            <small>Категория: персональные данные · контактный номер телефона.</small>
+          </div>
+        </div>
+
+        <div class="pj-pettag-field">
+          <span class="pj-pettag-field-label">Где будет опубликован</span>
+          <div class="pj-pettag-status-readonly">
+            <strong>Публичная страница PetTag <%= @pet_tag.tag_code %></strong>
+            <small><%= @public_pet_tag_url %></small>
+          </div>
+        </div>
+
+        <div class="pj-pettag-field">
+          <span class="pj-pettag-field-label">Цель публикации</span>
+          <div class="pj-pettag-status-readonly">
+            <strong>Связь с владельцем питомца</strong>
+            <small>Человек, открывший PetTag, сможет увидеть номер и позвонить владельцу по поводу питомца.</small>
+          </div>
+        </div>
+
+        <div class="pj-pettag-field">
+          <span class="pj-pettag-field-label">Условия распространения</span>
+          <div class="pj-pettag-status-readonly">
+            <strong>Только предоставление доступа через PetTag</strong>
+            <small>PetJournal не использует это согласие для публикации номера в других разделах или передачи его оператором иным способом.</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="pj-pettag-form-card">
+        <div class="pj-pettag-form-card__heading">
+          <h2>Данные субъекта и оператора</h2>
+          <p>Эти сведения фиксируются как доказательство отдельного согласия на распространение.</p>
+        </div>
+
+        <div class="pj-pettag-field">
+          <%= label_tag :subject_full_name, "Фамилия, имя, отчество (при наличии)" %>
+          <%= text_field_tag :subject_full_name,
+                             @subject_full_name,
+                             required: true,
+                             maxlength: 200,
+                             autocomplete: "name",
+                             placeholder: "Иванов Иван Иванович" %>
+          <small>Укажите фамилию и имя. Отчество — если оно у вас есть.</small>
+        </div>
+
+        <div class="pj-pettag-field">
+          <span class="pj-pettag-field-label">Контактная информация субъекта</span>
+          <div class="pj-pettag-status-readonly">
+            <strong><%= @subject_contact %></strong>
+            <small>Используется email текущего аккаунта PetJournal.</small>
+          </div>
+        </div>
+
+        <div class="pj-pettag-field">
+          <span class="pj-pettag-field-label">Оператор</span>
+          <div class="pj-pettag-status-readonly">
+            <strong><%= @operator_name %></strong>
+            <% if @operator_details.present? %>
+              <small><%= @operator_details %></small>
+            <% else %>
+              <small>Сведения об операторе не заполнены.</small>
+            <% end %>
+            <small><%= @operator_email %></small>
+          </div>
+        </div>
+
+        <% unless @operator_ready %>
+          <div class="pj-pettag-form-errors" role="alert">
+            <strong>Публикация временно недоступна</strong>
+            <span>Перед включением публичного телефона в production необходимо заполнить реквизиты оператора.</span>
+          </div>
+        <% end %>
+      </section>
+
+      <section class="pj-pettag-form-card">
+        <div class="pj-pettag-form-card__heading">
+          <h2>Согласие</h2>
+          <p>Версия документа: <%= @legal_document[:version] %> · действует с <%= l(@legal_document[:effective_on], format: "%d.%m.%Y") %>.</p>
+        </div>
+
+        <label class="pj-pettag-toggle">
+          <%= check_box_tag :phone_distribution_consent, "1", false, required: true, disabled: !@operator_ready %>
+          <span>
+            <strong>Я разрешаю распространение указанного номера телефона</strong>
+            <small>Номер будет доступен неопределённому кругу лиц только на публичной странице этого PetTag до отзыва согласия, изменения номера, смены публичной ссылки или удаления PetTag.</small>
+          </span>
+        </label>
+
+        <p class="pj-pettag-form-hint">
+          Полный текст: <%= link_to "согласие на распространение персональных данных через PetTag",
+                                    pet_tag_phone_distribution_consent_path,
+                                    target: "_blank",
+                                    rel: "noopener" %>.
+          Также действует <%= link_to "Политика обработки персональных данных",
+                                     privacy_path,
+                                     target: "_blank",
+                                     rel: "noopener" %>.
+        </p>
+      </section>
+
+      <div class="pj-pettag-form-actions">
+        <%= link_to "Отмена", edit_pet_pet_tag_path(@pet), class: "pj-pettag-secondary-button" %>
+        <%= submit_tag "Разрешить публикацию", class: "pj-pettag-primary-button", disabled: !@operator_ready %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -14,13 +14,13 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should create pet tag" do
+  test "should create pet tag without enabling public phone from ordinary params" do
     pet = @user.pets.create!(name: "Без жетона")
 
     assert_difference("PetTag.count") do
       post pet_pet_tag_url(pet), params: {
         pet_tag: {
-          public_message: "Позвоните владельцу.",
+          public_message: "Свяжитесь с владельцем.",
           behavior_notes: "Боится шума.",
           medical_notes: "Без лекарств.",
           contact_phone: "+79990000003",
@@ -31,20 +31,26 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to pet_pet_tag_url(pet)
     assert pet.reload.pet_tag.public_token.present?
+    assert_not pet.pet_tag.show_phone?
   end
 
-  test "should get edit" do
+  test "should get edit and offer separate phone publication consent" do
+    @pet_tag.update_columns(show_phone: false)
+
     get edit_pet_pet_tag_url(@pet)
 
     assert_response :success
+    assert_select "a[href=?]", phone_consent_pet_pet_tag_path(@pet), text: /Разрешить публикацию/
+    assert_select ".pj-pettag-token-management", text: /Телефон скрыт/
   end
 
-  test "should update pet tag" do
+  test "ordinary update cannot enable public phone" do
+    @pet_tag.update_columns(show_phone: false)
+
     patch pet_pet_tag_url(@pet), params: {
       pet_tag: {
         public_message: "Новое публичное сообщение",
-        safety_status: "safe",
-        show_phone: "0",
+        show_phone: "1",
         show_medical_notes: "0",
         notification_preference: "always"
       }
@@ -55,6 +61,103 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
     assert_not @pet_tag.show_phone?
     assert_not @pet_tag.show_medical_notes?
     assert @pet_tag.notify_always?
+  end
+
+  test "phone consent page identifies exact phone resource and separate consent" do
+    get phone_consent_pet_pet_tag_url(@pet)
+
+    assert_response :success
+    assert_select "input[name='subject_full_name'][required]", count: 1
+    assert_select "input[name='phone_distribution_consent'][type='checkbox'][required]", count: 1
+    assert_select "a[href=?]", pet_tag_phone_distribution_consent_path
+    assert_match @pet_tag.contact_phone, response.body
+    assert_match @pet_tag.tag_code, response.body
+  end
+
+  test "does not publish phone without separate consent" do
+    @pet_tag.update_columns(show_phone: false)
+
+    assert_no_difference("UserConsent.count") do
+      post publish_phone_pet_pet_tag_url(@pet), params: {
+        subject_full_name: "Иванов Иван Иванович"
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_not @pet_tag.reload.show_phone?
+  end
+
+  test "publishes phone only after recording scoped distribution consent" do
+    @pet_tag.update_columns(show_phone: false)
+
+    assert_difference("UserConsent.count", 1) do
+      post publish_phone_pet_pet_tag_url(@pet), params: {
+        subject_full_name: "Иванов Иван Иванович",
+        phone_distribution_consent: "1"
+      }
+    end
+
+    assert_redirected_to edit_pet_pet_tag_url(@pet)
+    assert @pet_tag.reload.show_phone?
+    assert @pet_tag.phone_publication_allowed?
+
+    consent = @pet_tag.active_phone_distribution_consent
+    assert_equal @user, consent.user
+    assert_equal @pet_tag, consent.consentable
+    assert_equal UserConsent::PET_TAG_PHONE_DISTRIBUTION, consent.consent_type
+    assert_equal LegalDocuments.version(:pet_tag_phone_distribution_consent), consent.document_version
+    assert_equal @pet_tag.contact_phone, consent.metadata["phone"]
+    assert_equal "Иванов Иван Иванович", consent.metadata["subject_full_name"]
+    assert_equal @user.email, consent.metadata["subject_contact"]
+    assert consent.accepted_at.present?
+  end
+
+  test "changing phone revokes distribution consent and hides phone" do
+    @pet_tag.update_columns(show_phone: false)
+    post publish_phone_pet_pet_tag_url(@pet), params: {
+      subject_full_name: "Иванов Иван Иванович",
+      phone_distribution_consent: "1"
+    }
+    consent = @pet_tag.reload.active_phone_distribution_consent
+
+    patch pet_pet_tag_url(@pet), params: { pet_tag: { contact_phone: "+79990000077" } }
+
+    assert_redirected_to pet_pet_tag_url(@pet)
+    assert_not @pet_tag.reload.show_phone?
+    assert_nil @pet_tag.active_phone_distribution_consent
+    assert consent.reload.revoked_at.present?
+  end
+
+  test "revoking phone publication hides phone and records revocation" do
+    @pet_tag.update_columns(show_phone: false)
+    post publish_phone_pet_pet_tag_url(@pet), params: {
+      subject_full_name: "Иванов Иван Иванович",
+      phone_distribution_consent: "1"
+    }
+    consent = @pet_tag.reload.active_phone_distribution_consent
+
+    delete revoke_phone_pet_pet_tag_url(@pet)
+
+    assert_redirected_to edit_pet_pet_tag_url(@pet)
+    assert_not @pet_tag.reload.show_phone?
+    assert consent.reload.revoked_at.present?
+  end
+
+  test "rotating public token revokes phone consent and hides phone" do
+    @pet_tag.update_columns(show_phone: false)
+    post publish_phone_pet_pet_tag_url(@pet), params: {
+      subject_full_name: "Иванов Иван Иванович",
+      phone_distribution_consent: "1"
+    }
+    old_token = @pet_tag.reload.public_token
+    consent = @pet_tag.active_phone_distribution_consent
+
+    patch rotate_token_pet_pet_tag_url(@pet)
+
+    assert_redirected_to pet_pet_tag_url(@pet)
+    assert_not_equal old_token, @pet_tag.reload.public_token
+    assert_not @pet_tag.show_phone?
+    assert consent.reload.revoked_at.present?
   end
 
   test "should update pet tag notification channels" do
@@ -76,14 +179,14 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
       pet_tag: {
         lost_mode_enabled: "1",
         safety_status: "lost",
-        lost_message: "Питомец потерялся, позвоните сразу.",
+        lost_message: "Питомец потерялся, напишите сразу.",
         last_seen_location: "Сквер у школы"
       }
     }
 
     assert_redirected_to pet_pet_tag_url(@pet)
     assert @pet_tag.reload.lost_mode_enabled?
-    assert_equal "Питомец потерялся, позвоните сразу.", @pet_tag.lost_message
+    assert_equal "Питомец потерялся, напишите сразу.", @pet_tag.lost_message
     assert_equal "Сквер у школы", @pet_tag.last_seen_location
   end
 
@@ -106,7 +209,7 @@ class PetTagsControllerTest < ActionDispatch::IntegrationTest
     get pet_pet_tag_url(@pet, scan_status: "found_reported")
 
     assert_response :success
-    assert_select ".filter-chip.active", text: /Нашедшие/
+    assert_select "select[name='scan_status'] option[value='found_reported'][selected]", count: 1
   end
 
   test "should rotate public token" do

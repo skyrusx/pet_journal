@@ -3,7 +3,7 @@ class PublicPetTagsController < ApplicationController
   before_action :prevent_public_indexing
 
   def show
-    @pet_tag = PetTag.includes(pet: { photo_attachment: :blob }).find_by(public_token: params[:token])
+    @pet_tag = PetTag.includes(:user_consents, pet: { photo_attachment: :blob }).find_by(public_token: params[:token])
 
     unless @pet_tag&.enabled?
       render :unavailable, status: :not_found
@@ -33,7 +33,19 @@ class PublicPetTagsController < ApplicationController
       return
     end
 
-    if @pet_tag_scan.update(location_params.merge(scan_status: :found_reported, location_shared_at: Time.current, found_reported_at: Time.current))
+    unless finder_personal_data_consent?
+      redirect_to public_pet_tag_path(@pet_tag.public_token, anchor: "found-form"),
+                  alert: "Чтобы отправить данные владельцу, подтвердите согласие на их обработку."
+      return
+    end
+
+    consent_metadata = {
+      finder_consent_version: LegalDocuments.version(:pet_tag_finder_consent),
+      finder_privacy_policy_version: LegalDocuments.version(:privacy_policy),
+      finder_consented_at: Time.current
+    }
+
+    if @pet_tag_scan.update(location_params.merge(consent_metadata).merge(scan_status: :found_reported, location_shared_at: Time.current, found_reported_at: Time.current))
       @pet_tag.mark_found!(message: @pet_tag_scan.finder_message) if @pet_tag.lost_mode_enabled?
       PetTagScanNotifier.notify(@pet_tag_scan, event: :found)
       redirect_to public_pet_tag_path(@pet_tag.public_token), notice: "Геолокация отправлена владельцу."
@@ -64,10 +76,7 @@ class PublicPetTagsController < ApplicationController
   end
 
   def create_scan(pet_tag)
-    scan = pet_tag.pet_tag_scans.create!(
-      user_agent: request.user_agent,
-      referrer: request.referrer
-    )
+    scan = pet_tag.pet_tag_scans.create!
 
     PetTagScanNotifier.notify(scan, event: :scan) if pet_tag.notify_on_scan?
 
@@ -83,6 +92,10 @@ class PublicPetTagsController < ApplicationController
 
   def location_params
     params.permit(:latitude, :longitude, :location_note, :finder_name, :finder_contact, :finder_message)
+  end
+
+  def finder_personal_data_consent?
+    params[:finder_personal_data_consent].to_s == "1"
   end
 
   def scan_belongs_to_session?(pet_tag, scan)

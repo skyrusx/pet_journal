@@ -126,11 +126,24 @@
 
 .pj-pettag-status-readonly {
   min-height: 44px;
-  justify-content: center;
+  justify-content: stretch;
+  align-content: center;
   padding: 10px 11px;
   border: 1px solid #ded9cf;
   border-radius: 9px;
   background: #f8f7f2;
+  text-align: left;
+}
+
+/* Phone-distribution consent is a vertical document flow rather than the
+   regular two-column PetTag settings grid. Give its top-level sections a clear
+   rhythm so legal blocks do not visually merge into one another. */
+.pj-pettag-form-page .pj-pettag-form > .pj-pettag-form-card + .pj-pettag-form-card {
+  margin-top: 20px;
+}
+
+.pj-pettag-form-page .pj-pettag-form > .pj-pettag-form-actions {
+  margin-top: 20px;
 }
 
 @media (max-width: 820px) {
@@ -178,5 +191,10 @@
     width: 100%;
     max-width: none;
     box-sizing: border-box;
+  }
+
+  .pj-pettag-form-page .pj-pettag-form > .pj-pettag-form-card + .pj-pettag-form-card,
+  .pj-pettag-form-page .pj-pettag-form > .pj-pettag-form-actions {
+    margin-top: 16px;
   }
 }

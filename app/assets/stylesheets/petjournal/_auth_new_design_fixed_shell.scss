@@ -1,14 +1,97 @@
-/* Keep the approved desktop auth shell stable while only the form content changes. */
+/* Keep one shared desktop auth shell for login, registration and recovery flows. */
+
+/* The auth navbar is rendered outside .pj-auth-v2, so it must explicitly use
+   the same typography and desktop geometry as the public landing navbar. */
+.pj-auth-v2-navbar {
+  font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
 
 @media (min-width: 821px) {
-  .pj-auth-v2 .pj-auth-v2-stage,
-  .pj-auth-v2 .pj-auth-v2-visual {
-    height: 570px;
-    min-height: 570px;
+  .pj-auth-v2-navbar__inner {
+    grid-template-columns: 220px minmax(0, 1fr) 240px;
+    column-gap: 24px;
   }
 
-  /* Registration has the tallest form, so use the shell space instead of growing the whole block. */
+  .pj-auth-v2-navbar__nav {
+    gap: clamp(26px, 2.6vw, 44px);
+  }
+
+  .pj-auth-v2-navbar__nav a {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .pj-auth-v2-navbar__actions {
+    align-items: center;
+    gap: 28px;
+  }
+
+  .pj-auth-v2-navbar__cta {
+    min-height: 46px;
+    padding: 0 24px;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+  }
+
+  .pj-auth-v2-navbar__cta:hover,
+  .pj-auth-v2-navbar__cta:focus-visible {
+    border-color: #103d25;
+    background: #103d25;
+    color: #ffffff;
+  }
+
+  .pj-auth-v2-navbar__cta:active {
+    transform: translateY(1px);
+  }
+
+  .pj-auth-v2-navbar__nav a:focus-visible,
+  .pj-auth-v2-navbar__cta:focus-visible,
+  .pj-auth-v2-navbar__brand:focus-visible {
+    outline: 3px solid rgba(151, 168, 58, 0.38);
+    outline-offset: 4px;
+  }
+
+  .pj-auth-v2 .pj-auth-v2-stage,
+  .pj-auth-v2 .pj-auth-v2-visual {
+    height: 610px;
+    min-height: 610px;
+  }
+
+  /* The registration form is the tallest auth flow; keep it centered with
+     enough breathing room without changing the shared shell geometry. */
   .pj-auth-v2--registration .pj-auth-v2-form-side {
-    padding-block: 14px;
+    padding-block: 20px;
+  }
+}
+
+@media (min-width: 821px) and (max-width: 1100px) {
+  .pj-auth-v2-shell {
+    width: min(100% - 48px, 1240px);
+  }
+
+  .pj-auth-v2-navbar__inner {
+    grid-template-columns: 190px minmax(0, 1fr) 220px;
+    column-gap: 18px;
+  }
+
+  .pj-auth-v2-navbar__logo {
+    width: 164px;
+  }
+
+  .pj-auth-v2-navbar__nav {
+    gap: 24px;
+  }
+
+  .pj-auth-v2-navbar__actions {
+    gap: 20px;
+  }
+
+  .pj-auth-v2-navbar__cta {
+    padding-inline: 20px;
   }
 }

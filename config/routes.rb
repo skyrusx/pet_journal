@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   root "pages#index"
   get "new-design" => "pages#new_design", as: :new_design
+  get "privacy" => "legal#privacy", as: :privacy
+  get "personal-data-consent" => "legal#personal_data_consent", as: :personal_data_consent
+  get "pet-tag-data-consent" => "legal#pet_tag_finder_consent", as: :pet_tag_data_consent
+  get "pet-tag-phone-distribution-consent" => "legal#pet_tag_phone_distribution_consent", as: :pet_tag_phone_distribution_consent
 
   if Rails.env.development?
     get "error-preview/:status" => "errors#show",
@@ -16,8 +20,8 @@ Rails.application.routes.draw do
     post "login" => "devise/sessions#create", as: :user_session
     delete "logout" => "devise/sessions#destroy", as: :destroy_user_session
 
-    get "register" => "devise/registrations#new", as: :new_user_registration
-    post "register" => "devise/registrations#create", as: :user_registration
+    get "register" => "users/registrations#new", as: :new_user_registration
+    post "register" => "users/registrations#create", as: :user_registration
     get "account" => "users/registrations#edit", as: :edit_user_registration
     patch "account" => "users/registrations#update"
     put "account" => "users/registrations#update"
@@ -73,6 +77,9 @@ Rails.application.routes.draw do
       patch :mark_found
       patch :mark_reunited
       patch :mark_safe
+      get :phone_consent, path: "phone-consent"
+      post :publish_phone, path: "phone-consent"
+      delete :revoke_phone, path: "phone-consent"
       get "qr.:format" => "pet_tags#qr", as: :qr, constraints: { format: /svg|png/ }
     end
     resources :pet_events, path: :events

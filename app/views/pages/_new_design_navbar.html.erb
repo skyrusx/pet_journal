@@ -1,12 +1,16 @@
+<% brand_path = local_assigns.fetch(:brand_path, new_design_path) %>
+<% features_path = local_assigns.fetch(:features_path, "#features") %>
+<% how_it_works_path = local_assigns.fetch(:how_it_works_path, "#how-it-works") %>
+
 <header class="pj-nd-navbar">
   <div class="pj-nd-shell pj-nd-navbar__inner">
-    <%= link_to new_design_path, class: "pj-nd-navbar__brand", aria: { label: "PetJournal — новый дизайн" } do %>
+    <%= link_to brand_path, class: "pj-nd-navbar__brand", aria: { label: "PetJournal — новый дизайн" } do %>
       <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", class: "pj-nd-navbar__logo" %>
     <% end %>
 
     <nav class="pj-nd-navbar__nav" aria-label="Основная навигация">
-      <a href="#features">Возможности</a>
-      <a href="#how-it-works">Как это работает</a>
+      <%= link_to "Возможности", features_path %>
+      <%= link_to "Как это работает", how_it_works_path %>
     </nav>
 
     <div class="pj-nd-navbar__actions">
@@ -22,8 +26,8 @@
       <div class="pj-nd-navbar__mobile-panel">
         <div class="pj-nd-navbar__mobile-card">
           <nav class="pj-nd-navbar__mobile-nav" aria-label="Мобильная навигация">
-            <a href="#features">Возможности</a>
-            <a href="#how-it-works">Как это работает</a>
+            <%= link_to "Возможности", features_path %>
+            <%= link_to "Как это работает", how_it_works_path %>
           </nav>
 
           <div class="pj-nd-navbar__mobile-separator" aria-hidden="true"></div>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title><%= content_for(:title) || "PetJournal" %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+    <%= render "shared/pwa_head" %>
+
+    <%= favicon_link_tag "petjournal/favicon.ico" %>
+    <%= favicon_link_tag "petjournal/favicon-32.png", rel: "icon", type: "image/png" %>
+    <%= favicon_link_tag "petjournal/favicon-512.png", rel: "apple-touch-icon", type: "image/png" %>
+
+    <%= stylesheet_link_tag "new_design" %>
+    <%= stylesheet_link_tag "new_design_hero_visual" %>
+    <%= stylesheet_link_tag "new_design_showcase" %>
+    <%= stylesheet_link_tag "new_design_showcase_polish" %>
+    <%= stylesheet_link_tag "new_design_steps" %>
+    <%= stylesheet_link_tag "new_design_features" %>
+    <%= stylesheet_link_tag "new_design_trust_strip" %>
+    <%= stylesheet_link_tag "new_design_cta" %>
+    <%= stylesheet_link_tag "new_design_footer" %>
+    <%= stylesheet_link_tag "new_design_mobile" %>
+    <%= stylesheet_link_tag "legal" %>
+    <%= javascript_importmap_tags "pwa" %>
+  </head>
+
+  <body class="pj-new-design-body">
+    <div class="pj-new-design pj-legal-page">
+      <%= render "pages/new_design_navbar",
+                 brand_path: root_path,
+                 features_path: root_path(anchor: "features"),
+                 how_it_works_path: root_path(anchor: "how-it-works") %>
+
+      <main class="pj-new-design__canvas pj-legal-main">
+        <div class="pj-nd-shell">
+          <%= yield %>
+        </div>
+      </main>
+
+      <%= render "pages/new_design_footer" %>
+    </div>
+  </body>
+</html>

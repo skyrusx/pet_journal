@@ -1,6 +1,7 @@
 one:
   pet: one
   public_token: publictokenone1234567890
+  tag_code: PJT-ABCD-2345
   enabled: true
   public_message: Если нашли питомца, пожалуйста, позвоните владельцу.
   behavior_notes: Спокойная, откликается на имя.
@@ -18,6 +19,7 @@ one:
 two:
   pet: two
   public_token: publictokentwo1234567890
+  tag_code: PJT-EFGH-6789
   enabled: false
   public_message: Профиль отключен.
   behavior_notes:

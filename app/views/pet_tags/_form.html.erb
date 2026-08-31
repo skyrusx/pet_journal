@@ -50,7 +50,7 @@
       </div>
       <div class="pj-pettag-field">
         <%= f.label :lost_message, "Сообщение при потере" %>
-        <%= f.text_area :lost_message, rows: 3, placeholder: "Пожалуйста, позвоните сразу — питомец может испугаться" %>
+        <%= f.text_area :lost_message, rows: 3, placeholder: "Пожалуйста, отправьте сообщение — питомец может испугаться" %>
       </div>
       <div class="pj-pettag-field">
         <%= f.label :last_seen_location, "Где видели в последний раз" %>
@@ -63,21 +63,47 @@
     </section>
 
     <section class="pj-pettag-form-card">
-      <div class="pj-pettag-form-card__heading"><h2>Контакты и уведомления</h2><p>Как связаться с владельцем и когда PetJournal должен сообщать о сканах.</p></div>
+      <div class="pj-pettag-form-card__heading"><h2>Контакты и уведомления</h2><p>Как PetJournal доставит владельцу сообщение о сканировании или находке.</p></div>
 
       <div class="pj-pettag-field">
-        <%= f.label :contact_phone, "Телефон" %>
+        <%= f.label :contact_phone, "Телефон владельца" %>
         <%= f.telephone_field :contact_phone,
                               placeholder: "+7 (999) 123-45-67",
                               autocomplete: "tel",
                               inputmode: "tel",
                               data: { account_phone_input: true } %>
+        <small>Телефон можно хранить только для настроек PetTag или отдельно разрешить его публикацию на QR-странице.</small>
       </div>
 
-      <label class="pj-pettag-toggle">
-        <%= f.check_box :show_phone %>
-        <span><strong>Показывать телефон</strong><small>Email владельца в PetTag никогда не публикуется</small></span>
-      </label>
+      <% if @pet_tag.persisted? && @pet_tag.phone_publication_allowed? %>
+        <div class="pj-pettag-token-management">
+          <div>
+            <strong>Телефон опубликован</strong>
+            <small><%= @pet_tag.contact_phone %> доступен на публичной странице PetTag по отдельному согласию.</small>
+            <small>Если номер изменить, публикация автоматически отключится и потребуется новое согласие.</small>
+          </div>
+          <%= link_to "Скрыть телефон",
+                      revoke_phone_pet_pet_tag_path(@pet),
+                      class: "pj-pettag-token-rotate",
+                      data: { turbo_method: :delete, turbo_confirm: "Скрыть телефон на публичной странице PetTag и отозвать действующее согласие?" } %>
+        </div>
+      <% else %>
+        <div class="pj-pettag-token-management">
+          <div>
+            <strong>Телефон скрыт</strong>
+            <% if @pet_tag.persisted? && @pet_tag.contact_phone.present? %>
+              <small>Номер не виден на публичной странице. Для публикации нужно отдельное согласие на распространение персональных данных.</small>
+            <% else %>
+              <small>Сначала укажите и сохраните номер телефона. После этого его можно будет отдельно разрешить для публикации.</small>
+            <% end %>
+          </div>
+          <% if @pet_tag.persisted? && @pet_tag.contact_phone.present? %>
+            <%= link_to "Разрешить публикацию",
+                        phone_consent_pet_pet_tag_path(@pet),
+                        class: "pj-pettag-token-rotate" %>
+          <% end %>
+        </div>
+      <% end %>
 
       <div class="pj-pettag-field">
         <%= f.label :notification_preference, "Уведомления о сканах" %>

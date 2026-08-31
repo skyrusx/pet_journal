@@ -22,12 +22,12 @@ class DeviseRoutesAndNavigationTest < ActionDispatch::IntegrationTest
     assert_routing({ method: "get", path: "/login" }, controller: "devise/sessions", action: "new")
     assert_routing({ method: "post", path: "/login" }, controller: "devise/sessions", action: "create")
     assert_routing({ method: "delete", path: "/logout" }, controller: "devise/sessions", action: "destroy")
-    assert_routing({ method: "get", path: "/register" }, controller: "devise/registrations", action: "new")
-    assert_routing({ method: "post", path: "/register" }, controller: "devise/registrations", action: "create")
-    assert_routing({ method: "get", path: "/account" }, controller: "devise/registrations", action: "edit")
-    assert_routing({ method: "patch", path: "/account" }, controller: "devise/registrations", action: "update")
-    assert_routing({ method: "put", path: "/account" }, controller: "devise/registrations", action: "update")
-    assert_routing({ method: "delete", path: "/account" }, controller: "devise/registrations", action: "destroy")
+    assert_routing({ method: "get", path: "/register" }, controller: "users/registrations", action: "new")
+    assert_routing({ method: "post", path: "/register" }, controller: "users/registrations", action: "create")
+    assert_routing({ method: "get", path: "/account" }, controller: "users/registrations", action: "edit")
+    assert_routing({ method: "patch", path: "/account" }, controller: "users/registrations", action: "update")
+    assert_routing({ method: "put", path: "/account" }, controller: "users/registrations", action: "update")
+    assert_routing({ method: "delete", path: "/account" }, controller: "users/registrations", action: "destroy")
     assert_routing({ method: "get", path: "/password/new" }, controller: "devise/passwords", action: "new")
     assert_routing({ method: "post", path: "/password" }, controller: "devise/passwords", action: "create")
     assert_routing({ method: "get", path: "/password/edit" }, controller: "devise/passwords", action: "edit")
@@ -64,7 +64,8 @@ class DeviseRoutesAndNavigationTest < ActionDispatch::IntegrationTest
         user: {
           email: "route-user@example.test",
           password: "password123",
-          password_confirmation: "password123"
+          password_confirmation: "password123",
+          personal_data_consent: "1"
         }
       }
     end
@@ -82,7 +83,7 @@ class DeviseRoutesAndNavigationTest < ActionDispatch::IntegrationTest
         current_password: "password123"
       }
     }
-    assert_redirected_to root_path
+    assert_redirected_to edit_user_registration_path
 
     disposable = User.create!(email: "delete-account@example.test", password: "password123", password_confirmation: "password123")
     sign_in disposable
@@ -122,36 +123,35 @@ class DeviseRoutesAndNavigationTest < ActionDispatch::IntegrationTest
     sign_in @user
 
     get root_path
-    assert_select "a.app-nav-link.active[href=?]", root_path, text: "Рабочий стол"
+    assert_select "a.pj-dash-nav__item.active[href=?]", root_path, text: /Главная/
 
     get pets_path
-    assert_select "a.app-nav-link.active[href=?]", pets_path, text: "Мои питомцы"
+    assert_select "a.pj-dash-nav__item.active[href=?]", pets_path, text: /Питомцы/
 
     get notification_channels_path
-    assert_select "a.app-nav-link.active[href=?]", notification_channels_path, text: "Уведомления"
+    assert_select "a.pj-dash-nav__item.active[href=?]", settings_path, text: /Настройки/
 
     get edit_user_registration_path
-    assert_select "a.app-nav-link[href=?]", edit_user_registration_path, count: 0
-    assert_select "details.app-user-menu summary.active"
-    assert_select "a.app-user-dropdown-link.active[href=?]", edit_user_registration_path, text: "Настройки аккаунта"
+    assert_response :success
+    assert_select "a.pj-dash-profile-popover__item[href=?]", edit_user_registration_path, text: /Профиль/
   end
 
-  test "pet tabs expose expected links and active tab follows controller" do
+  test "pet profile exposes quick section links and journal marks workspace navigation active" do
     sign_in @user
 
     get pet_path(@pet)
-    assert_select "nav.pet-tabs" do
-      assert_select "a[href=?]", pet_path(@pet), text: "Обзор"
-      assert_select "a[href=?]", pet_pet_events_path(@pet), text: "Журнал"
-      assert_select "a[href=?]", pet_reminders_path(@pet), text: "Напоминания"
-      assert_select "a[href=?]", pet_pet_documents_path(@pet), text: "Документы"
-      assert_select "a[href=?]", pet_pet_tag_path(@pet), text: "Жетон"
-      assert_select "a[href=?]", pet_profile_shares_path(@pet), text: "Доступ"
-      assert_select "a[href=?]", edit_pet_path(@pet), text: "Данные"
-      assert_select "a.pet-tab.active[href=?]", pet_path(@pet), text: "Обзор"
+    assert_response :success
+    assert_select ".pj-pet-quick-section" do
+      assert_select "a.pj-pet-quick-card[href=?]", journal_overview_path(pet_id: @pet.id), text: /Журнал/
+      assert_select "a.pj-pet-quick-card[href=?]", pet_reminders_path(@pet), text: /Напоминания/
+      assert_select "a.pj-pet-quick-card[href=?]", pet_pet_documents_path(@pet), text: /Документы/
+      assert_select "a.pj-pet-quick-card[href=?]", pet_pet_tag_path(@pet), text: /PetTag/
+      assert_select "a.pj-pet-quick-card[href=?]", pet_profile_shares_path(@pet), text: /Доступ/
     end
+    assert_select "a.pj-desktop-detail-action[href=?]", edit_pet_path(@pet), count: 1
 
     get pet_pet_events_path(@pet)
-    assert_select "a.pet-tab.active[href=?]", pet_pet_events_path(@pet), text: "Журнал"
+    assert_response :success
+    assert_select "a.pj-dash-nav__item.active[href=?]", journal_overview_path, text: /Журнал/
   end
 end

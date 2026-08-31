@@ -7,22 +7,26 @@ class ReleaseCoreFlowTest < ApplicationSystemTestCase
 
   test "owner can move from login to pet first journal entry and reminder" do
     sign_in_through_ui
-    assert_selector ".home-dashboard", visible: true
+    assert_selector "[data-dashboard-root]", visible: true
 
     visit new_pet_path
-    fill_in "Имя питомца", with: "Релизный питомец"
-    fill_in "Вид", with: "Кот"
+    fill_in "pet_name", with: "Релизный питомец"
+    fill_in "pet_species", with: "Кот"
     click_button "Сохранить"
+    assert_text "Питомец добавлен."
 
     pet = Pet.find_by!(user: @user, name: "Релизный питомец")
     assert_current_path pet_path(pet)
     assert_text "Релизный питомец"
-    assert_selector ".pet-focus-card", count: 2
+    assert_selector ".pj-pet-summary-card", count: 2
 
     click_link "Добавить запись", match: :first
     assert_current_path new_pet_pet_event_path(pet)
-    fill_in "Заголовок", with: "Первое наблюдение"
-    click_button "Сохранить запись"
+    click_button "Далее"
+    fill_in "pet_event_title", with: "Первое наблюдение"
+    click_button "Далее"
+    click_button "Сохранить"
+    assert_text "Событие добавлено."
 
     event = pet.pet_events.find_by!(title: "Первое наблюдение")
     assert_current_path pet_pet_event_path(pet, event)
@@ -32,11 +36,11 @@ class ReleaseCoreFlowTest < ApplicationSystemTestCase
     assert_text "Первое наблюдение"
 
     visit new_pet_reminder_path(pet)
-    fill_in "Название", with: "Проверить самочувствие"
-    select "Лекарство", from: "Тип"
-    click_button "Создать напоминание"
+    fill_in "reminder_title", with: "Проверить самочувствие"
+    select "Лекарство", from: "reminder_reminder_type"
+    click_button "Сохранить"
 
-    assert_current_path pet_reminders_path(pet)
+    assert_current_path reminders_overview_path(pet_id: pet.id)
     assert_text "Проверить самочувствие"
   end
 
@@ -44,8 +48,8 @@ class ReleaseCoreFlowTest < ApplicationSystemTestCase
 
   def sign_in_through_ui
     visit new_user_session_path
-    fill_in "Электронная почта", with: @user.email
-    fill_in "Пароль", with: "password123"
+    fill_in "user_email", with: @user.email
+    fill_in "user_password", with: "password123"
     click_button "Войти"
     assert_current_path root_path
   end

@@ -70,6 +70,20 @@
                 </div>
               </div>
 
+              <div class="pj-auth-v2-consent">
+                <label class="pj-auth-v2-consent__check">
+                  <%= f.check_box :personal_data_consent, { required: true }, "1", "0" %>
+                  <span>Я даю <%= link_to "согласие на обработку персональных данных",
+                                          personal_data_consent_path,
+                                          target: "_blank",
+                                          rel: "noopener" %>.</span>
+                </label>
+                <p>Подробнее — в <%= link_to "Политике обработки персональных данных",
+                                            privacy_path,
+                                            target: "_blank",
+                                            rel: "noopener" %>.</p>
+              </div>
+
               <%= f.submit "Зарегистрироваться", class: "pj-auth-v2-submit" %>
             <% end %>
 

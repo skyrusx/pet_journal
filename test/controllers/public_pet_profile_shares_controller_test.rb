@@ -11,13 +11,13 @@ class PublicPetProfileSharesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1", text: share.pet.name
     assert_select ".public-share-section", minimum: 1
-    assert_select 'a.pj-public-profile-share-button[href="#public-share-sheet"]', text: /Поделиться/
-    assert_select '#public-share-sheet.pj-public-share-sheet' do
+    assert_select "a.pj-public-profile-share-button[href='#public-share-sheet']", text: /Поделиться/
+    assert_select "#public-share-sheet.pj-public-share-sheet" do
       assert_select "h2", text: "Поделиться профилем"
-      assert_select 'a[href^="https://t.me/share/url?"]', text: "Telegram"
-      assert_select 'a[href^="https://vk.com/share.php?"]', text: "ВКонтакте"
-      assert_select 'a[href^="mailto:?"]', text: "Почта"
-      assert_select 'input[readonly][value=?]', public_pet_profile_share_url(share.public_token)
+      assert_select "a[href^='https://t.me/share/url?']", text: "Telegram"
+      assert_select "a[href^='https://vk.com/share.php?']", text: "ВКонтакте"
+      assert_select "a[href^='mailto:?']", text: "Почта"
+      assert_select "input[readonly][value=?]", public_pet_profile_share_url(share.public_token)
     end
     assert share.reload.last_viewed_at.present?
     assert_equal "noindex, nofollow", response.headers["X-Robots-Tag"]
@@ -53,10 +53,24 @@ class PublicPetProfileSharesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  test "should hide owner contact when disabled" do
-    get public_pet_profile_share_url(pet_profile_shares(:one).public_token)
+  test "should hide owner contact even for legacy enabled flag" do
+    share = pet_profile_shares(:one)
+    share.update_column(:show_owner_contact, true)
+
+    get public_pet_profile_share_url(share.public_token)
 
     assert_response :success
-    assert_no_match users(:one).email, response.body
+    assert_no_match Regexp.new(Regexp.escape(users(:one).email)), response.body
+  end
+
+  test "should hide PetTag phone even for legacy enabled flag" do
+    share = pet_profile_shares(:one)
+    share.update_columns(show_pet_tag: true, show_owner_contact: false)
+    share.pet.pet_tag.update_column(:show_phone, true)
+
+    get public_pet_profile_share_url(share.public_token)
+
+    assert_response :success
+    assert_select "a[href^='tel:']", count: 0
   end
 end

@@ -54,7 +54,7 @@ class PreReleaseScenariosTest < ActionDispatch::IntegrationTest
     assert_not_nil document.reminder
 
     patch complete_pet_reminder_path(pet, follow_up), params: { create_event: "1", completion_note: "Проверено перед релизом" }
-    assert_redirected_to pet_reminders_path(pet)
+    assert_redirected_to reminders_overview_path(pet_id: pet.id)
     assert follow_up.reload.status_completed?
     assert follow_up.reminder_completions.last.pet_event.present?
 
@@ -138,6 +138,7 @@ class PreReleaseScenariosTest < ActionDispatch::IntegrationTest
     assert_emails 1 do
       post public_pet_tag_location_path(pet_tag.public_token), params: {
         scan_token: scan.public_token,
+        finder_personal_data_consent: "1",
         latitude: "53.755833",
         longitude: "87.109167",
         finder_name: "Анна",

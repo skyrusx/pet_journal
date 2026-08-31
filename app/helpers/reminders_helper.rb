@@ -84,20 +84,21 @@ module RemindersHelper
   end
 
   def reminder_type_icon(type)
-    path = case type.to_s
-           when "vaccination"
-             '<path d="M8 5h8M9 3v4M15 3v4M7 9h10v10H7z"/><path d="M9.5 12.5h5M12 10v5"/>'
-           when "medication"
-             '<path d="M8.2 6.2a4 4 0 0 1 5.6 0l4 4a4 4 0 0 1-5.6 5.6l-4-4a4 4 0 0 1 0-5.6z"/><path d="m10 8 6 6"/>'
-           when "treatment"
-             '<path d="M12 3v18M7 7h10M7 17h10"/><path d="m6 5 12 14M18 5 6 19"/>'
-           when "visit"
-             '<path d="M12 20s6-5.1 6-10A6 6 0 1 0 6 10c0 4.9 6 10 6 10z"/><circle cx="12" cy="10" r="2"/>'
-           when "weight"
-             '<path d="M5 7h14l-1 12H6L5 7z"/><path d="M9 7a3 3 0 0 1 6 0M12 10v3"/>'
-           else
-             '<path d="M6 5h12v14H6z"/><path d="M9 9h6M9 13h6"/>'
-           end
+    path =
+      case type.to_s
+      when "vaccination"
+        '<path d="M8 5h8M9 3v4M15 3v4M7 9h10v10H7z"/><path d="M9.5 12.5h5M12 10v5"/>'
+      when "medication"
+        '<path d="M8.2 6.2a4 4 0 0 1 5.6 0l4 4a4 4 0 0 1-5.6 5.6l-4-4a4 4 0 0 1 0-5.6z"/><path d="m10 8 6 6"/>'
+      when "treatment"
+        '<path d="M12 3v18M7 7h10M7 17h10"/><path d="m6 5 12 14M18 5 6 19"/>'
+      when "visit"
+        '<path d="M12 20s6-5.1 6-10A6 6 0 1 0 6 10c0 4.9 6 10 6 10z"/><circle cx="12" cy="10" r="2"/>'
+      when "weight"
+        '<path d="M5 7h14l-1 12H6L5 7z"/><path d="M9 7a3 3 0 0 1 6 0M12 10v3"/>'
+      else
+        '<path d="M6 5h12v14H6z"/><path d="M9 9h6M9 13h6"/>'
+      end
 
     content_tag(
       :svg,

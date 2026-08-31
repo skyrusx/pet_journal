@@ -16,7 +16,11 @@ class ReminderMailerTest < ActionMailer::TestCase
 
     html = mail.html_part.body.decoded
     text = mail.text_part.body.decoded
-    reminder_url = pet_reminder_url(reminder.pet, reminder, host: "www.example.com")
+    reminder_url = Rails.application.routes.url_helpers.pet_reminder_url(
+      reminder.pet,
+      reminder,
+      host: "www.example.com"
+    )
 
     assert_includes html, reminder.title
     assert_includes html, reminder.pet.name
