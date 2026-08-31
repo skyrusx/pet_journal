@@ -20,4 +20,4 @@ test:
 
 production:
   <<: *default
-  url: <%= ENV.fetch("DB_CONNECTION_STRING") %>
+  url: <%= ENV["DB_CONNECTION_STRING"] %>
