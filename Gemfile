@@ -60,5 +60,6 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
-  gem "selenium-webdriver"
+  # Selenium 4.33+ requires Ruby 3.2; 4.32 is the latest line compatible with NetAngels Ruby 3.1.
+  gem "selenium-webdriver", "~> 4.32.0"
 end
