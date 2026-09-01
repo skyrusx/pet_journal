@@ -145,20 +145,13 @@ jobs:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
         run: |
-          printf '%s\n' "$DB_CONNECTION_STRING" | ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" "\
+          ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" "\
             set -e; \
-            IFS= read -r DB_CONNECTION_STRING; \
-            export DB_CONNECTION_STRING; \
-            ROOT=\"\$(dirname '$DEPLOY_PATH')\"; \
-            export GEM_HOME=\"\$ROOT/gems/ruby3.1\"; \
-            export GEM_PATH=\"\$GEM_HOME:/usr/lib/ruby/gems/3.1.0:/usr/lib/x86_64-linux-gnu/rubygems-integration/3.1.0:/usr/share/rubygems-integration/all\"; \
-            export PATH=\"\$ROOT/bin:\$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:\$GEM_HOME/bin\"; \
-            export RUBY_VERSION=ruby-3.1.2; \
+            cd '$DEPLOY_PATH'; \
+            eval \"\$(direnv export bash)\"; \
             test -d \"\$GEM_HOME/gems/rubygems-update-3.3.26\" || gem install rubygems-update -v 3.3.26 --no-document; \
             export RUBYLIB=\"\$GEM_HOME/gems/rubygems-update-3.3.26/lib\"; \
-            cd '$DEPLOY_PATH'; \
             git fetch origin main; \
             git reset --hard '$GITHUB_SHA'; \
             test \"\$(git rev-parse HEAD)\" = '$GITHUB_SHA'; \
