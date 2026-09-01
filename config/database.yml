@@ -1,22 +1,20 @@
+# PostgreSQL. Versions 9.1 and up are supported.
 default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
 
-local: &local
+development:
   <<: *default
+  database: <%= ENV.fetch("PET_JOURNAL_DB_NAME", "pet_journal_development") %>
   username: <%= ENV.fetch("PET_JOURNAL_DB_USER", "postgres") %>
   password: <%= ENV["PET_JOURNAL_DB_PASSWORD"] %>
   host: <%= ENV.fetch("PET_JOURNAL_DB_HOST", "localhost") %>
   port: <%= ENV.fetch("PET_JOURNAL_DB_PORT", 5432) %>
 
-development:
-  <<: *local
-  database: <%= ENV.fetch("PET_JOURNAL_DB_NAME", "pet_journal_development") %>
-
 test:
-  <<: *local
-  database: <%= ENV.fetch("PET_JOURNAL_TEST_DB_NAME", "pet_journal_test") %>
+  <<: *default
+  url: <%= ENV['DB_CONNECTION_STRING'] %>
 
 production:
   <<: *default
