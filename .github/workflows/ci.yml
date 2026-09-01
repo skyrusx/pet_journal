@@ -121,44 +121,6 @@ jobs:
           path: ${{ github.workspace }}/tmp/screenshots
           if-no-files-found: ignore
 
-  ssh_check:
-    if: github.event_name == 'pull_request' && github.head_ref == 'feature/auto-deploy'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Configure SSH
-        env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-        run: |
-          install -m 700 -d ~/.ssh
-          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
-
-      - name: Check NetAngels connection
-        env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
-        run: |
-          printf '%s\n' "$DB_CONNECTION_STRING" | ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" "\
-            set -e; \
-            IFS= read -r DB_CONNECTION_STRING; \
-            export DB_CONNECTION_STRING; \
-            test \"\$(whoami)\" = '$DEPLOY_USER'; \
-            ROOT=\"\$(dirname '$DEPLOY_PATH')\"; \
-            export GEM_HOME=\"\$ROOT/gems/ruby3.1\"; \
-            export GEM_PATH=\"\$GEM_HOME:/usr/lib/ruby/gems/3.1.0:/usr/lib/x86_64-linux-gnu/rubygems-integration/3.1.0:/usr/share/rubygems-integration/all\"; \
-            export PATH=\"\$ROOT/bin:\$HOME/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:\$GEM_HOME/bin\"; \
-            export RUBY_VERSION=ruby-3.1.2; \
-            cd '$DEPLOY_PATH'; \
-            ruby -v; \
-            bundle -v; \
-            test -n \"\$DB_CONNECTION_STRING\"; \
-            echo 'NetAngels SSH check passed'"
-
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [scan_ruby, scan_js, lint, test]
