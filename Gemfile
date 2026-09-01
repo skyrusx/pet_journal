@@ -35,6 +35,9 @@ gem "bootsnap", require: false
 gem "image_processing", "~> 1.2"
 
 group :development, :test do
+  # Load local environment variables from .env without committing secrets.
+  gem "dotenv-rails", "~> 3.2"
+
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
@@ -57,5 +60,6 @@ end
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
-  gem "selenium-webdriver"
+  # Selenium 4.33+ requires Ruby 3.2; 4.32 is the latest line compatible with NetAngels Ruby 3.1.
+  gem "selenium-webdriver", "~> 4.32.0"
 end

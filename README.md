@@ -6,9 +6,25 @@ PetJournal is a Rails app for pet care history, reminders, documents, PetTag saf
 
 Requirements:
 
-- Ruby `3.2.2`
+- Ruby `3.1.2`
 - PostgreSQL
 - Bundler
+
+Local database credentials are loaded from `.env` via `dotenv-rails`. The file is ignored by Git. Example:
+
+```env
+PET_JOURNAL_DB_USER=postgres
+PET_JOURNAL_DB_PASSWORD=your-local-password
+PET_JOURNAL_DB_HOST=localhost
+PET_JOURNAL_DB_PORT=5432
+```
+
+Optional database name overrides:
+
+```env
+PET_JOURNAL_DB_NAME=pet_journal_development
+PET_JOURNAL_TEST_DB_NAME=pet_journal_test
+```
 
 Setup:
 
@@ -33,7 +49,7 @@ Required environment:
 
 - `APP_HOST`
 - `SECRET_KEY_BASE`
-- `DATABASE_URL` or `PET_JOURNAL_DATABASE_PASSWORD`
+- `DB_CONNECTION_STRING`
 - `LEGAL_OPERATOR_NAME`
 - `LEGAL_OPERATOR_EMAIL`
 - `MAIL_FROM`
