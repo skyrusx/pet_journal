@@ -2,10 +2,10 @@ module PetJournal
   class ProductionReadiness
     CORE_ENV = %w[
       APP_HOST
-      SECRET_KEY_BASE
     ].freeze
 
     DATABASE_ENV = %w[
+      DB_CONNECTION_STRING
       DATABASE_URL
       PET_JOURNAL_DATABASE_PASSWORD
     ].freeze
@@ -29,8 +29,11 @@ module PetJournal
     ].freeze
 
     class << self
-      def missing_required_env(env = ENV)
+      def missing_required_env(env = ENV, secret_key_base: nil)
+        secret_key_base ||= Rails.application.secret_key_base if env.equal?(ENV)
+
         missing = CORE_ENV.reject { |key| env[key].present? }
+        missing << "SECRET_KEY_BASE or Rails credentials" unless env["SECRET_KEY_BASE"].present? || secret_key_base.present?
         missing << DATABASE_ENV.join(" or ") unless DATABASE_ENV.any? { |key| env[key].present? }
         missing.concat(LEGAL_ENV.reject { |key| env[key].present? })
         missing
