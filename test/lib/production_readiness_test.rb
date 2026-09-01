@@ -7,22 +7,33 @@ class ProductionReadinessTest < ActiveSupport::TestCase
     report = PetJournal::ProductionReadiness.report(env)
 
     assert_includes report[:missing_required_env], "APP_HOST"
-    assert_includes report[:missing_required_env], "SECRET_KEY_BASE"
-    assert_includes report[:missing_required_env], "DATABASE_URL or PET_JOURNAL_DATABASE_PASSWORD"
+    assert_includes report[:missing_required_env], "SECRET_KEY_BASE or Rails credentials"
+    assert_includes report[:missing_required_env], "DB_CONNECTION_STRING or DATABASE_URL or PET_JOURNAL_DATABASE_PASSWORD"
     assert_includes report[:missing_required_env], "LEGAL_OPERATOR_NAME"
     assert_includes report[:missing_required_env], "LEGAL_OPERATOR_EMAIL"
   end
 
-  test "accepts database and legal configuration" do
+  test "accepts NetAngels database and legal configuration" do
     env = {
       "APP_HOST" => "petjournal.example",
       "SECRET_KEY_BASE" => "secret",
-      "DATABASE_URL" => "postgres://postgres:postgres@localhost/pet_journal",
+      "DB_CONNECTION_STRING" => "postgres://postgres:postgres@localhost/pet_journal",
       "LEGAL_OPERATOR_NAME" => "PetJournal Test Operator",
       "LEGAL_OPERATOR_EMAIL" => "privacy@example.test"
     }
 
     assert_empty PetJournal::ProductionReadiness.missing_required_env(env)
+  end
+
+  test "accepts secret key base from Rails credentials" do
+    env = {
+      "APP_HOST" => "petjournal.example",
+      "DB_CONNECTION_STRING" => "postgres://postgres:postgres@localhost/pet_journal",
+      "LEGAL_OPERATOR_NAME" => "PetJournal Test Operator",
+      "LEGAL_OPERATOR_EMAIL" => "privacy@example.test"
+    }
+
+    assert_empty PetJournal::ProductionReadiness.missing_required_env(env, secret_key_base: "credentials-secret")
   end
 
   test "reports optional notification configuration warnings" do
