@@ -121,6 +121,37 @@ jobs:
           path: ${{ github.workspace }}/tmp/screenshots
           if-no-files-found: ignore
 
+  ssh_check:
+    if: github.event_name == 'pull_request' && github.head_ref == 'feature/auto-deploy'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure SSH
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+
+      - name: Check NetAngels connection
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" "\
+            set -e; \
+            test \"\$(whoami)\" = '$DEPLOY_USER'; \
+            ruby -v; \
+            bundle -v; \
+            test -d '$DEPLOY_PATH'; \
+            test -n \"\$APP_PATH\"; \
+            test -n \"\$DB_CONNECTION_STRING\"; \
+            echo 'NetAngels SSH check passed'"
+
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [scan_ruby, scan_js, lint, test]
