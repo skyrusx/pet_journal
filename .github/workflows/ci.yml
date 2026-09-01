@@ -141,9 +141,12 @@ jobs:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
         run: |
-          ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" "\
+          printf '%s\n' "$DB_CONNECTION_STRING" | ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" "\
             set -e; \
+            IFS= read -r DB_CONNECTION_STRING; \
+            export DB_CONNECTION_STRING; \
             test \"\$(whoami)\" = '$DEPLOY_USER'; \
             ROOT=\"\$(dirname '$DEPLOY_PATH')\"; \
             export GEM_HOME=\"\$ROOT/gems/ruby3.1\"; \
@@ -153,7 +156,6 @@ jobs:
             cd '$DEPLOY_PATH'; \
             ruby -v; \
             bundle -v; \
-            test -n \"\$APP_PATH\"; \
             test -n \"\$DB_CONNECTION_STRING\"; \
             echo 'NetAngels SSH check passed'"
 
@@ -181,9 +183,12 @@ jobs:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
         run: |
-          ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" "\
+          printf '%s\n' "$DB_CONNECTION_STRING" | ssh -i ~/.ssh/deploy_key "$DEPLOY_USER@$DEPLOY_HOST" "\
             set -e; \
+            IFS= read -r DB_CONNECTION_STRING; \
+            export DB_CONNECTION_STRING; \
             ROOT=\"\$(dirname '$DEPLOY_PATH')\"; \
             export GEM_HOME=\"\$ROOT/gems/ruby3.1\"; \
             export GEM_PATH=\"\$GEM_HOME:/usr/lib/ruby/gems/3.1.0:/usr/lib/x86_64-linux-gnu/rubygems-integration/3.1.0:/usr/share/rubygems-integration/all\"; \
