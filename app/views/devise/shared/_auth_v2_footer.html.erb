@@ -1,8 +1,12 @@
+<% show_legal = local_assigns.fetch(:show_legal, true) %>
 <footer class="pj-auth-v2-footer" aria-label="Подвал PetJournal">
   <div class="pj-auth-v2-shell">
     <div class="pj-auth-v2-footer__inner">
       <div class="pj-auth-v2-footer__meta">
         <p>© <%= Time.current.year %> PetJournal.</p>
+        <% if show_legal %>
+          <p><%= legal_link :privacy %></p>
+        <% end %>
       </div>
       <p class="pj-auth-v2-footer__care">Сделано с заботой о тех, кто рядом ♡</p>
     </div>
