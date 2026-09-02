@@ -197,15 +197,14 @@
           <div class="pj-public-tag-consent">
             <label class="pj-public-tag-consent__check">
               <%= check_box_tag :finder_personal_data_consent, "1", false, required: true %>
-              <span>Я даю <%= link_to "согласие на обработку переданных мной данных",
-                                      pet_tag_data_consent_path,
-                                      target: "_blank",
-                                      rel: "noopener" %>.</span>
+              <span>Я даю <%= legal_link :pet_tag_data_consent,
+                                          lowercase: true,
+                                          target: "_blank",
+                                          rel: "noopener" %>.</span>
             </label>
-            <p>Подробнее — в <%= link_to "Политике обработки персональных данных",
-                                        privacy_path,
-                                        target: "_blank",
-                                        rel: "noopener" %>.</p>
+            <p>Подробнее: <%= legal_link :privacy,
+                                         target: "_blank",
+                                         rel: "noopener" %>.</p>
           </div>
 
           <%= submit_tag "Отправить владельцу", class: "pj-public-tag-primary-button" %>
@@ -217,6 +216,6 @@
 
   <footer class="pj-public-tag-footer">
     <span>Спасибо, что помогаете вернуть питомца домой.</span>
-    <span>PetJournal · безопасность и забота · <%= link_to "Конфиденциальность", privacy_path %></span>
+    <span>PetJournal · безопасность и забота · <%= legal_link :privacy %></span>
   </footer>
 </div>
