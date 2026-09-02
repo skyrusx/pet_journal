@@ -3,6 +3,8 @@
   padding: 0 0 24px;
   color: #737a73;
   font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 .pj-auth-v2-footer__inner {
