@@ -152,16 +152,6 @@
   line-height: 1.35;
 }
 
-.pj-nd-footer__legal a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 150ms ease;
-}
-
-.pj-nd-footer__legal a:hover {
-  color: #145d34;
-}
-
 .pj-nd-footer__made-with-care {
   color: #385941 !important;
   text-align: right;
@@ -264,3 +254,5 @@
     text-align: left;
   }
 }
+
+@import "petjournal/legal_links";
