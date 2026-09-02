@@ -59,37 +59,39 @@ class User < ApplicationRecord
 
   def prepare_personal_data_consent!(value:, ip_address:, user_agent:)
     self.personal_data_consent = value
-    @personal_data_consent_metadata = {
+    @personal_data_consent_context = {
       ip_address: ip_address,
-      user_agent: user_agent
+      user_agent: user_agent.to_s.truncate(500)
     }
   end
 
   private
 
   def personal_data_consent_required?
-    new_record? && Rails.configuration.x.legal.require_personal_data_consent
+    @personal_data_consent_context.present?
   end
 
   def record_personal_data_consent!
-    metadata = @personal_data_consent_metadata || {}
-
-    UserConsent.create!(
-      user: self,
-      consent_type: "personal_data_processing",
-      document_version: Rails.configuration.x.legal.personal_data_consent_version,
+    user_consents.create!(
+      consent_type: UserConsent::PERSONAL_DATA,
+      document_version: LegalDocuments.version(:personal_data_consent),
       accepted_at: Time.current,
-      ip_address: metadata[:ip_address],
-      user_agent: metadata[:user_agent]
+      source: "registration",
+      ip_address: @personal_data_consent_context[:ip_address],
+      user_agent: @personal_data_consent_context[:user_agent],
+      metadata: {
+        "privacy_policy_version" => LegalDocuments.version(:privacy_policy)
+      }
     )
-  ensure
-    @personal_data_consent_metadata = nil
   end
 
   def acceptable_avatar
     return unless avatar.attached?
 
-    errors.add(:avatar, "должен быть изображением JPEG, PNG или WebP") unless AVATAR_CONTENT_TYPES.include?(avatar.blob.content_type)
-    errors.add(:avatar, "не должен быть больше 5 МБ") if avatar.blob.byte_size > AVATAR_MAX_SIZE
+    unless AVATAR_CONTENT_TYPES.include?(avatar.blob.content_type)
+      errors.add(:avatar, "должен быть JPG, PNG или WebP")
+    end
+
+    errors.add(:avatar, "должен быть меньше 5 МБ") if avatar.blob.byte_size > AVATAR_MAX_SIZE
   end
 end
