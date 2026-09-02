@@ -127,14 +127,13 @@
         </label>
 
         <p class="pj-pettag-form-hint">
-          Полный текст: <%= link_to "согласие на распространение персональных данных через PetTag",
-                                    pet_tag_phone_distribution_consent_path,
-                                    target: "_blank",
-                                    rel: "noopener" %>.
-          Также действует <%= link_to "Политика обработки персональных данных",
-                                     privacy_path,
-                                     target: "_blank",
-                                     rel: "noopener" %>.
+          Полный текст: <%= legal_link :pet_tag_phone_distribution_consent,
+                                       lowercase: true,
+                                       target: "_blank",
+                                       rel: "noopener" %>.
+          Также действует <%= legal_link :privacy,
+                                         target: "_blank",
+                                         rel: "noopener" %>.
         </p>
       </section>
 
