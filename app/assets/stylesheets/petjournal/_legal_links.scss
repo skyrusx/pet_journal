@@ -1,0 +1,22 @@
+/* Canonical visual treatment for links to PetJournal legal documents. */
+a.pj-legal-link {
+  color: #737a73;
+  font-size: inherit;
+  font-weight: 500;
+  line-height: inherit;
+  text-decoration: none;
+  transition: color 150ms ease;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a.pj-legal-link:visited {
+  color: #737a73;
+}
+
+a.pj-legal-link:hover,
+a.pj-legal-link:focus-visible,
+a.pj-legal-link.active {
+  color: #145d34;
+  text-decoration: none;
+}
