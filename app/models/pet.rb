@@ -24,7 +24,9 @@ class Pet < ApplicationRecord
     return if birth_date.blank?
 
     years = date.year - birth_date.year
-    years -= 1 if [date.month, date.day] < [birth_date.month, birth_date.day]
+    birthday_has_not_happened = date.month < birth_date.month ||
+                                (date.month == birth_date.month && date.day < birth_date.day)
+    years -= 1 if birthday_has_not_happened
     [years, 0].max
   end
 end

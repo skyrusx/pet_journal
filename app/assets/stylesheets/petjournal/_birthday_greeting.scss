@@ -25,6 +25,10 @@
   backdrop-filter: blur(16px);
 }
 
+.pj-birthday-greeting--many {
+  grid-template-columns: 128px minmax(0, 1fr) 28px;
+}
+
 .pj-birthday-greeting.is-visible {
   opacity: 1;
   transform: translateY(0) scale(1);
@@ -43,6 +47,10 @@
   display: flex;
   align-items: center;
   flex: 0 0 auto;
+}
+
+.pj-birthday-greeting--many .pj-birthday-greeting__avatars {
+  width: 128px;
 }
 
 .pj-birthday-greeting__avatar {
@@ -315,9 +323,17 @@ body.pj-has-birthday-greeting .flash-stack {
     border-radius: 20px;
   }
 
+  .pj-birthday-greeting--many {
+    grid-template-columns: 108px minmax(0, 1fr) 26px;
+  }
+
   .pj-birthday-greeting__avatars {
     width: 82px;
     height: 82px;
+  }
+
+  .pj-birthday-greeting--many .pj-birthday-greeting__avatars {
+    width: 108px;
   }
 
   .pj-birthday-greeting__avatar {

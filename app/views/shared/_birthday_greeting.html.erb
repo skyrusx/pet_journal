@@ -1,6 +1,10 @@
 <% presenter = birthday_greeting_presenter %>
 <% if presenter.present? %>
-  <aside class="pj-birthday-greeting <%= "pj-birthday-greeting--multiple" if presenter.multiple? %>"
+  <aside class="<%= class_names(
+                       "pj-birthday-greeting",
+                       "pj-birthday-greeting--multiple": presenter.multiple?,
+                       "pj-birthday-greeting--many": presenter.pets.size >= 3
+                     ) %>"
          data-birthday-greeting
          role="status"
          aria-live="polite"
