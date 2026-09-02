@@ -16,6 +16,22 @@
   margin-top: auto !important;
 }
 
+/* Keep signed-in footers visually identical to the public/auth footer. */
+.pj-dash-footer,
+.pj-workspace-footer {
+  color: #737a73;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.pj-dash-footer span:last-child,
+.pj-workspace-footer span:last-child {
+  color: #385941;
+}
+
 /* The public shared profile uses the same rule outside the authenticated workspace. */
 .pj-public-profile-page {
   min-height: 100vh;
