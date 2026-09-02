@@ -169,6 +169,10 @@ function initDashboardUi() {
 }
 
 document.addEventListener("click", (event) => {
+  if (event.target.closest?.("[data-dashboard-sheet-close]")) {
+    closeDashboardMobileSheets();
+  }
+
   document.querySelectorAll("[data-dashboard-profile-menu][open]").forEach((menu) => {
     if (!menu.contains(event.target)) menu.removeAttribute("open");
   });
