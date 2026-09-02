@@ -87,6 +87,10 @@ class PublicPetTagsControllerTest < ActionDispatch::IntegrationTest
     assert_select "input[name='finder_personal_data_consent'][type='checkbox'][required]", count: 1
     assert_select "a[href=?]", pet_tag_data_consent_path
     assert_select "a[href=?]", privacy_path
+    assert_select ".pj-auth-v2-footer__legal" do
+      assert_select "a[href=?]", privacy_path, text: "Политика конфиденциальности"
+      assert_select "a[href=?]", personal_data_consent_path, text: "Согласие на обработку персональных данных"
+    end
   end
 
   test "throttles repeated scans in same session" do
