@@ -21,6 +21,7 @@
     <%= javascript_import_module_tag "document_file_preview" %>
     <%= javascript_import_module_tag "notification_channels" %>
     <%= javascript_import_module_tag "account_profile" %>
+    <%= javascript_import_module_tag "birthday_greeting" %>
     <%= javascript_include_tag "public_access_copy", defer: true %>
   </head>
 
@@ -41,6 +42,7 @@
     </div>
 
     <%= render "shared/dashboard_mobile_chrome" if user_signed_in? %>
+    <%= render "shared/birthday_greeting" if user_signed_in? %>
 
     <% if notice.present? || alert.present? %>
       <div class="flash-stack" aria-live="polite" aria-atomic="true">

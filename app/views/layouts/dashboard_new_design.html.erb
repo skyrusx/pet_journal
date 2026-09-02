@@ -18,11 +18,13 @@
     <%= javascript_importmap_tags %>
     <%= javascript_import_module_tag "dashboard_sidebar" %>
     <%= javascript_import_module_tag "pwa" %>
+    <%= javascript_import_module_tag "birthday_greeting" %>
   </head>
 
   <body class="<%= class_names('pj-dashboard-body', current_user&.interface_text_size_css_class) %>" data-pwa-install-autoprompt="true">
     <%= yield %>
     <%= render "shared/dashboard_mobile_chrome" if user_signed_in? %>
+    <%= render "shared/birthday_greeting" if user_signed_in? %>
 
     <% if notice.present? || alert.present? %>
       <div class="flash-stack" aria-live="polite" aria-atomic="true">

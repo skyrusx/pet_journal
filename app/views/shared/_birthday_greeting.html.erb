@@ -1,0 +1,53 @@
+<% presenter = birthday_greeting_presenter %>
+<% if presenter.present? %>
+  <aside class="<%= class_names(
+                       "pj-birthday-greeting",
+                       "pj-birthday-greeting--multiple": presenter.multiple?,
+                       "pj-birthday-greeting--many": presenter.pets.size >= 3
+                     ) %>"
+         data-birthday-greeting
+         role="status"
+         aria-live="polite"
+         aria-label="Поздравление с днём рождения питомца">
+    <div class="pj-birthday-greeting__decor" aria-hidden="true">
+      <span class="pj-birthday-greeting__confetti pj-birthday-greeting__confetti--one"></span>
+      <span class="pj-birthday-greeting__confetti pj-birthday-greeting__confetti--two"></span>
+      <span class="pj-birthday-greeting__confetti pj-birthday-greeting__confetti--three"></span>
+      <span class="pj-birthday-greeting__confetti pj-birthday-greeting__confetti--four"></span>
+      <span class="pj-birthday-greeting__heart">♡</span>
+      <span class="pj-birthday-greeting__paw"><%= pj_icon(:paw) %></span>
+    </div>
+
+    <div class="pj-birthday-greeting__avatars" aria-hidden="true">
+      <% presenter.avatar_pets.each_with_index do |pet, index| %>
+        <span class="pj-birthday-greeting__avatar" style="--pj-birthday-avatar-index: <%= index %>">
+          <% if pet.photo.attached? %>
+            <%= image_tag pet.photo, alt: "", loading: "eager" %>
+          <% else %>
+            <span class="pj-birthday-greeting__avatar-placeholder"><%= pet.name.to_s.first.to_s.upcase.presence || "P" %></span>
+          <% end %>
+          <span class="pj-birthday-greeting__party-hat">
+            <span></span>
+          </span>
+        </span>
+      <% end %>
+
+      <% if presenter.overflow_count.positive? %>
+        <span class="pj-birthday-greeting__avatar pj-birthday-greeting__avatar--more"
+              style="--pj-birthday-avatar-index: 2">
+          +<%= presenter.overflow_count %>
+        </span>
+      <% end %>
+    </div>
+
+    <div class="pj-birthday-greeting__content">
+      <strong class="pj-birthday-greeting__title"><%= presenter.title %></strong>
+      <p class="pj-birthday-greeting__text"><%= presenter.body %></p>
+    </div>
+
+    <button type="button"
+            class="pj-birthday-greeting__close"
+            data-birthday-greeting-close
+            aria-label="Закрыть поздравление"></button>
+  </aside>
+<% end %>

@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :notification_channels, dependent: :destroy
   has_many :in_app_notifications, dependent: :destroy
   has_many :user_consents, dependent: :destroy
+  has_many :pet_birthday_greetings, dependent: :destroy
   has_many :reminders, through: :pets
 
   attr_accessor :remove_avatar, :personal_data_consent
