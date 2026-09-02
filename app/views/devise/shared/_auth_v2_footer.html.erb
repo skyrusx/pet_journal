@@ -2,12 +2,14 @@
 <footer class="pj-auth-v2-footer" aria-label="Подвал PetJournal">
   <div class="pj-auth-v2-shell">
     <div class="pj-auth-v2-footer__inner">
-      <div class="pj-auth-v2-footer__meta">
-        <p>© <%= Time.current.year %> PetJournal.</p>
-        <% if show_legal %>
-          <p><%= legal_link :privacy %></p>
-        <% end %>
-      </div>
+      <p>© <%= Time.current.year %> PetJournal.</p>
+      <% if show_legal %>
+        <nav class="pj-auth-v2-footer__legal" aria-label="Юридическая информация">
+          <%= legal_link :privacy %>
+          <span aria-hidden="true">·</span>
+          <%= legal_link :personal_data_consent %>
+        </nav>
+      <% end %>
       <p class="pj-auth-v2-footer__care">Сделано с заботой о тех, кто рядом ♡</p>
     </div>
   </div>
