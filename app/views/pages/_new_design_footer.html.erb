@@ -20,8 +20,6 @@
         <div class="pj-nd-footer__column pj-nd-footer__support">
           <h3>Поддержка</h3>
           <a href="mailto:support@pet-journal.ru">support@pet-journal.ru</a>
-          <%= legal_link :privacy %>
-          <%= legal_link :personal_data_consent %>
           <p>Мы рядом, если нужна помощь</p>
         </div>
 
@@ -37,6 +35,11 @@
 
       <div class="pj-nd-footer__bottom">
         <p>© <%= Time.current.year %> PetJournal.</p>
+        <nav class="pj-nd-footer__legal" aria-label="Юридические документы">
+          <%= legal_link :privacy %>
+          <span aria-hidden="true">·</span>
+          <%= legal_link :personal_data_consent %>
+        </nav>
         <p class="pj-nd-footer__made-with-care">Сделано с заботой о тех, кто рядом ♡</p>
       </div>
     </div>
