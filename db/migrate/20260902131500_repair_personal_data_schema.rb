@@ -31,7 +31,7 @@ class RepairPersonalDataSchema < ActiveRecord::Migration[7.2]
 
     add_index :user_consents, :user_id unless index_exists?(:user_consents, :user_id)
 
-    unless index_exists?(:user_consents, name: "index_active_global_user_consents")
+    unless index_named?(:user_consents, "index_active_global_user_consents")
       add_index :user_consents,
                 %i[user_id consent_type document_version],
                 unique: true,
@@ -39,7 +39,7 @@ class RepairPersonalDataSchema < ActiveRecord::Migration[7.2]
                 name: "index_active_global_user_consents"
     end
 
-    unless index_exists?(:user_consents, name: "index_active_scoped_user_consents")
+    unless index_named?(:user_consents, "index_active_scoped_user_consents")
       add_index :user_consents,
                 %i[user_id consent_type consentable_type consentable_id],
                 unique: true,
@@ -47,13 +47,13 @@ class RepairPersonalDataSchema < ActiveRecord::Migration[7.2]
                 name: "index_active_scoped_user_consents"
     end
 
-    unless index_exists?(:user_consents, name: "index_user_consents_on_user_type_accepted_at")
+    unless index_named?(:user_consents, "index_user_consents_on_user_type_accepted_at")
       add_index :user_consents,
                 %i[user_id consent_type accepted_at],
                 name: "index_user_consents_on_user_type_accepted_at"
     end
 
-    unless index_exists?(:user_consents, name: "index_user_consents_on_consentable")
+    unless index_named?(:user_consents, "index_user_consents_on_consentable")
       add_index :user_consents,
                 %i[consentable_type consentable_id],
                 name: "index_user_consents_on_consentable"
@@ -66,5 +66,9 @@ class RepairPersonalDataSchema < ActiveRecord::Migration[7.2]
     add_column :pet_tag_scans, :finder_consent_version, :string, limit: 32 unless column_exists?(:pet_tag_scans, :finder_consent_version)
     add_column :pet_tag_scans, :finder_privacy_policy_version, :string, limit: 32 unless column_exists?(:pet_tag_scans, :finder_privacy_policy_version)
     add_column :pet_tag_scans, :finder_consented_at, :datetime unless column_exists?(:pet_tag_scans, :finder_consented_at)
+  end
+
+  def index_named?(table_name, index_name)
+    connection.indexes(table_name).any? { |index| index.name == index_name }
   end
 end
