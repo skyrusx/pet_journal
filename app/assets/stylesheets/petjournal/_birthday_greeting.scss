@@ -25,8 +25,12 @@
   backdrop-filter: blur(16px);
 }
 
+.pj-birthday-greeting--multiple {
+  grid-template-columns: 134px minmax(0, 1fr) 28px;
+}
+
 .pj-birthday-greeting--many {
-  grid-template-columns: 128px minmax(0, 1fr) 28px;
+  grid-template-columns: 138px minmax(0, 1fr) 28px;
 }
 
 .pj-birthday-greeting.is-visible {
@@ -50,11 +54,13 @@
 }
 
 .pj-birthday-greeting--multiple .pj-birthday-greeting__avatars {
-  width: 112px;
+  width: 126px;
+  height: 104px;
 }
 
 .pj-birthday-greeting--many .pj-birthday-greeting__avatars {
-  width: 128px;
+  width: 134px;
+  height: 96px;
 }
 
 .pj-birthday-greeting__avatar {
@@ -74,17 +80,17 @@
 }
 
 .pj-birthday-greeting--multiple .pj-birthday-greeting__avatar {
-  left: calc(var(--pj-birthday-avatar-index) * 30px);
-  top: calc(var(--pj-birthday-avatar-index) * 3px);
-  width: 72px;
-  height: 72px;
+  left: calc(var(--pj-birthday-avatar-index) * 48px);
+  top: calc(var(--pj-birthday-avatar-index) * 18px);
+  width: 78px;
+  height: 78px;
 }
 
 .pj-birthday-greeting--many .pj-birthday-greeting__avatar {
-  left: calc(var(--pj-birthday-avatar-index) * 26px);
-  top: calc(var(--pj-birthday-avatar-index) * 3px);
-  width: 68px;
-  height: 68px;
+  left: calc(var(--pj-birthday-avatar-index) * 34px);
+  top: calc(var(--pj-birthday-avatar-index) * 10px);
+  width: 64px;
+  height: 64px;
 }
 
 .pj-birthday-greeting:not(.pj-birthday-greeting--multiple) .pj-birthday-greeting__avatar {
@@ -117,10 +123,10 @@
 
 .pj-birthday-greeting__avatar--more {
   z-index: 4;
-  width: 64px;
-  height: 64px;
-  top: 13px;
-  left: 62px;
+  width: 60px;
+  height: 60px;
+  top: 20px;
+  left: 76px;
   border-width: 3px;
   background: #edf3e5;
   color: var(--pj-green);
@@ -220,13 +226,13 @@
 
 .pj-birthday-greeting__avatar:nth-child(2) .pj-birthday-greeting__party-hat {
   left: 14px;
-  top: -9px;
+  top: -8px;
   transform: rotate(-4deg);
 }
 
 .pj-birthday-greeting__avatar:nth-child(3) .pj-birthday-greeting__party-hat {
   left: 15px;
-  top: -8px;
+  top: -7px;
   transform: rotate(6deg);
 }
 
@@ -388,8 +394,12 @@ body.pj-has-birthday-greeting .flash-stack {
     border-radius: 20px;
   }
 
+  .pj-birthday-greeting--multiple {
+    grid-template-columns: 112px minmax(0, 1fr) 26px;
+  }
+
   .pj-birthday-greeting--many {
-    grid-template-columns: 108px minmax(0, 1fr) 26px;
+    grid-template-columns: 118px minmax(0, 1fr) 26px;
   }
 
   .pj-birthday-greeting__avatars {
@@ -398,11 +408,13 @@ body.pj-has-birthday-greeting .flash-stack {
   }
 
   .pj-birthday-greeting--multiple .pj-birthday-greeting__avatars {
-    width: 96px;
+    width: 100px;
+    height: 86px;
   }
 
   .pj-birthday-greeting--many .pj-birthday-greeting__avatars {
-    width: 108px;
+    width: 112px;
+    height: 82px;
   }
 
   .pj-birthday-greeting__avatar {
@@ -412,15 +424,17 @@ body.pj-has-birthday-greeting .flash-stack {
   }
 
   .pj-birthday-greeting--multiple .pj-birthday-greeting__avatar {
-    left: calc(var(--pj-birthday-avatar-index) * 24px);
-    width: 60px;
-    height: 60px;
+    left: calc(var(--pj-birthday-avatar-index) * 38px);
+    top: calc(var(--pj-birthday-avatar-index) * 14px);
+    width: 62px;
+    height: 62px;
   }
 
   .pj-birthday-greeting--many .pj-birthday-greeting__avatar {
-    left: calc(var(--pj-birthday-avatar-index) * 22px);
-    width: 58px;
-    height: 58px;
+    left: calc(var(--pj-birthday-avatar-index) * 28px);
+    top: calc(var(--pj-birthday-avatar-index) * 8px);
+    width: 56px;
+    height: 56px;
   }
 
   .pj-birthday-greeting:not(.pj-birthday-greeting--multiple) .pj-birthday-greeting__avatar {
@@ -430,10 +444,10 @@ body.pj-has-birthday-greeting .flash-stack {
   }
 
   .pj-birthday-greeting__avatar--more {
-    left: 52px;
-    top: 10px;
-    width: 56px;
-    height: 56px;
+    left: 60px;
+    top: 17px;
+    width: 52px;
+    height: 52px;
   }
 
   .pj-birthday-greeting--multiple .pj-birthday-greeting__party-hat {
@@ -445,12 +459,12 @@ body.pj-has-birthday-greeting .flash-stack {
 
   .pj-birthday-greeting__avatar:nth-child(2) .pj-birthday-greeting__party-hat {
     left: 11px;
-    top: -7px;
+    top: -6px;
   }
 
   .pj-birthday-greeting__avatar:nth-child(3) .pj-birthday-greeting__party-hat {
     left: 12px;
-    top: -6px;
+    top: -5px;
   }
 
   .pj-birthday-greeting__title {
