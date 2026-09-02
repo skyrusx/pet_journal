@@ -25,6 +25,8 @@ module LegalLinksHelper
 
   def legal_link(document, lowercase: false, **options)
     config = LEGAL_LINKS.fetch(document)
+    options[:class] = class_names("pj-legal-link", options[:class])
+
     link_to(
       legal_link_label(document, lowercase: lowercase),
       public_send(config.fetch(:path_helper)),
