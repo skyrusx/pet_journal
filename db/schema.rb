@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_08_24_170000) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_02_094000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -88,6 +88,17 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_24_170000) do
     t.index ["reminder_id", "notification_channel_id", "created_at"], name: "index_deliveries_on_reminder_channel_created_at"
     t.index ["reminder_id"], name: "index_notification_deliveries_on_reminder_id"
     t.index ["status", "next_attempt_at"], name: "index_notification_deliveries_on_status_and_next_attempt_at"
+  end
+
+  create_table "pet_birthday_greetings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.date "greeting_date", null: false
+    t.datetime "shown_at"
+    t.datetime "email_sent_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "greeting_date"], name: "index_pet_birthday_greetings_on_user_and_date", unique: true
+    t.index ["user_id"], name: "index_pet_birthday_greetings_on_user_id"
   end
 
   create_table "pet_documents", force: :cascade do |t|
@@ -328,6 +339,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_08_24_170000) do
   add_foreign_key "notification_channels", "users"
   add_foreign_key "notification_deliveries", "notification_channels"
   add_foreign_key "notification_deliveries", "reminders"
+  add_foreign_key "pet_birthday_greetings", "users"
   add_foreign_key "pet_documents", "pet_events"
   add_foreign_key "pet_documents", "pets"
   add_foreign_key "pet_documents", "reminders"
