@@ -8,6 +8,7 @@ namespace :reminders do
     deliveries_before = NotificationDelivery.count
 
     NotificationDispatcher.dispatch_all
+    BirthdayGreetingDispatchJob.perform_now
 
     puts "Due reminders: #{due_count}"
     puts "Retry deliveries: #{retry_count}"
@@ -29,6 +30,8 @@ namespace :reminders do
     ActiveJob::Base.queue_adapter = :inline
 
     interval = ENV.fetch("REMINDER_DISPATCH_INTERVAL", "60").to_i.clamp(10, 3600)
+    birthday_interval = ENV.fetch("BIRTHDAY_DISPATCH_INTERVAL", "900").to_i.clamp(60, 3600)
+    last_birthday_dispatch_at = nil
     stop = false
 
     Signal.trap("TERM") { stop = true }
@@ -37,6 +40,12 @@ namespace :reminders do
     until stop
       started_at = Time.current
       NotificationDispatcher.dispatch_all
+
+      if last_birthday_dispatch_at.nil? || started_at - last_birthday_dispatch_at >= birthday_interval
+        BirthdayGreetingDispatchJob.perform_now(started_at)
+        last_birthday_dispatch_at = started_at
+      end
+
       Rails.logger.info("reminders.dispatch_loop completed at #{started_at.iso8601}")
       sleep interval unless stop
     end
