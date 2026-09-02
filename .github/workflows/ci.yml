@@ -71,7 +71,13 @@ jobs:
 
     steps:
       - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql-client
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql-client
+          if command -v chromedriver >/dev/null 2>&1; then
+            sudo rm -f "$(command -v chromedriver)"
+          fi
+          google-chrome --version
 
       - name: Checkout code
         uses: actions/checkout@v4
