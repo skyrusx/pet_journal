@@ -16,4 +16,10 @@ class LegalLinksHelperTest < ActionView::TestCase
     assert_equal "согласие на обработку данных отправителя PetTag",
                  legal_link_label(:pet_tag_data_consent, lowercase: true)
   end
+
+  test "adds canonical legal link class and preserves custom classes" do
+    html = legal_link(:privacy, class: "active")
+
+    assert_includes html, 'class="pj-legal-link active"'
+  end
 end
