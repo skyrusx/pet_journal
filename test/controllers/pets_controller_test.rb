@@ -36,7 +36,7 @@ class PetsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select ".pj-pet-profile-page"
-    assert_select "form[action='#{pet_path(@pet)}'][data-turbo-confirm]", count: 2
+    assert_select "form[action='#{pet_path(@pet)}'][onsubmit*='confirm']", count: 2
     assert_select "button[aria-label='Убрать #{@pet.name} из PetJournal']", count: 2
   end
 
