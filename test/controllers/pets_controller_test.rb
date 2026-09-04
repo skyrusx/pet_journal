@@ -80,7 +80,7 @@ class PetsControllerTest < ActionDispatch::IntegrationTest
     document = @pet.pet_documents.create!(title: "Документ", document_type: :other)
     share = @pet.pet_profile_shares.create!(title: "Для семьи")
     share_view = share.pet_profile_share_views.create!(public_token: SecureRandom.hex(12))
-    tag = @pet.create_pet_tag!
+    tag = @pet.pet_tag
     tag_scan = tag.pet_tag_scans.create!
     pet_name = @pet.name
 
