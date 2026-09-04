@@ -3,7 +3,7 @@ class PetsController < ApplicationController
   MOBILE_PAGE_SIZE = 10
 
   before_action :authenticate_user!
-  before_action :set_pet, only: %i[show edit update]
+  before_action :set_pet, only: %i[show edit update destroy]
 
   layout "workspace_new_design"
 
@@ -76,6 +76,13 @@ class PetsController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    pet_name = @pet.name
+    @pet.destroy!
+
+    redirect_to pets_path, notice: "Профиль #{pet_name} удалён."
   end
 
   private
