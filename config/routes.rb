@@ -70,7 +70,7 @@ Rails.application.routes.draw do
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker, defaults: { format: :js }
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest, defaults: { format: :json }
 
-  resources :pets, only: %i[index show new create edit update] do
+  resources :pets, only: %i[index show new create edit update destroy] do
     resource :pet_tag, path: :tag, only: %i[show create edit update] do
       patch :rotate_token
       patch :mark_lost
