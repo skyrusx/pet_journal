@@ -25,7 +25,7 @@
                     method: :delete,
                     class: "pj-desktop-detail-action pj-desktop-detail-action--danger",
                     form_class: "pj-desktop-detail-action-form",
-                    form: { data: { turbo_confirm: remove_pet_confirmation } },
+                    form: { onsubmit: "return confirm(#{remove_pet_confirmation.to_json})" },
                     aria: { label: "Убрать #{@pet.name} из PetJournal" },
                     title: "Убрать питомца из PetJournal" do %>
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -61,7 +61,7 @@
                       method: :delete,
                       class: "pj-mobile-detail-action pj-mobile-detail-action--danger",
                       form_class: "pj-mobile-detail-action-form",
-                      form: { data: { turbo_confirm: remove_pet_confirmation } },
+                      form: { onsubmit: "return confirm(#{remove_pet_confirmation.to_json})" },
                       aria: { label: "Убрать #{@pet.name} из PetJournal" },
                       title: "Убрать питомца из PetJournal" do %>
           <svg viewBox="0 0 24 24" aria-hidden="true">
