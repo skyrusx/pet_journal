@@ -26,6 +26,8 @@
             <%= render "devise/shared/error_messages", resource: resource %>
 
             <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "pj-auth-v2-form pj-auth-v2-registration-form" }) do |f| %>
+              <%= render "shared/public_form_protection" %>
+
               <div class="pj-auth-v2-field">
                 <%= f.label :name, "Имя" %>
                 <%= f.text_field :name,

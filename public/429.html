@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#fffdf8">
+  <title>Слишком много попыток — PetJournal</title>
+  <link rel="stylesheet" href="/petjournal/errors/error-pages.css?v=12">
+  <link rel="stylesheet" href="/petjournal/errors/error-pages-reference.css?v=14">
+  <link rel="stylesheet" href="/petjournal/errors/error-header-landing.css?v=4">
+  <link rel="stylesheet" href="/petjournal/errors/error-footer-landing.css?v=4">
+</head>
+<body class="pj-error-page pj-error-page--422 pj-error-page--landing-chrome">
+  <header class="pj-error-header">
+    <div class="pj-error-shell">
+      <a href="/" class="pj-error-brand" aria-label="PetJournal — на главную">
+        <img src="/petjournal/errors/logo-horizontal.png" class="pj-error-logo" alt="PetJournal">
+      </a>
+
+      <nav class="pj-error-navbar__nav" aria-label="Основная навигация">
+        <a href="/#features">Возможности</a>
+        <a href="/#how-it-works">Как это работает</a>
+      </nav>
+
+      <div class="pj-error-navbar__actions">
+        <a href="/login" class="pj-error-navbar__login">Войти</a>
+        <a href="/register" class="pj-error-navbar__cta">Создать журнал</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="pj-error-main">
+    <section class="pj-error-card" aria-labelledby="pj-error-title">
+      <img src="/petjournal/errors/error-422.webp?v=14"
+           class="pj-error-illustration"
+           width="670" height="330"
+           alt="Собака и кошка рядом с уведомлением PetJournal">
+      <h1 class="pj-error-title" id="pj-error-title">Слишком много попыток</h1>
+      <p class="pj-error-copy">Мы временно ограничили запросы. Попробуйте ещё раз немного позже.</p>
+      <div class="pj-error-actions">
+        <a href="/" class="pj-error-primary">На главную</a>
+        <button type="button" class="pj-error-secondary" onclick="pjGoBack()">Вернуться назад</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pj-nd-footer" aria-label="Подвал PetJournal">
+    <div class="pj-nd-shell">
+      <div class="pj-nd-footer__panel">
+        <div class="pj-nd-footer__bottom">
+          <p>© 2026 PetJournal.</p>
+          <nav class="pj-nd-footer__legal" aria-label="Юридические документы">
+            <a href="/privacy" class="pj-legal-link">Политика конфиденциальности</a>
+            <span aria-hidden="true">·</span>
+            <a href="/personal-data-consent" class="pj-legal-link">Согласие на обработку персональных данных</a>
+          </nav>
+          <p class="pj-nd-footer__made-with-care">Сделано с заботой о тех, кто рядом ♡</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function pjGoBack() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "/";
+      }
+    }
+  </script>
+</body>
+</html>
