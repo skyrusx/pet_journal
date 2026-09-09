@@ -25,11 +25,18 @@ module PublicFormProtection
   def protect_public_form_submission!
     if params[HONEYPOT_FIELD].present?
       log_public_form_security_event("honeypot")
-      head :unprocessable_entity
+      render_honeypot_rejection
       return
     end
 
     log_public_form_security_event("suspicious_timing") if suspicious_public_form_timing?
+  end
+
+  def render_honeypot_rejection
+    render file: Rails.root.join("public/422.html"),
+           status: :unprocessable_entity,
+           layout: false,
+           content_type: "text/html"
   end
 
   def public_form_security_token
