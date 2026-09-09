@@ -1,0 +1,5 @@
+<div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
+  <%= label_tag :contact_website, "Ваш сайт" %>
+  <%= text_field_tag :contact_website, nil, tabindex: -1, autocomplete: "off" %>
+</div>
+<%= hidden_field_tag :security_form_token, public_form_security_token %>

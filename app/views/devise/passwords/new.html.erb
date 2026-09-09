@@ -26,6 +26,8 @@
             <%= render "devise/shared/error_messages", resource: resource %>
 
             <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "pj-auth-v2-form" }) do |f| %>
+              <%= render "shared/public_form_protection" %>
+
               <div class="pj-auth-v2-field">
                 <%= f.label :email, "Email" %>
                 <%= f.email_field :email,

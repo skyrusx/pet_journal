@@ -163,6 +163,7 @@
         </div>
 
         <%= form_with url: public_pet_tag_location_path(@pet_tag.public_token), method: :post, local: true, class: "pj-public-tag-form" do %>
+          <%= render "shared/public_form_protection" %>
           <%= hidden_field_tag :scan_token, @pet_tag_scan.public_token %>
           <%= hidden_field_tag :latitude, nil, id: "location-latitude" %>
           <%= hidden_field_tag :longitude, nil, id: "location-longitude" %>
