@@ -89,7 +89,7 @@ Rack::Attack.throttled_responder = lambda do |request|
     [429, { "Content-Type" => "application/json; charset=utf-8", "Cache-Control" => "no-store", "Retry-After" => retry_after.to_s }, [body]]
   else
     error_page = Rails.root.join("public/429.html")
-    body = File.exist?(error_page) ? File.binread(error_page) : message
+    body = File.exist?(error_page) ? File.read(error_page, encoding: Encoding::UTF_8) : message
     [429, { "Content-Type" => "text/html; charset=utf-8", "Cache-Control" => "no-store", "Retry-After" => retry_after.to_s }, [body]]
   end
 end
