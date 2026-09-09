@@ -38,7 +38,7 @@ class SecurityProtectionTest < ActionDispatch::IntegrationTest
     assert_select "input[name='security_form_token'][type='hidden']", count: 1
   end
 
-  test "registration honeypot rejects obvious bot submission" do
+  test "registration honeypot rejects obvious bot submission with branded 422 page" do
     assert_no_difference("User.count") do
       post user_registration_path, params: {
         contact_website: "https://spam.example",
@@ -53,6 +53,8 @@ class SecurityProtectionTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
+    assert_includes response.body, "Не удалось выполнить действие"
+    assert_includes response.body, "PetJournal"
   end
 
   test "login honeypot rejects obvious bot submission" do
@@ -65,6 +67,7 @@ class SecurityProtectionTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :unprocessable_entity
+    assert_includes response.body, "Не удалось выполнить действие"
   end
 
   test "registration rate limit returns friendly 429 response" do
@@ -130,6 +133,7 @@ class SecurityProtectionTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :unprocessable_entity
+    assert_includes response.body, "Не удалось выполнить действие"
   end
 
   test "all public security throttles are registered" do
