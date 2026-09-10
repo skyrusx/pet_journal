@@ -22,6 +22,9 @@
             <%= link_to "PetTag", pettag_path %>
             <%= link_to "Профиль", edit_user_registration_path %>
             <%= link_to "Настройки", settings_path %>
+            <% if current_user.admin_access? %>
+              <%= link_to "Управление", admin_root_path %>
+            <% end %>
             <%= button_to "Выйти",
                           destroy_user_session_path,
                           method: :delete,
