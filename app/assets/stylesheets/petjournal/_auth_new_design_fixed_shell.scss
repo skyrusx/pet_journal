@@ -62,17 +62,16 @@
     min-height: 610px;
   }
 
-  /* Registration can be taller than the shared auth shell after adding
-     consent and OAuth controls. Keep the normal minimum, but let it grow
-     instead of clipping the bottom of the form. */
+  /* Registration must keep the exact same desktop shell height as the other
+     auth screens so the shared photo crop never changes between routes. */
   .pj-auth-v2--registration .pj-auth-v2-stage,
   .pj-auth-v2--registration .pj-auth-v2-visual {
-    height: auto;
+    height: 610px;
     min-height: 610px;
   }
 
   .pj-auth-v2--registration .pj-auth-v2-form-side {
-    padding-block: 20px;
+    padding-block: 12px;
   }
 }
 
