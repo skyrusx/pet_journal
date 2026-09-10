@@ -10,6 +10,9 @@
     <% [["vk", "VK ID"], ["yandex", "Яндекс ID"]].each do |provider, label| %>
       <% identity = user.external_identities.find { |item| item.provider == provider } %>
       <% configured = Oauth::Configuration.configured?(provider) %>
+      <% disconnect_blocked = configured && identity && !user.can_disconnect_external_identity?(identity) %>
+      <% disconnect_hint_id = "pj-oauth-#{provider}-disconnect-hint" %>
+
       <div class="pj-account-oauth-provider <%= "pj-account-oauth-provider__disabled" unless configured %>">
         <% if provider == "vk" %>
           <span class="pj-account-oauth-provider__icon pj-account-oauth-provider__icon--vk" aria-hidden="true">
@@ -25,6 +28,11 @@
           <strong><%= label %></strong>
           <% if identity %>
             <span>Подключён <%= l(identity.connected_at.to_date, format: :short) %>. Можно использовать для входа.</span>
+            <% if disconnect_blocked %>
+              <small id="<%= disconnect_hint_id %>" class="pj-account-oauth-provider__hint">
+                Чтобы отключить, сначала создайте пароль или подключите другой способ входа.
+              </small>
+            <% end %>
           <% elsif configured %>
             <span>Не подключён.</span>
           <% else %>
@@ -40,7 +48,11 @@
                           class: "pj-account-secondary-button",
                           data: { turbo: false } %>
             <% else %>
-              <span class="pj-account-secondary-button" aria-disabled="true" title="Сначала создайте пароль или подключите другой способ входа">Отключить</span>
+              <span class="pj-account-secondary-button pj-account-oauth-provider__blocked-action"
+                    aria-disabled="true"
+                    aria-describedby="<%= disconnect_hint_id %>">
+                Отключить
+              </span>
             <% end %>
           <% elsif configured %>
             <%= link_to "Подключить",
