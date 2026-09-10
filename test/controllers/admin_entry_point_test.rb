@@ -18,7 +18,7 @@ class AdminEntryPointTest < ActionDispatch::IntegrationTest
     get root_url
 
     assert_response :success
-    assert_select ".app-user-dropdown a[href=?]", admin_root_path, text: "Управление"
-    assert_select "#mobile-more-sheet a[href=?]", admin_root_path, text: /Управление/
+    assert_select ".pj-dash-profile-popover a[href=?]", admin_root_path, text: "Управление"
+    assert_select ".pj-dash-mobile-menu__panel a[href=?]", admin_root_path, text: "Управление"
   end
 end
