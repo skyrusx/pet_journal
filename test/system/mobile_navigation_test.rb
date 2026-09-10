@@ -20,19 +20,24 @@ class MobileNavigationTest < ApplicationSystemTestCase
       assert_no_horizontal_overflow
 
       find('[data-dashboard-sheet-toggle="add"]', visible: true).click
-      assert_selector '[data-dashboard-sheet="add"].is-open', visible: true
-      assert_selector '[data-dashboard-sheet="add"]', text: "Запись в журнал"
+      add_sheet = find('[data-dashboard-sheet="add"].is-open', visible: true)
+      assert_selector add_sheet, text: "Запись в журнал"
       assert_no_horizontal_overflow
 
+      wait_for_sheet_transition(add_sheet)
       find('[data-dashboard-sheet="add"] [data-dashboard-sheet-close]', visible: true).click
       assert_no_selector '[data-dashboard-sheet="add"].is-open', visible: true
 
       find('[data-dashboard-sheet-toggle="more"]', visible: true).click
-      assert_selector '[data-dashboard-sheet="more"].is-open', visible: true
-      assert_selector '[data-dashboard-sheet="more"]', text: "Публичный доступ"
-      assert_selector '[data-dashboard-sheet="more"]', text: "Профиль"
-      assert_selector '[data-dashboard-sheet="more"]', text: "Настройки"
+      more_sheet = find('[data-dashboard-sheet="more"].is-open', visible: true)
+      assert_selector more_sheet, text: "Публичный доступ"
+      assert_selector more_sheet, text: "Профиль"
+      assert_selector more_sheet, text: "Настройки"
       assert_no_horizontal_overflow
+
+      wait_for_sheet_transition(more_sheet)
+      find('[data-dashboard-sheet="more"] [data-dashboard-sheet-close]', visible: true).click
+      assert_no_selector '[data-dashboard-sheet="more"].is-open', visible: true
     end
   end
 
@@ -79,6 +84,19 @@ class MobileNavigationTest < ApplicationSystemTestCase
     fill_in "user_password", with: "password123"
     click_button "Войти"
     assert_current_path root_path
+  end
+
+  def wait_for_sheet_transition(sheet)
+    transition_ms = page.driver.browser.execute_script(<<~JS, sheet.native)
+      const style = window.getComputedStyle(arguments[0]);
+      const toMs = (value) => value.trim().endsWith("ms") ? parseFloat(value) : parseFloat(value) * 1000;
+      const durations = style.transitionDuration.split(",").map(toMs);
+      const delays = style.transitionDelay.split(",").map(toMs);
+
+      return Math.max(...durations.map((duration, index) => duration + (delays[index] || delays[0] || 0)));
+    JS
+
+    sleep((transition_ms + 50) / 1000.0) if transition_ms.positive?
   end
 
   def assert_no_horizontal_overflow
