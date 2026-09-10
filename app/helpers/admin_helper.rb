@@ -34,6 +34,26 @@ module AdminHelper
     "#{weekdays[date.wday]}, #{date.day} #{months[date.month - 1]} #{date.year}"
   end
 
+  def admin_metric_change_label(metric)
+    change_percent = metric[:change_percent]
+
+    if change_percent.nil?
+      return "—" if metric[:recent].zero?
+
+      return "↑ +#{metric[:recent]}"
+    end
+
+    change_percent.negative? ? "↓ #{change_percent}%" : "↑ +#{change_percent}%"
+  end
+
+  def admin_metric_change_tone(metric)
+    change_percent = metric[:change_percent]
+
+    return metric[:recent].positive? ? "positive" : "neutral" if change_percent.nil?
+
+    change_percent.negative? ? "negative" : "positive"
+  end
+
   def admin_pagination_pages(current_page, total_pages)
     return (1..total_pages).to_a if total_pages <= 5
 
