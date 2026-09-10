@@ -10,32 +10,23 @@
   </header>
 
   <div class="admin-stat-grid" aria-label="Основные показатели">
-    <article class="admin-stat-card">
-      <span class="admin-stat-icon"><%= pj_icon(:user) %></span>
-      <div class="admin-stat-copy">
-        <span class="admin-stat-label">Пользователи</span>
-        <strong><%= number_with_delimiter(@stats[:users], delimiter: " ") %></strong>
-        <small>зарегистрировано</small>
-      </div>
-    </article>
-
-    <article class="admin-stat-card">
-      <span class="admin-stat-icon"><%= pj_icon(:paw) %></span>
-      <div class="admin-stat-copy">
-        <span class="admin-stat-label">Питомцы</span>
-        <strong><%= number_with_delimiter(@stats[:pets], delimiter: " ") %></strong>
-        <small>добавлено в сервис</small>
-      </div>
-    </article>
-
-    <article class="admin-stat-card">
-      <span class="admin-stat-icon"><%= pj_icon(:tag) %></span>
-      <div class="admin-stat-copy">
-        <span class="admin-stat-label">PetTag</span>
-        <strong><%= number_with_delimiter(@stats[:pet_tags], delimiter: " ") %></strong>
-        <small>создано профилей</small>
-      </div>
-    </article>
+    <% [
+      ["Пользователи", @stats[:users], :user],
+      ["Питомцы", @stats[:pets], :paw],
+      ["PetTag", @stats[:pet_tags], :tag]
+    ].each do |label, metric, icon| %>
+      <article class="admin-stat-card">
+        <span class="admin-stat-icon"><%= pj_icon(icon) %></span>
+        <div class="admin-stat-copy">
+          <span class="admin-stat-label"><%= label %></span>
+          <strong><%= number_with_delimiter(metric[:total], delimiter: " ") %></strong>
+          <span class="admin-stat-trend admin-stat-trend--<%= admin_metric_change_tone(metric) %>">
+            <b><%= admin_metric_change_label(metric) %></b>
+            <small>за последние 7 дней</small>
+          </span>
+        </div>
+      </article>
+    <% end %>
   </div>
 
   <div class="admin-dashboard-grid">
