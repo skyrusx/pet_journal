@@ -94,9 +94,17 @@ jobs:
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/pet_journal_test
         run: |
-          bin/rails db:prepare
-          bin/rails test
-          bin/rails test:system
+          set -o pipefail
+          mkdir -p tmp
+          { bin/rails db:prepare; bin/rails test; bin/rails test:system; } 2>&1 | tee tmp/ci-test.log
+
+      - name: Keep test log from failed runs
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ci-test-log
+          path: ${{ github.workspace }}/tmp/ci-test.log
+          if-no-files-found: warn
 
       - name: Run pre-release product scenarios
         env:
