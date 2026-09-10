@@ -1,3 +1,7 @@
+<% registration_page = devise_controller? && controller_name == "registrations" && action_name == "new" %>
+<% auth_action_label = registration_page ? "Войти" : "Создать журнал" %>
+<% auth_action_path = registration_page ? new_user_session_path : new_user_registration_path %>
+
 <header class="pj-auth-v2-navbar">
   <div class="pj-auth-v2-shell pj-auth-v2-navbar__inner">
     <%= link_to new_design_path, class: "pj-auth-v2-navbar__brand", aria: { label: "PetJournal — главная" } do %>
@@ -10,7 +14,7 @@
     </nav>
 
     <div class="pj-auth-v2-navbar__actions">
-      <%= link_to "Создать журнал", new_user_registration_path, class: "pj-auth-v2-navbar__cta" %>
+      <%= link_to auth_action_label, auth_action_path, class: "pj-auth-v2-navbar__cta" %>
     </div>
 
     <details class="pj-auth-v2-navbar__mobile">
@@ -21,7 +25,7 @@
         <nav aria-label="Мобильная навигация">
           <%= link_to "Возможности", new_design_path(anchor: "features") %>
           <%= link_to "Как это работает", new_design_path(anchor: "how-it-works") %>
-          <%= link_to "Создать журнал", new_user_registration_path, class: "pj-auth-v2-navbar__mobile-cta" %>
+          <%= link_to auth_action_label, auth_action_path, class: "pj-auth-v2-navbar__mobile-cta" %>
         </nav>
       </div>
     </details>
