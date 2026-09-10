@@ -4,7 +4,7 @@
     <title><%= content_for(:title) || "Управление — PetJournal" %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <meta name="theme-color" content="#07392f">
+    <meta name="theme-color" content="#f7f8f4">
     <meta name="color-scheme" content="light">
     <meta name="robots" content="noindex,nofollow">
     <%= csrf_meta_tags %>
@@ -24,9 +24,10 @@
 
       <div class="admin-workspace">
         <header class="admin-topbar">
-          <div class="admin-topbar-copy">
+          <div class="admin-topbar-copy" aria-label="Текущий раздел">
+            <%= link_to "PetJournal", root_path, class: "admin-topbar-product" %>
+            <span aria-hidden="true">/</span>
             <strong>Управление</strong>
-            <span>Внутренняя панель PetJournal</span>
           </div>
 
           <%= link_to edit_user_registration_path, class: "admin-account" do %>
