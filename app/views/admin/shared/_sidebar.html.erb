@@ -1,16 +1,15 @@
 <aside class="admin-sidebar" aria-label="Навигация управления">
-  <div class="admin-sidebar-head">
-    <%= link_to admin_root_path, class: "admin-brand" do %>
-      <%= image_tag "petjournal/logo-symbol.png", alt: "", class: "admin-brand-logo" %>
-      <span class="admin-brand-copy">
-        <strong>PetJournal</strong>
-        <small>ADMIN</small>
-      </span>
-    <% end %>
-  </div>
+  <%= link_to admin_root_path, class: "admin-brand" do %>
+    <span class="admin-brand-mark">
+      <%= image_tag "petjournal/logo-symbol.png", alt: "" %>
+    </span>
+    <span class="admin-brand-copy">
+      <strong>PetJournal</strong>
+      <small>Управление</small>
+    </span>
+  <% end %>
 
   <nav class="admin-sidebar-nav">
-    <span class="admin-nav-caption">Управление</span>
     <%= admin_nav_link "Обзор",
                        admin_root_path,
                        icon: :home,
@@ -24,7 +23,7 @@
   <div class="admin-sidebar-footer">
     <%= link_to root_path, class: "admin-back-link" do %>
       <span aria-hidden="true">←</span>
-      <span>В PetJournal</span>
+      <span>Вернуться в PetJournal</span>
     <% end %>
   </div>
 </aside>

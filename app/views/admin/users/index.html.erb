@@ -3,23 +3,23 @@
 <section class="admin-page admin-users-page">
   <header class="admin-page-header">
     <div>
-      <span class="admin-eyebrow">Пользователи</span>
       <h1>Пользователи</h1>
-      <p>Просмотр зарегистрированных пользователей PetJournal.</p>
+      <p>Управление пользователями PetJournal.</p>
     </div>
-    <span class="admin-count-badge"><%= @total_users %></span>
   </header>
 
   <%= form_with url: admin_users_path, method: :get, local: true, class: "admin-toolbar" do |form| %>
     <div class="admin-search-field">
-      <span class="admin-search-icon" aria-hidden="true">⌕</span>
+      <span class="admin-search-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+      </span>
       <%= form.search_field :q,
                             value: params[:q],
-                            placeholder: "Поиск по имени или email...",
+                            placeholder: "Поиск по имени, email...",
                             autocomplete: "off",
                             aria: { label: "Поиск пользователей" } %>
     </div>
-    <%= form.submit "Найти", class: "admin-search-button" %>
+    <%= form.submit "Найти", class: "visually-hidden" %>
     <% if params[:q].present? %>
       <%= link_to "Сбросить", admin_users_path, class: "admin-reset-link" %>
     <% end %>
@@ -59,7 +59,7 @@
                   <% end %>
                 </td>
                 <td class="admin-table-open">
-                  <%= link_to "›", admin_user_path(user), aria: { label: "Открыть пользователя #{admin_user_name(user)}" } %>
+                  <%= link_to "•••", admin_user_path(user), aria: { label: "Открыть пользователя #{admin_user_name(user)}" } %>
                 </td>
               </tr>
             <% end %>
@@ -76,18 +76,48 @@
               <small><%= user.email %></small>
               <span class="admin-user-mobile-meta">
                 <span><%= user.pets.size %> <%= russian_plural(user.pets.size, "питомец", "питомца", "питомцев") %></span>
-                <span>с <%= l(user.created_at.to_date, format: "%d.%m.%Y") %></span>
+                <span>С <%= l(user.created_at.to_date, format: "%d.%m.%Y") %></span>
               </span>
             </span>
             <span class="admin-user-mobile-side">
+              <span class="admin-user-mobile-more" aria-hidden="true">•••</span>
               <% if user.admin? %>
                 <span class="admin-badge admin-badge-accent">Админ</span>
               <% end %>
-              <span class="admin-row-chevron" aria-hidden="true">›</span>
             </span>
           <% end %>
         <% end %>
       </div>
+
+      <footer class="admin-users-footer">
+        <span>Показано <%= @from_index %>–<%= @to_index %> из <%= @total_users %></span>
+
+        <% if @total_pages > 1 %>
+          <nav class="admin-pagination" aria-label="Страницы пользователей">
+            <%= link_to "‹",
+                        admin_users_path(q: params[:q], page: @page - 1),
+                        class: class_names("admin-page-button", disabled: @page == 1),
+                        aria: { label: "Предыдущая страница" } %>
+
+            <% previous_page = nil %>
+            <% admin_pagination_pages(@page, @total_pages).each do |page| %>
+              <% if previous_page && page > previous_page + 1 %>
+                <span class="admin-pagination-gap">…</span>
+              <% end %>
+              <%= link_to page,
+                          admin_users_path(q: params[:q], page: page),
+                          class: class_names("admin-page-button", active: page == @page),
+                          aria: { current: page == @page ? "page" : nil } %>
+              <% previous_page = page %>
+            <% end %>
+
+            <%= link_to "›",
+                        admin_users_path(q: params[:q], page: @page + 1),
+                        class: class_names("admin-page-button", disabled: @page == @total_pages),
+                        aria: { label: "Следующая страница" } %>
+          </nav>
+        <% end %>
+      </footer>
     <% else %>
       <div class="admin-empty-state">
         <span class="admin-empty-icon"><%= pj_icon(:user) %></span>
@@ -99,30 +129,4 @@
       </div>
     <% end %>
   </section>
-
-  <% if @total_pages > 1 %>
-    <nav class="admin-pagination" aria-label="Страницы пользователей">
-      <%= link_to "←",
-                  admin_users_path(q: params[:q], page: @page - 1),
-                  class: class_names("admin-page-button", disabled: @page == 1),
-                  aria: { label: "Предыдущая страница" } %>
-
-      <% previous_page = nil %>
-      <% admin_pagination_pages(@page, @total_pages).each do |page| %>
-        <% if previous_page && page > previous_page + 1 %>
-          <span class="admin-pagination-gap">…</span>
-        <% end %>
-        <%= link_to page,
-                    admin_users_path(q: params[:q], page: page),
-                    class: class_names("admin-page-button", active: page == @page),
-                    aria: { current: page == @page ? "page" : nil } %>
-        <% previous_page = page %>
-      <% end %>
-
-      <%= link_to "→",
-                  admin_users_path(q: params[:q], page: @page + 1),
-                  class: class_names("admin-page-button", disabled: @page == @total_pages),
-                  aria: { label: "Следующая страница" } %>
-    </nav>
-  <% end %>
 </section>

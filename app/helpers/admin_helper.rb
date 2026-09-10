@@ -18,6 +18,22 @@ module AdminHelper
     admin_user_name(user).first.to_s.upcase.presence || "P"
   end
 
+  def admin_greeting(time = Time.zone.now)
+    case time.hour
+    when 0..5 then "Доброй ночи"
+    when 6..11 then "Доброе утро"
+    when 12..17 then "Добрый день"
+    else "Добрый вечер"
+    end
+  end
+
+  def admin_date_label(date = Date.current)
+    weekdays = %w[Воскресенье Понедельник Вторник Среда Четверг Пятница Суббота]
+    months = %w[января февраля марта апреля мая июня июля августа сентября октября ноября декабря]
+
+    "#{weekdays[date.wday]}, #{date.day} #{months[date.month - 1]} #{date.year}"
+  end
+
   def admin_pagination_pages(current_page, total_pages)
     return (1..total_pages).to_a if total_pages <= 5
 

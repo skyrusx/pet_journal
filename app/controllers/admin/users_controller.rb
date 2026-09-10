@@ -13,6 +13,8 @@ module Admin
       @total_users = scope.count
       @total_pages = [(@total_users.to_f / PER_PAGE).ceil, 1].max
       @page = params.fetch(:page, 1).to_i.clamp(1, @total_pages)
+      @from_index = @total_users.zero? ? 0 : ((@page - 1) * PER_PAGE) + 1
+      @to_index = [@page * PER_PAGE, @total_users].min
       @users = scope.with_attached_avatar
                     .includes(:pets)
                     .offset((@page - 1) * PER_PAGE)

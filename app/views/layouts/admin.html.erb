@@ -4,7 +4,7 @@
     <title><%= content_for(:title) || "Управление — PetJournal" %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <meta name="theme-color" content="#f7f8f4">
+    <meta name="theme-color" content="#063d34">
     <meta name="color-scheme" content="light">
     <meta name="robots" content="noindex,nofollow">
     <%= csrf_meta_tags %>
@@ -24,20 +24,37 @@
 
       <div class="admin-workspace">
         <header class="admin-topbar">
-          <div class="admin-topbar-copy" aria-label="Текущий раздел">
-            <%= link_to "PetJournal", root_path, class: "admin-topbar-product" %>
-            <span aria-hidden="true">/</span>
-            <strong>Управление</strong>
-          </div>
-
-          <%= link_to edit_user_registration_path, class: "admin-account" do %>
-            <%= render "admin/shared/avatar", user: current_user, size: :small %>
-            <span class="admin-account-copy">
-              <strong><%= admin_user_name(current_user) %></strong>
-              <small>Администратор</small>
+          <%= form_with url: admin_users_path, method: :get, local: true, class: "admin-global-search" do |form| %>
+            <span class="admin-global-search-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
             </span>
-            <span class="admin-account-chevron" aria-hidden="true">›</span>
+            <%= form.search_field :q,
+                                  value: controller_name == "users" ? params[:q] : nil,
+                                  placeholder: "Поиск по пользователям...",
+                                  autocomplete: "off",
+                                  aria: { label: "Поиск пользователей" } %>
+            <%= form.submit "Найти", class: "visually-hidden" %>
           <% end %>
+
+          <div class="admin-topbar-actions">
+            <%= link_to notifications_path,
+                        class: "admin-topbar-icon-button",
+                        aria: { label: "Уведомления" },
+                        title: "Уведомления" do %>
+              <%= pj_icon(:bell) %>
+            <% end %>
+
+            <span class="admin-topbar-divider" aria-hidden="true"></span>
+
+            <%= link_to edit_user_registration_path, class: "admin-account" do %>
+              <%= render "admin/shared/avatar", user: current_user, size: :small %>
+              <span class="admin-account-copy">
+                <strong><%= admin_user_name(current_user) %></strong>
+                <small>Администратор</small>
+              </span>
+              <span class="admin-account-chevron" aria-hidden="true">⌄</span>
+            <% end %>
+          </div>
         </header>
 
         <%= render "admin/shared/mobile_navigation" %>

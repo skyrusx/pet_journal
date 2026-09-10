@@ -8,7 +8,9 @@
 
     <div class="admin-mobile-drawer-panel">
       <div class="admin-mobile-drawer-brand">
-        <span class="admin-brand-mark"><%= pj_icon(:paw) %></span>
+        <span class="admin-brand-mark">
+          <%= image_tag "petjournal/logo-symbol.png", alt: "" %>
+        </span>
         <span>
           <strong>PetJournal</strong>
           <small>Управление</small>
@@ -38,11 +40,19 @@
     <small>Управление</small>
   <% end %>
 
-  <%= link_to edit_user_registration_path,
-              class: "admin-mobile-account",
-              aria: { label: "Аккаунт администратора" } do %>
-    <%= render "admin/shared/avatar", user: current_user, size: :small %>
-  <% end %>
+  <div class="admin-mobile-header-actions">
+    <%= link_to notifications_path,
+                class: "admin-mobile-notifications",
+                aria: { label: "Уведомления" } do %>
+      <%= pj_icon(:bell) %>
+    <% end %>
+
+    <%= link_to edit_user_registration_path,
+                class: "admin-mobile-account",
+                aria: { label: "Аккаунт администратора" } do %>
+      <%= render "admin/shared/avatar", user: current_user, size: :small %>
+    <% end %>
+  </div>
 </header>
 
 <nav class="admin-mobile-bottom-nav" aria-label="Мобильная навигация управления">
