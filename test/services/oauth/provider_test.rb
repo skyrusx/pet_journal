@@ -23,10 +23,11 @@ class OauthProviderTest < ActiveSupport::TestCase
     query = query_for(provider.authorization_url(state: "state-1", code_challenge: "challenge-1"))
 
     assert_equal "vk-app", query["client_id"]
+    assert_equal "vk-app", query["app_id"]
     assert_equal "code", query["response_type"]
     assert_equal "state-1", query["state"]
     assert_equal "challenge-1", query["code_challenge"]
-    assert_equal "S256", query["code_challenge_method"]
+    assert_equal "s256", query["code_challenge_method"]
     assert_equal "email phone", query["scope"]
   end
 
