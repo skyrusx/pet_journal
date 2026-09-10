@@ -1,0 +1,313 @@
+/* Approved PetJournal admin concept — visual source of truth for the admin shell. */
+
+.admin-body {
+  --admin-green: #063d34;
+  --admin-green-deep: #04342d;
+  --admin-green-active: #1b5648;
+  --admin-lime: #a8df4f;
+  --admin-cream: #f8f5ed;
+  --admin-surface: #fffefb;
+  --admin-line: #e6e4dd;
+  --admin-muted: #7b8782;
+  --admin-ink: #17352e;
+  background: var(--admin-cream);
+}
+
+.admin-app {
+  grid-template-columns: 202px minmax(0, 1fr);
+}
+
+.admin-sidebar {
+  padding: 20px 14px 18px;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(113, 170, 116, .12), transparent 25%),
+    linear-gradient(180deg, #063d34 0%, #04342d 100%);
+}
+
+.admin-brand {
+  gap: 10px;
+  padding: 0 8px 24px;
+}
+
+.admin-brand-mark {
+  width: 32px;
+  height: 32px;
+  flex-basis: 32px;
+  border-radius: 9px;
+  background: #dcefd2;
+}
+
+.admin-brand-copy strong {
+  font-size: .98rem;
+}
+
+.admin-brand-copy small {
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: .56rem;
+}
+
+.admin-sidebar-nav {
+  gap: 4px;
+}
+
+.admin-nav-link {
+  min-height: 40px;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: .79rem;
+}
+
+.admin-nav-link.active::before {
+  left: -14px;
+  top: 7px;
+  bottom: 7px;
+  width: 3px;
+  background: #c5ed46;
+}
+
+.admin-topbar {
+  height: 64px;
+  padding: 0 26px;
+  border-bottom-color: #e7e5df;
+  background: rgba(255, 254, 250, .97);
+}
+
+.admin-global-search {
+  width: min(375px, 46vw);
+}
+
+.admin-global-search input {
+  height: 36px;
+  border-color: #e8e7e1;
+  border-radius: 6px;
+  background: #f7f6f1;
+  font-size: .7rem;
+}
+
+.admin-account-copy strong {
+  font-size: .7rem;
+}
+
+.admin-account-copy small {
+  font-size: .59rem;
+}
+
+.admin-main {
+  width: min(100%, 1110px);
+  padding: 30px 28px 52px;
+}
+
+.admin-page {
+  gap: 16px;
+}
+
+.admin-dashboard-hero h1,
+.admin-page-header h1 {
+  margin-bottom: 4px;
+  font-size: 1.62rem;
+  font-weight: 760;
+}
+
+.admin-dashboard-hero p,
+.admin-page-header p {
+  font-size: .72rem;
+}
+
+.admin-dashboard-hero time {
+  font-size: .65rem;
+}
+
+.admin-stat-grid {
+  gap: 12px;
+}
+
+.admin-stat-card {
+  min-height: 104px;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(18, 55, 47, .025);
+}
+
+.admin-stat-icon {
+  width: 40px;
+  height: 40px;
+  flex-basis: 40px;
+  border-radius: 8px;
+  background: #dff1d8;
+}
+
+.admin-stat-label {
+  font-size: .68rem;
+}
+
+.admin-stat-card strong {
+  font-size: 1.55rem;
+}
+
+.admin-stat-card small {
+  margin-top: 6px;
+  font-size: .58rem;
+}
+
+.admin-dashboard-grid {
+  grid-template-columns: minmax(0, 1.45fr) minmax(290px, .9fr);
+  gap: 14px;
+}
+
+.admin-panel,
+.admin-users-panel,
+.admin-user-profile-card {
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(18, 55, 47, .02);
+}
+
+.admin-panel-header {
+  min-height: 54px;
+  padding: 12px 16px;
+}
+
+.admin-panel-header h2 {
+  font-size: .82rem;
+}
+
+.admin-recent-user,
+.admin-quick-link {
+  min-height: 56px;
+  padding: 9px 16px;
+}
+
+.admin-recent-user-copy strong,
+.admin-quick-copy strong {
+  font-size: .69rem;
+}
+
+.admin-recent-user-copy small,
+.admin-quick-copy small,
+.admin-recent-user time {
+  font-size: .59rem;
+}
+
+.admin-users-page {
+  gap: 12px;
+}
+
+.admin-toolbar {
+  margin-top: 0;
+}
+
+.admin-search-field {
+  width: min(455px, 60vw);
+}
+
+.admin-search-field input {
+  height: 37px;
+  border-radius: 6px;
+  font-size: .7rem;
+}
+
+.admin-users-panel {
+  border-radius: 8px;
+}
+
+.admin-users-table th {
+  height: 34px;
+  background: #f0f1ee;
+  font-size: .6rem;
+}
+
+.admin-users-table td {
+  height: 49px;
+  font-size: .64rem;
+}
+
+.admin-table-user strong {
+  font-size: .68rem;
+}
+
+.admin-access-indicator {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.admin-access-indicator__track {
+  position: relative;
+  width: 31px;
+  height: 18px;
+  display: inline-block;
+  border-radius: 999px;
+  background: #d8dbd7;
+}
+
+.admin-access-indicator__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(14, 48, 40, .18);
+}
+
+.admin-access-indicator.is-admin .admin-access-indicator__track {
+  background: #19985b;
+}
+
+.admin-access-indicator.is-admin .admin-access-indicator__thumb {
+  left: 15px;
+}
+
+.admin-users-footer {
+  min-height: 54px;
+}
+
+@media (max-width: 760px) {
+  .admin-body,
+  .admin-workspace {
+    background: #f8f7f2;
+  }
+
+  .admin-mobile-header {
+    height: 64px;
+    background: linear-gradient(180deg, #063d34 0%, #04342d 100%);
+  }
+
+  .admin-mobile-drawer-panel {
+    inset: 64px auto 67px 0;
+  }
+
+  .admin-main {
+    padding: 17px 13px 28px;
+  }
+
+  .admin-dashboard-hero h1,
+  .admin-page-header h1 {
+    font-size: 1.24rem;
+  }
+
+  .admin-dashboard-hero p,
+  .admin-page-header p {
+    font-size: .67rem;
+  }
+
+  .admin-stat-card {
+    min-height: 72px;
+    padding: 10px 11px;
+    border-radius: 8px;
+  }
+
+  .admin-stat-card strong {
+    font-size: 1.3rem;
+  }
+
+  .admin-users-panel {
+    border-radius: 0;
+  }
+
+  .admin-user-mobile-card {
+    border-radius: 8px;
+  }
+}
