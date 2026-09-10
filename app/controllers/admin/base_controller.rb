@@ -2,6 +2,9 @@ module Admin
   class BaseController < ApplicationController
     layout "admin"
 
+    helper ApplicationHelper
+    helper AdminHelper
+
     before_action :authenticate_user!
     before_action :require_admin!
 
