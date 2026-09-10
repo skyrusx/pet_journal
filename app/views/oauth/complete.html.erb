@@ -1,0 +1,75 @@
+<%= render "devise/shared/auth_v2_navbar" %>
+
+<div class="pj-auth-v2 pj-auth-v2--oauth-complete">
+  <main class="pj-auth-v2-main">
+    <div class="pj-auth-v2-shell">
+      <section class="pj-auth-v2-stage" aria-labelledby="pj-auth-v2-title">
+        <div class="pj-auth-v2-visual" aria-hidden="true">
+          <div class="pj-auth-v2-brand-card">
+            <%= image_tag "petjournal/logo-horizontal.png", alt: "", class: "pj-auth-v2-brand-card__logo" %>
+            <h2>Почти готово</h2>
+            <p>Проверьте данные и подтвердите создание аккаунта PetJournal.</p>
+          </div>
+        </div>
+
+        <div class="pj-auth-v2-form-side">
+          <div class="pj-auth-v2-card">
+            <div class="pj-auth-v2-heading">
+              <h1 id="pj-auth-v2-title">Создание аккаунта</h1>
+              <p>Данные получены из <%= Oauth::Configuration.provider_name(@profile.provider) %>.</p>
+            </div>
+
+            <% if flash[:alert].present? %>
+              <div class="pj-oauth-alert" role="alert"><%= flash[:alert] %></div>
+            <% end %>
+
+            <div class="pj-oauth-profile-preview">
+              <% if @profile.avatar_url.present? %>
+                <%= image_tag @profile.avatar_url,
+                              alt: "",
+                              class: "pj-oauth-profile-preview__avatar",
+                              referrerpolicy: "no-referrer" %>
+              <% else %>
+                <span class="pj-oauth-profile-preview__avatar pj-oauth-profile-preview__avatar--fallback" aria-hidden="true">
+                  <%= (@profile.name.presence || @profile.email).to_s.first.to_s.upcase %>
+                </span>
+              <% end %>
+
+              <div>
+                <strong><%= @profile.name.presence || "Новый пользователь" %></strong>
+                <span><%= @profile.email.presence || "Email не получен" %></span>
+                <% if @profile.phone.present? %>
+                  <small><%= @profile.phone %></small>
+                <% end %>
+              </div>
+            </div>
+
+            <%= form_with url: oauth_register_path, method: :post, class: "pj-auth-v2-form" do %>
+              <%= render "shared/public_form_protection" %>
+
+              <div class="pj-auth-v2-consent">
+                <label class="pj-auth-v2-consent__check">
+                  <%= check_box_tag :personal_data_consent, "1", false, required: true %>
+                  <span>Я даю <%= legal_link :personal_data_consent,
+                                              lowercase: true,
+                                              target: "_blank",
+                                              rel: "noopener" %>.</span>
+                </label>
+                <p>Подробнее: <%= legal_link :privacy, target: "_blank", rel: "noopener" %>.</p>
+              </div>
+
+              <%= submit_tag "Продолжить", class: "pj-auth-v2-submit" %>
+            <% end %>
+
+            <p class="pj-auth-v2-register">
+              Не хотите создавать аккаунт?
+              <%= link_to "Вернуться ко входу", new_user_session_path %>
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <%= render "devise/shared/auth_v2_footer" %>
+</div>

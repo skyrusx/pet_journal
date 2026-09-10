@@ -16,7 +16,7 @@ class UserConsent < ApplicationRecord
   ].freeze
 
   CONSENT_TYPES = [PERSONAL_DATA, PET_TAG_PHONE_DISTRIBUTION].freeze
-  SOURCES = %w[registration pet_tag_settings].freeze
+  SOURCES = %w[registration oauth_registration pet_tag_settings].freeze
 
   belongs_to :user
   belongs_to :consentable, polymorphic: true, optional: true

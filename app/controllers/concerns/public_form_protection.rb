@@ -6,7 +6,7 @@ module PublicFormProtection
   MINIMUM_FORM_AGE = 2.seconds
   TOKEN_PURPOSE = :public_form_submission
   HONEYPOT_FIELD = :contact_website
-  PUBLIC_FORM_PATHS = %w[/register /login /password].freeze
+  PUBLIC_FORM_PATHS = %w[/register /login /password /oauth/complete].freeze
   PET_TAG_LOCATION_PATH = %r{\A/p/[^/]+/location\z}
 
   included do

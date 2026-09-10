@@ -1,0 +1,69 @@
+<section class="pj-account-card pj-account-oauth-card" aria-labelledby="pj-oauth-connections-title">
+  <div class="pj-account-card__head">
+    <div>
+      <span class="pj-account-card__kicker">Способы входа</span>
+      <p id="pj-oauth-connections-title">Подключите внешний аккаунт для быстрого входа в PetJournal.</p>
+    </div>
+  </div>
+
+  <div class="pj-account-oauth-list">
+    <% [["vk", "VK ID"], ["yandex", "Яндекс ID"]].each do |provider, label| %>
+      <% identity = user.external_identities.find { |item| item.provider == provider } %>
+      <% configured = Oauth::Configuration.configured?(provider) %>
+      <% disconnect_blocked = configured && identity && !user.can_disconnect_external_identity?(identity) %>
+      <% disconnect_hint_id = "pj-oauth-#{provider}-disconnect-hint" %>
+
+      <div class="pj-account-oauth-provider <%= "pj-account-oauth-provider__disabled" unless configured %>">
+        <% if provider == "vk" %>
+          <span class="pj-account-oauth-provider__icon pj-account-oauth-provider__icon--vk" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M6.79 7.3H4.05c.13 6.24 3.25 9.99 8.72 9.99h.31v-3.57c2.01.2 3.53 1.67 4.14 3.57h2.84c-.78-2.84-2.83-4.41-4.11-5.01 1.28-.74 3.08-2.54 3.51-4.98h-2.58c-.56 1.98-2.22 3.78-3.8 3.95V7.3H10.5v6.92c-1.6-.4-3.62-2.34-3.71-6.92Z"/>
+            </svg>
+          </span>
+        <% else %>
+          <span class="pj-account-oauth-provider__icon pj-account-oauth-provider__icon--yandex" aria-hidden="true">Я</span>
+        <% end %>
+
+        <div class="pj-account-oauth-provider__copy">
+          <strong><%= label %></strong>
+          <% if identity %>
+            <span>Подключён <%= l(identity.connected_at.to_date, format: :short) %>. Можно использовать для входа.</span>
+            <% if disconnect_blocked %>
+              <small id="<%= disconnect_hint_id %>" class="pj-account-oauth-provider__hint">
+                Чтобы отключить, сначала создайте пароль или подключите другой способ входа.
+              </small>
+            <% end %>
+          <% elsif configured %>
+            <span>Не подключён.</span>
+          <% else %>
+            <span>Провайдер пока не настроен на сервере.</span>
+          <% end %>
+        </div>
+
+        <div class="pj-account-oauth-provider__action">
+          <% if configured && identity %>
+            <% if user.can_disconnect_external_identity?(identity) %>
+              <%= link_to "Отключить",
+                          oauth_start_path(provider: provider, purpose: "disconnect"),
+                          class: "pj-account-secondary-button",
+                          data: { turbo: false } %>
+            <% else %>
+              <span class="pj-account-secondary-button pj-account-oauth-provider__blocked-action"
+                    aria-disabled="true"
+                    aria-describedby="<%= disconnect_hint_id %>">
+                Отключить
+              </span>
+            <% end %>
+          <% elsif configured %>
+            <%= link_to "Подключить",
+                        oauth_start_path(provider: provider, purpose: "link"),
+                        class: "pj-account-secondary-button",
+                        data: { turbo: false } %>
+          <% else %>
+            <span class="pj-account-secondary-button" aria-disabled="true">Недоступно</span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>
