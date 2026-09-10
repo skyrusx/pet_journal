@@ -47,6 +47,11 @@ Rails.application.routes.draw do
   get "settings" => "settings#edit", as: :settings
   patch "settings" => "settings#update"
 
+  namespace :admin do
+    root "dashboard#index"
+    resources :users, only: %i[index show]
+  end
+
   resources :notifications, controller: :in_app_notifications, only: %i[index show] do
     patch :mark_all_read, on: :collection
   end
