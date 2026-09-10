@@ -13,10 +13,11 @@ module Oauth
       params = {
         response_type: "code",
         client_id: client_id,
+        app_id: client_id,
         redirect_uri: redirect_uri,
         state: state,
         code_challenge: code_challenge,
-        code_challenge_method: "S256",
+        code_challenge_method: "s256",
         scope: SCOPE
       }
 
