@@ -1,15 +1,14 @@
 <% content_for :title, "Обзор — Управление PetJournal" %>
 
 <section class="admin-page admin-dashboard">
-  <header class="admin-page-header admin-page-header-dashboard">
+  <header class="admin-page-header">
     <div>
-      <span class="admin-eyebrow">Обзор</span>
-      <h1>Добро пожаловать, <%= admin_user_name(current_user) %>! <span aria-hidden="true">👋</span></h1>
-      <p>Здесь главное о PetJournal и быстрый доступ к управлению сервисом.</p>
+      <h1>Обзор</h1>
+      <p>Ключевые показатели и последние изменения в PetJournal.</p>
     </div>
   </header>
 
-  <div class="admin-stat-grid" aria-label="Основные показатели">
+  <section class="admin-stat-grid" aria-label="Основные показатели">
     <article class="admin-stat-card">
       <span class="admin-stat-icon"><%= pj_icon(:user) %></span>
       <div>
@@ -33,64 +32,33 @@
         <strong><%= number_with_delimiter(@stats[:pet_tags], delimiter: " ") %></strong>
       </div>
     </article>
-  </div>
+  </section>
 
-  <div class="admin-dashboard-grid">
-    <section class="admin-panel">
-      <div class="admin-panel-header">
-        <div>
-          <h2>Последние регистрации</h2>
-          <p>Новые пользователи PetJournal.</p>
-        </div>
-        <%= link_to "Все пользователи", admin_users_path, class: "admin-text-link" %>
+  <section class="admin-panel admin-dashboard-primary">
+    <div class="admin-panel-header">
+      <div>
+        <h2>Последние регистрации</h2>
+        <p>Новые пользователи PetJournal.</p>
       </div>
+      <%= link_to "Все пользователи", admin_users_path, class: "admin-text-link" %>
+    </div>
 
-      <% if @recent_users.any? %>
-        <div class="admin-recent-list">
-          <% @recent_users.each do |user| %>
-            <%= link_to admin_user_path(user), class: "admin-recent-user" do %>
-              <%= render "admin/shared/avatar", user: user, size: :medium %>
-              <span class="admin-recent-user-copy">
-                <strong><%= admin_user_name(user) %></strong>
-                <small><%= user.email %></small>
-              </span>
-              <time datetime="<%= user.created_at.iso8601 %>"><%= l(user.created_at, format: "%d.%m.%Y, %H:%M") %></time>
-              <span class="admin-row-chevron" aria-hidden="true">›</span>
-            <% end %>
+    <% if @recent_users.any? %>
+      <div class="admin-recent-list">
+        <% @recent_users.each do |user| %>
+          <%= link_to admin_user_path(user), class: "admin-recent-user" do %>
+            <%= render "admin/shared/avatar", user: user, size: :medium %>
+            <span class="admin-recent-user-copy">
+              <strong><%= admin_user_name(user) %></strong>
+              <small><%= user.email %></small>
+            </span>
+            <time datetime="<%= user.created_at.iso8601 %>"><%= l(user.created_at, format: "%d.%m.%Y, %H:%M") %></time>
+            <span class="admin-row-chevron" aria-hidden="true">›</span>
           <% end %>
-        </div>
-      <% else %>
-        <div class="admin-empty-compact">Регистраций пока нет.</div>
-      <% end %>
-    </section>
-
-    <section class="admin-panel admin-quick-panel">
-      <div class="admin-panel-header">
-        <div>
-          <h2>Быстрые действия</h2>
-          <p>Основные разделы текущей версии.</p>
-        </div>
-      </div>
-
-      <div class="admin-quick-list">
-        <%= link_to admin_users_path, class: "admin-quick-link" do %>
-          <span class="admin-quick-icon"><%= pj_icon(:user) %></span>
-          <span>
-            <strong>Пользователи</strong>
-            <small>Просмотр и поиск пользователей</small>
-          </span>
-          <span class="admin-row-chevron" aria-hidden="true">›</span>
-        <% end %>
-
-        <%= link_to root_path, class: "admin-quick-link" do %>
-          <span class="admin-quick-icon"><%= pj_icon(:home) %></span>
-          <span>
-            <strong>PetJournal</strong>
-            <small>Вернуться в пользовательскую часть</small>
-          </span>
-          <span class="admin-row-chevron" aria-hidden="true">›</span>
         <% end %>
       </div>
-    </section>
-  </div>
+    <% else %>
+      <div class="admin-empty-compact">Регистраций пока нет.</div>
+    <% end %>
+  </section>
 </section>
