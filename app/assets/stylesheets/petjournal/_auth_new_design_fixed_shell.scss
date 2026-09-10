@@ -62,8 +62,15 @@
     min-height: 610px;
   }
 
-  /* The registration form is the tallest auth flow; keep it centered with
-     enough breathing room without changing the shared shell geometry. */
+  /* Registration can be taller than the shared auth shell after adding
+     consent and OAuth controls. Keep the normal minimum, but let it grow
+     instead of clipping the bottom of the form. */
+  .pj-auth-v2--registration .pj-auth-v2-stage,
+  .pj-auth-v2--registration .pj-auth-v2-visual {
+    height: auto;
+    min-height: 610px;
+  }
+
   .pj-auth-v2--registration .pj-auth-v2-form-side {
     padding-block: 20px;
   }
