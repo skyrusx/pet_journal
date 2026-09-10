@@ -60,6 +60,11 @@
               <%= link_to "Настройки аккаунта",
                           edit_user_registration_path,
                           class: class_names("app-user-dropdown-link", active: devise_controller?) %>
+              <% if current_user.admin_access? %>
+                <%= link_to "Управление",
+                            admin_root_path,
+                            class: "app-user-dropdown-link" %>
+              <% end %>
               <div class="app-user-dropdown-separator" aria-hidden="true"></div>
               <%= button_to "Выйти",
                             destroy_user_session_path,
@@ -233,6 +238,16 @@
                   <% if item[:badge].present? %>
                     <span class="mobile-sheet-badge"><%= item[:badge] %></span>
                   <% end %>
+                  <%= pj_icon(:chevron, class: "mobile-sheet-chevron") %>
+                <% end %>
+              <% end %>
+
+              <% if current_user.admin_access? %>
+                <%= link_to admin_root_path,
+                            class: "mobile-sheet-link",
+                            data: { mobile_sheet_link: true } do %>
+                  <span class="mobile-sheet-link-icon"><%= pj_icon(:settings) %></span>
+                  <span>Управление</span>
                   <%= pj_icon(:chevron, class: "mobile-sheet-chevron") %>
                 <% end %>
               <% end %>

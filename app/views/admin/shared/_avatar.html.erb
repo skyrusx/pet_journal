@@ -1,0 +1,7 @@
+<span class="admin-avatar admin-avatar-<%= local_assigns.fetch(:size, :medium) %>">
+  <% if user.avatar.attached? %>
+    <%= image_tag user.avatar, alt: "", loading: "lazy" %>
+  <% else %>
+    <span><%= admin_user_initial(user) %></span>
+  <% end %>
+</span>

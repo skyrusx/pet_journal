@@ -87,6 +87,13 @@
           <span>Профиль</span>
         <% end %>
 
+        <% if current_user.admin_access? %>
+          <%= link_to admin_root_path, class: "pj-dash-profile-popover__item" do %>
+            <%= pj_icon(:settings) %>
+            <span>Управление</span>
+          <% end %>
+        <% end %>
+
         <div class="pj-dash-profile-popover__separator" aria-hidden="true"></div>
 
         <%= button_to destroy_user_session_path,

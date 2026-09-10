@@ -1,0 +1,89 @@
+<header class="admin-mobile-header">
+  <details class="admin-mobile-drawer">
+    <summary class="admin-mobile-menu-button" aria-label="Открыть меню управления">
+      <span></span>
+      <span></span>
+      <span></span>
+    </summary>
+
+    <div class="admin-mobile-drawer-panel">
+      <div class="admin-mobile-drawer-brand">
+        <span class="admin-brand-mark">
+          <%= image_tag "petjournal/logo-symbol.png", alt: "" %>
+        </span>
+        <span>
+          <strong>PetJournal</strong>
+          <small>Управление</small>
+        </span>
+      </div>
+
+      <nav class="admin-mobile-drawer-nav">
+        <%= admin_nav_link "Обзор",
+                           admin_root_path,
+                           icon: :home,
+                           active: controller_name == "dashboard" %>
+        <%= admin_nav_link "Пользователи",
+                           admin_users_path,
+                           icon: :user,
+                           active: controller_name == "users" %>
+      </nav>
+
+      <%= link_to root_path, class: "admin-mobile-drawer-back" do %>
+        <span aria-hidden="true">←</span>
+        <span>Вернуться в PetJournal</span>
+      <% end %>
+    </div>
+  </details>
+
+  <%= link_to admin_root_path, class: "admin-mobile-brand" do %>
+    <strong>PetJournal</strong>
+    <small>Управление</small>
+  <% end %>
+
+  <div class="admin-mobile-header-actions">
+    <%= link_to notifications_path,
+                class: "admin-mobile-notifications",
+                aria: { label: "Уведомления" } do %>
+      <%= pj_icon(:bell) %>
+    <% end %>
+
+    <%= link_to edit_user_registration_path,
+                class: "admin-mobile-account",
+                aria: { label: "Аккаунт администратора" } do %>
+      <%= render "admin/shared/avatar", user: current_user, size: :small %>
+    <% end %>
+  </div>
+</header>
+
+<nav class="admin-mobile-bottom-nav" aria-label="Мобильная навигация управления">
+  <%= link_to admin_root_path,
+              class: class_names("admin-mobile-bottom-item", active: controller_name == "dashboard"),
+              aria: { current: controller_name == "dashboard" ? "page" : nil } do %>
+    <%= pj_icon(:home) %>
+    <span>Обзор</span>
+  <% end %>
+
+  <%= link_to admin_users_path,
+              class: class_names("admin-mobile-bottom-item", active: controller_name == "users"),
+              aria: { current: controller_name == "users" ? "page" : nil } do %>
+    <%= pj_icon(:user) %>
+    <span>Пользователи</span>
+  <% end %>
+
+  <details class="admin-mobile-more">
+    <summary class="admin-mobile-bottom-item">
+      <%= pj_icon(:more) %>
+      <span>Ещё</span>
+    </summary>
+    <div class="admin-mobile-more-menu">
+      <%= link_to edit_user_registration_path do %>
+        <%= pj_icon(:settings) %>
+        <span>Настройки аккаунта</span>
+      <% end %>
+      <%= link_to root_path do %>
+        <span class="admin-mobile-more-arrow" aria-hidden="true">←</span>
+        <span>Вернуться в PetJournal</span>
+      <% end %>
+    </div>
+  </details>
+</nav>
