@@ -35,7 +35,7 @@
               <th>Email</th>
               <th>Питомцы</th>
               <th>Регистрация</th>
-              <th>Доступ</th>
+              <th>Админ</th>
               <th><span class="visually-hidden">Открыть</span></th>
             </tr>
           </thead>
@@ -52,11 +52,12 @@
                 <td><%= user.pets.size %></td>
                 <td><%= l(user.created_at.to_date, format: "%d.%m.%Y") %></td>
                 <td>
-                  <% if user.admin? %>
-                    <span class="admin-badge admin-badge-accent">Администратор</span>
-                  <% else %>
-                    <span class="admin-badge admin-badge-neutral">Пользователь</span>
-                  <% end %>
+                  <span class="admin-access-indicator <%= "is-admin" if user.admin? %>"
+                        aria-label="<%= user.admin? ? "Администратор" : "Обычный пользователь" %>">
+                    <span class="admin-access-indicator__track">
+                      <span class="admin-access-indicator__thumb"></span>
+                    </span>
+                  </span>
                 </td>
                 <td class="admin-table-open">
                   <%= link_to "•••", admin_user_path(user), aria: { label: "Открыть пользователя #{admin_user_name(user)}" } %>
