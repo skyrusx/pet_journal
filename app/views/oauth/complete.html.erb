@@ -24,9 +24,16 @@
             <% end %>
 
             <div class="pj-oauth-profile-preview">
-              <span class="pj-oauth-profile-preview__avatar pj-oauth-profile-preview__avatar--fallback" aria-hidden="true">
-                <%= (@profile.name.presence || @profile.email).to_s.first.to_s.upcase %>
-              </span>
+              <% if @profile.avatar_url.present? %>
+                <%= image_tag @profile.avatar_url,
+                              alt: "",
+                              class: "pj-oauth-profile-preview__avatar",
+                              referrerpolicy: "no-referrer" %>
+              <% else %>
+                <span class="pj-oauth-profile-preview__avatar pj-oauth-profile-preview__avatar--fallback" aria-hidden="true">
+                  <%= (@profile.name.presence || @profile.email).to_s.first.to_s.upcase %>
+                </span>
+              <% end %>
 
               <div>
                 <strong><%= @profile.name.presence || "Новый пользователь" %></strong>
