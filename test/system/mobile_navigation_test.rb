@@ -21,7 +21,7 @@ class MobileNavigationTest < ApplicationSystemTestCase
 
       find('[data-dashboard-sheet-toggle="add"]', visible: true).click
       add_sheet = find('[data-dashboard-sheet="add"].is-open', visible: true)
-      assert_selector add_sheet, text: "Запись в журнал"
+      add_sheet.assert_text "Запись в журнал"
       assert_no_horizontal_overflow
 
       wait_for_sheet_transition(add_sheet)
@@ -30,9 +30,9 @@ class MobileNavigationTest < ApplicationSystemTestCase
 
       find('[data-dashboard-sheet-toggle="more"]', visible: true).click
       more_sheet = find('[data-dashboard-sheet="more"].is-open', visible: true)
-      assert_selector more_sheet, text: "Публичный доступ"
-      assert_selector more_sheet, text: "Профиль"
-      assert_selector more_sheet, text: "Настройки"
+      more_sheet.assert_text "Публичный доступ"
+      more_sheet.assert_text "Профиль"
+      more_sheet.assert_text "Настройки"
       assert_no_horizontal_overflow
 
       wait_for_sheet_transition(more_sheet)
