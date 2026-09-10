@@ -75,6 +75,10 @@ class User < ApplicationRecord
     password_configured? || external_identities.where.not(id: identity.id).exists?
   end
 
+  def admin_access?
+    admin?
+  end
+
   private
 
   def personal_data_consent_required?
