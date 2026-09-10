@@ -24,7 +24,7 @@
         <div class="pj-account-oauth-provider__copy">
           <strong><%= label %></strong>
           <% if identity %>
-            <span>Подключён <%= l(identity.connected_at.to_date, format: :long) %>. Можно использовать для входа.</span>
+            <span>Подключён <%= l(identity.connected_at.to_date, format: :short) %>. Можно использовать для входа.</span>
           <% elsif configured %>
             <span>Не подключён.</span>
           <% else %>
