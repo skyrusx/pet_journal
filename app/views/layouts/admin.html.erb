@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title><%= content_for(:title) || "Управление — PetJournal" %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#07392f">
+    <meta name="color-scheme" content="light">
+    <meta name="robots" content="noindex,nofollow">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= favicon_link_tag "petjournal/favicon.ico" %>
+    <%= favicon_link_tag "petjournal/favicon-32.png", rel: "icon", type: "image/png" %>
+    <%= favicon_link_tag "petjournal/favicon-512.png", rel: "apple-touch-icon", type: "image/png" %>
+
+    <%= stylesheet_link_tag "application" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="admin-body">
+    <div class="admin-app">
+      <%= render "admin/shared/sidebar" %>
+
+      <div class="admin-workspace">
+        <header class="admin-topbar">
+          <div class="admin-topbar-copy">
+            <strong>Управление</strong>
+            <span>Внутренняя панель PetJournal</span>
+          </div>
+
+          <%= link_to edit_user_registration_path, class: "admin-account" do %>
+            <%= render "admin/shared/avatar", user: current_user, size: :small %>
+            <span class="admin-account-copy">
+              <strong><%= admin_user_name(current_user) %></strong>
+              <small>Администратор</small>
+            </span>
+            <span class="admin-account-chevron" aria-hidden="true">›</span>
+          <% end %>
+        </header>
+
+        <%= render "admin/shared/mobile_navigation" %>
+
+        <main class="admin-main">
+          <%= yield %>
+        </main>
+      </div>
+    </div>
+
+    <% if notice.present? || alert.present? %>
+      <div class="flash-stack" aria-live="polite" aria-atomic="true">
+        <% if notice.present? %>
+          <div class="flash-toast notice" role="status" data-flash-toast>
+            <div>
+              <strong>Готово</strong>
+              <p><%= notice %></p>
+            </div>
+            <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
+          </div>
+        <% end %>
+
+        <% if alert.present? %>
+          <div class="flash-toast alert" role="alert" data-flash-toast>
+            <div>
+              <strong>Внимание</strong>
+              <p><%= alert %></p>
+            </div>
+            <button type="button" aria-label="Закрыть уведомление" data-flash-close></button>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </body>
+</html>

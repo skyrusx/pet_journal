@@ -1,0 +1,79 @@
+<% content_for :title, "#{admin_user_name(@user)} — Управление PetJournal" %>
+
+<section class="admin-page admin-user-show">
+  <%= link_to admin_users_path, class: "admin-back-to-list" do %>
+    <span aria-hidden="true">←</span>
+    <span>Пользователи</span>
+  <% end %>
+
+  <header class="admin-user-profile-card">
+    <%= render "admin/shared/avatar", user: @user, size: :large %>
+    <div class="admin-user-profile-copy">
+      <div class="admin-user-profile-title">
+        <h1><%= admin_user_name(@user) %></h1>
+        <% if @user.admin? %>
+          <span class="admin-badge admin-badge-accent">Администратор</span>
+        <% else %>
+          <span class="admin-badge admin-badge-neutral">Пользователь</span>
+        <% end %>
+      </div>
+      <p><%= @user.email %></p>
+      <span>В PetJournal с <%= l(@user.created_at.to_date, format: "%d.%m.%Y") %></span>
+    </div>
+  </header>
+
+  <div class="admin-user-detail-grid">
+    <section class="admin-panel">
+      <div class="admin-panel-header">
+        <div>
+          <h2>Основная информация</h2>
+          <p>Базовые данные аккаунта.</p>
+        </div>
+      </div>
+
+      <dl class="admin-detail-list">
+        <div>
+          <dt>Email</dt>
+          <dd><%= @user.email %></dd>
+        </div>
+        <div>
+          <dt>Имя</dt>
+          <dd><%= @user.name.presence || "Не указано" %></dd>
+        </div>
+        <div>
+          <dt>Дата регистрации</dt>
+          <dd><%= l(@user.created_at, format: "%d.%m.%Y, %H:%M") %></dd>
+        </div>
+        <div>
+          <dt>ID</dt>
+          <dd>#<%= @user.id %></dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="admin-panel">
+      <div class="admin-panel-header">
+        <div>
+          <h2>Питомцы</h2>
+          <p><%= @user.pets.size %> <%= russian_plural(@user.pets.size, "питомец", "питомца", "питомцев") %> в аккаунте.</p>
+        </div>
+      </div>
+
+      <% if @user.pets.any? %>
+        <div class="admin-pets-list">
+          <% @user.pets.sort_by(&:created_at).reverse_each do |pet| %>
+            <div class="admin-pet-row">
+              <span class="admin-pet-icon"><%= pj_icon(:paw) %></span>
+              <span>
+                <strong><%= pet.name.presence || "Без имени" %></strong>
+                <small><%= [pet.species, pet.breed].compact_blank.join(" · ").presence || "Данные не указаны" %></small>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="admin-empty-compact">Питомцев пока нет.</div>
+      <% end %>
+    </section>
+  </div>
+</section>

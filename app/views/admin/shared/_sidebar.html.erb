@@ -1,0 +1,27 @@
+<aside class="admin-sidebar" aria-label="Навигация управления">
+  <%= link_to admin_root_path, class: "admin-brand" do %>
+    <span class="admin-brand-mark"><%= pj_icon(:paw) %></span>
+    <span class="admin-brand-copy">
+      <strong>PetJournal</strong>
+      <small>Управление</small>
+    </span>
+  <% end %>
+
+  <nav class="admin-sidebar-nav">
+    <%= admin_nav_link "Обзор",
+                       admin_root_path,
+                       icon: :home,
+                       active: controller_name == "dashboard" %>
+    <%= admin_nav_link "Пользователи",
+                       admin_users_path,
+                       icon: :user,
+                       active: controller_name == "users" %>
+  </nav>
+
+  <div class="admin-sidebar-footer">
+    <%= link_to root_path, class: "admin-back-link" do %>
+      <span aria-hidden="true">←</span>
+      <span>Вернуться в PetJournal</span>
+    <% end %>
+  </div>
+</aside>
