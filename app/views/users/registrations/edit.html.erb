@@ -124,20 +124,29 @@
               <%= f.email_field :email,
                                 autocomplete: "email",
                                 required: true %>
-              <small>Используется для входа и системных сообщений.</small>
+              <small>
+                Используется для входа и системных сообщений.
+                <% unless resource.password_configured? %>
+                  Чтобы изменить email, сначала создайте пароль.
+                <% end %>
+              </small>
 
               <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
                 <small class="pj-account-field-warning">Ожидается подтверждение: <%= resource.unconfirmed_email %></small>
               <% end %>
             </div>
 
+            <% unless resource.password_configured? %>
+              <p class="pj-account-inline-hint">Вы зарегистрировались через внешний сервис. Создайте пароль, если хотите иметь дополнительный способ входа.</p>
+            <% end %>
+
             <div class="pj-account-password-grid">
               <div class="pj-account-field">
-                <%= f.label :password, "Новый пароль" %>
+                <%= f.label :password, resource.password_configured? ? "Новый пароль" : "Создать пароль" %>
                 <div class="pj-account-password-field auth-password-field">
                   <%= f.password_field :password,
                                        autocomplete: "new-password",
-                                       placeholder: "Оставьте пустым, если не меняете",
+                                       placeholder: resource.password_configured? ? "Оставьте пустым, если не меняете" : "Придумайте пароль",
                                        data: { password_input: true } %>
                   <%= render "devise/shared/password_toggle" %>
                 </div>
@@ -159,24 +168,28 @@
               <p class="pj-account-inline-hint">Новый пароль — минимум <%= @minimum_password_length %> символов.</p>
             <% end %>
 
-            <div class="pj-account-field pj-account-current-password">
-              <%= f.label :current_password, "Текущий пароль" %>
-              <div class="pj-account-password-field auth-password-field">
-                <%= f.password_field :current_password,
-                                     autocomplete: "current-password",
-                                     placeholder: "Нужен для смены email или пароля",
-                                     data: { password_input: true } %>
-                <%= render "devise/shared/password_toggle" %>
+            <% if resource.password_configured? %>
+              <div class="pj-account-field pj-account-current-password">
+                <%= f.label :current_password, "Текущий пароль" %>
+                <div class="pj-account-password-field auth-password-field">
+                  <%= f.password_field :current_password,
+                                       autocomplete: "current-password",
+                                       placeholder: "Нужен для смены email или пароля",
+                                       data: { password_input: true } %>
+                  <%= render "devise/shared/password_toggle" %>
+                </div>
+                <small>Текущий пароль требуется только при изменении email или пароля.</small>
               </div>
-              <small>Текущий пароль требуется только при изменении email или пароля.</small>
-            </div>
+            <% end %>
           </div>
 
           <div class="pj-account-form-actions">
-            <%= f.submit "Сохранить", class: "pj-account-primary-button" %>
+            <%= f.submit resource.password_configured? ? "Сохранить" : "Создать пароль", class: "pj-account-primary-button" %>
           </div>
         <% end %>
       </section>
+
+      <%= render "users/registrations/oauth_connections", user: resource %>
     </div>
 
     <section class="pj-account-card pj-account-contact-note" aria-labelledby="pj-contact-note-title">

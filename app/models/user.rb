@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :in_app_notifications, dependent: :destroy
   has_many :user_consents, dependent: :destroy
   has_many :pet_birthday_greetings, dependent: :destroy
+  has_many :external_identities, dependent: :destroy
   has_many :reminders, through: :pets
 
   attr_accessor :remove_avatar, :personal_data_consent
@@ -24,6 +25,7 @@ class User < ApplicationRecord
   validate :acceptable_avatar
 
   after_create :record_personal_data_consent!, if: :personal_data_consent_required?
+  after_update :mark_password_configured_after_password_change, if: :oauth_password_became_configured?
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -57,12 +59,20 @@ class User < ApplicationRecord
     end
   end
 
-  def prepare_personal_data_consent!(value:, ip_address:, user_agent:)
+  def prepare_personal_data_consent!(value:, ip_address:, user_agent:, source: "registration", metadata: {})
     self.personal_data_consent = value
     @personal_data_consent_context = {
       ip_address: ip_address,
-      user_agent: user_agent.to_s.truncate(500)
+      user_agent: user_agent.to_s.truncate(500),
+      source: source,
+      metadata: metadata.to_h
     }
+  end
+
+  def can_disconnect_external_identity?(identity)
+    return false unless identity&.user_id == id
+
+    password_configured? || external_identities.where.not(id: identity.id).exists?
   end
 
   private
@@ -76,13 +86,21 @@ class User < ApplicationRecord
       consent_type: UserConsent::PERSONAL_DATA,
       document_version: LegalDocuments.version(:personal_data_consent),
       accepted_at: Time.current,
-      source: "registration",
+      source: @personal_data_consent_context[:source],
       ip_address: @personal_data_consent_context[:ip_address],
       user_agent: @personal_data_consent_context[:user_agent],
       metadata: {
         "privacy_policy_version" => LegalDocuments.version(:privacy_policy)
-      }
+      }.merge(@personal_data_consent_context[:metadata])
     )
+  end
+
+  def oauth_password_became_configured?
+    !password_configured? && saved_change_to_encrypted_password?
+  end
+
+  def mark_password_configured_after_password_change
+    update_column(:password_configured, true)
   end
 
   def acceptable_avatar

@@ -88,6 +88,8 @@
               <%= f.submit "Зарегистрироваться", class: "pj-auth-v2-submit" %>
             <% end %>
 
+            <%= render "devise/shared/oauth_buttons", divider_text: "или продолжите через" %>
+
             <p class="pj-auth-v2-register">
               Уже есть аккаунт?
               <%= link_to "Войти", new_session_path(resource_name) %>

@@ -35,6 +35,15 @@ Rails.application.routes.draw do
     put "password" => "devise/passwords#update"
   end
 
+  get "oauth/complete" => "oauth#complete", as: :oauth_complete
+  post "oauth/complete" => "oauth#register", as: :oauth_register
+  get "oauth/:provider/callback" => "oauth#callback",
+      as: :oauth_callback,
+      constraints: { provider: /vk|yandex/ }
+  get "oauth/:provider" => "oauth#start",
+      as: :oauth_start,
+      constraints: { provider: /vk|yandex/ }
+
   get "settings" => "settings#edit", as: :settings
   patch "settings" => "settings#update"
 

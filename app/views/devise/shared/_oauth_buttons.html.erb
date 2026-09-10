@@ -1,0 +1,38 @@
+<% divider_text = local_assigns.fetch(:divider_text, "или войдите через") %>
+
+<div class="pj-auth-v2-divider"><span><%= divider_text %></span></div>
+
+<div class="pj-auth-v2-socials" aria-label="Вход через внешний сервис">
+  <% [["vk", "VK ID"], ["yandex", "Яндекс ID"]].each do |provider, label| %>
+    <% configured = Oauth::Configuration.configured?(provider) %>
+    <% classes = ["pj-auth-v2-social", configured ? "pj-auth-v2-social--enabled" : "pj-auth-v2-social--disabled"] %>
+
+    <% if configured %>
+      <%= link_to oauth_start_path(provider: provider), class: classes.join(" "), data: { turbo: false } do %>
+        <% if provider == "vk" %>
+          <span class="pj-auth-v2-social__vk" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M6.79 7.3H4.05c.13 6.24 3.25 9.99 8.72 9.99h.31v-3.57c2.01.2 3.53 1.67 4.14 3.57h2.84c-.78-2.84-2.83-4.41-4.11-5.01 1.28-.74 3.08-2.54 3.51-4.98h-2.58c-.56 1.98-2.22 3.78-3.8 3.95V7.3H10.5v6.92c-1.6-.4-3.62-2.34-3.71-6.92Z"/>
+            </svg>
+          </span>
+        <% else %>
+          <span class="pj-auth-v2-social__ya" aria-hidden="true">Я</span>
+        <% end %>
+        <span><%= label %></span>
+      <% end %>
+    <% else %>
+      <span class="<%= classes.join(" ") %>" aria-disabled="true" title="Провайдер пока не настроен">
+        <% if provider == "vk" %>
+          <span class="pj-auth-v2-social__vk" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M6.79 7.3H4.05c.13 6.24 3.25 9.99 8.72 9.99h.31v-3.57c2.01.2 3.53 1.67 4.14 3.57h2.84c-.78-2.84-2.83-4.41-4.11-5.01 1.28-.74 3.08-2.54 3.51-4.98h-2.58c-.56 1.98-2.22 3.78-3.8 3.95V7.3H10.5v6.92c-1.6-.4-3.62-2.34-3.71-6.92Z"/>
+            </svg>
+          </span>
+        <% else %>
+          <span class="pj-auth-v2-social__ya" aria-hidden="true">Я</span>
+        <% end %>
+        <span><%= label %></span>
+      </span>
+    <% end %>
+  <% end %>
+</div>

@@ -56,6 +56,14 @@ Rack::Attack.throttle("security/password_reset/email", limit: 3, period: 1.hour)
   SecurityRateLimitKey.email(request) if request.post? && request.path == "/password"
 end
 
+Rack::Attack.throttle("security/oauth/start/ip", limit: 30, period: 10.minutes) do |request|
+  request.ip if request.get? && request.path.match?(%r{\A/oauth/(vk|yandex)\z})
+end
+
+Rack::Attack.throttle("security/oauth/register/ip", limit: 5, period: 10.minutes) do |request|
+  request.ip if request.post? && request.path == "/oauth/complete"
+end
+
 Rack::Attack.throttle("security/public_pet_tag/show/ip", limit: 30, period: 5.minutes) do |request|
   request.ip if request.get? && request.path.match?(%r{\A/p/[^/]+\z})
 end
