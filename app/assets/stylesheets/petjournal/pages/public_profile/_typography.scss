@@ -1,0 +1,165 @@
+/*
+ * Public profile typography standardization.
+ *
+ * Keep the public page on the same type scale as the authenticated workspace:
+ * Prata for headings, Manrope for interface/content, and the shared product
+ * tokens for caption/meta/body/card/section/page text.
+ */
+
+.pj-public-profile-page {
+  font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+  font-size: var(--pj-font-body);
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.pj-public-profile-page button,
+.pj-public-profile-page a,
+.pj-public-profile-page dt,
+.pj-public-profile-page dd,
+.pj-public-profile-page p,
+.pj-public-profile-page small,
+.pj-public-profile-page span,
+.pj-public-profile-page strong,
+.pj-public-profile-page time,
+.pj-public-profile-page em {
+  font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+}
+
+.pj-public-profile-identity h1,
+.pj-public-profile-section h2,
+.pj-public-profile-side-card h2,
+.pj-public-profile-contact h2 {
+  font-family: "Prata", Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+/* Page identity */
+.pj-public-profile-identity h1 {
+  font-size: var(--pj-font-page-title);
+  line-height: 1.2;
+}
+
+.pj-public-profile-identity p {
+  font-size: var(--pj-font-body);
+  line-height: 1.5;
+}
+
+.pj-public-profile-meta span,
+.pj-public-profile-count {
+  font-size: var(--pj-font-caption);
+  line-height: 1.25;
+}
+
+/* Section hierarchy */
+.pj-public-profile-section h2,
+.pj-public-profile-side-card h2,
+.pj-public-profile-contact h2 {
+  font-size: var(--pj-font-section-title);
+  line-height: 1.3;
+}
+
+.pj-public-profile-section__head small,
+.pj-public-profile-contact small {
+  font-size: var(--pj-font-caption);
+  line-height: 1.35;
+}
+
+/* Profile data */
+.pj-public-profile-details dt {
+  font-size: var(--pj-font-caption);
+  line-height: 1.4;
+}
+
+.pj-public-profile-details dd {
+  font-size: var(--pj-font-body);
+  line-height: 1.4;
+}
+
+.pj-public-profile-note strong,
+.pj-public-profile-alert strong,
+.pj-public-profile-pettag__grid strong {
+  font-size: var(--pj-font-meta);
+  line-height: 1.4;
+}
+
+.pj-public-profile-note p,
+.pj-public-profile-contact p,
+.pj-public-profile-alert p,
+.pj-public-profile-pettag__grid p {
+  font-size: var(--pj-font-body);
+  line-height: 1.5;
+}
+
+/* Actions */
+.pj-public-profile-share-button,
+.pj-public-profile-primary-action {
+  font-size: var(--pj-font-control);
+  line-height: 1.2;
+}
+
+/* Journal / documents / reminders cards */
+.pj-public-profile-journal-item time,
+.pj-public-profile-document-item small,
+.pj-public-profile-reminder-item small,
+.pj-public-profile-document-item em,
+.pj-public-profile-reminder-item time {
+  font-size: var(--pj-font-caption);
+  line-height: 1.4;
+}
+
+.pj-public-profile-journal-item strong,
+.pj-public-profile-document-item strong,
+.pj-public-profile-reminder-item strong {
+  font-size: var(--pj-font-card-title);
+  line-height: 1.35;
+}
+
+.pj-public-profile-journal-item p,
+.pj-public-profile-document-item p,
+.pj-public-profile-reminder-item p {
+  font-size: var(--pj-font-meta);
+  line-height: 1.5;
+}
+
+.pj-public-profile-inline-meta span,
+.pj-public-profile-file-list a,
+.pj-public-profile-file-list span {
+  font-size: var(--pj-font-caption);
+  line-height: 1.35;
+}
+
+.pj-public-profile-side-empty {
+  font-size: var(--pj-font-meta);
+  line-height: 1.5;
+}
+
+/* Standard PetJournal footer uses the same readable caption scale here too. */
+.pj-public-profile-standard-footer {
+  font-size: var(--pj-font-caption);
+  line-height: 1.4;
+}
+
+@media (max-width: 820px) {
+  .pj-public-profile-identity h1 {
+    font-size: 1.5rem;
+  }
+
+  .pj-public-profile-section h2,
+  .pj-public-profile-side-card h2,
+  .pj-public-profile-contact h2 {
+    font-size: 1.125rem;
+  }
+
+  .pj-public-profile-share-button,
+  .pj-public-profile-primary-action {
+    font-size: var(--pj-font-body);
+  }
+
+  .pj-public-profile-journal-item strong,
+  .pj-public-profile-document-item strong,
+  .pj-public-profile-reminder-item strong {
+    font-size: .9375rem;
+  }
+}

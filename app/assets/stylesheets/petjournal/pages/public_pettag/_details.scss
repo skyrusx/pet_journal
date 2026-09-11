@@ -1,0 +1,218 @@
+.pj-public-tag-owner > .pj-public-tag-outline-button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pj-public-tag-owner__phone {
+  width: fit-content;
+  color: #315f47;
+  font-size: var(--pj-font-caption);
+  line-height: 1.45;
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.pj-public-tag-owner__phone:hover,
+.pj-public-tag-owner__phone:focus-visible {
+  color: #174f34;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pj-public-tag-outline-button,
+.pj-public-tag-primary-button,
+.pj-public-tag-location-button {
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 120ms ease;
+}
+
+.pj-public-tag-outline-button:hover,
+.pj-public-tag-outline-button:focus-visible {
+  color: #174f34;
+  border-color: #cbd5c8;
+  background: #f2f5ed;
+  box-shadow: 0 5px 14px rgba(49, 57, 50, .06);
+  transform: translateY(-1px);
+}
+
+.pj-public-tag-primary-button:hover,
+.pj-public-tag-primary-button:focus-visible,
+.pj-public-tag-page.is-lost .pj-public-tag-primary-button:hover,
+.pj-public-tag-page.is-lost .pj-public-tag-primary-button:focus-visible {
+  color: #fff;
+  background: #154d34;
+  box-shadow: 0 7px 18px rgba(25, 90, 60, .16);
+  transform: translateY(-1px);
+}
+
+.pj-public-tag-location-button:hover,
+.pj-public-tag-location-button:focus-visible {
+  color: #25563d;
+  border-color: #cbd8bd;
+  background: #f1f6e8;
+  box-shadow: 0 5px 14px rgba(49, 57, 50, .05);
+  transform: translateY(-1px);
+}
+
+.pj-public-tag-outline-button:active,
+.pj-public-tag-primary-button:active,
+.pj-public-tag-location-button:active {
+  transform: translateY(0) scale(.985);
+}
+
+.pj-public-tag-location-button:disabled {
+  cursor: wait;
+  opacity: .72;
+}
+
+.pj-public-tag-location-button.is-loading {
+  border-color: #d7ddcf;
+  background: #f4f5f0;
+}
+
+.pj-public-tag-location-button.is-loading:hover,
+.pj-public-tag-location-button.is-loading:focus-visible,
+.pj-public-tag-location-button:disabled:hover,
+.pj-public-tag-location-button:disabled:focus-visible {
+  box-shadow: none;
+  transform: none;
+}
+
+.pj-public-tag-location-status.is-success {
+  color: #587144;
+}
+
+.pj-public-tag-location-status.is-error {
+  color: #9a5149;
+}
+
+.pj-public-tag-consent {
+  display: grid;
+  gap: var(--pj-space-2);
+  padding: var(--pj-space-4);
+  border: 1px solid var(--pj-border);
+  border-radius: var(--pj-radius-card);
+  background: var(--pj-soft);
+  color: var(--pj-muted);
+  font-size: var(--pj-font-meta);
+  line-height: var(--pj-line-body);
+}
+
+.pj-public-tag-consent__check {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: var(--pj-space-2);
+  align-items: start;
+  margin: 0;
+  cursor: pointer;
+}
+
+.pj-public-tag-consent__check input {
+  width: 20px;
+  height: 20px;
+  margin: 1px 0 0;
+  accent-color: var(--pj-green);
+}
+
+.pj-public-tag-consent p {
+  margin: 0 0 0 var(--pj-space-7);
+}
+
+.pj-public-tag-consent a,
+.pj-public-tag-footer a {
+  color: var(--pj-green);
+  font-weight: 700;
+  text-underline-offset: 2px;
+}
+
+/* Public PetTag uses the same public shell as the landing page. The old local
+   header/footer remain in the template for backwards-compatible markup but are
+   visually replaced by the shared landing navbar and auth footer from layout. */
+body.public-pettag-layout-body {
+  margin: 0;
+  background: #fdfcf8 !important;
+}
+
+.pj-public-pettag-site {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #fdfcf8;
+}
+
+.pj-public-tag-page {
+  min-height: 0;
+  flex: 1 0 auto;
+  background: #fdfcf8;
+}
+
+.pj-public-tag-header,
+.pj-public-tag-footer {
+  display: none;
+}
+
+.pj-public-tag-main {
+  width: min(1240px, calc(100% - 96px));
+  margin-inline: auto;
+  padding: 32px 0 44px;
+}
+
+.pj-public-pettag-site > .pj-auth-v2-footer {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 1100px) {
+  .pj-public-tag-main {
+    width: min(100% - 48px, 1240px);
+  }
+}
+
+@media (max-width: 820px) {
+  /* The avatar has a 14px left offset. Give its grid track enough width so the
+     text column starts after the photo instead of exactly at its right edge. */
+  .pj-public-tag-pet-card {
+    grid-template-columns: 94px minmax(0, 1fr);
+  }
+
+  .pj-public-tag-pet-card__body {
+    min-width: 0;
+    padding-left: 14px;
+  }
+}
+
+@media (max-width: 560px) {
+  .pj-public-tag-main {
+    width: calc(100% - 32px);
+    padding-top: 20px;
+    padding-bottom: 32px;
+  }
+
+  .pj-public-tag-consent__check {
+    grid-template-columns: var(--pj-size-touch-target) minmax(0, 1fr);
+    gap: 0;
+    align-items: center;
+  }
+
+  .pj-public-tag-consent p {
+    margin-left: var(--pj-size-touch-target);
+  }
+}
+
+@media (max-width: 390px) {
+  .pj-public-tag-pet-card {
+    grid-template-columns: 82px minmax(0, 1fr);
+  }
+}
+
+@media (hover: none) {
+  .pj-public-tag-outline-button:hover,
+  .pj-public-tag-primary-button:hover,
+  .pj-public-tag-location-button:hover {
+    box-shadow: none;
+    transform: none;
+  }
+}

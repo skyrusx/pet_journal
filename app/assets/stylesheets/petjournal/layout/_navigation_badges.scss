@@ -1,0 +1,14 @@
+/* Navigation counters use the same calm sage palette as reminder status pills. */
+
+.pj-dash-nav__badge,
+.pj-mobile-chrome__badge {
+  color: #577444;
+  background: #edf2dc;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+/* Keep only the neutral separation needed when the mobile badge overlaps the icon. */
+.pj-mobile-chrome__badge {
+  border-color: #fffefa;
+}

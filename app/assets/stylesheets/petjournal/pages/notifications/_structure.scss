@@ -1,0 +1,817 @@
+/* Notification visual standardization.
+   Keeps existing behavior intact while matching the scale and rhythm of polished PetJournal workspace pages. */
+
+/* Shared desktop scale */
+.pj-notifications-content {
+  padding-top: 32px;
+  padding-bottom: 52px;
+}
+
+.pj-notifications-form-content {
+  width: min(960px, calc(100% - 72px));
+  padding-top: 30px;
+  padding-bottom: 52px;
+}
+
+.pj-notifications-heading {
+  margin-bottom: 24px;
+}
+
+.pj-notifications-heading h1,
+.pj-notifications-form-heading h1 {
+  margin-bottom: 7px;
+  font-size: 30px;
+  line-height: 1.22;
+}
+
+.pj-notifications-heading p,
+.pj-notifications-form-heading p,
+.pj-notifications-section__head p,
+.pj-notifications-panel__heading p {
+  color: #8d948e;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.pj-notifications-eyebrow {
+  margin-bottom: 6px;
+  font-size: 11px;
+  letter-spacing: .075em;
+}
+
+.pj-notifications-primary-button,
+.pj-notifications-secondary-button {
+  min-height: 44px;
+  padding-inline: 18px;
+  border-radius: 9px;
+  font-size: 13.5px;
+}
+
+.pj-notifications-section {
+  margin-bottom: 24px;
+  padding: 24px;
+  border-radius: 14px;
+}
+
+.pj-notifications-section__head {
+  margin-bottom: 20px;
+}
+
+.pj-notifications-section__head h2,
+.pj-notifications-panel__heading h2,
+.pj-notifications-help h2 {
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+.pj-notifications-summary {
+  gap: 8px;
+}
+
+.pj-notifications-summary > span {
+  min-height: 34px;
+  padding-inline: 11px;
+  font-size: 12px;
+}
+
+.pj-notifications-summary strong {
+  font-size: 13px;
+}
+
+/* Channel cards */
+.pj-notifications-channel-grid {
+  gap: 14px;
+}
+
+.pj-notifications-channel-card {
+  min-height: 148px;
+  grid-template-columns: 50px minmax(0, 1fr) 34px;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 12px;
+}
+
+.pj-notifications-channel-card__icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+}
+
+.pj-notifications-channel-card__icon .pj-notification-channel-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.pj-notifications-channel-card__title-row > div > span {
+  margin-bottom: 3px;
+  font-size: 11.5px;
+}
+
+.pj-notifications-channel-card h3 {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.pj-notifications-channel-card__address,
+.pj-notifications-channel-card__config {
+  margin-top: 7px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.pj-notifications-status {
+  min-height: 25px;
+  padding-inline: 9px;
+  font-size: 10.5px;
+}
+
+.pj-notifications-channel-actions > summary {
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+}
+
+.pj-notifications-channel-actions__menu {
+  width: 196px;
+  padding: 7px;
+}
+
+.pj-notifications-channel-actions__menu a,
+.pj-notifications-channel-actions__menu button {
+  min-height: 40px;
+  padding-inline: 11px;
+  font-size: 12.5px;
+}
+
+/* Empty state */
+.pj-notifications-empty {
+  min-height: 146px;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  gap: 16px;
+  padding: 20px;
+}
+
+.pj-notifications-empty__icon {
+  width: 52px;
+  height: 52px;
+}
+
+.pj-notifications-empty h3 {
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+.pj-notifications-empty p {
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* Settings panels */
+.pj-notifications-settings-grid {
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.pj-notifications-panel {
+  padding: 22px;
+  border-radius: 14px;
+}
+
+.pj-notifications-panel__heading {
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.pj-notifications-panel__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+.pj-notifications-panel__icon .pj-nav-icon,
+.pj-notifications-panel__icon .pj-notification-channel-icon {
+  width: 23px;
+  height: 23px;
+}
+
+.pj-notifications-toggle-row {
+  min-height: 68px;
+  gap: 20px;
+  padding: 13px 14px;
+  border-radius: 10px;
+}
+
+.pj-notifications-toggle-row strong {
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+
+.pj-notifications-toggle-row small {
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.pj-notifications-switch {
+  width: 42px;
+  height: 24px;
+  flex-basis: 42px;
+}
+
+.pj-notifications-switch > span::after {
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+}
+
+.pj-notifications-switch input:checked + span::after {
+  transform: translateX(18px);
+}
+
+.pj-notifications-quiet-fields,
+.pj-notifications-form-grid {
+  gap: 16px;
+}
+
+.pj-notifications-quiet-fields {
+  margin-top: 16px;
+}
+
+.pj-notifications-field {
+  gap: 7px;
+}
+
+.pj-notifications-field label {
+  color: #4f5e55;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pj-notifications-field input,
+.pj-notifications-field select {
+  height: 46px;
+  padding-inline: 13px;
+  border-radius: 9px;
+  font-size: 14px;
+}
+
+.pj-notifications-field > small {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.pj-notifications-panel__actions,
+.pj-notifications-push-actions {
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.pj-notifications-push-status {
+  min-height: 20px;
+  margin-top: 12px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.pj-notifications-inline-note,
+.pj-notifications-form-note,
+.pj-notifications-form-info {
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+/* Delivery history */
+.pj-notifications-history-filter {
+  gap: 8px;
+}
+
+.pj-notifications-history-filter select {
+  height: 44px;
+  padding: 0 34px 0 12px;
+  border-radius: 9px;
+  font-size: 13px;
+}
+
+.pj-notifications-filter-reset {
+  font-size: 12px;
+}
+
+.pj-notifications-delivery-table {
+  border-radius: 11px;
+}
+
+.pj-notifications-delivery-table__head,
+.pj-notifications-delivery-row {
+  grid-template-columns: 150px 210px minmax(260px, 1fr) 72px 118px 80px;
+  gap: 14px;
+}
+
+.pj-notifications-delivery-table__head {
+  min-height: 40px;
+  padding-inline: 14px;
+  font-size: 11px;
+}
+
+.pj-notifications-delivery-row {
+  min-height: 78px;
+  padding: 12px 14px;
+}
+
+.pj-notifications-delivery-row strong {
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.pj-notifications-delivery-row small {
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.pj-notifications-delivery-row__channel {
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 10px;
+}
+
+.pj-notifications-delivery-row__icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+}
+
+.pj-notifications-delivery-row__icon .pj-notification-channel-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.pj-notifications-delivery-row__attempts {
+  font-size: 12px;
+}
+
+.pj-notifications-text-button {
+  font-size: 12px;
+}
+
+.pj-notifications-history-empty {
+  min-height: 132px;
+}
+
+.pj-notifications-history-empty strong {
+  font-size: 13px;
+}
+
+.pj-notifications-history-empty small {
+  font-size: 12px;
+}
+
+/* Help */
+.pj-notifications-help {
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 28px;
+  padding: 22px 24px;
+  border-radius: 14px;
+}
+
+.pj-notifications-help__grid {
+  gap: 16px 24px;
+}
+
+.pj-notifications-help__grid strong {
+  font-size: 13px;
+}
+
+.pj-notifications-help__grid span {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* Add/edit form */
+.pj-notifications-form-heading {
+  margin-bottom: 20px;
+}
+
+.pj-notifications-form-card {
+  padding: 26px;
+  border-radius: 12px;
+}
+
+.pj-notifications-form-errors {
+  gap: 5px;
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  font-size: 13px;
+}
+
+.pj-notifications-form-errors strong {
+  font-size: 13.5px;
+}
+
+.pj-notifications-readonly-field {
+  min-height: 46px;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 10px;
+  padding: 6px 11px;
+  border-radius: 9px;
+}
+
+.pj-notifications-readonly-field__icon {
+  width: 34px;
+  height: 34px;
+}
+
+.pj-notifications-readonly-field__icon .pj-notification-channel-icon {
+  width: 17px;
+  height: 17px;
+}
+
+.pj-notifications-readonly-field strong {
+  font-size: 13px;
+}
+
+.pj-notifications-readonly-field small {
+  font-size: 11.5px;
+}
+
+.pj-notifications-form-info--wide {
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.pj-notifications-form-info > span {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.pj-notifications-form-info .pj-notification-channel-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.pj-notifications-form-info strong,
+.pj-notifications-form-note strong {
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.pj-notifications-form-note {
+  margin-top: 18px;
+}
+
+.pj-notifications-form-actions {
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 20px;
+}
+
+@media (max-width: 1180px) and (min-width: 821px) {
+  .pj-notifications-delivery-table__head,
+  .pj-notifications-delivery-row {
+    grid-template-columns: 135px 180px minmax(220px, 1fr) 64px 108px 72px;
+    gap: 10px;
+  }
+}
+
+/* Mobile: readable first, compact second. */
+@media (max-width: 820px) {
+  .pj-notifications-content,
+  .pj-notifications-form-content {
+    padding: 24px 18px 112px;
+  }
+
+  .pj-notifications-heading {
+    margin-bottom: 22px;
+  }
+
+  .pj-notifications-heading h1,
+  .pj-notifications-form-heading h1 {
+    margin-bottom: 7px;
+    font-size: 30px;
+    line-height: 1.2;
+  }
+
+  .pj-notifications-heading p,
+  .pj-notifications-form-heading p,
+  .pj-notifications-section__head p,
+  .pj-notifications-panel__heading p {
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+
+  .pj-notifications-primary-button,
+  .pj-notifications-secondary-button {
+    min-height: 48px;
+    padding-inline: 18px;
+    font-size: 15px;
+  }
+
+  .pj-notifications-section,
+  .pj-notifications-panel,
+  .pj-notifications-form-card,
+  .pj-notifications-help {
+    border-radius: 14px;
+  }
+
+  .pj-notifications-section {
+    padding: 18px;
+    margin-bottom: 18px;
+  }
+
+  .pj-notifications-section__head,
+  .pj-notifications-history__head {
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .pj-notifications-section__head h2,
+  .pj-notifications-panel__heading h2,
+  .pj-notifications-help h2 {
+    font-size: 22px;
+  }
+
+  .pj-notifications-eyebrow {
+    font-size: 11.5px;
+  }
+
+  .pj-notifications-summary > span {
+    min-height: 34px;
+    padding-inline: 11px;
+    font-size: 12.5px;
+  }
+
+  .pj-notifications-summary strong {
+    font-size: 13.5px;
+  }
+
+  .pj-notifications-channel-grid {
+    gap: 12px;
+  }
+
+  .pj-notifications-channel-card {
+    min-height: 0;
+    grid-template-columns: 48px minmax(0, 1fr) 36px;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .pj-notifications-channel-card__icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .pj-notifications-channel-card__title-row > div > span {
+    font-size: 12px;
+  }
+
+  .pj-notifications-channel-card h3 {
+    font-size: 16px;
+    white-space: normal;
+  }
+
+  .pj-notifications-channel-card__address,
+  .pj-notifications-channel-card__config {
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  .pj-notifications-channel-card__address {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .pj-notifications-status {
+    min-height: 26px;
+    font-size: 11.5px;
+  }
+
+  .pj-notifications-channel-actions > summary {
+    width: 36px;
+    height: 36px;
+  }
+
+  .pj-notifications-channel-actions__menu a,
+  .pj-notifications-channel-actions__menu button {
+    min-height: 48px;
+    font-size: 14px;
+  }
+
+  .pj-notifications-empty {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 14px;
+    padding: 17px;
+  }
+
+  .pj-notifications-empty__icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .pj-notifications-empty h3 {
+    font-size: 19px;
+  }
+
+  .pj-notifications-empty p {
+    font-size: 14px;
+  }
+
+  .pj-notifications-settings-grid {
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .pj-notifications-panel {
+    padding: 18px;
+  }
+
+  .pj-notifications-panel__heading {
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 13px;
+    margin-bottom: 18px;
+  }
+
+  .pj-notifications-panel__icon {
+    width: 46px;
+    height: 46px;
+  }
+
+  .pj-notifications-toggle-row {
+    min-height: 74px;
+    padding: 14px;
+  }
+
+  .pj-notifications-toggle-row strong {
+    font-size: 14.5px;
+  }
+
+  .pj-notifications-toggle-row small {
+    font-size: 13px;
+  }
+
+  .pj-notifications-field label {
+    font-size: 13.5px;
+  }
+
+  .pj-notifications-field input,
+  .pj-notifications-field select {
+    height: 50px;
+    padding-inline: 14px;
+    font-size: 16px;
+  }
+
+  .pj-notifications-field > small {
+    font-size: 13px;
+  }
+
+  .pj-notifications-push-status,
+  .pj-notifications-inline-note,
+  .pj-notifications-form-note,
+  .pj-notifications-form-info {
+    font-size: 13px;
+  }
+
+  .pj-notifications-history-filter select {
+    height: 48px;
+    font-size: 15px;
+  }
+
+  .pj-notifications-filter-reset {
+    font-size: 13px;
+  }
+
+  .pj-notifications-delivery-row {
+    gap: 11px 14px;
+    margin-bottom: 11px;
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  .pj-notifications-delivery-row strong {
+    font-size: 13.5px;
+    white-space: normal;
+  }
+
+  .pj-notifications-delivery-row small {
+    font-size: 12.5px;
+    white-space: normal;
+  }
+
+  .pj-notifications-delivery-row__attempts {
+    font-size: 12.5px;
+  }
+
+  .pj-notifications-text-button {
+    font-size: 13px;
+  }
+
+  .pj-notifications-history-empty {
+    min-height: 138px;
+  }
+
+  .pj-notifications-history-empty strong {
+    font-size: 14px;
+  }
+
+  .pj-notifications-history-empty small {
+    font-size: 13px;
+  }
+
+  .pj-notifications-help {
+    gap: 20px;
+    padding: 18px;
+  }
+
+  .pj-notifications-help__grid {
+    gap: 16px;
+  }
+
+  .pj-notifications-help__grid strong {
+    font-size: 14px;
+  }
+
+  .pj-notifications-help__grid span {
+    font-size: 13px;
+  }
+
+  .pj-notifications-form-card {
+    padding: 20px;
+  }
+
+  .pj-notifications-form-errors {
+    font-size: 13.5px;
+  }
+
+  .pj-notifications-readonly-field {
+    min-height: 50px;
+  }
+
+  .pj-notifications-readonly-field strong {
+    font-size: 14px;
+  }
+
+  .pj-notifications-readonly-field small {
+    font-size: 12.5px;
+  }
+
+  .pj-notifications-form-info strong,
+  .pj-notifications-form-note strong {
+    font-size: 14px;
+  }
+
+  .pj-notifications-form-actions {
+    margin-top: 22px;
+    padding-top: 18px;
+  }
+}
+
+@media (max-width: 540px) {
+  .pj-notifications-content,
+  .pj-notifications-form-content {
+    padding-inline: 15px;
+  }
+
+  .pj-notifications-heading {
+    gap: 16px;
+  }
+
+  .pj-notifications-heading h1,
+  .pj-notifications-form-heading h1 {
+    font-size: 28px;
+  }
+
+  .pj-notifications-section,
+  .pj-notifications-panel,
+  .pj-notifications-form-card,
+  .pj-notifications-help {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .pj-notifications-channel-card {
+    padding: 15px;
+  }
+
+  .pj-notifications-summary {
+    flex-wrap: wrap;
+  }
+
+  .pj-notifications-history-filter {
+    grid-template-columns: 1fr;
+  }
+
+  .pj-notifications-history-filter .pj-notifications-secondary-button,
+  .pj-notifications-history-filter select {
+    width: 100%;
+  }
+
+  .pj-notifications-filter-reset {
+    grid-column: 1;
+  }
+
+  .pj-notifications-push-actions,
+  .pj-notifications-form-actions {
+    gap: 10px;
+  }
+}

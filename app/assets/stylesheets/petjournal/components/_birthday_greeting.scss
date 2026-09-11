@@ -1,0 +1,610 @@
+/* Birthday greeting: intentionally mirrors the approved PetJournal birthday card. */
+.pj-birthday-greeting {
+  --pj-birthday-border: rgba(101, 132, 88, .88);
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1250;
+  width: min(420px, calc(100vw - 32px));
+  min-height: 156px;
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr) 28px;
+  gap: 14px;
+  align-items: center;
+  padding: 18px 18px 16px;
+  overflow: hidden;
+  border: 1.5px solid var(--pj-birthday-border);
+  border-radius: 20px;
+  background: #fffdf8;
+  box-shadow: 0 10px 28px rgba(28, 53, 34, .09);
+  color: var(--pj-ink);
+  opacity: 0;
+  transform: translateY(12px) scale(.988);
+  transition: opacity .22s ease, transform .22s ease;
+}
+
+.pj-birthday-greeting--multiple,
+.pj-birthday-greeting--many {
+  width: min(520px, calc(100vw - 32px));
+  min-height: 198px;
+  grid-template-columns: 152px minmax(0, 1fr) 28px;
+  gap: 18px;
+  padding: 20px 18px 18px;
+}
+
+.pj-birthday-greeting.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.pj-birthday-greeting.is-closing {
+  opacity: 0;
+  transform: translateY(8px) scale(.992);
+}
+
+.pj-birthday-greeting__avatars {
+  position: relative;
+  z-index: 2;
+  width: 98px;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.pj-birthday-greeting--multiple .pj-birthday-greeting__avatars,
+.pj-birthday-greeting--many .pj-birthday-greeting__avatars {
+  width: 152px;
+  height: 138px;
+}
+
+.pj-birthday-greeting__avatar {
+  --pj-birthday-avatar-index: 0;
+  position: absolute;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+  border: 3px solid #fffdf8;
+  border-radius: 50%;
+  background: #e6eee0;
+  box-shadow: 0 7px 20px rgba(7, 57, 47, .1);
+}
+
+.pj-birthday-greeting:not(.pj-birthday-greeting--multiple) .pj-birthday-greeting__avatar {
+  left: 8px;
+  top: 4px;
+  width: 84px;
+  height: 84px;
+}
+
+.pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(1) {
+  left: 0;
+  top: 6px;
+  z-index: 2;
+  width: 96px;
+  height: 96px;
+}
+
+.pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(2) {
+  left: 58px;
+  top: 51px;
+  z-index: 3;
+  width: 96px;
+  height: 96px;
+}
+
+.pj-birthday-greeting--many .pj-birthday-greeting__avatar:nth-child(1) {
+  left: 0;
+  top: 16px;
+  z-index: 2;
+  width: 72px;
+  height: 72px;
+}
+
+.pj-birthday-greeting--many .pj-birthday-greeting__avatar:nth-child(2) {
+  left: 42px;
+  top: 50px;
+  z-index: 4;
+  width: 72px;
+  height: 72px;
+}
+
+.pj-birthday-greeting--many .pj-birthday-greeting__avatar:nth-child(3) {
+  left: 82px;
+  top: 13px;
+  z-index: 3;
+  width: 72px;
+  height: 72px;
+}
+
+.pj-birthday-greeting__avatar img,
+.pj-birthday-greeting__avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.pj-birthday-greeting__avatar img {
+  object-fit: cover;
+}
+
+.pj-birthday-greeting__avatar-placeholder {
+  background: linear-gradient(145deg, #eef3e7 0%, #dfe9d7 100%);
+  color: var(--pj-green);
+  font-family: "Prata", Georgia, serif;
+  font-size: 26px;
+}
+
+.pj-birthday-greeting__avatar--more {
+  z-index: 5;
+  width: 58px;
+  height: 58px;
+  top: 48px;
+  left: 94px;
+  border-width: 3px;
+  background: #edf3e5;
+  color: var(--pj-green);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+/* Party hats deliberately echo the approved mockup: patterned cone, pom-pom and narrow band. */
+.pj-birthday-greeting__party-hat {
+  position: absolute;
+  top: -15px;
+  left: 13px;
+  z-index: 6;
+  width: 30px;
+  height: 34px;
+  filter: drop-shadow(0 2px 2px rgba(7, 57, 47, .1));
+  transform: rotate(-8deg);
+  transform-origin: 50% 100%;
+}
+
+.pj-birthday-greeting__party-hat::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 12px;
+  z-index: 3;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ddb45c;
+}
+
+.pj-birthday-greeting__party-hat::after {
+  content: "";
+  position: absolute;
+  left: 1px;
+  bottom: 1px;
+  width: 28px;
+  height: 30px;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background:
+    radial-gradient(circle at 31% 68%, #dfbd69 0 2px, transparent 2.3px),
+    radial-gradient(circle at 68% 47%, #dfbd69 0 2px, transparent 2.3px),
+    linear-gradient(105deg, transparent 0 43%, rgba(239, 216, 143, .95) 43% 51%, transparent 51% 100%),
+    #6f8f62;
+}
+
+.pj-birthday-greeting__party-hat span {
+  position: absolute;
+  left: 3px;
+  bottom: 1px;
+  z-index: 4;
+  width: 26px;
+  height: 4px;
+  border-radius: 4px;
+  background: #e0bd68;
+  transform: rotate(1deg);
+}
+
+.pj-birthday-greeting__party-hat span::before,
+.pj-birthday-greeting__party-hat span::after {
+  content: none;
+}
+
+.pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(1) .pj-birthday-greeting__party-hat {
+  top: -24px;
+  left: 25px;
+  width: 38px;
+  height: 42px;
+  transform: rotate(-5deg);
+}
+
+.pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(1) .pj-birthday-greeting__party-hat::before {
+  top: -5px;
+  left: 15px;
+  width: 8px;
+  height: 8px;
+}
+
+.pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(1) .pj-birthday-greeting__party-hat::after {
+  width: 36px;
+  height: 38px;
+}
+
+.pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(1) .pj-birthday-greeting__party-hat span {
+  left: 4px;
+  width: 32px;
+}
+
+.pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(2) .pj-birthday-greeting__party-hat {
+  top: -22px;
+  left: 27px;
+  width: 36px;
+  height: 40px;
+  transform: rotate(6deg);
+}
+
+.pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(2) .pj-birthday-greeting__party-hat::before {
+  top: -5px;
+  left: 14px;
+  width: 8px;
+  height: 8px;
+  background: #e3b45b;
+}
+
+.pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(2) .pj-birthday-greeting__party-hat::after {
+  width: 34px;
+  height: 36px;
+  background:
+    radial-gradient(circle at 31% 66%, #f4dc9a 0 2px, transparent 2.3px),
+    radial-gradient(circle at 68% 44%, #f4dc9a 0 2px, transparent 2.3px),
+    linear-gradient(105deg, transparent 0 43%, rgba(255, 237, 184, .95) 43% 51%, transparent 51% 100%),
+    #d8a94c;
+}
+
+.pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(2) .pj-birthday-greeting__party-hat span {
+  left: 4px;
+  width: 30px;
+  background: #f1d083;
+}
+
+.pj-birthday-greeting__content {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  align-self: center;
+  padding: 0;
+}
+
+.pj-birthday-greeting__title {
+  display: block;
+  margin: 0;
+  color: #26481f;
+  font-family: "Prata", Georgia, serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.34;
+  letter-spacing: -.01em;
+}
+
+.pj-birthday-greeting--multiple .pj-birthday-greeting__title,
+.pj-birthday-greeting--many .pj-birthday-greeting__title {
+  font-size: 20px;
+  line-height: 1.42;
+}
+
+.pj-birthday-greeting__text {
+  margin: 10px 0 0;
+  color: #434b43;
+  font-size: 14px;
+  line-height: 1.52;
+}
+
+.pj-birthday-greeting--multiple .pj-birthday-greeting__text,
+.pj-birthday-greeting--many .pj-birthday-greeting__text {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.62;
+}
+
+.pj-birthday-greeting__close {
+  position: relative;
+  z-index: 3;
+  align-self: start;
+  width: 28px;
+  height: 28px;
+  margin: -2px -2px 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.pj-birthday-greeting__close::before,
+.pj-birthday-greeting__close::after {
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 7px;
+  width: 14px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: #5d665d;
+}
+
+.pj-birthday-greeting__close::before {
+  transform: rotate(45deg);
+}
+
+.pj-birthday-greeting__close::after {
+  transform: rotate(-45deg);
+}
+
+.pj-birthday-greeting__close:hover {
+  background: rgba(23, 79, 52, .07);
+}
+
+.pj-birthday-greeting__decor {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pj-birthday-greeting__decor::before,
+.pj-birthday-greeting__decor::after {
+  position: absolute;
+  color: #d7a84a;
+  line-height: 1;
+}
+
+.pj-birthday-greeting__decor::before {
+  content: "♥";
+  top: 18px;
+  left: 58%;
+  font-size: 15px;
+  transform: rotate(-4deg);
+}
+
+.pj-birthday-greeting__decor::after {
+  content: "♥";
+  left: 31px;
+  bottom: 51px;
+  font-size: 14px;
+  transform: rotate(-8deg);
+}
+
+.pj-birthday-greeting__confetti {
+  position: absolute;
+  width: 4px;
+  height: 9px;
+  border-radius: 3px;
+  opacity: .9;
+}
+
+.pj-birthday-greeting__confetti--one {
+  top: 18px;
+  left: 18px;
+  background: #91a77d;
+  transform: rotate(-22deg);
+  box-shadow:
+    58px 3px 0 #d9b159,
+    135px -1px 0 #91a77d,
+    286px 0 0 #91a77d,
+    430px 3px 0 #d9b159;
+}
+
+.pj-birthday-greeting__confetti--two {
+  top: 55px;
+  left: 88px;
+  width: 4px;
+  height: 8px;
+  background: #d9b159;
+  transform: rotate(34deg);
+  box-shadow:
+    332px 58px 0 #d9b159,
+    390px 98px 0 #91a77d;
+}
+
+.pj-birthday-greeting__confetti--three {
+  left: 20px;
+  bottom: 18px;
+  width: 4px;
+  height: 8px;
+  background: #d9b159;
+  transform: rotate(14deg);
+  box-shadow:
+    130px 2px 0 #91a77d,
+    250px -8px 0 #d9b159,
+    365px 0 0 #91a77d;
+}
+
+.pj-birthday-greeting__confetti--four {
+  top: 112px;
+  right: 29px;
+  width: 4px;
+  height: 8px;
+  background: #d9b159;
+  transform: rotate(-32deg);
+}
+
+.pj-birthday-greeting__heart {
+  position: absolute;
+  left: 14px;
+  bottom: 10px;
+  color: #d3a74d;
+  font-size: 20px;
+  line-height: 1;
+  opacity: .92;
+  transform: rotate(-10deg);
+}
+
+.pj-birthday-greeting__paw {
+  position: absolute;
+  right: 18px;
+  bottom: 10px;
+  width: 22px;
+  height: 22px;
+  color: #d9aa4d;
+  opacity: .92;
+  transform: none;
+}
+
+.pj-birthday-greeting__paw .pj-nav-icon {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+  stroke-width: 1.6;
+}
+
+body.pj-has-birthday-greeting .pwa-offer,
+body.pj-has-birthday-greeting .flash-stack {
+  bottom: calc(24px + var(--pj-birthday-stack-offset, 194px)) !important;
+}
+
+@media (max-width: 820px) {
+  .pj-birthday-greeting,
+  .pj-birthday-greeting--multiple,
+  .pj-birthday-greeting--many {
+    right: 12px;
+    bottom: calc(82px + env(safe-area-inset-bottom));
+    width: calc(100vw - 24px);
+    min-height: 140px;
+    grid-template-columns: 82px minmax(0, 1fr) 26px;
+    gap: 11px;
+    padding: 18px 14px 17px;
+    border-radius: 20px;
+  }
+
+  .pj-birthday-greeting--multiple,
+  .pj-birthday-greeting--many {
+    min-height: 156px;
+    grid-template-columns: 108px minmax(0, 1fr) 26px;
+  }
+
+  .pj-birthday-greeting__avatars {
+    width: 82px;
+    height: 82px;
+  }
+
+  .pj-birthday-greeting--multiple .pj-birthday-greeting__avatars,
+  .pj-birthday-greeting--many .pj-birthday-greeting__avatars {
+    width: 104px;
+    height: 98px;
+  }
+
+  .pj-birthday-greeting:not(.pj-birthday-greeting--multiple) .pj-birthday-greeting__avatar {
+    left: 3px;
+    top: 4px;
+    width: 72px;
+    height: 72px;
+  }
+
+  .pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(1) {
+    left: 0;
+    top: 4px;
+    width: 66px;
+    height: 66px;
+  }
+
+  .pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(2) {
+    left: 39px;
+    top: 34px;
+    width: 66px;
+    height: 66px;
+  }
+
+  .pj-birthday-greeting--many .pj-birthday-greeting__avatar:nth-child(1) {
+    left: 0;
+    top: 11px;
+    width: 54px;
+    height: 54px;
+  }
+
+  .pj-birthday-greeting--many .pj-birthday-greeting__avatar:nth-child(2) {
+    left: 29px;
+    top: 34px;
+    width: 54px;
+    height: 54px;
+  }
+
+  .pj-birthday-greeting--many .pj-birthday-greeting__avatar:nth-child(3) {
+    left: 55px;
+    top: 9px;
+    width: 54px;
+    height: 54px;
+  }
+
+  .pj-birthday-greeting__avatar--more {
+    left: 57px;
+    top: 29px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(1) .pj-birthday-greeting__party-hat,
+  .pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(2) .pj-birthday-greeting__party-hat {
+    top: -15px;
+    left: 17px;
+    width: 27px;
+    height: 30px;
+  }
+
+  .pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(1) .pj-birthday-greeting__party-hat::after,
+  .pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(2) .pj-birthday-greeting__party-hat::after {
+    width: 26px;
+    height: 28px;
+  }
+
+  .pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(1) .pj-birthday-greeting__party-hat span,
+  .pj-birthday-greeting--multiple .pj-birthday-greeting__avatar:nth-child(2) .pj-birthday-greeting__party-hat span {
+    width: 22px;
+  }
+
+  .pj-birthday-greeting__title,
+  .pj-birthday-greeting--multiple .pj-birthday-greeting__title,
+  .pj-birthday-greeting--many .pj-birthday-greeting__title {
+    font-size: 16px;
+  }
+
+  .pj-birthday-greeting__text,
+  .pj-birthday-greeting--multiple .pj-birthday-greeting__text,
+  .pj-birthday-greeting--many .pj-birthday-greeting__text {
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .pj-birthday-greeting__decor::before {
+    left: 60%;
+  }
+
+  .pj-birthday-greeting__confetti--one {
+    box-shadow:
+      48px 3px 0 #d9b159,
+      112px -1px 0 #91a77d,
+      222px 0 0 #91a77d;
+  }
+
+  .pj-birthday-greeting__confetti--two {
+    box-shadow: 205px 48px 0 #d9b159;
+  }
+
+  .pj-birthday-greeting__confetti--three {
+    box-shadow:
+      104px 2px 0 #91a77d,
+      170px -8px 0 #d9b159,
+      228px 0 0 #91a77d;
+  }
+
+  body.pj-has-birthday-greeting .pwa-offer,
+  body.pj-has-birthday-greeting .flash-stack {
+    bottom: calc(82px + env(safe-area-inset-bottom) + var(--pj-birthday-stack-offset, 180px)) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pj-birthday-greeting,
+  .pj-birthday-greeting__close {
+    transition: none !important;
+  }
+}

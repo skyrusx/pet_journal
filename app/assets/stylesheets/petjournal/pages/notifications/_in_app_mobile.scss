@@ -1,0 +1,54 @@
+/* Final mobile pass for the in-app notification inbox.
+   Reuse the exact compact search + Filters bottom-sheet pattern from Reminders. */
+
+.pj-inbox-heading > div:first-child {
+  max-width: 760px;
+}
+
+/* The workspace topbar already owns the desktop page title. Keep the content
+   title as a mobile-only counterpart because the shared mobile chrome hides the
+   topbar heading. */
+.pj-inbox-mobile-title {
+  display: none;
+}
+
+@media (max-width: 820px) {
+  /* Desktop filter grid is replaced by the same mobile control used by Reminders. */
+  .pj-inbox-page .pj-inbox-filters {
+    display: none !important;
+  }
+
+  .pj-inbox-mobile-filters {
+    margin-bottom: var(--pj-space-3);
+  }
+
+  .pj-inbox-heading {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
+  .pj-inbox-heading > div:first-child {
+    width: 100%;
+    max-width: none;
+  }
+
+  /* Exact mobile title language from Reminders. The higher specificity and
+     !important prevent the shared responsive h1 rule (1.75rem) from winning. */
+  .pj-inbox-page .pj-inbox-heading .pj-inbox-mobile-title {
+    display: block;
+    margin: 0;
+    color: #334038;
+    font-family: "Prata", Georgia, serif;
+    font-size: 24px !important;
+    font-weight: 400;
+    line-height: normal;
+  }
+
+  /* Mobile requests load 10 rows at a time rather than the desktop batch of 25.
+     Hide the desktop-oriented remaining-count caption so the compact action only
+     communicates the progressive action itself. */
+  .pj-inbox-load-more__button small {
+    display: none;
+  }
+}

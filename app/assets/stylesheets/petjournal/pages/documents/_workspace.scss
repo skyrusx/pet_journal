@@ -1,0 +1,59 @@
+/* Documents use the same workspace navigation/action language as Journal and Reminders. */
+
+.pj-documents-search-row {
+  display: contents;
+}
+
+.pj-document-detail-heading {
+  justify-content: flex-start;
+}
+
+/* Rails renders Cancel as an <a> and Save as an <input>. Keep both controls
+   on exactly the same typography instead of allowing element defaults or
+   generic form rules to make one look larger than the other. */
+.pj-document-form-actions .pj-document-form-cancel,
+.pj-document-form-actions .pj-documents-primary-button {
+  font-family: inherit !important;
+  font-size: var(--pj-font-body) !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+}
+
+@media (max-width: 820px) {
+  /* The shared mobile detail/form navigation owns back + action placement. */
+  .pj-document-mobile-nav,
+  .pj-document-form-mobile-nav {
+    width: 100%;
+  }
+
+  /* Status and Type remain a balanced first row, Scope is full width,
+     then Search mirrors the approved Journal/Reminders pattern. */
+  .pj-documents-search-row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 48px;
+    gap: 8px;
+  }
+
+  .pj-documents-search-row .pj-documents-filter--search,
+  .pj-documents-search-row .pj-documents-filter-submit {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .pj-documents-search-row .pj-documents-filter--search {
+    min-width: 0;
+  }
+
+  .pj-documents-search-row .pj-documents-filter-submit {
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    justify-self: stretch;
+  }
+
+  .pj-document-detail-heading {
+    margin-top: 2px;
+  }
+}

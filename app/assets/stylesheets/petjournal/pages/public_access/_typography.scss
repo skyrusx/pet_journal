@@ -1,0 +1,166 @@
+/*
+ * Public access management typography.
+ * Keep the same readable scale as the rest of the PetJournal workspace.
+ */
+
+.pj-public-access-page {
+  font-size: var(--pj-font-body);
+  line-height: 1.5;
+}
+
+.pj-public-access-intro p,
+.pj-public-access-form-title p,
+.pj-public-access-summary p,
+.pj-public-access-manager-hero__copy > p {
+  font-size: var(--pj-font-body);
+  line-height: 1.55;
+}
+
+.pj-public-access-pet,
+.pj-public-access-primary,
+.pj-public-access-secondary,
+.pj-public-access-quiet,
+.pj-public-access-danger-outline {
+  font-size: var(--pj-font-control);
+}
+
+.pj-public-access-summary small,
+.pj-public-access-panel__head small,
+.pj-public-access-link-card small,
+.pj-public-access-danger-panel small {
+  font-size: var(--pj-font-caption);
+  line-height: 1.4;
+}
+
+.pj-public-access-summary h2 {
+  font-size: 1.5rem;
+}
+
+.pj-public-access-summary__stats strong,
+.pj-public-access-manager-hero__stats strong {
+  font-size: 1.375rem;
+}
+
+.pj-public-access-summary__stats span,
+.pj-public-access-manager-hero__stats span {
+  font-size: var(--pj-font-caption);
+  line-height: 1.35;
+}
+
+.pj-public-access-card__status {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-public-access-card h2 {
+  font-size: 1.375rem;
+}
+
+.pj-public-access-card__head p,
+.pj-public-access-card__warning,
+.pj-public-access-card__url,
+.pj-public-access-link-card__url {
+  font-size: var(--pj-font-meta);
+  line-height: 1.5;
+}
+
+.pj-public-access-card__chips span {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-public-access-card__meta {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-public-access-card__meta strong {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-public-access-link-card strong {
+  font-size: var(--pj-font-body);
+}
+
+.pj-public-access-sensitive {
+  font-size: var(--pj-font-meta);
+  line-height: 1.5;
+}
+
+.pj-public-access-panel__head > span,
+.pj-public-access-view__status {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-public-access-view strong {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-public-access-view small,
+.pj-public-access-view p {
+  font-size: var(--pj-font-caption);
+  line-height: 1.45;
+}
+
+.pj-public-access-panel__empty strong {
+  font-size: var(--pj-font-body);
+}
+
+.pj-public-access-panel__empty p {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-public-access-scope > div {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-public-access-scope strong {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-public-access-danger-panel p,
+.pj-public-access-form__errors p,
+.pj-public-access-form-section__head p {
+  font-size: var(--pj-font-meta);
+  line-height: 1.5;
+}
+
+.pj-public-access-form__errors strong {
+  font-size: var(--pj-font-body);
+}
+
+.pj-public-access-field > span {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-public-access-field > small,
+.pj-public-access-master-toggle small,
+.pj-public-access-toggle-card small {
+  font-size: var(--pj-font-caption);
+  line-height: 1.45;
+}
+
+.pj-public-access-field input,
+.pj-public-access-field select {
+  font-size: var(--pj-font-control);
+}
+
+.pj-public-access-master-toggle strong,
+.pj-public-access-toggle-card strong {
+  font-size: var(--pj-font-body);
+}
+
+@media (max-width: 820px) {
+  .pj-public-access-primary,
+  .pj-public-access-secondary,
+  .pj-public-access-quiet,
+  .pj-public-access-danger-outline,
+  .pj-public-access-field input,
+  .pj-public-access-field select {
+    font-size: var(--pj-font-mobile-control);
+  }
+
+  .pj-public-access-intro p,
+  .pj-public-access-form-title p,
+  .pj-public-access-summary p,
+  .pj-public-access-manager-hero__copy > p {
+    font-size: var(--pj-font-body);
+  }
+}

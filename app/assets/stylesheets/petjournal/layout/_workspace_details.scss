@@ -1,0 +1,52 @@
+/* Final shared workspace polish before release. */
+
+@media (min-width: 821px) {
+  /* Keep the standard workspace header visible while the content pane scrolls. */
+  .pj-workspace-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 8;
+    flex: 0 0 auto;
+    background: rgba(255, 254, 250, .96);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Collapsed sidebar: profile control should be a compact avatar button, not a tall empty card. */
+  .pj-dash.is-sidebar-collapsed .pj-dash-sidebar__footer {
+    display: grid;
+    justify-items: center;
+  }
+
+  .pj-dash.is-sidebar-collapsed .pj-dash-profile-menu {
+    width: 48px;
+  }
+
+  .pj-dash.is-sidebar-collapsed .pj-dash-account {
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    min-height: 48px;
+    grid-template-columns: 1fr;
+    place-items: center;
+    gap: 0;
+    padding: 4px;
+  }
+
+  .pj-dash.is-sidebar-collapsed .pj-dash-account__avatar {
+    width: 38px;
+    height: 38px;
+    margin: 0;
+  }
+
+  .pj-dash.is-sidebar-collapsed .pj-dash-account__copy,
+  .pj-dash.is-sidebar-collapsed .pj-dash-account > .pj-nav-icon {
+    display: none !important;
+  }
+
+  .pj-dash.is-sidebar-collapsed .pj-dash-profile-popover {
+    left: calc(100% + 12px);
+    bottom: 0;
+    width: 216px;
+  }
+}

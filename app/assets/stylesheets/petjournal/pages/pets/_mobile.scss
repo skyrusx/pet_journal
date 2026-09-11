@@ -1,0 +1,31 @@
+/* Final mobile consistency pass for the Pets section. */
+
+@media (max-width: 820px) {
+  /*
+   * Pet form actions are link + submit input, so the generic mobile input rule
+   * must not make the submit 16px. Both actions resolve to the canonical 14px.
+   */
+  .pj-pets-page .pj-pet-form__actions .pj-pet-secondary-button,
+  .pj-pets-page .pj-pet-form__actions input.pj-pets-primary-button {
+    font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+    font-size: var(--pj-font-body) !important;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  /* Profile summary actions follow the same canonical button text size. */
+  .pj-pets-page .pj-pet-summary-card__button {
+    font-size: var(--pj-font-body);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  /* Textareas need a comfortable writing area on mobile instead of input height. */
+  .pj-pets-page textarea.pj-pet-form__textarea {
+    height: auto;
+    min-height: var(--pj-size-textarea-mobile);
+    padding-block: 12px;
+    line-height: 1.5;
+    resize: vertical;
+  }
+}

@@ -1,0 +1,108 @@
+/* Reminder list actions aligned with Pets and Journal list patterns. */
+
+.pj-reminders-row-wrap {
+  position: relative;
+  border-top: 1px solid #ebe6de;
+}
+
+.pj-reminders-row-wrap .pj-reminders-row {
+  border-top: 0;
+  padding-right: 62px;
+}
+
+.pj-reminders-row__edit {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  color: #315f47;
+  background: transparent;
+  text-decoration: none;
+  transform: translateY(-50%);
+  transition: color 140ms ease, background 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.pj-reminders-row__edit:hover,
+.pj-reminders-row__edit:focus-visible {
+  color: #174f34;
+  border-color: #dbe4d7;
+  background: #eef3e9;
+  box-shadow: 0 4px 12px rgba(39, 71, 51, .08);
+}
+
+.pj-reminders-row__edit svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pj-reminders-mobile-card-wrap {
+  display: none;
+}
+
+/* button_to renders a real <button>, while snooze is a <summary>.
+   Give every reminder detail action the same product typography. */
+.pj-reminder-action-bar .pj-reminder-complete-button,
+.pj-reminder-action-bar .pj-reminder-secondary-button,
+.pj-reminder-snooze > div button {
+  font-size: var(--pj-font-body) !important;
+  line-height: 1.35;
+}
+
+@media (max-width: 820px) {
+  .pj-reminders-mobile-list {
+    display: grid;
+  }
+
+  .pj-reminders-mobile-card-wrap {
+    min-height: 102px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 48px;
+    align-items: center;
+    gap: 4px;
+    padding-right: 8px;
+    border-bottom: 1px solid #ece7df;
+  }
+
+  .pj-reminders-mobile-card-wrap:last-child {
+    border-bottom: 0;
+  }
+
+  .pj-reminders-mobile-card-wrap .pj-reminders-mobile-card {
+    min-height: 101px;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 11px;
+    padding: 12px 8px 12px 13px;
+    border-bottom: 0;
+  }
+
+  .pj-reminders-mobile-card-wrap .pj-reminders-row__edit {
+    position: static;
+    width: 44px;
+    height: 44px;
+    justify-self: end;
+    border-color: transparent;
+    background: transparent;
+    transform: none;
+  }
+
+  .pj-reminders-mobile-card-wrap .pj-reminders-row__edit:active {
+    background: #edf2e7;
+    transform: scale(.96);
+  }
+
+  .pj-reminders-mobile-card-wrap .pj-reminders-row__edit svg {
+    width: 17px;
+    height: 17px;
+  }
+}

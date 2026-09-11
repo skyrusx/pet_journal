@@ -1,0 +1,22 @@
+/* Final mobile Dashboard spacing fixes. */
+
+@media (max-width: 820px) {
+  /* Pet avatars are a horizontally scrollable cluster, not a space-between row.
+     Keep items visually grouped while preserving horizontal scrolling for more pets. */
+  .pj-dashboard-body .pj-dash-pets-grid {
+    justify-content: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .pj-dashboard-body .pj-dash-pet-card-wrap,
+  .pj-dashboard-body .pj-dash-pet-card,
+  .pj-dashboard-body .pj-dash-pet-add {
+    flex: 0 0 64px;
+    width: 64px;
+    min-width: 64px;
+  }
+
+  .pj-dashboard-body .pj-dash-pet-card__name {
+    max-width: 64px;
+  }
+}
