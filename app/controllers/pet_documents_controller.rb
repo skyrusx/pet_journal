@@ -7,7 +7,7 @@ class PetDocumentsController < ApplicationController
   before_action :set_document, only: %i[show edit update destroy destroy_file sync_journal_event sync_expiry_reminder]
   before_action :set_document_pets
 
-  layout "workspace_new_design"
+  layout "workspace"
 
   def index
     @selected_type = params[:type].presence_in(PetDocument.document_types.keys)

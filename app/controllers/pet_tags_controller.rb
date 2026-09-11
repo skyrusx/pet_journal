@@ -7,7 +7,7 @@ class PetTagsController < ApplicationController
   ]
   before_action :set_notification_channels, only: %i[show edit update]
 
-  layout "workspace_new_design"
+  layout "workspace"
 
   def index
     @pets = current_user.pets.includes(:pet_tag, photo_attachment: :blob).order(:name)

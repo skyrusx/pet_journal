@@ -1,26 +1,5 @@
-/* Follow-up after visual review of the product-wide typography pass. */
+/* Dashboard pet-card edit action. */
 
-/* Pet profile: secondary labels in the additional-data block must remain readable. */
-.pj-pet-extra-details__grid > div > span,
-.pj-pet-extra-details__notes > span {
-  color: #7f8780;
-  font-size: var(--pj-font-caption) !important;
-  line-height: 1.4;
-}
-
-/* Dashboard empty-state copy was still inheriting the old mockup-sized type. */
-.pj-dash-calm-empty > div > strong {
-  font-size: var(--pj-font-body);
-  line-height: 1.4;
-}
-
-.pj-dash-calm-empty > div > span {
-  font-size: var(--pj-font-meta);
-  line-height: 1.45;
-}
-
-/* Dashboard pet cards: keep the card itself opening the profile and expose a
-   separate edit action, matching the dedicated Pets list. */
 .pj-dash-pet-card-wrap {
   position: relative;
   min-width: 0;

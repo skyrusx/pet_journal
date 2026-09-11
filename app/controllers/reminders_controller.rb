@@ -8,7 +8,7 @@ class RemindersController < ApplicationController
   before_action :set_notification_channels, only: %i[new create edit update show]
   before_action :set_reminder_pets, only: %i[index new create edit update]
 
-  layout "workspace_new_design"
+  layout "workspace"
 
   def index
     @selected_status = params[:status].presence_in(%w[all active today overdue paused completed]) || "active"

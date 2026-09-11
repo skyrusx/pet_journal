@@ -4,7 +4,7 @@ class PetProfileSharesController < ApplicationController
   before_action :set_pet_choices
   before_action :set_share, only: %i[show edit update destroy enable disable rotate_token qr]
 
-  layout "workspace_new_design"
+  layout "workspace"
 
   def index
     @shares = @pet.pet_profile_shares.recent.includes(:pet_profile_share_views)

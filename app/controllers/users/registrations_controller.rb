@@ -1,6 +1,6 @@
 module Users
   class RegistrationsController < Devise::RegistrationsController
-    layout "workspace_new_design", only: %i[edit update destroy]
+    layout "workspace", only: %i[edit update destroy]
 
     protected
 
