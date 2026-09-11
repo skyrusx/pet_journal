@@ -1,0 +1,18 @@
+/* Readability fixes that belong to the product-wide typography layer. */
+
+.pj-pet-extra-details__grid > div > span,
+.pj-pet-extra-details__notes > span {
+  color: #7f8780;
+  font-size: var(--pj-font-caption) !important;
+  line-height: 1.4;
+}
+
+.pj-dash-calm-empty > div > strong {
+  font-size: var(--pj-font-body);
+  line-height: 1.4;
+}
+
+.pj-dash-calm-empty > div > span {
+  font-size: var(--pj-font-meta);
+  line-height: 1.45;
+}

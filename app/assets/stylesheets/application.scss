@@ -1,111 +1,143 @@
 @import "bootstrap";
 
-@import "petjournal/tokens";
-@import "petjournal/landing";
-@import "petjournal/base";
-@import "petjournal/dashboard";
-@import "petjournal/documents";
-@import "petjournal/journal";
-@import "petjournal/forms";
-@import "petjournal/auth";
-@import "petjournal/workspace";
-@import "petjournal/responsive";
-@import "petjournal/public_auth_navigation";
-@import "petjournal/premium_polish";
-@import "petjournal/release_polish";
-@import "petjournal/auth_new_design";
-@import "petjournal/auth_new_design_layout";
-@import "petjournal/auth_new_design_reference";
-@import "petjournal/auth_new_design_photo";
-@import "petjournal/auth_new_design_footer";
-@import "petjournal/auth_new_design_registration";
-@import "petjournal/auth_required";
-@import "petjournal/auth_new_design_reset_password";
-@import "petjournal/auth_new_design_fixed_shell";
-@import "petjournal/oauth";
-@import "petjournal/dashboard_new_design";
-@import "petjournal/dashboard_fullscreen";
-@import "petjournal/dashboard_workspace_polish";
-@import "petjournal/dashboard_sidebar_refine";
-@import "petjournal/dashboard_sidebar_motion";
-@import "petjournal/dashboard_mobile_chrome";
-@import "petjournal/dashboard_mobile_refine";
-@import "petjournal/pets_new_design";
-@import "petjournal/pets_form_refine";
-@import "petjournal/journal_new_design";
-@import "petjournal/journal_model_refine";
-@import "petjournal/journal_wizard";
-@import "petjournal/journal_overview";
-@import "petjournal/typography_refactor";
-@import "petjournal/typography_followup";
-@import "petjournal/workspace_visual_balance";
-@import "petjournal/mobile_usability_refine";
-@import "petjournal/mobile_app_unify";
-@import "petjournal/mobile_detail_actions_unify";
-@import "petjournal/desktop_detail_actions_unify";
-@import "petjournal/journal_desktop_subtitle";
-@import "petjournal/reminders_new_design";
-@import "petjournal/reminders_visual_alignment";
-@import "petjournal/reminders_mobile_filters_refine";
-@import "petjournal/reminders_list_actions_refine";
-@import "petjournal/reminders_overview";
-@import "petjournal/notifications_new_design";
-@import "petjournal/notifications_standardization";
-@import "petjournal/notifications_form_width_fix";
-@import "petjournal/notifications_review_fixes";
-@import "petjournal/notifications_mobile_polish";
-@import "petjournal/documents_new_design";
-@import "petjournal/documents_file_preview";
-@import "petjournal/documents_workspace_standardization";
-@import "petjournal/pettag_new_design";
-@import "petjournal/pettag_settings_refine";
-@import "petjournal/pettag_overview";
-@import "petjournal/public_pettag_reference";
-@import "petjournal/public_pettag_fixes";
-@import "petjournal/account_new_design";
-@import "petjournal/profile_avatar_refine";
-@import "petjournal/navigation_badges_refine";
-@import "petjournal/select_control_standardization";
-@import "petjournal/account_review_fixes";
-@import "petjournal/account_profile_followup";
-@import "petjournal/settings_new_design";
-@import "petjournal/settings_mobile_consistency";
-@import "petjournal/workspace_shell_fixes";
-@import "petjournal/first_run_onboarding";
-@import "petjournal/empty_dashboard_reference_match";
-@import "petjournal/section_empty_states";
-@import "petjournal/pets_empty_state";
-@import "petjournal/public_access_new_design";
-@import "petjournal/public_access_footer_fix";
-@import "petjournal/public_profile_readability";
-@import "petjournal/public_access_action_alignment";
-@import "petjournal/public_profile_typography_standardization";
-@import "petjournal/public_access_typography_standardization";
-@import "petjournal/footer_pin_standardization";
-@import "petjournal/public_profile_share_sheet";
-@import "petjournal/public_access_final_review";
-@import "petjournal/legal";
-@import "petjournal/system_errors";
-@import "petjournal/workspace_final_polish";
-@import "petjournal/pets_mobile_consistency";
-@import "petjournal/dashboard_content_consistency";
-@import "petjournal/journal_mobile_consistency";
-@import "petjournal/workspace_control_final";
-@import "petjournal/dashboard_mobile_consistency";
-@import "petjournal/reminders_mobile_consistency";
-@import "petjournal/documents_overview";
-@import "petjournal/notifications_final_consistency";
-@import "petjournal/in_app_notifications";
-@import "petjournal/mobile_notification_center";
-@import "petjournal/in_app_notifications_list_polish";
-@import "petjournal/in_app_notifications_mobile_consistency";
-@import "petjournal/mobile_progressive_loading";
-@import "petjournal/pettag_review_polish";
-@import "petjournal/settings_dashboard_gutters";
-@import "petjournal/section_subtitles_polish";
-@import "petjournal/pettag_settings_mobile_consistency";
-@import "petjournal/public_access_standardization";
-@import "petjournal/pwa";
-@import "petjournal/birthday_greeting";
-@import "petjournal/legal_links";
-@import "petjournal/ui_consistency";
+// Base and historical foundation layers. Import order is intentionally preserved
+// while the UI is consolidated so the refactor does not change the current look.
+@import "petjournal/base/tokens";
+@import "petjournal/pages/landing";
+@import "petjournal/base/foundation";
+@import "petjournal/pages/dashboard/foundation";
+@import "petjournal/pages/documents/foundation";
+@import "petjournal/pages/journal/foundation";
+@import "petjournal/components/forms";
+@import "petjournal/pages/auth/foundation";
+@import "petjournal/layout/workspace";
+@import "petjournal/layout/responsive";
+@import "petjournal/layout/public_navigation";
+@import "petjournal/base/product_surface";
+@import "petjournal/base/product_density";
+
+// Authentication.
+@import "petjournal/pages/auth/base";
+@import "petjournal/pages/auth/layout";
+@import "petjournal/pages/auth/composition";
+@import "petjournal/pages/auth/photo";
+@import "petjournal/pages/auth/footer";
+@import "petjournal/pages/auth/registration";
+@import "petjournal/pages/auth/required";
+@import "petjournal/pages/auth/reset_password";
+@import "petjournal/pages/auth/shell";
+@import "petjournal/pages/auth/oauth";
+
+// Dashboard and application shell.
+@import "petjournal/pages/dashboard/base";
+@import "petjournal/pages/dashboard/fullscreen";
+@import "petjournal/pages/dashboard/workspace";
+@import "petjournal/layout/sidebar";
+@import "petjournal/layout/sidebar_motion";
+@import "petjournal/layout/mobile_chrome";
+@import "petjournal/layout/mobile_chrome_layout";
+
+// Pets.
+@import "petjournal/pages/pets/base";
+@import "petjournal/pages/pets/form";
+
+// Journal.
+@import "petjournal/pages/journal/base";
+@import "petjournal/pages/journal/model";
+@import "petjournal/pages/journal/wizard";
+@import "petjournal/pages/journal/overview";
+
+// Product-wide typography and shared responsive behavior.
+@import "petjournal/base/typography";
+@import "petjournal/base/typography_details";
+@import "petjournal/pages/dashboard/pet_card_actions";
+@import "petjournal/layout/workspace_balance";
+@import "petjournal/layout/mobile_usability";
+@import "petjournal/layout/mobile_app";
+@import "petjournal/components/detail_actions";
+@import "petjournal/pages/journal/desktop";
+
+// Reminders.
+@import "petjournal/pages/reminders/base";
+@import "petjournal/pages/reminders/layout";
+@import "petjournal/pages/reminders/mobile_filters";
+@import "petjournal/pages/reminders/actions";
+@import "petjournal/pages/reminders/overview";
+
+// Notification channels and delivery history.
+@import "petjournal/pages/notifications/base";
+@import "petjournal/pages/notifications/structure";
+@import "petjournal/pages/notifications/form";
+@import "petjournal/pages/notifications/details";
+@import "petjournal/pages/notifications/mobile";
+
+// Documents.
+@import "petjournal/pages/documents/base";
+@import "petjournal/pages/documents/file_preview";
+@import "petjournal/pages/documents/workspace";
+
+// PetTag and public PetTag.
+@import "petjournal/pages/pettag/base";
+@import "petjournal/pages/pettag/settings";
+@import "petjournal/pages/pettag/overview";
+@import "petjournal/pages/public_pettag/base";
+@import "petjournal/pages/public_pettag/details";
+
+// Account and settings.
+@import "petjournal/pages/account/base";
+@import "petjournal/pages/account/avatar";
+@import "petjournal/layout/navigation_badges";
+@import "petjournal/components/select";
+@import "petjournal/pages/account/details";
+@import "petjournal/pages/account/profile";
+@import "petjournal/pages/settings/base";
+@import "petjournal/pages/settings/mobile";
+
+// Shared workspace components and empty states.
+@import "petjournal/layout/workspace_shell";
+@import "petjournal/components/onboarding";
+@import "petjournal/pages/dashboard/empty";
+@import "petjournal/components/empty_states";
+@import "petjournal/pages/pets/empty";
+
+// Public access and public profile.
+@import "petjournal/pages/public_access/base";
+@import "petjournal/pages/public_access/footer";
+@import "petjournal/pages/public_profile/readability";
+@import "petjournal/pages/public_access/actions";
+@import "petjournal/pages/public_profile/typography";
+@import "petjournal/pages/public_access/typography";
+@import "petjournal/layout/footer";
+@import "petjournal/pages/public_profile/share_sheet";
+@import "petjournal/pages/public_access/details";
+
+// Legal and error pages.
+@import "petjournal/pages/legal";
+@import "petjournal/pages/errors";
+
+// Late-stage responsive rules kept in their semantic owners.
+@import "petjournal/layout/workspace_details";
+@import "petjournal/pages/pets/mobile";
+@import "petjournal/pages/dashboard/content";
+@import "petjournal/pages/journal/mobile";
+@import "petjournal/layout/workspace_controls";
+@import "petjournal/pages/dashboard/mobile";
+@import "petjournal/pages/reminders/mobile";
+@import "petjournal/pages/documents/overview";
+@import "petjournal/pages/notifications/controls";
+@import "petjournal/pages/notifications/in_app";
+@import "petjournal/pages/notifications/mobile_center";
+@import "petjournal/pages/notifications/list";
+@import "petjournal/pages/notifications/in_app_mobile";
+@import "petjournal/components/progressive_loading";
+@import "petjournal/pages/pettag/details";
+@import "petjournal/pages/settings/gutters";
+@import "petjournal/components/section_subtitles";
+@import "petjournal/pages/pettag/mobile";
+@import "petjournal/pages/public_access/structure";
+
+// PWA and shared application components.
+@import "petjournal/components/pwa";
+@import "petjournal/components/birthday_greeting";
+@import "petjournal/components/legal_links";
+@import "petjournal/components/ui";

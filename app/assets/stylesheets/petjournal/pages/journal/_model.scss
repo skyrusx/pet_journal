@@ -1,0 +1,27 @@
+/* Layout refinements for the expanded journal data model. */
+
+@media (min-width: 1101px) {
+  .pj-journal-filters {
+    grid-template-columns: minmax(180px, 1.45fr) repeat(4, minmax(105px, .72fr)) auto auto;
+  }
+}
+
+@media (max-width: 1100px) and (min-width: 821px) {
+  .pj-journal-filters {
+    grid-template-columns: minmax(150px, 1.2fr) repeat(4, minmax(92px, .7fr)) auto;
+  }
+
+  .pj-journal-filter-reset {
+    grid-column: 1 / -1;
+  }
+}
+
+.pj-journal-state.planned {
+  color: #7f754b;
+  background: #f4f0dc;
+}
+
+.pj-journal-state.done {
+  color: #638064;
+  background: #eaf1e8;
+}

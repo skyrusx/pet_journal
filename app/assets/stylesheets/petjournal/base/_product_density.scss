@@ -1,0 +1,69 @@
+/* Final pre-release density pass.
+   Keeps the existing product surfaces while reducing secondary competition. */
+
+.journal-quick-actions .btn-outline-primary.btn-sm,
+.reminders-quick-actions .btn-outline-primary.btn-sm,
+.documents-quick-actions .btn-outline-primary.btn-sm {
+  background: transparent;
+  border-color: transparent;
+  color: var(--pj-muted);
+  font-size: 13px;
+  font-weight: 500;
+  padding-left: .4rem;
+  padding-right: .4rem;
+}
+
+.journal-quick-actions .btn-outline-primary.btn-sm:hover,
+.reminders-quick-actions .btn-outline-primary.btn-sm:hover,
+.documents-quick-actions .btn-outline-primary.btn-sm:hover {
+  background: transparent;
+  border-color: transparent;
+  color: var(--pj-green);
+}
+
+.event-type-option strong,
+.channel-choice strong,
+.compact-list strong,
+.document-row .fw-semibold,
+.delivery-row .fw-semibold,
+.scan-item .fw-semibold {
+  font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  /* The mobile Add sheet already exposes these shortcuts; keep page heroes focused. */
+  .journal-quick-actions .btn-outline-primary.btn-sm,
+  .reminders-quick-actions .btn-outline-primary.btn-sm,
+  .documents-quick-actions .btn-outline-primary.btn-sm {
+    display: none;
+  }
+
+  /* Mobile summaries show only actionable signal, not every statistic available on desktop. */
+  .journal-metrics > :nth-child(2),
+  .journal-metrics > :nth-child(3) {
+    display: none;
+  }
+
+  .reminders-metrics > :nth-child(1),
+  .reminders-metrics > :nth-child(2),
+  .reminders-metrics > :nth-child(5),
+  .reminders-metrics > :nth-child(6) {
+    display: none;
+  }
+
+  .documents-metrics > :nth-child(n+4) {
+    display: none;
+  }
+
+  .journal-metrics,
+  .reminders-metrics,
+  .documents-metrics {
+    gap: 8px;
+  }
+
+  .journal-workspace-hero,
+  .reminders-hero,
+  .documents-hero {
+    margin-bottom: 1rem;
+  }
+}

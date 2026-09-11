@@ -1,0 +1,190 @@
+/* Real three-step journal event flow. */
+
+.pj-journal-form [data-journal-wizard-step][hidden] {
+  display: none !important;
+}
+
+.pj-journal-step-rail__button {
+  width: 100%;
+  min-height: 35px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 7px;
+  color: #8d938d;
+  background: transparent;
+  font: inherit;
+  font-size: var(--pj-font-meta);
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+  transition: color 150ms ease, background 150ms ease, opacity 150ms ease;
+}
+
+.pj-journal-step-rail__button b {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #dcded4;
+  border-radius: 50%;
+  color: #858c85;
+  background: #fffefa;
+  font-size: .6875rem;
+  line-height: 1;
+}
+
+.pj-journal-step-rail__button.active {
+  color: #315b42;
+  background: #eef2df;
+}
+
+.pj-journal-step-rail__button.active b {
+  border-color: #315b42;
+  color: #fff;
+  background: #315b42;
+}
+
+.pj-journal-step-rail__button.is-complete:not(.active) {
+  color: #5f7567;
+}
+
+.pj-journal-step-rail__button.is-complete:not(.active) b {
+  border-color: #b8c5b1;
+  color: #315b42;
+  background: #f1f4e8;
+}
+
+.pj-journal-step-rail__button:disabled {
+  opacity: .52;
+  cursor: default;
+}
+
+.pj-journal-step-rail__button:not(:disabled):hover {
+  color: #315b42;
+  background: #f4f5ec;
+}
+
+/*
+ * The legacy form stylesheet separates consecutive sections with a top border
+ * and extra spacing. Wizard steps are mutually exclusive screens, not stacked
+ * sections, so every step must start on the same vertical baseline.
+ */
+.pj-journal-form-section[data-journal-wizard-step] {
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  border-top: 0 !important;
+}
+
+.pj-journal-form-section[data-journal-wizard-step="1"] .pj-journal-type-grid {
+  margin-bottom: 18px;
+}
+
+.pj-journal-wizard-message {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #8b554e;
+  background: #fbefec;
+  font-size: var(--pj-font-meta);
+  font-weight: 650;
+}
+
+.pj-journal-wizard-message[hidden] {
+  display: none;
+}
+
+/* Reuse the Documents uploader literally, with only local spacing adapted to the wizard. */
+.pj-journal-upload-card {
+  margin-top: var(--pj-space-3);
+}
+
+.pj-journal-form-actions--wizard {
+  margin-top: auto;
+  padding-top: 22px;
+}
+
+.pj-journal-form-actions--wizard button {
+  min-width: 128px;
+}
+
+.pj-journal-form-actions--wizard .pj-journal-form-save:disabled {
+  opacity: .48;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (max-width: 820px) {
+  .pj-journal-step-rail {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .pj-journal-step-rail__button {
+    min-width: 0;
+    min-height: 38px;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 4px;
+    font-size: .71875rem;
+    text-align: center;
+  }
+
+  .pj-journal-step-rail__button b {
+    width: 18px;
+    height: 18px;
+    flex-basis: 18px;
+    font-size: .625rem;
+  }
+
+  .pj-journal-step-rail__button span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pj-journal-form-section[data-journal-wizard-step] {
+    min-height: 0;
+  }
+
+  /* Match the approved Pets mobile action bar: compact sticky surface,
+     secondary action narrower than the primary action. */
+  .pj-journal-form-actions--wizard {
+    position: sticky;
+    z-index: 8;
+    bottom: 75px;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 10px;
+    margin: 15px -4px 0;
+    padding: 8px 4px;
+    border-top: 0;
+    background: rgba(251, 250, 246, .94);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .pj-journal-form-actions--wizard > * {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Save may be either a button or an input[type=submit]. Keep its computed
+     typography identical to Cancel despite the global 16px mobile input rule. */
+  .pj-journal-form-actions--wizard .pj-journal-form-cancel,
+  .pj-journal-form-actions--wizard .pj-journal-form-save {
+    min-height: var(--pj-size-touch-target) !important;
+    font-family: "Manrope", "Avenir Next", "Segoe UI", Arial, sans-serif;
+    font-size: var(--pj-font-body) !important;
+    font-weight: 700;
+    line-height: 1;
+  }
+}

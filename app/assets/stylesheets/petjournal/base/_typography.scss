@@ -1,0 +1,526 @@
+/*
+ * Product-wide typography normalization.
+ *
+ * The visual mockups used many 7–10px labels. They looked neat in static
+ * compositions but are too small in the real product. This layer keeps the
+ * approved layouts intact while moving everyday text onto a readable scale.
+ * Future user text-size preferences can override the shared tokens instead of
+ * patching individual screens.
+ */
+
+.pj-dashboard-body {
+  font-size: var(--pj-font-body);
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Shared workspace controls and semantic text. */
+.pj-workspace-main input:not([type="checkbox"]):not([type="radio"]),
+.pj-workspace-main select,
+.pj-workspace-main textarea,
+.pj-workspace-main button,
+.pj-workspace-main .btn {
+  font-size: var(--pj-font-control);
+}
+
+.pj-workspace-main label,
+.pj-workspace-main dt {
+  font-size: var(--pj-font-meta) !important;
+  line-height: 1.4;
+}
+
+.pj-workspace-main dd,
+.pj-workspace-main p {
+  font-size: var(--pj-font-body);
+  line-height: 1.5;
+}
+
+.pj-workspace-main small {
+  font-size: var(--pj-font-caption) !important;
+  line-height: 1.4;
+}
+
+/* Dashboard */
+.pj-dash-nav__item {
+  font-size: var(--pj-font-body);
+}
+
+.pj-dash-account__copy strong,
+.pj-dash-profile-popover__identity strong {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-dash-account__copy small,
+.pj-dash-profile-popover__identity small {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-dash-profile-popover__item {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-dash-section__head h1,
+.pj-dash-section__head h2 {
+  font-size: var(--pj-font-section-title);
+}
+
+.pj-dash-section__head a {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-dash-upcoming-card__copy small {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-dash-upcoming-card__copy strong {
+  font-size: var(--pj-font-body);
+}
+
+.pj-dash-upcoming-card__copy span {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-dash-pet-card__name {
+  font-size: var(--pj-font-card-title);
+}
+
+.pj-dash-pet-card__meta {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-dash-pet-card__tag {
+  font-size: .71875rem; /* 11.5px */
+}
+
+.pj-dash-recent-item__copy strong {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-dash-recent-item__copy small,
+.pj-dash-recent-item__copy span {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-dash-footer,
+.pj-workspace-footer {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-dash-pettag-card__status,
+.pj-dash-pettag-card__qr,
+.pj-dash-pettag-card__button {
+  font-size: .71875rem;
+}
+
+/* Shared workspace / Pets */
+.pj-workspace-topbar h1 {
+  font-size: 1.25rem;
+}
+
+.pj-workspace-back {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-pets-heading p {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-pets-primary-button,
+.pj-pet-secondary-button {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-pet-list-card__name {
+  font-size: var(--pj-font-card-title);
+}
+
+.pj-pet-list-card__breed,
+.pj-pet-list-card__age {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-pet-list-card__tag,
+.pj-pet-profile-tag {
+  font-size: .71875rem;
+}
+
+.pj-pet-list-add {
+  font-size: var(--pj-font-body);
+}
+
+.pj-pets-empty p {
+  font-size: var(--pj-font-body);
+}
+
+.pj-pet-profile-name-row h1 {
+  font-size: var(--pj-font-page-title);
+}
+
+.pj-pet-profile-details dt {
+  font-size: var(--pj-font-caption) !important;
+}
+
+.pj-pet-profile-details dd {
+  font-size: var(--pj-font-body);
+}
+
+.pj-pet-summary-card__label {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-pet-summary-card__row strong {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-pet-summary-card__row small,
+.pj-pet-summary-card__empty {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-pet-summary-status {
+  font-size: .6875rem; /* 11px */
+}
+
+.pj-pet-summary-card__button {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-pet-quick-section h2,
+.pj-pet-profile-content > .pj-pet-quick-section h2 {
+  font-size: var(--pj-font-card-title);
+}
+
+.pj-pet-quick-card strong {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-pet-quick-card small {
+  font-size: var(--pj-font-caption) !important;
+}
+
+.pj-pet-form-heading h1 {
+  font-size: var(--pj-font-page-title);
+}
+
+.pj-pet-form-heading p,
+.pj-pet-form__extra > p {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-pet-form__extra > summary {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-pet-form label {
+  font-size: var(--pj-font-meta) !important;
+}
+
+.pj-pet-form input:not([type="checkbox"]):not([type="radio"]),
+.pj-pet-form select,
+.pj-pet-form textarea {
+  font-size: var(--pj-font-control) !important;
+}
+
+.pj-pet-form small,
+.pj-pet-photo-upload small {
+  font-size: var(--pj-font-caption) !important;
+}
+
+/* Journal list */
+.pj-journal-pet-switcher > summary {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-journal-pet-option strong {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-journal-pet-option small {
+  font-size: var(--pj-font-caption) !important;
+}
+
+.pj-journal-add,
+.pj-journal-filter-submit,
+.pj-journal-form-save,
+.pj-journal-secondary-action,
+.pj-journal-form-cancel {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-journal-filter input,
+.pj-journal-filter select {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-journal-filter-reset {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-journal-table-head {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-journal-row__date {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-journal-row__event strong {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-journal-row__event small,
+.pj-journal-row__detail,
+.pj-journal-row__detail small {
+  font-size: var(--pj-font-caption) !important;
+}
+
+.pj-journal-state {
+  font-size: .71875rem;
+}
+
+.pj-journal-empty h2 {
+  font-size: var(--pj-font-section-title);
+}
+
+.pj-journal-empty p {
+  font-size: var(--pj-font-meta);
+}
+
+/* Journal event details */
+.pj-journal-event-heading h1 {
+  font-size: 1.5rem;
+}
+
+.pj-journal-event-heading p {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-journal-detail-list dt {
+  font-size: var(--pj-font-caption) !important;
+}
+
+.pj-journal-detail-list dd {
+  font-size: var(--pj-font-body);
+  line-height: 1.5;
+}
+
+.pj-journal-note-block h2,
+.pj-journal-files h2,
+.pj-journal-history-card h2 {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-journal-note-block p,
+.pj-journal-file-row strong,
+.pj-journal-follow-up strong,
+.pj-journal-pet-card strong,
+.pj-journal-history-card strong {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-journal-file-row small,
+.pj-journal-follow-up small,
+.pj-journal-pet-card small,
+.pj-journal-history-card small {
+  font-size: var(--pj-font-caption) !important;
+}
+
+/* Journal create / edit */
+.pj-journal-step-rail span {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-journal-form-heading h1 {
+  font-size: 1.5rem;
+}
+
+.pj-journal-form-heading p,
+.pj-journal-type-note {
+  font-size: var(--pj-font-meta);
+  line-height: 1.5;
+}
+
+.pj-journal-form-heading--compact span {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-journal-type-option strong {
+  font-size: var(--pj-font-body);
+}
+
+.pj-journal-type-option small {
+  font-size: var(--pj-font-caption) !important;
+  line-height: 1.4;
+}
+
+.pj-journal-field label {
+  font-size: var(--pj-font-meta) !important;
+}
+
+.pj-journal-field input,
+.pj-journal-field select,
+.pj-journal-field textarea {
+  font-size: var(--pj-font-control) !important;
+}
+
+.pj-journal-field small,
+.pj-journal-file-control small,
+.pj-journal-follow-up-toggle small,
+.pj-journal-attached-files small {
+  font-size: var(--pj-font-caption) !important;
+}
+
+.pj-journal-file-control strong,
+.pj-journal-follow-up-toggle strong,
+.pj-journal-attached-files strong {
+  font-size: var(--pj-font-meta);
+}
+
+/* Auth: retain the approved composition, but remove undersized text. */
+.pj-auth-v2 .pj-auth-v2-field label {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-auth-v2 .pj-auth-v2-input {
+  font-size: var(--pj-font-body);
+}
+
+.pj-auth-v2 .pj-auth-v2-forgot,
+.pj-auth-v2 .pj-auth-v2-register,
+.pj-auth-v2 .pj-auth-v2-social {
+  font-size: var(--pj-font-meta);
+}
+
+.pj-auth-v2 .pj-auth-v2-divider {
+  font-size: var(--pj-font-caption);
+}
+
+.pj-auth-v2-brand-card__benefits li {
+  font-size: var(--pj-font-caption);
+}
+
+/* Existing pre-redesign forms still benefit from sane controls. */
+body:not(.pj-landing-body) .form-control,
+body:not(.pj-landing-body) .form-select,
+body:not(.pj-landing-body) .btn {
+  font-size: var(--pj-font-control);
+}
+
+/* Mobile */
+@media (max-width: 820px) {
+  .pj-workspace-topbar h1 {
+    font-size: 1.375rem;
+  }
+
+  .pj-dash-section__head h1,
+  .pj-dash-section__head h2 {
+    font-size: 1.25rem;
+  }
+
+  .pj-dash-upcoming-card__copy strong,
+  .pj-dash-pet-card__name,
+  .pj-journal-mobile-card__body strong {
+    font-size: var(--pj-font-card-title);
+  }
+
+  .pj-dash-upcoming-card__copy span,
+  .pj-dash-pet-card__meta,
+  .pj-dash-recent-item__copy span,
+  .pj-journal-mobile-card__body span {
+    font-size: var(--pj-font-meta);
+  }
+
+  .pj-dash-upcoming-card__copy small,
+  .pj-dash-recent-item__copy small,
+  .pj-journal-mobile-card__body small {
+    font-size: var(--pj-font-caption) !important;
+  }
+
+  /* Seven compact bottom-bar actions are a deliberate product choice. Keep
+     labels smaller than content text, but no longer at 7–8px. */
+  .pj-mobile-tabs__item,
+  .pj-mobile-tabs__item span {
+    font-size: .65625rem !important; /* 10.5px */
+  }
+
+  .pj-mobile-sheet__head small {
+    font-size: var(--pj-font-caption) !important;
+  }
+
+  .pj-mobile-sheet__action strong {
+    font-size: var(--pj-font-body);
+  }
+
+  .pj-mobile-sheet__action small {
+    font-size: var(--pj-font-caption) !important;
+  }
+
+  .pj-mobile-sheet__hint {
+    font-size: var(--pj-font-meta);
+  }
+
+  .pj-pet-profile-name-row h1,
+  .pj-pet-form-heading h1,
+  .pj-journal-form-heading h1,
+  .pj-journal-event-heading h1 {
+    font-size: 1.5rem;
+  }
+
+  .pj-pet-profile-details dt,
+  .pj-journal-detail-list dt {
+    font-size: var(--pj-font-meta) !important;
+  }
+
+  .pj-pet-profile-details dd,
+  .pj-journal-detail-list dd {
+    font-size: .9375rem;
+  }
+
+  .pj-pet-list-card__name {
+    font-size: .9375rem;
+  }
+
+  .pj-pet-list-card__breed,
+  .pj-pet-list-card__age,
+  .pj-pet-list-card__tag,
+  .pj-pet-profile-tag,
+  .pj-pet-summary-status,
+  .pj-journal-state {
+    font-size: var(--pj-font-caption);
+  }
+
+  .pj-workspace-main input:not([type="checkbox"]):not([type="radio"]),
+  .pj-workspace-main select,
+  .pj-workspace-main textarea,
+  .pj-pet-form input:not([type="checkbox"]):not([type="radio"]),
+  .pj-pet-form select,
+  .pj-pet-form textarea,
+  .pj-journal-field input,
+  .pj-journal-field select,
+  .pj-journal-field textarea,
+  .pj-auth-v2 .pj-auth-v2-input,
+  body:not(.pj-landing-body) .form-control,
+  body:not(.pj-landing-body) .form-select {
+    font-size: var(--pj-font-mobile-control) !important;
+  }
+
+  .pj-workspace-main button,
+  .pj-workspace-main .btn,
+  .pj-pets-primary-button,
+  .pj-pet-secondary-button,
+  .pj-journal-add,
+  .pj-journal-filter-submit,
+  .pj-journal-form-save,
+  .pj-journal-secondary-action,
+  .pj-journal-form-cancel {
+    font-size: var(--pj-font-body);
+  }
+}
+
+@media (max-width: 360px) {
+  .pj-mobile-tabs__item,
+  .pj-mobile-tabs__item span {
+    font-size: .625rem !important; /* 10px, compact floor for very narrow phones */
+  }
+}

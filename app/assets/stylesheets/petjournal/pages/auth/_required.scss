@@ -1,0 +1,8 @@
+/* Required field markers for authentication forms. */
+
+.pj-auth-v2-field:has(input[required]) label::after,
+.auth-form .mb-3:has(input[required]) > .form-label::after {
+  content: " *";
+  color: #a65349;
+  font-weight: 700;
+}
