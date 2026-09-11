@@ -1,7 +1,7 @@
 class PagesController < ApplicationController
   def index
     unless user_signed_in?
-      render :new_design, layout: "new_design"
+      render :landing, layout: "landing"
       return
     end
 
@@ -26,7 +26,7 @@ class PagesController < ApplicationController
     @profile_share_views_count = PetProfileShareView.joins(pet_profile_share: :pet).where(pets: { user_id: current_user.id }).count
     @active_profile_shares_count = PetProfileShare.active.joins(:pet).where(pets: { user_id: current_user.id }).count
 
-    render layout: "dashboard_new_design"
+    render layout: "dashboard"
   end
 
   def new_design

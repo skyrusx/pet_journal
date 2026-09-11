@@ -1,0 +1,407 @@
+<% mobile_pets = current_user.pets.includes(:pet_tag).order(created_at: :desc).to_a %>
+<% mobile_pets_without_pettag = mobile_pets.select { |pet| pet.pet_tag.blank? } %>
+<% context_pet = (defined?(@pet) && @pet&.persisted?) ? @pet : nil %>
+<% primary_pet = context_pet || Array(@pets).first || mobile_pets.first %>
+<% journal_path = journal_overview_path %>
+<% reminders_path = reminders_overview_path %>
+<% documents_path = documents_overview_path %>
+<% pettag_path = mobile_pets.many? ? pet_tags_path : (primary_pet ? pet_pet_tag_path(primary_pet) : pet_tags_path) %>
+<% public_access_path = public_access_overview_path %>
+<% reminders_badge = mobile_reminders_badge %>
+<% notifications_badge = mobile_notifications_badge %>
+<% mobile_notification_scope = current_user.in_app_notifications.recent %>
+<% mobile_recent_notifications = mobile_notification_scope.limit(6) %>
+<% mobile_unread_notifications_count = current_user.in_app_notifications.unread.count %>
+<% empty_workspace_section = controller_name == "workspace_sections" ? action_name : nil %>
+<% more_active = %w[pet_profile_shares settings notification_channels in_app_notifications].include?(controller_name) || empty_workspace_section == "public_access" || devise_controller? %>
+
+<div class="pj-mobile-chrome" data-dashboard-mobile-chrome>
+  <header class="pj-mobile-chrome__header">
+    <%= link_to root_path, class: "pj-mobile-chrome__brand", aria: { label: "PetJournal — главная" } do %>
+      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
+    <% end %>
+
+    <div class="pj-mobile-chrome__header-actions" aria-label="Быстрые разделы">
+      <%= link_to reminders_path,
+                  class: class_names("pj-mobile-chrome__bell", "is-active": controller_name == "reminders" || empty_workspace_section == "reminders"),
+                  aria: { label: "Напоминания", current: (controller_name == "reminders" || empty_workspace_section == "reminders") ? "page" : nil },
+                  title: "Напоминания" do %>
+        <%= pj_icon(:alarm) %>
+        <% if reminders_badge.present? %>
+          <span class="pj-mobile-chrome__badge" aria-hidden="true"><%= reminders_badge %></span>
+        <% end %>
+      <% end %>
+
+      <button type="button"
+              class="<%= class_names('pj-mobile-chrome__bell', 'is-active': controller_name == 'in_app_notifications') %>"
+              aria-label="Уведомления"
+              aria-expanded="false"
+              title="Уведомления"
+              data-dashboard-sheet-toggle="notifications">
+        <%= pj_icon(:bell) %>
+        <% if notifications_badge.present? %>
+          <span class="pj-mobile-chrome__badge" aria-hidden="true"><%= notifications_badge %></span>
+        <% end %>
+      </button>
+    </div>
+  </header>
+
+  <div class="pj-mobile-chrome__backdrop" data-dashboard-sheet-backdrop hidden></div>
+
+  <section class="pj-mobile-sheet pj-mobile-notifications-sheet"
+           data-dashboard-sheet="notifications"
+           aria-hidden="true"
+           aria-labelledby="pj-mobile-notifications-title">
+    <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+    <div class="pj-mobile-sheet__head">
+      <div>
+        <h2 id="pj-mobile-notifications-title">Уведомления</h2>
+        <% if mobile_unread_notifications_count.positive? %>
+          <small><%= mobile_unread_notifications_count %> непрочитано</small>
+        <% end %>
+      </div>
+      <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+    </div>
+
+    <% if mobile_recent_notifications.any? %>
+      <div class="pj-mobile-sheet__actions pj-mobile-notifications-sheet__list">
+        <% mobile_recent_notifications.each do |notification| %>
+          <%= link_to notification_path(notification),
+                      class: class_names("pj-mobile-sheet__action", "pj-mobile-notification-item", unread: !notification.read?) do %>
+            <span class="pj-mobile-sheet__action-icon">
+              <%= notification.kind.start_with?("pet_tag") ? pj_icon(:tag) : pj_icon(:alarm) %>
+            </span>
+            <span>
+              <strong><%= notification.title %></strong>
+              <% if notification.body.present? %><small><%= notification.body %></small><% end %>
+              <small><%= in_app_notification_time_label(notification) %></small>
+            </span>
+            <% unless notification.read? %><i class="pj-mobile-notification-item__dot" aria-label="Непрочитано"></i><% end %>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="pj-mobile-sheet__hint">Новых уведомлений нет.</p>
+    <% end %>
+
+    <div class="pj-mobile-sheet__actions pj-mobile-notifications-sheet__footer">
+      <% if mobile_unread_notifications_count.positive? %>
+        <%= button_to mark_all_read_notifications_path,
+                      method: :patch,
+                      class: "pj-mobile-sheet__action" do %>
+          <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:journal) %></span>
+          <span><strong>Прочитать все</strong></span>
+        <% end %>
+      <% end %>
+
+      <%= link_to notifications_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:bell) %></span>
+        <span><strong>Все уведомления</strong></span>
+      <% end %>
+
+      <%= link_to notification_channels_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:settings) %></span>
+        <span><strong>Настройки уведомлений</strong></span>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="pj-mobile-sheet" data-dashboard-sheet="add" aria-hidden="true" aria-labelledby="pj-mobile-add-title">
+    <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+    <div class="pj-mobile-sheet__head">
+      <div>
+        <small>Быстрое действие</small>
+        <h2 id="pj-mobile-add-title">Что добавить?</h2>
+      </div>
+      <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+    </div>
+
+    <div class="pj-mobile-sheet__actions">
+      <%= link_to new_pet_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:paw) %></span>
+        <span><strong>Питомца</strong><small>Создать новую карточку</small></span>
+      <% end %>
+
+      <% if primary_pet %>
+        <% if mobile_pets.many? %>
+          <button type="button"
+                  class="pj-mobile-sheet__action"
+                  aria-expanded="false"
+                  data-dashboard-sheet-toggle="journal-pet">
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:journal) %></span>
+            <span><strong>Запись в журнал</strong><small>Сначала выберите питомца</small></span>
+          </button>
+        <% else %>
+          <%= link_to new_pet_pet_event_path(primary_pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:journal) %></span>
+            <span><strong>Запись в журнал</strong><small>Событие, наблюдение или здоровье</small></span>
+          <% end %>
+        <% end %>
+
+        <% if mobile_pets.many? %>
+          <button type="button"
+                  class="pj-mobile-sheet__action"
+                  aria-expanded="false"
+                  data-dashboard-sheet-toggle="reminder-pet">
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:alarm) %></span>
+            <span><strong>Напоминание</strong><small>Сначала выберите питомца</small></span>
+          </button>
+        <% else %>
+          <%= link_to new_pet_reminder_path(primary_pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:alarm) %></span>
+            <span><strong>Напоминание</strong><small>Чтобы ничего не забыть</small></span>
+          <% end %>
+        <% end %>
+
+        <% if mobile_pets.many? %>
+          <button type="button"
+                  class="pj-mobile-sheet__action"
+                  aria-expanded="false"
+                  data-dashboard-sheet-toggle="document-pet">
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:file) %></span>
+            <span><strong>Документ</strong><small>Сначала выберите питомца</small></span>
+          </button>
+        <% else %>
+          <%= link_to new_pet_pet_document_path(primary_pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:file) %></span>
+            <span><strong>Документ</strong><small>Файл, справка или паспорт</small></span>
+          <% end %>
+        <% end %>
+
+        <% if mobile_pets_without_pettag.any? %>
+          <% if mobile_pets_without_pettag.many? %>
+            <button type="button"
+                    class="pj-mobile-sheet__action"
+                    aria-expanded="false"
+                    data-dashboard-sheet-toggle="pettag-pet">
+              <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:tag) %></span>
+              <span><strong>PetTag</strong><small>Выбрать питомца и создать QR-профиль</small></span>
+            </button>
+          <% else %>
+            <% pet_without_pettag = mobile_pets_without_pettag.first %>
+            <%= link_to pet_pet_tag_path(pet_without_pettag), class: "pj-mobile-sheet__action" do %>
+              <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:tag) %></span>
+              <span><strong>PetTag</strong><small>Создать QR-профиль для <%= pet_without_pettag.name %></small></span>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <% if mobile_pets.many? && context_pet.blank? %>
+          <button type="button"
+                  class="pj-mobile-sheet__action"
+                  aria-expanded="false"
+                  data-dashboard-sheet-toggle="public-access-pet">
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:share) %></span>
+            <span><strong>Публичный доступ</strong><small>Выбрать питомца и создать ссылку</small></span>
+          </button>
+        <% else %>
+          <%= link_to new_pet_profile_share_path(primary_pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:share) %></span>
+            <span><strong>Публичный доступ</strong><small>Создать ссылку на выбранные данные питомца</small></span>
+          <% end %>
+        <% end %>
+      <% else %>
+        <p class="pj-mobile-sheet__hint">После добавления питомца здесь появятся запись в журнал, напоминание, документ, PetTag и публичный доступ.</p>
+      <% end %>
+
+      <%= link_to new_notification_channel_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:bell) %></span>
+        <span><strong>Канал уведомлений</strong><small>Email, Telegram, VK или Push</small></span>
+      <% end %>
+    </div>
+  </section>
+
+  <% if mobile_pets.many? %>
+    <section class="pj-mobile-sheet" data-dashboard-sheet="journal-pet" aria-hidden="true" aria-labelledby="pj-mobile-journal-pet-title">
+      <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+      <div class="pj-mobile-sheet__head">
+        <div>
+          <small>Запись в журнал</small>
+          <h2 id="pj-mobile-journal-pet-title">Для какого питомца?</h2>
+        </div>
+        <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+      </div>
+
+      <div class="pj-mobile-sheet__actions">
+        <% mobile_pets.each do |pet| %>
+          <%= link_to new_pet_pet_event_path(pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:paw) %></span>
+            <span>
+              <strong><%= pet.name %></strong>
+              <small><%= [pet.breed.presence || pet.species.presence, pet_age(pet)].compact.join(" · ") %></small>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+
+    <section class="pj-mobile-sheet" data-dashboard-sheet="reminder-pet" aria-hidden="true" aria-labelledby="pj-mobile-reminder-pet-title">
+      <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+      <div class="pj-mobile-sheet__head">
+        <div>
+          <small>Напоминание</small>
+          <h2 id="pj-mobile-reminder-pet-title">Для какого питомца?</h2>
+        </div>
+        <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+      </div>
+
+      <div class="pj-mobile-sheet__actions">
+        <% mobile_pets.each do |pet| %>
+          <%= link_to new_pet_reminder_path(pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:paw) %></span>
+            <span>
+              <strong><%= pet.name %></strong>
+              <small><%= [pet.breed.presence || pet.species.presence, pet_age(pet)].compact.join(" · ") %></small>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+
+    <section class="pj-mobile-sheet" data-dashboard-sheet="document-pet" aria-hidden="true" aria-labelledby="pj-mobile-document-pet-title">
+      <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+      <div class="pj-mobile-sheet__head">
+        <div>
+          <small>Документ</small>
+          <h2 id="pj-mobile-document-pet-title">Для какого питомца?</h2>
+        </div>
+        <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+      </div>
+
+      <div class="pj-mobile-sheet__actions">
+        <% mobile_pets.each do |pet| %>
+          <%= link_to new_pet_pet_document_path(pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:paw) %></span>
+            <span>
+              <strong><%= pet.name %></strong>
+              <small><%= [pet.breed.presence || pet.species.presence, pet_age(pet)].compact.join(" · ") %></small>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <% if mobile_pets_without_pettag.many? %>
+    <section class="pj-mobile-sheet" data-dashboard-sheet="pettag-pet" aria-hidden="true" aria-labelledby="pj-mobile-pettag-pet-title">
+      <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+      <div class="pj-mobile-sheet__head">
+        <div>
+          <small>PetTag</small>
+          <h2 id="pj-mobile-pettag-pet-title">Для какого питомца?</h2>
+        </div>
+        <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+      </div>
+
+      <div class="pj-mobile-sheet__actions">
+        <% mobile_pets_without_pettag.each do |pet| %>
+          <%= link_to pet_pet_tag_path(pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:paw) %></span>
+            <span>
+              <strong><%= pet.name %></strong>
+              <small><%= [pet.breed.presence || pet.species.presence, pet_age(pet)].compact.join(" · ") %></small>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <% if mobile_pets.many? && context_pet.blank? %>
+    <section class="pj-mobile-sheet" data-dashboard-sheet="public-access-pet" aria-hidden="true" aria-labelledby="pj-mobile-public-access-pet-title">
+      <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+      <div class="pj-mobile-sheet__head">
+        <div>
+          <small>Публичный доступ</small>
+          <h2 id="pj-mobile-public-access-pet-title">Для какого питомца?</h2>
+        </div>
+        <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+      </div>
+
+      <div class="pj-mobile-sheet__actions">
+        <% mobile_pets.each do |pet| %>
+          <%= link_to new_pet_profile_share_path(pet), class: "pj-mobile-sheet__action" do %>
+            <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:paw) %></span>
+            <span>
+              <strong><%= pet.name %></strong>
+              <small><%= [pet.breed.presence || pet.species.presence, pet_age(pet)].compact.join(" · ") %></small>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <section class="pj-mobile-sheet" data-dashboard-sheet="more" aria-hidden="true" aria-labelledby="pj-mobile-account-title">
+    <div class="pj-mobile-sheet__handle" aria-hidden="true"></div>
+    <div class="pj-mobile-sheet__head">
+      <div>
+        <h2 id="pj-mobile-account-title">Дополнительно</h2>
+        <small>Другие функции и настройки</small>
+      </div>
+      <button type="button" class="pj-mobile-sheet__close" aria-label="Закрыть" data-dashboard-sheet-close>×</button>
+    </div>
+
+    <nav class="pj-mobile-sheet__actions" aria-label="Дополнительное меню">
+      <%= link_to public_access_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:share) %></span>
+        <span><strong>Публичный доступ</strong><small>Поделиться выбранными данными питомца</small></span>
+      <% end %>
+
+      <%= link_to edit_user_registration_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:user) %></span>
+        <span><strong>Профиль</strong><small>Аккаунт и персональные данные</small></span>
+      <% end %>
+
+      <%= link_to settings_path, class: "pj-mobile-sheet__action" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:settings) %></span>
+        <span><strong>Настройки</strong><small>Интерфейс, регион и уведомления</small></span>
+      <% end %>
+
+      <%= button_to destroy_user_session_path,
+                    method: :delete,
+                    class: "pj-mobile-sheet__action pj-mobile-sheet__action--logout",
+                    form_class: "pj-mobile-sheet__logout-form" do %>
+        <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:logout) %></span>
+        <span><strong>Выйти</strong><small>Завершить текущую сессию</small></span>
+      <% end %>
+    </nav>
+  </section>
+
+  <nav class="pj-mobile-tabs" aria-label="Основная навигация">
+    <%= link_to root_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pages"), aria: { current: controller_name == "pages" ? "page" : nil } do %>
+      <%= pj_icon(:home) %><span>Главная</span>
+    <% end %>
+
+    <%= link_to pets_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pets"), aria: { current: controller_name == "pets" ? "page" : nil } do %>
+      <%= pj_icon(:paw) %><span>Питомцы</span>
+    <% end %>
+
+    <%= link_to journal_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pet_events" || empty_workspace_section == "journal"), aria: { current: (controller_name == "pet_events" || empty_workspace_section == "journal") ? "page" : nil } do %>
+      <%= pj_icon(:journal) %><span>Журнал</span>
+    <% end %>
+    <button type="button"
+            class="pj-mobile-tabs__add"
+            aria-label="Добавить"
+            aria-expanded="false"
+            data-dashboard-sheet-toggle="add">
+      <%= pj_icon(:plus) %>
+    </button>
+
+    <%= link_to documents_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pet_documents" || empty_workspace_section == "documents"), aria: { current: (controller_name == "pet_documents" || empty_workspace_section == "documents") ? "page" : nil } do %>
+      <%= pj_icon(:file) %><span>Документы</span>
+    <% end %>
+
+    <%= link_to pettag_path, class: class_names("pj-mobile-tabs__item", "is-active": controller_name == "pet_tags"), aria: { current: controller_name == "pet_tags" ? "page" : nil } do %>
+      <%= pj_icon(:tag) %><span>PetTag</span>
+    <% end %>
+
+    <button type="button"
+            class="<%= class_names('pj-mobile-tabs__item', 'pj-mobile-tabs__more', 'pj-mobile-tabs__more--icon-only', 'is-active': more_active) %>"
+            aria-label="Дополнительное меню"
+            aria-expanded="false"
+            data-dashboard-sheet-toggle="more">
+      <%= pj_icon(:more) %>
+    </button>
+  </nav>
+</div>
