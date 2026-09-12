@@ -2,7 +2,7 @@ class WorkspaceSectionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_primary_pet
 
-  layout "workspace_new_design"
+  layout "workspace"
 
   def journal
     return redirect_to pet_pet_events_path(@primary_pet) if @primary_pet

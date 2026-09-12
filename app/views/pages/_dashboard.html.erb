@@ -7,7 +7,7 @@
 
 <div class="pj-dash" data-dashboard-root>
   <div class="pj-dash-shell">
-    <%= render "shared/workspace_sidebar" %>
+    <%= render "shared/sidebar" %>
 
     <main class="pj-dash-main pj-workspace-main">
       <header class="pj-dash-mobile-header">
@@ -42,7 +42,7 @@
       <header class="pj-workspace-topbar pj-dashboard-topbar">
         <h1>Главная</h1>
         <div class="pj-workspace-topbar__actions">
-          <%= render "shared/workspace_notification_link" %>
+          <%= render "shared/notification_link" %>
         </div>
       </header>
 
@@ -216,10 +216,7 @@
         <% end %>
       </div>
 
-      <footer class="pj-dash-footer">
-        <span>© <%= Date.current.year %> PetJournal.</span>
-        <span>Сделано с заботой о тех, кто рядом ♡</span>
-      </footer>
+      <%= render "shared/footer", class_name: "pj-dash-footer" %>
 
       <nav class="pj-dash-bottom-nav" aria-label="Основная мобильная навигация">
         <%= link_to root_path, class: "pj-dash-bottom-nav__item active", aria: { current: "page" } do %>
