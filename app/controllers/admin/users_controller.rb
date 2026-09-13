@@ -56,7 +56,7 @@ class Admin::UsersController < Admin::ApplicationController
       documents: PetDocument.where(pet_id: pet_ids).count,
       pettags: PetTag.where(pet_id: pet_ids).count
     }
-    @pets = pet_scope.with_attached_photo.order(created_at: :desc).limit(6)
+    @pets = pet_scope.includes(:pet_tag).with_attached_photo.order(created_at: :desc).limit(6)
   end
 
   def update
