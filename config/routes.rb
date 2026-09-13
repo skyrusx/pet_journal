@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   namespace :admin do
     root "dashboard#index"
     resources :users, only: %i[index show]
+    resources :pets, only: %i[index show]
   end
 
   get "oauth/complete" => "oauth#complete", as: :oauth_complete
