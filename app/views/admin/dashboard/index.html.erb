@@ -9,16 +9,16 @@
 </div>
 
 <section class="admin-activity-grid" aria-label="Активность за последние 7 дней">
-  <article class="admin-metric-card">
+  <%= link_to admin_users_path(role: "user", registered: "7_days"), class: "admin-metric-card admin-metric-card--link" do %>
     <span>Новые пользователи</span>
     <strong><%= number_with_delimiter(@activity[:users]) %></strong>
     <small>зарегистрировались</small>
-  </article>
-  <article class="admin-metric-card">
+  <% end %>
+  <%= link_to admin_pets_path(owner_role: "user", created: "7_days"), class: "admin-metric-card admin-metric-card--link" do %>
     <span>Новые питомцы</span>
     <strong><%= number_with_delimiter(@activity[:pets]) %></strong>
     <small>добавлены владельцами</small>
-  </article>
+  <% end %>
   <article class="admin-metric-card">
     <span>Записи журнала</span>
     <strong><%= number_with_delimiter(@activity[:events]) %></strong>
@@ -64,10 +64,11 @@
           </div>
         <% end %>
         <% if @attention[:lost_pets].positive? %>
-          <div class="admin-attention-item">
+          <%= link_to admin_pets_path(owner_role: "user", lost: "1"), class: "admin-attention-item admin-attention-item--link" do %>
             <span class="admin-attention-item__value"><%= @attention[:lost_pets] %></span>
             <div><strong>Активный lost mode</strong><span>Питомцы сейчас отмечены как потерянные.</span></div>
-          </div>
+            <b>→</b>
+          <% end %>
         <% end %>
       </div>
     <% end %>
@@ -86,9 +87,9 @@
         <div><strong>Пользователи</strong><small>Найти и открыть аккаунт</small></div>
         <b>→</b>
       <% end %>
-      <%= link_to admin_users_path(q: ""), class: "admin-quick-action" do %>
-        <span><%= pj_icon(:more) %></span>
-        <div><strong>Поиск пользователя</strong><small>По имени или email</small></div>
+      <%= link_to admin_pets_path, class: "admin-quick-action" do %>
+        <span><%= pj_icon(:paw) %></span>
+        <div><strong>Питомцы</strong><small>Каталог питомцев сервиса</small></div>
         <b>→</b>
       <% end %>
       <%= link_to root_path, class: "admin-quick-action" do %>
@@ -106,7 +107,7 @@
       <h2>Рост PetJournal</h2>
       <p>Регистрации новых пользователей за 30 дней.</p>
     </div>
-    <span>30 дней</span>
+    <%= link_to "Все за 30 дней →", admin_users_path(role: "user", registered: "30_days") %>
   </div>
 
   <div class="admin-growth-chart" role="img" aria-label="График регистраций пользователей за последние 30 дней">
@@ -134,22 +135,23 @@
     </div>
 
     <% usage_total = [@usage[:registered], 1].max %>
+    <% usage_items = [
+      ["Зарегистрировались", @usage[:registered], admin_users_path(role: "user")],
+      ["Добавили питомца", @usage[:with_pet], admin_users_path(role: "user", usage: "with_pet")],
+      ["Создали запись", @usage[:with_event], admin_users_path(role: "user", usage: "with_event")],
+      ["Создали напоминание", @usage[:with_reminder], admin_users_path(role: "user", usage: "with_reminder")],
+      ["Настроили PetTag", @usage[:with_pettag], admin_users_path(role: "user", usage: "with_pettag")]
+    ] %>
     <div class="admin-usage-list">
-      <% [
-        ["Зарегистрировались", @usage[:registered]],
-        ["Добавили питомца", @usage[:with_pet]],
-        ["Создали запись", @usage[:with_event]],
-        ["Создали напоминание", @usage[:with_reminder]],
-        ["Настроили PetTag", @usage[:with_pettag]]
-      ].each do |label, value| %>
+      <% usage_items.each do |label, value, path| %>
         <% percent = @usage[:registered].zero? ? 0 : ((value.to_f / usage_total) * 100).round %>
-        <div class="admin-usage-item">
+        <%= link_to path, class: "admin-usage-item admin-usage-item--link" do %>
           <div class="admin-usage-item__line">
             <span><%= label %></span>
-            <strong><%= number_with_delimiter(value) %> <small><%= percent %>%</small></strong>
+            <strong><%= number_with_delimiter(value) %> <small><%= percent %>%</small><b>→</b></strong>
           </div>
           <div class="admin-usage-track"><span style="--admin-usage-width: <%= percent %>%"></span></div>
-        </div>
+        <% end %>
       <% end %>
     </div>
   </section>
@@ -160,7 +162,7 @@
         <h2>Последние регистрации</h2>
         <p>Новые аккаунты PetJournal.</p>
       </div>
-      <%= link_to "Все", admin_users_path %>
+      <%= link_to "Все", admin_users_path(role: "user") %>
     </div>
 
     <% if @recent_users.any? %>
