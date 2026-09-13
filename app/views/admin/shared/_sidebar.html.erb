@@ -1,18 +1,35 @@
-<aside class="admin-sidebar">
-  <div class="admin-sidebar-top">
-    <%= link_to admin_root_path, class: "admin-brand", aria: { label: "PetJournal — управление" } do %>
-      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 156, height: 45 %>
-      <span>Управление</span>
+<% display_name = current_user.name.presence || current_user.email.to_s.split("@").first.presence || "Аккаунт" %>
+<% avatar_letter = display_name.to_s.first.to_s.upcase.presence || current_user.email.to_s.first.to_s.upcase %>
+
+<aside class="pj-dash-sidebar admin-sidebar" aria-label="Навигация управления" data-dashboard-sidebar>
+  <div class="pj-dash-sidebar__top">
+    <%= link_to admin_root_path, class: "pj-dash-brand admin-brand", aria: { label: "PetJournal — управление" } do %>
+      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", class: "pj-dash-brand__full" %>
+      <%= image_tag "petjournal/logo-symbol.png", alt: "", class: "pj-dash-brand__compact" %>
     <% end %>
 
-    <%= render "admin/shared/navigation" %>
+    <button type="button"
+            class="pj-dash-sidebar-toggle"
+            aria-label="Свернуть боковое меню"
+            aria-expanded="true"
+            data-dashboard-sidebar-toggle>
+      <%= pj_icon(:chevron) %>
+    </button>
   </div>
 
-  <div class="admin-sidebar-bottom">
-    <div class="admin-sidebar-user">
-      <span class="admin-avatar"><%= admin_user_initial(current_user) %></span>
-      <span class="admin-sidebar-user-copy">
-        <strong><%= admin_user_display_name(current_user) %></strong>
+  <%= render "admin/shared/navigation" %>
+
+  <div class="pj-dash-sidebar__footer admin-sidebar-bottom">
+    <div class="pj-dash-account admin-sidebar-user">
+      <span class="pj-dash-account__avatar admin-avatar">
+        <% if current_user.avatar.attached? %>
+          <%= image_tag current_user.avatar, alt: "" %>
+        <% else %>
+          <%= avatar_letter %>
+        <% end %>
+      </span>
+      <span class="pj-dash-account__copy admin-sidebar-user-copy">
+        <strong><%= display_name %></strong>
         <small>Администратор</small>
       </span>
     </div>
