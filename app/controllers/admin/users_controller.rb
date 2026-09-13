@@ -45,6 +45,33 @@ class Admin::UsersController < Admin::ApplicationController
   end
 
   def show
-    @user = User.includes(:pets).find(params[:id])
+    @user = User.includes(:external_identities).find(params[:id])
+    pet_scope = @user.pets
+    pet_ids = pet_scope.select(:id)
+
+    @usage = {
+      pets: pet_scope.count,
+      events: PetEvent.where(pet_id: pet_ids).count,
+      reminders: Reminder.where(pet_id: pet_ids).count,
+      documents: PetDocument.where(pet_id: pet_ids).count,
+      pettags: PetTag.where(pet_id: pet_ids).count
+    }
+    @pets = pet_scope.with_attached_photo.order(created_at: :desc).limit(6)
+  end
+
+  def update
+    @user = User.find(params[:id])
+    requested_role = params.dig(:user, :role).to_s
+
+    unless User.roles.key?(requested_role)
+      return redirect_to admin_user_path(@user), alert: "Некорректная роль пользователя."
+    end
+
+    if @user == current_user && requested_role != "admin"
+      return redirect_to admin_user_path(@user), alert: "Нельзя снять роль администратора с текущего аккаунта."
+    end
+
+    @user.update!(role: requested_role)
+    redirect_to admin_user_path(@user), notice: "Роль пользователя обновлена."
   end
 end
