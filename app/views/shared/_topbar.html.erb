@@ -3,21 +3,26 @@
 <% back_label = local_assigns.fetch(:back_label, "Назад") %>
 <% class_name = local_assigns[:class_name] %>
 <% show_notifications = local_assigns.fetch(:notifications, true) %>
-<% notification_path = local_assigns.fetch(:notification_path, in_app_notifications_path) %>
+<% action_path = local_assigns[:action_path] %>
+<% action_label = local_assigns.fetch(:action_label, "Действие") %>
+<% action_icon = local_assigns.fetch(:action_icon, :bell) %>
 
 <header class="<%= class_names('pj-workspace-topbar', class_name) %>">
   <% if back_path.present? %>
-    <%= link_to back_path, class: "pj-workspace-back-link" do %>
-      <span aria-hidden="true">←</span>
-      <span><%= back_label %></span>
+    <%= link_to back_path, class: "pj-workspace-back" do %>
+      <%= pj_icon(:chevron) %><span><%= back_label %></span>
     <% end %>
   <% elsif title.present? %>
     <h1><%= title %></h1>
   <% end %>
 
-  <% if show_notifications %>
+  <% if action_path.present? %>
+    <%= link_to action_path, class: "pj-workspace-icon", aria: { label: action_label }, title: action_label do %>
+      <%= pj_icon(action_icon) %>
+    <% end %>
+  <% elsif show_notifications %>
     <div class="pj-workspace-topbar__actions">
-      <%= render "shared/notification_link", path: notification_path %>
+      <%= render "shared/notification_link" %>
     </div>
   <% end %>
 </header>
