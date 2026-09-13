@@ -16,7 +16,13 @@
       <%= form.select :activity,
                       options_for_select([["Любая активность", ""], ["За последние 7 дней", "7_days"], ["За последние 30 дней", "30_days"], ["Нет данных", "never"]], @activity_filter),
                       {}, class: "admin-filter-select" %>
-      <% if @query.present? || @role_filter.present? || @activity_filter.present? %>
+      <%= form.select :registered,
+                      options_for_select([["Любая дата регистрации", ""], ["Регистрация за 7 дней", "7_days"], ["Регистрация за 30 дней", "30_days"]], @registered_filter),
+                      {}, class: "admin-filter-select" %>
+      <%= form.select :usage,
+                      options_for_select([["Любое использование", ""], ["С питомцем", "with_pet"], ["С записью журнала", "with_event"], ["С напоминанием", "with_reminder"], ["С PetTag", "with_pettag"]], @usage_filter),
+                      {}, class: "admin-filter-select" %>
+      <% if @query.present? || @role_filter.present? || @activity_filter.present? || @registered_filter.present? || @usage_filter.present? %>
         <%= link_to "Сбросить", admin_users_path, class: "admin-secondary-button" %>
       <% end %>
       <span class="admin-catalog-count"><strong><%= number_with_delimiter(@total_users) %></strong> найдено</span>
