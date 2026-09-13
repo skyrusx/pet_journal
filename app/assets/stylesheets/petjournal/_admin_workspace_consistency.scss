@@ -1,140 +1,103 @@
-/* Admin lives inside the canonical PetJournal workspace.
-   The dark sidebar is the only intentional visual distinction. */
+/* Admin is the regular PetJournal workspace with a dark sidebar variant. */
 
 .admin-body {
   background: #f8f7f2;
   color: #26332a;
 }
 
-.admin-app {
-  display: block;
-  min-height: 100vh;
-  background: #f8f7f2;
-}
-
-.admin-shell {
+.admin-workspace,
+.admin-shell,
+.admin-workspace-main {
   background: #fbfaf6;
 }
 
-.admin-content-shell {
-  min-width: 0;
-  background: #fbfaf6;
-}
-
-/* Dark admin variant of the same dashboard sidebar. */
-.admin-sidebar {
+/* The only intentional shell-level difference. */
+.pj-dash-sidebar--admin {
   border-right-color: rgba(255, 255, 255, .08);
   background: #07392f;
   color: #fff;
 }
 
-.admin-sidebar .pj-dash-brand img {
+.pj-dash-sidebar--admin .pj-dash-brand img {
   filter: brightness(0) invert(1);
 }
 
-.admin-sidebar .pj-dash-sidebar-toggle {
+.pj-dash-sidebar--admin .pj-dash-sidebar-toggle {
   border-color: rgba(255, 255, 255, .14);
   color: rgba(255, 255, 255, .8);
   background: rgba(255, 255, 255, .06);
 }
 
-.admin-sidebar .pj-dash-sidebar-toggle:hover {
+.pj-dash-sidebar--admin .pj-dash-sidebar-toggle:hover {
   color: #fff;
   background: rgba(255, 255, 255, .11);
 }
 
-.admin-sidebar .pj-dash-nav__item {
+.pj-dash-sidebar--admin .pj-dash-nav__item {
   color: rgba(255, 255, 255, .74);
 }
 
-.admin-sidebar .pj-dash-nav__item:hover,
-.admin-sidebar .pj-dash-nav__item.active {
+.pj-dash-sidebar--admin .pj-dash-nav__item:hover,
+.pj-dash-sidebar--admin .pj-dash-nav__item.active {
   color: #fff;
   background: rgba(255, 255, 255, .11);
 }
 
-.admin-sidebar .pj-dash-nav__item.active {
-  font-weight: 700;
-}
-
-.admin-sidebar .pj-dash-nav__separator {
+.pj-dash-sidebar--admin .pj-dash-nav__separator {
   background: rgba(255, 255, 255, .12);
 }
 
-.admin-sidebar-bottom {
+.pj-admin-sidebar-footer {
+  display: grid;
   gap: 10px;
 }
 
-.admin-sidebar .pj-dash-account {
+.pj-dash-sidebar--admin .pj-admin-account {
   border-color: rgba(255, 255, 255, .12);
   color: #fff;
   background: rgba(255, 255, 255, .06);
 }
 
-.admin-sidebar .pj-dash-account__avatar {
+.pj-dash-sidebar--admin .pj-dash-account__avatar {
   background: #c7f43a;
   color: #174f34;
 }
 
-.admin-sidebar .pj-dash-account__avatar img {
+.pj-dash-sidebar--admin .pj-dash-account__avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.admin-sidebar .pj-dash-account__copy strong {
+.pj-dash-sidebar--admin .pj-dash-account__copy strong {
   color: #fff;
 }
 
-.admin-sidebar .pj-dash-account__copy small {
+.pj-dash-sidebar--admin .pj-dash-account__copy small {
   color: rgba(255, 255, 255, .56);
 }
 
-.admin-back-link {
+.pj-admin-back-link {
   min-height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 0 10px;
   color: rgba(255, 255, 255, .66);
   font-size: 11px;
+  text-decoration: none;
 }
 
-.admin-back-link:hover {
+.pj-admin-back-link:hover {
   color: #fff;
 }
 
-/* Header is the regular workspace topbar. */
-.admin-topbar {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  min-height: var(--pj-size-topbar);
-  padding-inline: var(--pj-workspace-gutter);
-  border-bottom: 1px solid #e6e1d7;
-  background: rgba(251, 250, 246, .92);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.admin-topbar h1 {
-  margin: 0;
-  color: #313b33;
-  font-family: "Prata", Georgia, "Times New Roman", serif;
-  font-size: var(--pj-font-topbar-title);
-  font-weight: 400;
-  line-height: var(--pj-line-tight);
-}
-
-.admin-topbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* Use exactly the same workspace gutter as the product dashboard. */
-.admin-main {
+/* Page body follows the current dashboard rhythm. */
+.admin-workspace-content {
   width: 100%;
-  max-width: none;
   margin: 0;
-  padding: 24px clamp(28px, 3vw, 52px) 48px;
+  padding-top: 24px;
+  padding-bottom: 48px;
 }
 
 .admin-page-heading,
@@ -345,16 +308,11 @@
     overflow: hidden;
   }
 
-  .admin-app,
+  .admin-workspace,
   .admin-shell,
-  .admin-content-shell {
+  .admin-workspace-main {
     height: 100vh;
     min-height: 100vh;
-  }
-
-  .admin-content-shell {
-    overflow-y: auto;
-    overflow-x: hidden;
   }
 }
 
@@ -363,11 +321,16 @@
     padding-top: 0;
   }
 
-  .admin-main {
-    padding: 20px 16px 96px;
+  .pj-dash-sidebar--admin {
+    display: none;
   }
 
-  .admin-topbar {
+  .admin-workspace-content {
+    padding-top: 20px;
+    padding-bottom: 96px;
+  }
+
+  .pj-admin-topbar {
     min-height: 64px;
     padding-inline: 16px;
   }
