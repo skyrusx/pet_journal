@@ -358,6 +358,13 @@
         <span><strong>Настройки</strong><small>Интерфейс, регион и уведомления</small></span>
       <% end %>
 
+      <% if current_user.admin? %>
+        <%= link_to admin_root_path, class: "pj-mobile-sheet__action pj-mobile-sheet__action--admin" do %>
+          <span class="pj-mobile-sheet__action-icon"><%= pj_icon(:settings) %></span>
+          <span><strong>Управление</strong><small>Администрирование PetJournal</small></span>
+        <% end %>
+      <% end %>
+
       <%= button_to destroy_user_session_path,
                     method: :delete,
                     class: "pj-mobile-sheet__action pj-mobile-sheet__action--logout",
