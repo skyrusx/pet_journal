@@ -16,15 +16,7 @@
     <%= stylesheet_link_tag "application" %>
     <%= stylesheet_link_tag "pwa_compact" %>
     <%= javascript_importmap_tags %>
-    <%= javascript_import_module_tag "dashboard_sidebar" %>
-    <%= javascript_import_module_tag "pwa" %>
-    <%= javascript_import_module_tag "pet_photo_preview" %>
-    <%= javascript_import_module_tag "journal_event_wizard" %>
-    <%= javascript_import_module_tag "document_file_preview" %>
-    <%= javascript_import_module_tag "notification_channels" %>
-    <%= javascript_import_module_tag "account_profile" %>
-    <%= javascript_import_module_tag "birthday_greeting" %>
-    <%= javascript_include_tag "public_access_copy", defer: true %>
+    <%= javascript_import_module_tag "authenticated" %>
   </head>
 
   <body class="<%= class_names('pj-dashboard-body', current_user&.interface_text_size_css_class) %>" data-pwa-install-autoprompt="true">
