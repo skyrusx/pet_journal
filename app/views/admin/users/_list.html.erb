@@ -27,12 +27,13 @@
   </div>
 
   <% if @total_pages > 1 %>
+    <% base_params = { q: @query.presence, role: @role_filter.presence, activity: @activity_filter.presence } %>
     <nav class="admin-pagination" aria-label="Пагинация пользователей">
-      <%= @page > 1 ? link_to("← Назад", admin_users_path(q: @query.presence, page: @page - 1)) : content_tag(:span, "← Назад", class: "disabled") %>
+      <%= @page > 1 ? link_to("← Назад", admin_users_path(base_params.merge(page: @page - 1))) : content_tag(:span, "← Назад", class: "disabled") %>
       <span>Страница <strong><%= @page %></strong> из <%= @total_pages %></span>
-      <%= @page < @total_pages ? link_to("Дальше →", admin_users_path(q: @query.presence, page: @page + 1)) : content_tag(:span, "Дальше →", class: "disabled") %>
+      <%= @page < @total_pages ? link_to("Дальше →", admin_users_path(base_params.merge(page: @page + 1))) : content_tag(:span, "Дальше →", class: "disabled") %>
     </nav>
   <% end %>
 <% else %>
-  <div class="admin-empty-state"><strong>Ничего не найдено</strong><span>Попробуйте изменить запрос.</span></div>
+  <div class="admin-empty-state"><strong>Ничего не найдено</strong><span>Измените поиск или фильтры.</span></div>
 <% end %>
