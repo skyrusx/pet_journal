@@ -1,104 +1,15 @@
 <% content_for :title, "Пользователи — Управление PetJournal" %>
 <% content_for :admin_title, "Пользователи" %>
 
-<div class="admin-page-heading admin-page-heading--with-actions">
-  <div>
-    <p class="admin-page-kicker">Управление</p>
-    <h1>Пользователи</h1>
-    <p>Аккаунты, роли и связанные питомцы.</p>
-  </div>
-  <div class="admin-page-count"><strong><%= number_with_delimiter(@total_users) %></strong><span>найдено</span></div>
-</div>
-
 <section class="admin-panel">
   <%= form_with url: admin_users_path, method: :get, class: "admin-search-form" do |form| %>
     <div class="admin-search-field">
       <%= form.label :q, "Поиск", class: "visually-hidden" %>
-      <%= form.search_field :q,
-                            value: @query,
-                            placeholder: "Имя или email",
-                            autocomplete: "off" %>
+      <%= form.search_field :q, value: @query, placeholder: "Имя или email", autocomplete: "off" %>
       <%= form.submit "Найти", class: "admin-primary-button" %>
-      <% if @query.present? %>
-        <%= link_to "Сбросить", admin_users_path, class: "admin-secondary-button" %>
-      <% end %>
+      <% if @query.present? %><%= link_to "Сбросить", admin_users_path, class: "admin-secondary-button" %><% end %>
     </div>
   <% end %>
 
-  <% if @users.any? %>
-    <div class="admin-table-wrap admin-users-desktop">
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Пользователь</th>
-            <th>Роль</th>
-            <th>Питомцы</th>
-            <th>Регистрация</th>
-            <th><span class="visually-hidden">Открыть</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @users.each do |user| %>
-            <tr>
-              <td>
-                <div class="admin-user-cell">
-                  <span class="admin-avatar"><%= admin_user_initial(user) %></span>
-                  <span>
-                    <strong><%= admin_user_display_name(user) %></strong>
-                    <small><%= user.email %></small>
-                  </span>
-                </div>
-              </td>
-              <td><span class="admin-role-badge <%= "admin-role-badge--admin" if user.admin? %>"><%= admin_role_label(user) %></span></td>
-              <td><%= user.pets.size %></td>
-              <td><%= user.created_at.strftime("%d.%m.%Y") %></td>
-              <td class="admin-table-action"><%= link_to "Открыть", admin_user_path(user) %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="admin-users-mobile">
-      <% @users.each do |user| %>
-        <%= link_to admin_user_path(user), class: "admin-user-card" do %>
-          <div class="admin-user-card-main">
-            <span class="admin-avatar"><%= admin_user_initial(user) %></span>
-            <span class="admin-user-card-copy">
-              <strong><%= admin_user_display_name(user) %></strong>
-              <small><%= user.email %></small>
-            </span>
-          </div>
-          <div class="admin-user-card-meta">
-            <span class="admin-role-badge <%= "admin-role-badge--admin" if user.admin? %>"><%= admin_role_label(user) %></span>
-            <span><%= user.pets.size %> питомц.</span>
-            <span><%= user.created_at.strftime("%d.%m.%Y") %></span>
-          </div>
-        <% end %>
-      <% end %>
-    </div>
-
-    <% if @total_pages > 1 %>
-      <nav class="admin-pagination" aria-label="Пагинация пользователей">
-        <% if @page > 1 %>
-          <%= link_to "← Назад", admin_users_path(q: @query.presence, page: @page - 1) %>
-        <% else %>
-          <span class="disabled">← Назад</span>
-        <% end %>
-
-        <span>Страница <strong><%= @page %></strong> из <%= @total_pages %></span>
-
-        <% if @page < @total_pages %>
-          <%= link_to "Дальше →", admin_users_path(q: @query.presence, page: @page + 1) %>
-        <% else %>
-          <span class="disabled">Дальше →</span>
-        <% end %>
-      </nav>
-    <% end %>
-  <% else %>
-    <div class="admin-empty-state">
-      <strong>Ничего не найдено</strong>
-      <span>Попробуйте изменить запрос.</span>
-    </div>
-  <% end %>
+  <%= render "list" %>
 </section>
