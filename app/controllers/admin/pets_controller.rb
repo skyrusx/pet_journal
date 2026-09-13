@@ -27,17 +27,19 @@ class Admin::PetsController < Admin::ApplicationController
     scope = scope.where(species: @species) if @species.present?
     scope = scope.where(users: { role: @owner_role_filter }) if %w[user admin].include?(@owner_role_filter)
 
-    scope = case @created_filter
-            when "7_days" then scope.where(pets: { created_at: 7.days.ago.beginning_of_day..Time.current })
-            when "30_days" then scope.where(pets: { created_at: 29.days.ago.beginning_of_day..Time.current })
-            else scope
-            end
+    scope =
+      case @created_filter
+      when "7_days" then scope.where(pets: { created_at: 7.days.ago.beginning_of_day..Time.current })
+      when "30_days" then scope.where(pets: { created_at: 29.days.ago.beginning_of_day..Time.current })
+      else scope
+      end
 
-    scope = case @pet_tag_filter
-            when "with" then scope.where.not(pet_tags: { id: nil })
-            when "without" then scope.where(pet_tags: { id: nil })
-            else scope
-            end
+    scope =
+      case @pet_tag_filter
+      when "with" then scope.where.not(pet_tags: { id: nil })
+      when "without" then scope.where(pet_tags: { id: nil })
+      else scope
+      end
 
     if @lost_filter == "1"
       scope = scope.where(pet_tags: { safety_status: PetTag.safety_statuses.fetch("lost") })
