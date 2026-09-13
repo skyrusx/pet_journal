@@ -1,0 +1,92 @@
+<% content_for :title, "#{@pet.name} — Питомцы PetJournal" %>
+<% content_for :admin_title, "Питомец" %>
+
+<div class="admin-breadcrumbs">
+  <%= link_to "Питомцы", admin_pets_path %><span>/</span><span><%= @pet.name %></span>
+</div>
+
+<div class="admin-pet-profile-heading">
+  <span class="admin-pet-profile-photo">
+    <%= @pet.photo.attached? ? image_tag(@pet.photo, alt: "") : admin_pet_initial(@pet) %>
+  </span>
+  <div>
+    <div class="admin-pet-profile-title">
+      <h1><%= @pet.name %></h1>
+      <span class="admin-pet-tag-badge <%= "admin-pet-tag-badge--lost" if @pet.pet_tag&.status_lost? %>"><%= admin_pet_tag_label(@pet) %></span>
+    </div>
+    <p><%= [@pet.species.presence, @pet.breed.presence].compact.join(" · ").presence || "Вид и порода не указаны" %></p>
+  </div>
+</div>
+
+<div class="admin-pet-detail-grid">
+  <section class="admin-panel">
+    <div class="admin-panel-header"><div><h2>Основная информация</h2><p>Данные карточки питомца.</p></div></div>
+    <dl class="admin-definition-list">
+      <div><dt>ID</dt><dd><%= @pet.id %></dd></div>
+      <div><dt>Имя</dt><dd><%= @pet.name %></dd></div>
+      <div><dt>Вид</dt><dd><%= @pet.species.presence || "Не указан" %></dd></div>
+      <div><dt>Порода</dt><dd><%= @pet.breed.presence || "Не указана" %></dd></div>
+      <div><dt>Дата рождения</dt><dd><%= @pet.birth_date&.strftime("%d.%m.%Y") || "Не указана" %></dd></div>
+      <div><dt>Вес</dt><dd><%= @pet.weight.present? ? "#{@pet.weight} кг" : "Не указан" %></dd></div>
+      <div><dt>Окрас</dt><dd><%= @pet.color.presence || "Не указан" %></dd></div>
+      <div><dt>Чип</dt><dd><%= @pet.chip_number.presence || "Не указан" %></dd></div>
+      <div><dt>Паспорт</dt><dd><%= @pet.passport_number.presence || "Не указан" %></dd></div>
+      <div><dt>Добавлен</dt><dd><%= @pet.created_at.strftime("%d.%m.%Y %H:%M") %></dd></div>
+      <div><dt>Обновлён</dt><dd><%= @pet.updated_at.strftime("%d.%m.%Y %H:%M") %></dd></div>
+    </dl>
+  </section>
+
+  <section class="admin-panel">
+    <div class="admin-panel-header"><div><h2>Владелец</h2><p>Аккаунт, к которому привязан питомец.</p></div></div>
+    <div class="admin-pet-owner-card">
+      <span class="admin-avatar"><%= admin_user_initial(@pet.user) %></span>
+      <div><strong><%= admin_user_display_name(@pet.user) %></strong><small><%= @pet.user.email %></small></div>
+      <%= link_to "Открыть", admin_user_path(@pet.user) %>
+    </div>
+
+    <div class="admin-pet-summary-grid">
+      <div><strong><%= @pet.pet_events.count %></strong><span>записей</span></div>
+      <div><strong><%= @pet.reminders.count %></strong><span>напоминаний</span></div>
+      <div><strong><%= @pet.pet_documents.size %></strong><span>документов</span></div>
+      <div><strong><%= @pet.pet_profile_shares.size %></strong><span>доступов</span></div>
+    </div>
+
+    <div class="admin-pet-tag-summary">
+      <span>PetTag</span>
+      <% if @pet.pet_tag %>
+        <strong><%= @pet.pet_tag.tag_code %></strong>
+        <small><%= admin_pet_tag_label(@pet) %></small>
+      <% else %>
+        <strong>Не настроен</strong>
+      <% end %>
+    </div>
+  </section>
+</div>
+
+<div class="admin-pet-detail-grid admin-pet-detail-grid--activity">
+  <section class="admin-panel">
+    <div class="admin-panel-header"><div><h2>Последние записи</h2><p>Последние события из журнала.</p></div></div>
+    <% if @recent_events.any? %>
+      <div class="admin-pet-activity-list">
+        <% @recent_events.each do |event| %>
+          <div class="admin-pet-activity-row"><span><strong><%= event.title.presence || event.event_type.humanize %></strong><small><%= event.event_date.strftime("%d.%m.%Y") %></small></span></div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="admin-empty-state admin-empty-state--compact">Записей пока нет.</div>
+    <% end %>
+  </section>
+
+  <section class="admin-panel">
+    <div class="admin-panel-header"><div><h2>Активные напоминания</h2><p>Ближайшие запланированные действия.</p></div></div>
+    <% if @upcoming_reminders.any? %>
+      <div class="admin-pet-activity-list">
+        <% @upcoming_reminders.each do |reminder| %>
+          <div class="admin-pet-activity-row"><span><strong><%= reminder.title %></strong><small><%= reminder.next_run_at.strftime("%d.%m.%Y %H:%M") %></small></span></div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="admin-empty-state admin-empty-state--compact">Активных напоминаний нет.</div>
+    <% end %>
+  </section>
+</div>
