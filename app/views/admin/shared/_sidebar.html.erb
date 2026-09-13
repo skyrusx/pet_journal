@@ -1,0 +1,25 @@
+<aside class="admin-sidebar">
+  <div class="admin-sidebar-top">
+    <%= link_to admin_root_path, class: "admin-brand", aria: { label: "PetJournal — управление" } do %>
+      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", width: 156, height: 45 %>
+      <span>Управление</span>
+    <% end %>
+
+    <%= render "admin/shared/navigation" %>
+  </div>
+
+  <div class="admin-sidebar-bottom">
+    <div class="admin-sidebar-user">
+      <span class="admin-avatar"><%= admin_user_initial(current_user) %></span>
+      <span class="admin-sidebar-user-copy">
+        <strong><%= admin_user_display_name(current_user) %></strong>
+        <small>Администратор</small>
+      </span>
+    </div>
+
+    <%= link_to root_path, class: "admin-back-link" do %>
+      <span aria-hidden="true">←</span>
+      <span>Вернуться в PetJournal</span>
+    <% end %>
+  </div>
+</aside>

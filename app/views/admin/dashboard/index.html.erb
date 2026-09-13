@@ -1,0 +1,80 @@
+<% content_for :title, "Обзор управления — PetJournal" %>
+<% content_for :admin_title, "Обзор" %>
+
+<div class="admin-page-heading">
+  <div>
+    <p class="admin-page-kicker">Состояние сервиса</p>
+    <h1>Обзор</h1>
+    <p>Основные показатели PetJournal и последние регистрации.</p>
+  </div>
+</div>
+
+<section class="admin-stats-grid" aria-label="Основные показатели">
+  <article class="admin-stat-card">
+    <span>Пользователи</span>
+    <strong><%= number_with_delimiter(@users_count) %></strong>
+    <small>Всего зарегистрировано</small>
+  </article>
+  <article class="admin-stat-card">
+    <span>Питомцы</span>
+    <strong><%= number_with_delimiter(@pets_count) %></strong>
+    <small>Добавлено в сервис</small>
+  </article>
+  <article class="admin-stat-card">
+    <span>Новые за 7 дней</span>
+    <strong><%= number_with_delimiter(@new_users_count) %></strong>
+    <small>Новые пользователи</small>
+  </article>
+  <article class="admin-stat-card">
+    <span>События</span>
+    <strong><%= number_with_delimiter(@events_count) %></strong>
+    <small>Записей в журнале</small>
+  </article>
+</section>
+
+<section class="admin-panel">
+  <div class="admin-panel-header">
+    <div>
+      <h2>Последние регистрации</h2>
+      <p>Новые пользователи PetJournal.</p>
+    </div>
+    <%= link_to "Все пользователи", admin_users_path, class: "admin-secondary-link" %>
+  </div>
+
+  <% if @recent_users.any? %>
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Пользователь</th>
+            <th>Роль</th>
+            <th>Питомцы</th>
+            <th>Регистрация</th>
+            <th><span class="visually-hidden">Открыть</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @recent_users.each do |user| %>
+            <tr>
+              <td>
+                <div class="admin-user-cell">
+                  <span class="admin-avatar"><%= admin_user_initial(user) %></span>
+                  <span>
+                    <strong><%= admin_user_display_name(user) %></strong>
+                    <small><%= user.email %></small>
+                  </span>
+                </div>
+              </td>
+              <td><span class="admin-role-badge <%= "admin-role-badge--admin" if user.admin? %>"><%= admin_role_label(user) %></span></td>
+              <td><%= user.pets.size %></td>
+              <td><%= user.created_at.strftime("%d.%m.%Y") %></td>
+              <td class="admin-table-action"><%= link_to "Открыть", admin_user_path(user) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="admin-empty-state">Пользователей пока нет.</div>
+  <% end %>
+</section>

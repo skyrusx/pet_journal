@@ -1,0 +1,17 @@
+<nav class="admin-navigation" aria-label="Навигация управления">
+  <% admin_navigation_sections.each do |section| %>
+    <section class="admin-nav-section">
+      <div class="admin-nav-section-label"><%= section[:label] %></div>
+      <div class="admin-nav-items">
+        <% section[:items].each do |item| %>
+          <%= link_to item[:path],
+                      class: class_names("admin-nav-link", active: item[:active]),
+                      aria: { current: item[:active] ? "page" : nil } do %>
+            <%= pj_icon(item[:icon], class: "admin-nav-link-icon") %>
+            <span><%= item[:label] %></span>
+          <% end %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+</nav>

@@ -1,0 +1,65 @@
+<% content_for :title, "#{admin_user_display_name(@user)} — Управление PetJournal" %>
+<% content_for :admin_title, "Пользователь" %>
+
+<div class="admin-breadcrumbs">
+  <%= link_to "Пользователи", admin_users_path %>
+  <span>/</span>
+  <span><%= admin_user_display_name(@user) %></span>
+</div>
+
+<div class="admin-profile-heading">
+  <span class="admin-profile-avatar"><%= admin_user_initial(@user) %></span>
+  <div class="admin-profile-copy">
+    <div class="admin-profile-title-row">
+      <h1><%= admin_user_display_name(@user) %></h1>
+      <span class="admin-role-badge <%= "admin-role-badge--admin" if @user.admin? %>"><%= admin_role_label(@user) %></span>
+    </div>
+    <p><%= @user.email %></p>
+  </div>
+</div>
+
+<div class="admin-detail-grid">
+  <section class="admin-panel">
+    <div class="admin-panel-header">
+      <div>
+        <h2>Основная информация</h2>
+        <p>Данные аккаунта в PetJournal.</p>
+      </div>
+    </div>
+
+    <dl class="admin-definition-list">
+      <div><dt>ID</dt><dd><%= @user.id %></dd></div>
+      <div><dt>Имя</dt><dd><%= @user.name.presence || "Не указано" %></dd></div>
+      <div><dt>Email</dt><dd><%= @user.email %></dd></div>
+      <div><dt>Телефон</dt><dd><%= @user.phone.presence || "Не указан" %></dd></div>
+      <div><dt>Роль</dt><dd><%= admin_role_label(@user) %></dd></div>
+      <div><dt>Регистрация</dt><dd><%= @user.created_at.strftime("%d.%m.%Y %H:%M") %></dd></div>
+      <div><dt>Обновлён</dt><dd><%= @user.updated_at.strftime("%d.%m.%Y %H:%M") %></dd></div>
+    </dl>
+  </section>
+
+  <section class="admin-panel">
+    <div class="admin-panel-header">
+      <div>
+        <h2>Питомцы</h2>
+        <p><%= @user.pets.size %> в аккаунте.</p>
+      </div>
+    </div>
+
+    <% if @user.pets.any? %>
+      <div class="admin-pets-list">
+        <% @user.pets.order(created_at: :desc).each do |pet| %>
+          <div class="admin-pet-row">
+            <span class="admin-pet-initial"><%= pet.name.to_s.first.to_s.upcase.presence || "P" %></span>
+            <span>
+              <strong><%= pet.name.presence || "Без имени" %></strong>
+              <small><%= [pet.species.presence, pet.breed.presence].compact.join(" · ").presence || "Данные не указаны" %></small>
+            </span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="admin-empty-state admin-empty-state--compact">Питомцев пока нет.</div>
+    <% end %>
+  </section>
+</div>

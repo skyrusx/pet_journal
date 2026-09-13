@@ -1,0 +1,10 @@
+<% if notice.present? || alert.present? %>
+  <div class="admin-flash-stack" aria-live="polite">
+    <% if notice.present? %>
+      <div class="admin-flash admin-flash--notice" role="status"><%= notice %></div>
+    <% end %>
+    <% if alert.present? %>
+      <div class="admin-flash admin-flash--alert" role="alert"><%= alert %></div>
+    <% end %>
+  </div>
+<% end %>

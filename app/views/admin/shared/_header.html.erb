@@ -1,0 +1,22 @@
+<header class="admin-topbar">
+  <div class="admin-topbar-title">
+    <span class="admin-topbar-eyebrow">PetJournal / Управление</span>
+    <strong><%= content_for(:admin_title) || "Управление" %></strong>
+  </div>
+
+  <div class="admin-topbar-actions">
+    <%= link_to "В PetJournal", root_path, class: "admin-topbar-back" %>
+
+    <details class="admin-mobile-menu">
+      <summary aria-label="Открыть меню управления">Меню</summary>
+      <div class="admin-mobile-menu-panel">
+        <div class="admin-mobile-menu-head">
+          <strong>Управление</strong>
+          <small><%= current_user.email %></small>
+        </div>
+        <%= render "admin/shared/navigation" %>
+        <%= link_to "Вернуться в PetJournal", root_path, class: "admin-mobile-back" %>
+      </div>
+    </details>
+  </div>
+</header>

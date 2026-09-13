@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title><%= content_for(:title) || "Управление — PetJournal" %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#07392f">
+    <meta name="color-scheme" content="light">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%= favicon_link_tag "petjournal/favicon.ico" %>
+    <%= favicon_link_tag "petjournal/favicon-32.png", rel: "icon", type: "image/png" %>
+    <%= stylesheet_link_tag "application" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="admin-body">
+    <div class="admin-app">
+      <%= render "admin/shared/sidebar" %>
+
+      <div class="admin-content-shell">
+        <%= render "admin/shared/header" %>
+
+        <main class="admin-main">
+          <%= render "admin/shared/flash" %>
+          <%= yield %>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
