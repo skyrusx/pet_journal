@@ -34,9 +34,12 @@
       </span>
     </div>
 
-    <%= link_to root_path, class: "pj-admin-back-link" do %>
-      <span aria-hidden="true">←</span>
-      <span>Вернуться в PetJournal</span>
+    <%= link_to root_path,
+                class: "pj-admin-back-link",
+                aria: { label: "Вернуться в PetJournal" },
+                title: "Вернуться в PetJournal" do %>
+      <span class="pj-admin-back-link__icon" aria-hidden="true">←</span>
+      <span class="pj-admin-back-link__label">Вернуться в PetJournal</span>
     <% end %>
   </div>
 </aside>
