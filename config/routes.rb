@@ -37,7 +37,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root "dashboard#index"
-    resources :users, only: %i[index show]
+    resources :users, only: %i[index show update]
     resources :pets, only: %i[index show]
   end
 
