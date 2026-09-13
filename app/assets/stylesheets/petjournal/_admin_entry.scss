@@ -1,0 +1,12 @@
+@media (max-width: 820px) {
+  .pj-mobile-sheet__action--admin {
+    margin-top: 8px;
+    border-color: #d9e1d5;
+    background: #f7f9ef;
+  }
+
+  .pj-mobile-sheet__action--admin .pj-mobile-sheet__action-icon {
+    color: var(--pj-green);
+    background: var(--pj-soft);
+  }
+}
