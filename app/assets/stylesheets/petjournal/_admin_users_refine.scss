@@ -1,0 +1,40 @@
+/* Users page refinements. */
+.admin-search-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-search-field input[type="search"] {
+  width: 100%;
+  min-width: 0;
+}
+
+.admin-primary-button {
+  border-color: #526b7a;
+  background: #526b7a;
+  color: #fff;
+}
+
+.admin-primary-button:hover,
+.admin-primary-button:focus-visible {
+  border-color: #435a68;
+  background: #435a68;
+  color: #fff;
+}
+
+.admin-last-seen {
+  color: #66736c;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .admin-search-field {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .admin-search-field input[type="search"] {
+    grid-column: 1 / -1;
+  }
+}
