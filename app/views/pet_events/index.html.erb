@@ -3,10 +3,7 @@
 <% has_event_filters = @selected_event_type.present? || @selected_period.present? || @selected_status.present? || @selected_marker.present? || @query.present? %>
 
 <div class="pj-journal-page pj-journal-index">
-  <header class="pj-workspace-topbar">
-    <h1>Журнал</h1>
-    <%= render "shared/workspace_notification_link" %>
-  </header>
+  <%= render "shared/topbar", title: "Журнал" %>
 
   <div class="pj-journal-content">
     <div class="pj-mobile-list-heading">
