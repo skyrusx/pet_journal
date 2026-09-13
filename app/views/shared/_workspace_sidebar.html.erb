@@ -57,6 +57,16 @@
                 title: "Настройки" do %>
       <%= pj_icon(:settings) %><span>Настройки</span>
     <% end %>
+
+    <% if current_user.admin? %>
+      <div class="pj-dash-nav__separator" aria-hidden="true"></div>
+      <%= link_to admin_root_path,
+                  class: "pj-dash-nav__item pj-dash-nav__item--admin",
+                  aria: { label: "Управление" },
+                  title: "Управление" do %>
+        <%= pj_icon(:settings) %><span>Управление</span>
+      <% end %>
+    <% end %>
   </nav>
 
   <div class="pj-dash-sidebar__footer">
@@ -85,13 +95,6 @@
         <%= link_to edit_user_registration_path, class: "pj-dash-profile-popover__item" do %>
           <%= pj_icon(:user) %>
           <span>Профиль</span>
-        <% end %>
-
-        <% if current_user.admin? %>
-          <%= link_to admin_root_path, class: "pj-dash-profile-popover__item" do %>
-            <%= pj_icon(:settings) %>
-            <span>Управление</span>
-          <% end %>
         <% end %>
 
         <div class="pj-dash-profile-popover__separator" aria-hidden="true"></div>
