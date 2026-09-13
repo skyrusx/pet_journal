@@ -24,4 +24,16 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1", "Обзор"
   end
+
+  test "links dashboard metrics to matching admin catalogs" do
+    sign_in users(:admin)
+
+    get admin_root_path
+
+    assert_response :success
+    assert_select "a.admin-metric-card[href*='registered=7_days'][href*='role=user']"
+    assert_select "a.admin-metric-card[href*='created=7_days'][href*='owner_role=user']"
+    assert_select "a.admin-usage-item[href*='usage=with_pet']"
+    assert_select "a.admin-attention-item[href*='lost=1'][href*='owner_role=user']"
+  end
 end
