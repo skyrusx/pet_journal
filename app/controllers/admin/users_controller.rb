@@ -6,6 +6,8 @@ class Admin::UsersController < Admin::ApplicationController
     @query = params[:q].to_s.strip
     @role_filter = params[:role].to_s
     @activity_filter = params[:activity].to_s
+    @registered_filter = params[:registered].to_s
+    @usage_filter = params[:usage].to_s
 
     if @query.present?
       pattern = "%#{ActiveRecord::Base.sanitize_sql_like(@query)}%"
@@ -18,6 +20,20 @@ class Admin::UsersController < Admin::ApplicationController
             when "7_days" then scope.where(last_seen_at: 7.days.ago..Time.current)
             when "30_days" then scope.where(last_seen_at: 30.days.ago..Time.current)
             when "never" then scope.where(last_seen_at: nil)
+            else scope
+            end
+
+    scope = case @registered_filter
+            when "7_days" then scope.where(created_at: 7.days.ago.beginning_of_day..Time.current)
+            when "30_days" then scope.where(created_at: 29.days.ago.beginning_of_day..Time.current)
+            else scope
+            end
+
+    scope = case @usage_filter
+            when "with_pet" then scope.joins(:pets).distinct
+            when "with_event" then scope.joins(pets: :pet_events).distinct
+            when "with_reminder" then scope.joins(pets: :reminders).distinct
+            when "with_pettag" then scope.joins(pets: :pet_tag).distinct
             else scope
             end
 
