@@ -27,7 +27,7 @@
   </div>
 
   <% if @total_pages > 1 %>
-    <% base_params = { q: @query.presence, role: @role_filter.presence, activity: @activity_filter.presence } %>
+    <% base_params = { q: @query.presence, role: @role_filter.presence, activity: @activity_filter.presence, registered: @registered_filter.presence, usage: @usage_filter.presence } %>
     <nav class="admin-pagination" aria-label="Пагинация пользователей">
       <%= @page > 1 ? link_to("← Назад", admin_users_path(base_params.merge(page: @page - 1))) : content_tag(:span, "← Назад", class: "disabled") %>
       <span>Страница <strong><%= @page %></strong> из <%= @total_pages %></span>
