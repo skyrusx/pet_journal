@@ -12,6 +12,8 @@ class Admin::PetsController < Admin::ApplicationController
     @species = params[:species].to_s.strip
     @pet_tag_filter = params[:pet_tag].to_s
     @lost_filter = params[:lost].to_s
+    @created_filter = params[:created].to_s
+    @owner_role_filter = params[:owner_role].to_s
 
     if @query.present?
       pattern = "%#{ActiveRecord::Base.sanitize_sql_like(@query)}%"
@@ -23,6 +25,13 @@ class Admin::PetsController < Admin::ApplicationController
     end
 
     scope = scope.where(species: @species) if @species.present?
+    scope = scope.where(users: { role: @owner_role_filter }) if %w[user admin].include?(@owner_role_filter)
+
+    scope = case @created_filter
+            when "7_days" then scope.where(pets: { created_at: 7.days.ago.beginning_of_day..Time.current })
+            when "30_days" then scope.where(pets: { created_at: 29.days.ago.beginning_of_day..Time.current })
+            else scope
+            end
 
     scope = case @pet_tag_filter
             when "with" then scope.where.not(pet_tags: { id: nil })
