@@ -1,18 +1,18 @@
 /* /admin keeps the current PetJournal workspace geometry and only changes its theme. */
 .admin-body {
-  --admin-bg: #11151a;
-  --admin-sidebar: #0c1015;
-  --admin-surface: #181d24;
-  --admin-surface-raised: #1e252d;
-  --admin-hover: #242c36;
-  --admin-border: #303946;
-  --admin-border-soft: #272f39;
-  --admin-text: #f2f5f8;
-  --admin-text-soft: #c1cad4;
-  --admin-muted: #8d98a5;
-  --admin-accent: #7997e8;
-  --admin-accent-hover: #94adf4;
-  --admin-accent-soft: rgba(121, 151, 232, .14);
+  --admin-bg: #20252b;
+  --admin-sidebar: #171b20;
+  --admin-surface: #2a3037;
+  --admin-surface-raised: #323941;
+  --admin-hover: #39424c;
+  --admin-border: #46515d;
+  --admin-border-soft: #3a444f;
+  --admin-text: #f4f6f8;
+  --admin-text-soft: #d2d8df;
+  --admin-muted: #a5afb9;
+  --admin-accent: #89a4f0;
+  --admin-accent-hover: #a6b9f7;
+  --admin-accent-soft: rgba(137, 164, 240, .16);
   margin: 0;
   background: var(--admin-bg);
   color: var(--admin-text);
@@ -35,36 +35,36 @@
 
 .admin-body .pj-dash-sidebar--admin .pj-dash-brand img {
   filter: grayscale(1) brightness(0) invert(1);
-  opacity: .93;
+  opacity: .95;
 }
 
 .admin-body .pj-dash-sidebar--admin .pj-dash-sidebar-toggle {
   border-color: var(--admin-border);
-  color: var(--admin-muted);
-  background: #141920;
+  color: #b8c1ca;
+  background: #242a30;
 }
 
 .admin-body .pj-dash-sidebar--admin .pj-dash-sidebar-toggle:hover {
   color: var(--admin-text);
-  background: var(--admin-surface-raised);
+  background: #30373f;
 }
 
 .admin-body .pj-dash-sidebar--admin .pj-dash-nav__separator {
-  background: var(--admin-border-soft);
+  background: #303840;
 }
 
 .admin-body .pj-dash-sidebar--admin .pj-dash-nav__item {
-  color: #a7b1bc;
+  color: #b9c1ca;
 }
 
 .admin-body .pj-dash-sidebar--admin .pj-dash-nav__item:hover {
-  color: #e6ebf0;
-  background: #171d24;
+  color: #f0f3f6;
+  background: #252b32;
 }
 
 .admin-body .pj-dash-sidebar--admin .pj-dash-nav__item.active {
-  color: #f7f9fb;
-  background: #202833;
+  color: #fff;
+  background: #303842;
   box-shadow: inset 3px 0 0 var(--admin-accent);
 }
 
@@ -78,14 +78,14 @@
 }
 
 .admin-body .pj-dash-sidebar--admin .pj-admin-account {
-  border-color: var(--admin-border);
+  border-color: #343d46;
   color: var(--admin-text);
-  background: #141920;
+  background: #23292f;
 }
 
 .admin-body .pj-dash-sidebar--admin .pj-dash-account__avatar {
-  background: #2a3442;
-  color: #d5def1;
+  background: #394553;
+  color: #e1e8f4;
 }
 
 .admin-body .pj-dash-sidebar--admin .pj-dash-account__avatar img {
@@ -100,7 +100,7 @@
 
 .admin-body .pj-dash-sidebar--admin .pj-dash-account__copy small,
 .admin-body .pj-admin-back-link {
-  color: var(--admin-muted);
+  color: #9ea8b2;
 }
 
 .admin-body .pj-admin-back-link {
@@ -114,13 +114,13 @@
 }
 
 .admin-body .pj-admin-back-link:hover {
-  color: #eef2f6;
+  color: #f3f5f7;
 }
 
 .admin-body .pj-admin-topbar,
 .admin-body .pj-workspace-topbar {
   border-bottom-color: var(--admin-border-soft);
-  background: rgba(17, 21, 26, .96);
+  background: rgba(32, 37, 43, .96);
   color: var(--admin-text);
 }
 
@@ -130,7 +130,7 @@
 }
 
 .admin-body .pj-workspace-icon {
-  color: var(--admin-muted);
+  color: #b1bbc5;
 }
 
 .admin-body .pj-workspace-icon:hover,
@@ -160,13 +160,13 @@
 .admin-body .pj-notification-center__badge {
   border-color: var(--admin-sidebar);
   background: var(--admin-accent);
-  color: #0d1116;
+  color: #18202a;
 }
 
 .admin-body .pj-notification-center__popover {
   border-color: var(--admin-border);
   background: var(--admin-surface);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, .4);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, .28);
 }
 
 .admin-body .pj-notification-center__head,
@@ -198,13 +198,13 @@
 }
 
 .admin-body .pj-notification-center__item-icon {
-  color: #bac8f5;
-  background: #293653;
+  color: #d4ddfb;
+  background: #3a4967;
 }
 
 .admin-body .pj-notification-center__mark-all,
 .admin-body .pj-notification-center__footer a {
-  color: #aebff4;
+  color: #c0cdf6;
 }
 
 .admin-body a:focus-visible,
