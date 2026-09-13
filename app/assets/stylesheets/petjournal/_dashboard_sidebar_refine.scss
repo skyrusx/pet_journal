@@ -218,6 +218,12 @@
 }
 
 @media (max-width: 820px) {
+  .pj-dash-mobile-menu__separator {
+    height: 1px;
+    margin: 6px 8px;
+    background: #e7e2d8;
+  }
+
   .pj-dash-mobile-menu__logout-form {
     margin: 5px 0 0;
     padding-top: 5px;
