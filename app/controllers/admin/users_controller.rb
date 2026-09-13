@@ -4,11 +4,22 @@ class Admin::UsersController < Admin::ApplicationController
   def index
     scope = User.order(created_at: :desc)
     @query = params[:q].to_s.strip
+    @role_filter = params[:role].to_s
+    @activity_filter = params[:activity].to_s
 
     if @query.present?
       pattern = "%#{ActiveRecord::Base.sanitize_sql_like(@query)}%"
       scope = scope.where("users.email ILIKE :pattern OR users.name ILIKE :pattern", pattern: pattern)
     end
+
+    scope = scope.where(role: @role_filter) if %w[user admin].include?(@role_filter)
+
+    scope = case @activity_filter
+            when "7_days" then scope.where(last_seen_at: 7.days.ago..Time.current)
+            when "30_days" then scope.where(last_seen_at: 30.days.ago..Time.current)
+            when "never" then scope.where(last_seen_at: nil)
+            else scope
+            end
 
     @total_users = scope.count
     @total_pages = [(@total_users.to_f / PER_PAGE).ceil, 1].max
