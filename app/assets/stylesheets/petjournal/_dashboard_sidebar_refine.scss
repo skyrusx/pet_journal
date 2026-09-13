@@ -21,6 +21,20 @@
   line-height: 1;
 }
 
+.pj-dash-nav__separator {
+  height: 1px;
+  margin: 9px 10px;
+  background: #e4e2d9;
+}
+
+.pj-dash-nav__item--admin {
+  color: #315b43;
+}
+
+.pj-dash-nav__item--admin:hover {
+  color: #174f34;
+}
+
 .pj-dash-sidebar__footer {
   position: relative;
   margin-top: auto;
@@ -181,6 +195,10 @@
     margin: 0;
     padding: 0 4px;
     font-size: 9px;
+  }
+
+  .pj-dash.is-sidebar-collapsed .pj-dash-nav__separator {
+    margin-inline: 8px;
   }
 
   .pj-dash.is-sidebar-collapsed .pj-dash-sidebar__footer {
