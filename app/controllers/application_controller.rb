@@ -1,10 +1,10 @@
 class ApplicationController < ActionController::Base
   include PublicFormProtection
 
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
   around_action :use_user_time_zone, if: :user_signed_in?
+  before_action :track_user_activity, if: :user_signed_in?
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
@@ -21,6 +21,12 @@ class ApplicationController < ActionController::Base
 
     user_agent = request.user_agent.to_s
     %w[Android iPhone iPod IEMobile Mobile].any? { |marker| user_agent.include?(marker) }
+  end
+
+  def track_user_activity
+    return if current_user.last_seen_at.present? && current_user.last_seen_at > 5.minutes.ago
+
+    current_user.update_column(:last_seen_at, Time.current)
   end
 
   def use_user_time_zone(&block)
