@@ -69,11 +69,41 @@
   align-items: center;
   gap: 8px;
   padding: 0 10px;
+  border-radius: 9px;
   color: #74828b;
   font-size: 11px;
   text-decoration: none;
 }
-.pj-admin-back-link:hover { color: #354b59; }
+.pj-admin-back-link:hover {
+  color: #354b59;
+  background: #e4e9ec;
+}
+.pj-admin-back-link__icon {
+  flex: 0 0 auto;
+  line-height: 1;
+}
+
+@media (min-width: 821px) {
+  .admin-workspace.is-sidebar-collapsed .pj-admin-sidebar-footer {
+    justify-items: center;
+  }
+
+  .admin-workspace.is-sidebar-collapsed .pj-admin-back-link {
+    width: 48px;
+    min-height: 44px;
+    justify-content: center;
+    gap: 0;
+    padding: 0;
+  }
+
+  .admin-workspace.is-sidebar-collapsed .pj-admin-back-link__label {
+    display: none;
+  }
+
+  .admin-workspace.is-sidebar-collapsed .pj-admin-back-link__icon {
+    font-size: 16px;
+  }
+}
 
 .admin-workspace-content {
   width: 100%;
