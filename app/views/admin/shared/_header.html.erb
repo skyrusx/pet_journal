@@ -1,11 +1,8 @@
-<header class="admin-topbar">
-  <div class="admin-topbar-title">
-    <span class="admin-topbar-eyebrow">PetJournal / Управление</span>
-    <strong><%= content_for(:admin_title) || "Управление" %></strong>
-  </div>
+<header class="pj-workspace-topbar admin-topbar">
+  <h1><%= content_for(:admin_title) || "Управление" %></h1>
 
-  <div class="admin-topbar-actions">
-    <%= link_to "В PetJournal", root_path, class: "admin-topbar-back" %>
+  <div class="pj-workspace-topbar__actions admin-topbar-actions">
+    <%= render "shared/workspace_notification_link" %>
 
     <details class="admin-mobile-menu">
       <summary aria-label="Открыть меню управления">Меню</summary>
