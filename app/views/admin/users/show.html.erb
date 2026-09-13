@@ -1,0 +1,122 @@
+<% content_for :title, "#{admin_user_display_name(@user)} — Управление PetJournal" %>
+<% content_for :admin_title, "Пользователь" %>
+
+<div class="admin-breadcrumbs">
+  <%= link_to "Пользователи", admin_users_path %>
+  <span>/</span>
+  <span><%= admin_user_display_name(@user) %></span>
+</div>
+
+<div class="admin-profile-heading admin-user-profile-heading">
+  <span class="admin-profile-avatar">
+    <% if @user.avatar.attached? %>
+      <%= image_tag @user.avatar, alt: "" %>
+    <% else %>
+      <%= admin_user_initial(@user) %>
+    <% end %>
+  </span>
+  <div class="admin-profile-copy">
+    <div class="admin-profile-title-row">
+      <h1><%= admin_user_display_name(@user) %></h1>
+      <span class="admin-role-badge <%= "admin-role-badge--admin" if @user.admin? %>"><%= admin_role_label(@user) %></span>
+    </div>
+    <p><%= @user.email %> · Последняя активность: <%= admin_last_seen_label(@user) %></p>
+  </div>
+  <%= link_to "Питомцы пользователя", admin_pets_path(q: @user.email), class: "admin-secondary-button admin-user-profile-action" %>
+</div>
+
+<div class="admin-user-summary-grid">
+  <%= link_to admin_pets_path(q: @user.email), class: "admin-user-summary-card" do %>
+    <strong><%= @usage[:pets] %></strong><span>Питомцев</span>
+  <% end %>
+  <div class="admin-user-summary-card"><strong><%= @usage[:events] %></strong><span>Записей журнала</span></div>
+  <div class="admin-user-summary-card"><strong><%= @usage[:reminders] %></strong><span>Напоминаний</span></div>
+  <div class="admin-user-summary-card"><strong><%= @usage[:documents] %></strong><span>Документов</span></div>
+  <%= link_to admin_pets_path(q: @user.email, pet_tag: "with"), class: "admin-user-summary-card" do %>
+    <strong><%= @usage[:pettags] %></strong><span>PetTag</span>
+  <% end %>
+</div>
+
+<div class="admin-detail-grid admin-user-detail-grid">
+  <section class="admin-panel">
+    <div class="admin-panel-header">
+      <div><h2>Основная информация</h2><p>Данные аккаунта в PetJournal.</p></div>
+    </div>
+
+    <dl class="admin-definition-list">
+      <div><dt>ID</dt><dd><%= @user.id %></dd></div>
+      <div><dt>Имя</dt><dd><%= @user.name.presence || "Не указано" %></dd></div>
+      <div><dt>Email</dt><dd><%= @user.email %></dd></div>
+      <div><dt>Телефон</dt><dd><%= @user.phone.presence || "Не указан" %></dd></div>
+      <div><dt>Регистрация</dt><dd><%= @user.created_at.strftime("%d.%m.%Y %H:%M") %></dd></div>
+      <div><dt>Последняя активность</dt><dd><%= admin_last_seen_label(@user) %></dd></div>
+      <div><dt>Обновлён</dt><dd><%= @user.updated_at.strftime("%d.%m.%Y %H:%M") %></dd></div>
+    </dl>
+  </section>
+
+  <section class="admin-panel">
+    <div class="admin-panel-header">
+      <div><h2>Доступ и роль</h2><p>Способы входа и права в админке.</p></div>
+    </div>
+
+    <% identities = @user.external_identities.index_by(&:provider) %>
+    <div class="admin-user-auth-list">
+      <div class="admin-user-auth-row">
+        <span class="admin-user-auth-dot <%= "is-active" if @user.password_configured? %>"></span>
+        <div><strong>Пароль</strong><small><%= @user.password_configured? ? "Настроен" : "Не настроен" %></small></div>
+      </div>
+      <% [["vk", "VK ID"], ["yandex", "Яндекс ID"]].each do |provider, label| %>
+        <% identity = identities[provider] %>
+        <div class="admin-user-auth-row">
+          <span class="admin-user-auth-dot <%= "is-active" if identity %>"></span>
+          <div>
+            <strong><%= label %></strong>
+            <small><%= identity ? "Подключён · последний вход #{admin_activity_time_label(identity.last_used_at)}" : "Не подключён" %></small>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="admin-user-role-control">
+      <div><strong>Роль</strong><small>Определяет доступ к разделу управления.</small></div>
+      <% if @user == current_user %>
+        <span class="admin-role-badge admin-role-badge--admin">Администратор</span>
+        <p>Нельзя снять роль администратора с текущего аккаунта.</p>
+      <% else %>
+        <%= form_with model: [:admin, @user], method: :patch, class: "admin-user-role-form" do |form| %>
+          <%= form.select :role,
+                          options_for_select([["Пользователь", "user"], ["Администратор", "admin"]], @user.role),
+                          {}, class: "admin-filter-select" %>
+          <%= form.submit "Сохранить роль", class: "admin-primary-button" %>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+</div>
+
+<section class="admin-panel admin-user-pets-panel">
+  <div class="admin-panel-header">
+    <div><h2>Питомцы</h2><p><%= @usage[:pets] %> в аккаунте.</p></div>
+    <% if @usage[:pets].positive? %><%= link_to "Все питомцы", admin_pets_path(q: @user.email), class: "admin-secondary-link" %><% end %>
+  </div>
+
+  <% if @pets.any? %>
+    <div class="admin-user-pets-grid">
+      <% @pets.each do |pet| %>
+        <%= link_to admin_pet_path(pet), class: "admin-user-pet-card" do %>
+          <span class="admin-pet-avatar">
+            <% if pet.photo.attached? %><%= image_tag pet.photo, alt: "" %><% else %><%= admin_pet_initial(pet) %><% end %>
+          </span>
+          <span class="admin-user-pet-card__copy">
+            <strong><%= pet.name %></strong>
+            <small><%= [pet.species.presence, pet.breed.presence].compact.join(" · ").presence || "Данные не указаны" %></small>
+          </span>
+          <span class="admin-pet-tag-badge <%= "admin-pet-tag-badge--lost" if pet.pet_tag&.status_lost? %>"><%= admin_pet_tag_label(pet) %></span>
+          <b>→</b>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="admin-empty-state admin-empty-state--compact">Питомцев пока нет.</div>
+  <% end %>
+</section>

@@ -22,6 +22,15 @@
     <% end %>
 
     <div class="pj-mobile-chrome__header-actions" aria-label="Быстрые разделы">
+      <% if current_user.admin? %>
+        <%= link_to admin_root_path,
+                    class: "pj-mobile-chrome__bell",
+                    aria: { label: "Управление" },
+                    title: "Управление" do %>
+          <%= pj_icon(:settings) %>
+        <% end %>
+      <% end %>
+
       <%= link_to reminders_path,
                   class: class_names("pj-mobile-chrome__bell", "is-active": controller_name == "reminders" || empty_workspace_section == "reminders"),
                   aria: { label: "Напоминания", current: (controller_name == "reminders" || empty_workspace_section == "reminders") ? "page" : nil },

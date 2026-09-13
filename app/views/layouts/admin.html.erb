@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title><%= content_for(:title) || "Управление — PetJournal" %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#f8f7f2">
+    <meta name="color-scheme" content="light">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%= favicon_link_tag "petjournal/favicon.ico" %>
+    <%= favicon_link_tag "petjournal/favicon-32.png", rel: "icon", type: "image/png" %>
+    <%= stylesheet_link_tag "application" %>
+    <%= javascript_importmap_tags %>
+    <%= javascript_import_module_tag "dashboard_sidebar" %>
+  </head>
+
+  <body class="pj-dashboard-body admin-body">
+    <div class="pj-dash admin-workspace" data-dashboard-root>
+      <div class="pj-dash-shell admin-shell">
+        <%= render "admin/shared/sidebar" %>
+
+        <main class="pj-dash-main pj-workspace-main admin-workspace-main">
+          <%= render "admin/shared/header" %>
+
+          <div class="pj-dash-content admin-workspace-content">
+            <%= render "admin/shared/flash" %>
+            <%= yield %>
+          </div>
+
+          <footer class="pj-dash-footer pj-workspace-footer">
+            <span>© <%= Date.current.year %> PetJournal.</span>
+            <span>Сделано с заботой о тех, кто рядом ♡</span>
+          </footer>
+        </main>
+      </div>
+    </div>
+
+    <%= render "admin/shared/mobile_chrome" if user_signed_in? %>
+  </body>
+</html>

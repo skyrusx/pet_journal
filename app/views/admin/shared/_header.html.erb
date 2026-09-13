@@ -1,0 +1,19 @@
+<header class="pj-workspace-topbar pj-admin-topbar">
+  <h1><%= content_for(:admin_title) || "Управление" %></h1>
+
+  <div class="pj-workspace-topbar__actions">
+    <%= render "shared/workspace_notification_link" %>
+
+    <details class="admin-mobile-menu">
+      <summary aria-label="Открыть меню управления">Меню</summary>
+      <div class="admin-mobile-menu-panel">
+        <div class="admin-mobile-menu-head">
+          <strong>Управление</strong>
+          <small><%= current_user.email %></small>
+        </div>
+        <%= render "admin/shared/navigation" %>
+        <%= link_to "Вернуться в PetJournal", root_path, class: "admin-mobile-back" %>
+      </div>
+    </details>
+  </div>
+</header>

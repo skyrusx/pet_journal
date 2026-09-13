@@ -1,0 +1,39 @@
+<% if @users.any? %>
+  <div class="admin-table-wrap admin-users-desktop">
+    <table class="admin-table">
+      <thead><tr><th>Пользователь</th><th>Роль</th><th>Питомцы</th><th>Последнее посещение</th><th>Регистрация</th><th><span class="visually-hidden">Открыть</span></th></tr></thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td><div class="admin-user-cell"><span class="admin-avatar"><%= admin_user_initial(user) %></span><span><strong><%= admin_user_display_name(user) %></strong><small><%= user.email %></small></span></div></td>
+            <td><span class="admin-role-badge <%= "admin-role-badge--admin" if user.admin? %>"><%= admin_role_label(user) %></span></td>
+            <td><%= user.pets.size %></td>
+            <td class="admin-last-seen"><%= admin_last_seen_label(user) %></td>
+            <td><%= user.created_at.strftime("%d.%m.%Y") %></td>
+            <td class="admin-table-action"><%= link_to "Открыть", admin_user_path(user) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="admin-users-mobile">
+    <% @users.each do |user| %>
+      <%= link_to admin_user_path(user), class: "admin-user-card" do %>
+        <div class="admin-user-card-main"><span class="admin-avatar"><%= admin_user_initial(user) %></span><span class="admin-user-card-copy"><strong><%= admin_user_display_name(user) %></strong><small><%= user.email %></small></span></div>
+        <div class="admin-user-card-meta"><span class="admin-role-badge <%= "admin-role-badge--admin" if user.admin? %>"><%= admin_role_label(user) %></span><span><%= user.pets.size %> питомц.</span><span>Был: <%= admin_last_seen_label(user) %></span><span>Регистрация: <%= user.created_at.strftime("%d.%m.%Y") %></span></div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if @total_pages > 1 %>
+    <% base_params = { q: @query.presence, role: @role_filter.presence, activity: @activity_filter.presence, registered: @registered_filter.presence, usage: @usage_filter.presence } %>
+    <nav class="admin-pagination" aria-label="Пагинация пользователей">
+      <%= @page > 1 ? link_to("← Назад", admin_users_path(base_params.merge(page: @page - 1))) : content_tag(:span, "← Назад", class: "disabled") %>
+      <span>Страница <strong><%= @page %></strong> из <%= @total_pages %></span>
+      <%= @page < @total_pages ? link_to("Дальше →", admin_users_path(base_params.merge(page: @page + 1))) : content_tag(:span, "Дальше →", class: "disabled") %>
+    </nav>
+  <% end %>
+<% else %>
+  <div class="admin-empty-state"><strong>Ничего не найдено</strong><span>Измените поиск или фильтры.</span></div>
+<% end %>

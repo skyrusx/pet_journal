@@ -1,0 +1,71 @@
+<% content_for :title, "Питомцы — Управление PetJournal" %>
+<% content_for :admin_title, "Питомцы" %>
+
+<section class="admin-panel admin-catalog-panel admin-pets-panel">
+  <%= form_with url: admin_pets_path, method: :get, class: "admin-catalog-filter-form" do |form| %>
+    <div class="admin-catalog-search-row">
+      <%= form.search_field :q, value: @query, placeholder: "Имя питомца, порода, чип, владелец или email", autocomplete: "off" %>
+      <%= form.submit "Найти", class: "admin-primary-button" %>
+    </div>
+    <div class="admin-catalog-filter-row">
+      <%= form.select :species, options_for_select([["Все виды", ""]] + @species_options.map { |value| [value, value] }, @species), {}, class: "admin-filter-select" %>
+      <%= form.select :pet_tag, options_for_select([["Любой PetTag", ""], ["PetTag есть", "with"], ["Без PetTag", "without"]], @pet_tag_filter), {}, class: "admin-filter-select" %>
+      <%= form.select :lost, options_for_select([["Любой статус", ""], ["Потерян", "1"]], @lost_filter), {}, class: "admin-filter-select" %>
+      <%= form.select :created, options_for_select([["Любая дата добавления", ""], ["Добавлены за 7 дней", "7_days"], ["Добавлены за 30 дней", "30_days"]], @created_filter), {}, class: "admin-filter-select" %>
+      <%= form.select :owner_role, options_for_select([["Любой владелец", ""], ["Пользователь", "user"], ["Администратор", "admin"]], @owner_role_filter), {}, class: "admin-filter-select" %>
+      <% if @query.present? || @species.present? || @pet_tag_filter.present? || @lost_filter.present? || @created_filter.present? || @owner_role_filter.present? %>
+        <%= link_to "Сбросить", admin_pets_path, class: "admin-secondary-button" %>
+      <% end %>
+      <span class="admin-catalog-count"><strong><%= number_with_delimiter(@total_pets) %></strong> найдено</span>
+    </div>
+  <% end %>
+
+  <% if @pets.any? %>
+    <div class="admin-table-wrap admin-pets-desktop">
+      <table class="admin-table admin-pets-table">
+        <thead><tr><th>Питомец</th><th>Владелец</th><th>Вид</th><th>PetTag</th><th>Добавлен</th><th>Обновлён</th><th></th></tr></thead>
+        <tbody>
+          <% @pets.each do |pet| %>
+            <tr>
+              <td>
+                <div class="admin-pet-cell">
+                  <span class="admin-pet-avatar"><%= pet.photo.attached? ? image_tag(pet.photo, alt: "") : admin_pet_initial(pet) %></span>
+                  <span><strong><%= pet.name %></strong><small><%= pet.breed.presence || "Порода не указана" %></small></span>
+                </div>
+              </td>
+              <td><%= link_to admin_user_display_name(pet.user), admin_user_path(pet.user), class: "admin-pet-owner-link" %><small class="admin-pet-owner-email"><%= pet.user.email %></small></td>
+              <td><%= admin_pet_species_label(pet) %></td>
+              <td><span class="admin-pet-tag-badge <%= "admin-pet-tag-badge--lost" if pet.pet_tag&.status_lost? %>"><%= admin_pet_tag_label(pet) %></span></td>
+              <td><%= pet.created_at.strftime("%d.%m.%Y") %></td>
+              <td><%= pet.updated_at.strftime("%d.%m.%Y") %></td>
+              <td class="admin-table-action"><%= link_to "Открыть", admin_pet_path(pet) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="admin-pets-mobile">
+      <% @pets.each do |pet| %>
+        <%= link_to admin_pet_path(pet), class: "admin-pet-card" do %>
+          <div class="admin-pet-card__main">
+            <span class="admin-pet-avatar"><%= pet.photo.attached? ? image_tag(pet.photo, alt: "") : admin_pet_initial(pet) %></span>
+            <span><strong><%= pet.name %></strong><small><%= [pet.species.presence, pet.breed.presence].compact.join(" · ").presence || "Данные не указаны" %></small></span>
+          </div>
+          <div class="admin-pet-card__meta"><span><%= admin_user_display_name(pet.user) %></span><span><%= admin_pet_tag_label(pet) %></span><span><%= pet.created_at.strftime("%d.%m.%Y") %></span></div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <% if @total_pages > 1 %>
+      <nav class="admin-pagination" aria-label="Пагинация питомцев">
+        <% base_params = { q: @query.presence, species: @species.presence, pet_tag: @pet_tag_filter.presence, lost: @lost_filter.presence, created: @created_filter.presence, owner_role: @owner_role_filter.presence } %>
+        <%= @page > 1 ? link_to("← Назад", admin_pets_path(base_params.merge(page: @page - 1))) : content_tag(:span, "← Назад", class: "disabled") %>
+        <span>Страница <strong><%= @page %></strong> из <%= @total_pages %></span>
+        <%= @page < @total_pages ? link_to("Дальше →", admin_pets_path(base_params.merge(page: @page + 1))) : content_tag(:span, "Дальше →", class: "disabled") %>
+      </nav>
+    <% end %>
+  <% else %>
+    <div class="admin-empty-state"><strong>Питомцы не найдены</strong><span>Измените поиск или фильтры.</span></div>
+  <% end %>
+</section>

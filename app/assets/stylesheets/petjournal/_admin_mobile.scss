@@ -1,0 +1,15 @@
+/* Mobile admin chrome reuses the PetJournal mobile navigation language. */
+
+@media (max-width: 820px) {
+  .admin-mobile-tabs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .pj-admin-topbar .pj-workspace-topbar__actions {
+    display: none;
+  }
+
+  .admin-mobile-menu {
+    display: none;
+  }
+}

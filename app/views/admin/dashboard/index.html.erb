@@ -1,0 +1,188 @@
+<% content_for :title, "Обзор управления — PetJournal" %>
+<% content_for :admin_title, "Обзор" %>
+
+<div class="admin-overview-heading">
+  <div>
+    <p>Главное о PetJournal и то, что требует внимания.</p>
+  </div>
+  <span class="admin-overview-period">Последние 7 дней</span>
+</div>
+
+<section class="admin-activity-grid" aria-label="Активность за последние 7 дней">
+  <%= link_to admin_users_path(role: "user", registered: "7_days"), class: "admin-metric-card admin-metric-card--link" do %>
+    <span>Новые пользователи</span>
+    <strong><%= number_with_delimiter(@activity[:users]) %></strong>
+    <small>зарегистрировались</small>
+  <% end %>
+  <%= link_to admin_pets_path(owner_role: "user", created: "7_days"), class: "admin-metric-card admin-metric-card--link" do %>
+    <span>Новые питомцы</span>
+    <strong><%= number_with_delimiter(@activity[:pets]) %></strong>
+    <small>добавлены владельцами</small>
+  <% end %>
+  <article class="admin-metric-card">
+    <span>Записи журнала</span>
+    <strong><%= number_with_delimiter(@activity[:events]) %></strong>
+    <small>создано событий</small>
+  </article>
+  <article class="admin-metric-card">
+    <span>Напоминания</span>
+    <strong><%= number_with_delimiter(@activity[:reminders]) %></strong>
+    <small>создано напоминаний</small>
+  </article>
+</section>
+
+<div class="admin-overview-row admin-overview-row--attention">
+  <section class="admin-overview-panel">
+    <div class="admin-overview-panel__head">
+      <div>
+        <h2>Требует внимания</h2>
+        <p>Состояния, которые стоит проверить.</p>
+      </div>
+    </div>
+
+    <% attention_total = @attention.values.sum %>
+    <% if attention_total.zero? %>
+      <div class="admin-attention-ok">
+        <span class="admin-attention-ok__icon">✓</span>
+        <div>
+          <strong>Всё спокойно</strong>
+          <span>Критичных состояний сейчас нет.</span>
+        </div>
+      </div>
+    <% else %>
+      <div class="admin-attention-list">
+        <% if @attention[:failed_deliveries].positive? %>
+          <div class="admin-attention-item admin-attention-item--danger">
+            <span class="admin-attention-item__value"><%= @attention[:failed_deliveries] %></span>
+            <div><strong>Ошибки доставки</strong><span>Уведомления завершились ошибкой за 7 дней.</span></div>
+          </div>
+        <% end %>
+        <% if @attention[:retry_deliveries].positive? %>
+          <div class="admin-attention-item admin-attention-item--warning">
+            <span class="admin-attention-item__value"><%= @attention[:retry_deliveries] %></span>
+            <div><strong>Повторные попытки</strong><span>Уведомления ожидают повторной доставки.</span></div>
+          </div>
+        <% end %>
+        <% if @attention[:lost_pets].positive? %>
+          <%= link_to admin_pets_path(owner_role: "user", lost: "1"), class: "admin-attention-item admin-attention-item--link" do %>
+            <span class="admin-attention-item__value"><%= @attention[:lost_pets] %></span>
+            <div><strong>Активный lost mode</strong><span>Питомцы сейчас отмечены как потерянные.</span></div>
+            <b>→</b>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </section>
+
+  <section class="admin-overview-panel admin-quick-panel">
+    <div class="admin-overview-panel__head">
+      <div>
+        <h2>Быстрые действия</h2>
+        <p>Частые переходы без поиска по меню.</p>
+      </div>
+    </div>
+    <div class="admin-quick-actions">
+      <%= link_to admin_users_path, class: "admin-quick-action" do %>
+        <span><%= pj_icon(:user) %></span>
+        <div><strong>Пользователи</strong><small>Найти и открыть аккаунт</small></div>
+        <b>→</b>
+      <% end %>
+      <%= link_to admin_pets_path, class: "admin-quick-action" do %>
+        <span><%= pj_icon(:paw) %></span>
+        <div><strong>Питомцы</strong><small>Каталог питомцев сервиса</small></div>
+        <b>→</b>
+      <% end %>
+      <%= link_to root_path, class: "admin-quick-action" do %>
+        <span><%= pj_icon(:home) %></span>
+        <div><strong>Открыть PetJournal</strong><small>Перейти в пользовательскую часть</small></div>
+        <b>→</b>
+      <% end %>
+    </div>
+  </section>
+</div>
+
+<section class="admin-overview-panel admin-growth-panel">
+  <div class="admin-overview-panel__head">
+    <div>
+      <h2>Рост PetJournal</h2>
+      <p>Регистрации новых пользователей за 30 дней.</p>
+    </div>
+    <%= link_to "Все за 30 дней →", admin_users_path(role: "user", registered: "30_days") %>
+  </div>
+
+  <div class="admin-growth-chart" role="img" aria-label="График регистраций пользователей за последние 30 дней">
+    <% @registration_series.each_with_index do |item, index| %>
+      <% height = item[:count].zero? ? 2 : [((item[:count].to_f / @registration_max) * 100).round, 8].max %>
+      <div class="admin-growth-day" title="<%= item[:date].strftime('%d.%m') %>: <%= item[:count] %>">
+        <span class="admin-growth-bar" style="--admin-bar-height: <%= height %>%"></span>
+        <% if index.zero? || index == @registration_series.length - 1 || index % 5 == 0 %>
+          <small><%= item[:date].strftime("%d.%m") %></small>
+        <% else %>
+          <small aria-hidden="true">&nbsp;</small>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<div class="admin-overview-row admin-overview-row--bottom">
+  <section class="admin-overview-panel admin-usage-panel">
+    <div class="admin-overview-panel__head">
+      <div>
+        <h2>Использование продукта</h2>
+        <p>Сколько пользователей дошли до ключевых функций.</p>
+      </div>
+    </div>
+
+    <% usage_total = [@usage[:registered], 1].max %>
+    <% usage_items = [
+      ["Зарегистрировались", @usage[:registered], admin_users_path(role: "user")],
+      ["Добавили питомца", @usage[:with_pet], admin_users_path(role: "user", usage: "with_pet")],
+      ["Создали запись", @usage[:with_event], admin_users_path(role: "user", usage: "with_event")],
+      ["Создали напоминание", @usage[:with_reminder], admin_users_path(role: "user", usage: "with_reminder")],
+      ["Настроили PetTag", @usage[:with_pettag], admin_users_path(role: "user", usage: "with_pettag")]
+    ] %>
+    <div class="admin-usage-list">
+      <% usage_items.each do |label, value, path| %>
+        <% percent = @usage[:registered].zero? ? 0 : ((value.to_f / usage_total) * 100).round %>
+        <%= link_to path, class: "admin-usage-item admin-usage-item--link" do %>
+          <div class="admin-usage-item__line">
+            <span><%= label %></span>
+            <strong><%= number_with_delimiter(value) %> <small><%= percent %>%</small><b>→</b></strong>
+          </div>
+          <div class="admin-usage-track"><span style="--admin-usage-width: <%= percent %>%"></span></div>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="admin-overview-panel admin-recent-panel">
+    <div class="admin-overview-panel__head">
+      <div>
+        <h2>Последние регистрации</h2>
+        <p>Новые аккаунты PetJournal.</p>
+      </div>
+      <%= link_to "Все", admin_users_path(role: "user") %>
+    </div>
+
+    <% if @recent_users.any? %>
+      <div class="admin-recent-users">
+        <% @recent_users.each do |user| %>
+          <%= link_to admin_user_path(user), class: "admin-recent-user" do %>
+            <span class="admin-recent-user__avatar"><%= admin_user_initial(user) %></span>
+            <span class="admin-recent-user__copy">
+              <strong><%= admin_user_display_name(user) %></strong>
+              <small><%= user.email %></small>
+            </span>
+            <span class="admin-recent-user__meta">
+              <small><%= user.created_at.strftime("%d.%m") %></small>
+              <b>→</b>
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="admin-overview-empty">Пользователей пока нет.</div>
+    <% end %>
+  </section>
+</div>

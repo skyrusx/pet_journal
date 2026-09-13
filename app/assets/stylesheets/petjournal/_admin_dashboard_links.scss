@@ -1,0 +1,80 @@
+/* Interactive states for actionable admin dashboard elements. */
+.admin-metric-card--link {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease, background .16s ease;
+}
+
+.admin-metric-card--link::after {
+  content: "→";
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: #8c9690;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.admin-metric-card--link:hover,
+.admin-metric-card--link:focus-visible {
+  border-color: #cfd8d2;
+  background: #fbfcf8;
+  box-shadow: 0 8px 22px rgba(49,57,50,.07);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.admin-metric-card--link:hover::after,
+.admin-metric-card--link:focus-visible::after {
+  color: #526b7a;
+}
+
+.admin-attention-item--link {
+  grid-template-columns: 38px minmax(0,1fr) auto;
+  color: inherit;
+  text-decoration: none;
+  transition: background .16s ease;
+}
+
+.admin-attention-item--link:hover,
+.admin-attention-item--link:focus-visible {
+  background: #f7f8f3;
+  outline: none;
+}
+
+.admin-attention-item--link > b {
+  color: #8c9690;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.admin-usage-item--link {
+  margin: -6px;
+  padding: 6px;
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+  transition: background .16s ease;
+}
+
+.admin-usage-item--link:hover,
+.admin-usage-item--link:focus-visible {
+  background: #f7f8f3;
+  outline: none;
+}
+
+.admin-usage-item__line strong b {
+  margin-left: 6px;
+  color: #8c9690;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.admin-overview-panel__head > a:hover,
+.admin-overview-panel__head > a:focus-visible {
+  color: #526b7a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  outline: none;
+}

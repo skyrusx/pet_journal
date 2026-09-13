@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_09_02_094000) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_13_160000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,19 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_02_094000) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "external_identities", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "provider", null: false
+    t.string "uid", null: false
+    t.datetime "connected_at", null: false
+    t.datetime "last_used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "uid"], name: "index_external_identities_on_provider_and_uid", unique: true
+    t.index ["user_id", "provider"], name: "index_external_identities_on_user_id_and_provider", unique: true
+    t.index ["user_id"], name: "index_external_identities_on_user_id"
   end
 
   create_table "in_app_notifications", force: :cascade do |t|
@@ -221,6 +234,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_02_094000) do
     t.datetime "found_reported_at"
     t.datetime "owner_notified_at"
     t.text "notification_error"
+    t.string "finder_consent_version", limit: 32
+    t.string "finder_privacy_policy_version", limit: 32
+    t.datetime "finder_consented_at"
     t.index ["pet_tag_id", "scan_status", "created_at"], name: "idx_on_pet_tag_id_scan_status_created_at_16ed5a9d04"
     t.index ["pet_tag_id"], name: "index_pet_tag_scans_on_pet_tag_id"
     t.index ["public_token"], name: "index_pet_tag_scans_on_public_token", unique: true
@@ -314,6 +330,27 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_02_094000) do
     t.index ["status", "reminder_type", "next_run_at"], name: "index_reminders_on_status_and_reminder_type_and_next_run_at"
   end
 
+  create_table "user_consents", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "consent_type", limit: 64, null: false
+    t.string "document_version", limit: 32, null: false
+    t.datetime "accepted_at", null: false
+    t.datetime "revoked_at"
+    t.inet "ip_address"
+    t.string "user_agent", limit: 500
+    t.string "source", limit: 64, null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.string "consentable_type", limit: 64
+    t.bigint "consentable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "consent_type", "document_version"], name: "index_active_global_user_consents", unique: true, where: "((revoked_at IS NULL) AND (consentable_type IS NULL) AND (consentable_id IS NULL))"
+    t.index ["user_id", "consent_type", "consentable_type", "consentable_id"], name: "index_active_scoped_user_consents", unique: true, where: "((revoked_at IS NULL) AND (consentable_type IS NOT NULL) AND (consentable_id IS NOT NULL))"
+    t.index ["consentable_type", "consentable_id"], name: "index_user_consents_on_consentable"
+    t.index ["user_id", "consent_type", "accepted_at"], name: "index_user_consents_on_user_type_accepted_at"
+    t.index ["user_id"], name: "index_user_consents_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -329,12 +366,18 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_02_094000) do
     t.string "name"
     t.string "phone"
     t.string "interface_text_size", default: "standard", null: false
+    t.boolean "password_configured", default: true, null: false
+    t.string "role", default: "user", null: false
+    t.datetime "last_seen_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["last_seen_at"], name: "index_users_on_last_seen_at"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["role"], name: "index_users_on_role"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "external_identities", "users"
   add_foreign_key "in_app_notifications", "users"
   add_foreign_key "notification_channels", "users"
   add_foreign_key "notification_deliveries", "notification_channels"
@@ -356,4 +399,5 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_02_094000) do
   add_foreign_key "reminder_notification_channels", "notification_channels"
   add_foreign_key "reminder_notification_channels", "reminders"
   add_foreign_key "reminders", "pets"
+  add_foreign_key "user_consents", "users"
 end
