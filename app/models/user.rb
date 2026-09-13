@@ -3,6 +3,11 @@ class User < ApplicationRecord
   AVATAR_MAX_SIZE = 5.megabytes
   INTERFACE_TEXT_SIZES = %w[compact standard comfortable large].freeze
 
+  enum :role, {
+    user: "user",
+    admin: "admin"
+  }, default: :user, validate: true
+
   has_one_attached :avatar
 
   has_many :pets, dependent: :destroy

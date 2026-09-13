@@ -35,6 +35,11 @@ Rails.application.routes.draw do
     put "password" => "devise/passwords#update"
   end
 
+  namespace :admin do
+    root "dashboard#index"
+    resources :users, only: %i[index show]
+  end
+
   get "oauth/complete" => "oauth#complete", as: :oauth_complete
   post "oauth/complete" => "oauth#register", as: :oauth_register
   get "oauth/:provider/callback" => "oauth#callback",
