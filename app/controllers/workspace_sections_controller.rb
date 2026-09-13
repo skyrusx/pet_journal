@@ -2,7 +2,7 @@ class WorkspaceSectionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_primary_pet
 
-  layout "workspace_new_design"
+  layout "workspace"
 
   def journal
     return redirect_to pet_pet_events_path(@primary_pet) if @primary_pet
@@ -13,7 +13,7 @@ class WorkspaceSectionsController < ApplicationController
       subtitle: "История здоровья и ухода за питомцем в одном месте",
       empty_title: "Журнал пока пуст",
       empty_text: "Добавьте питомца, чтобы начать сохранять важные события, наблюдения и историю здоровья.",
-      illustration: "petjournal/new_design/empty-journal.svg"
+      illustration: "petjournal/illustrations/empty-journal.svg"
     )
 
     render :empty
@@ -28,7 +28,7 @@ class WorkspaceSectionsController < ApplicationController
       subtitle: "Важные дела по уходу — вовремя и без лишней суеты",
       empty_title: "Нет напоминаний",
       empty_text: "Добавьте питомца, чтобы настроить напоминания о прививках, лекарствах и ежедневной заботе.",
-      illustration: "petjournal/new_design/empty-reminders.svg"
+      illustration: "petjournal/illustrations/empty-reminders.svg"
     )
 
     render :empty
@@ -43,7 +43,7 @@ class WorkspaceSectionsController < ApplicationController
       subtitle: "Паспорта, анализы, справки и другие важные документы питомца",
       empty_title: "Документы отсутствуют",
       empty_text: "Добавьте питомца, чтобы хранить его паспорт, результаты анализов, справки и другие документы в одном месте.",
-      illustration: "petjournal/new_design/empty-documents.svg"
+      illustration: "petjournal/illustrations/empty-documents.svg"
     )
 
     render :empty
@@ -65,7 +65,7 @@ class WorkspaceSectionsController < ApplicationController
       subtitle: "Безопасно делитесь выбранными данными питомца по отдельной ссылке",
       empty_title: "Сначала добавьте питомца",
       empty_text: "После создания профиля питомца вы сможете сформировать отдельную публичную ссылку и выбрать, какие данные по ней будут видны.",
-      illustration: "petjournal/new_design/empty-public-access.svg"
+      illustration: "petjournal/illustrations/empty-public-access.svg"
     )
 
     render :empty

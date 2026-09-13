@@ -5,7 +5,7 @@ class PetsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_pet, only: %i[show edit update destroy]
 
-  layout "workspace_new_design"
+  layout "workspace"
 
   def index
     @page = [params[:page].to_i, 1].max

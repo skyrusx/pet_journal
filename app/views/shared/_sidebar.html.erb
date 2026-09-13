@@ -1,0 +1,102 @@
+<% workspace_journal_path = journal_overview_path %>
+<% workspace_reminders_path = reminders_overview_path %>
+<% workspace_documents_path = documents_overview_path %>
+<% workspace_public_access_path = public_access_overview_path %>
+<% workspace_reminders_badge = mobile_reminders_badge %>
+<% display_name = current_user.name.presence || current_user.email.to_s.split("@").first.presence || "Аккаунт" %>
+<% avatar_letter = display_name.to_s.first.to_s.upcase.presence || current_user.email.to_s.first.to_s.upcase %>
+<% empty_workspace_section = controller_name == "workspace_sections" ? action_name : nil %>
+
+<aside class="pj-dash-sidebar" aria-label="Навигация PetJournal" data-dashboard-sidebar>
+  <div class="pj-dash-sidebar__top">
+    <%= link_to root_path, class: "pj-dash-brand", aria: { label: "PetJournal — главная" } do %>
+      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", class: "pj-dash-brand__full" %>
+      <%= image_tag "petjournal/logo-symbol.png", alt: "", class: "pj-dash-brand__compact" %>
+    <% end %>
+
+    <button type="button"
+            class="pj-dash-sidebar-toggle"
+            aria-label="Свернуть боковое меню"
+            aria-expanded="true"
+            data-dashboard-sidebar-toggle>
+      <%= pj_icon(:chevron) %>
+    </button>
+  </div>
+
+  <nav class="pj-dash-nav">
+    <%= link_to root_path, class: class_names("pj-dash-nav__item", active: controller_name == "pages"), aria: { label: "Главная" }, title: "Главная" do %>
+      <%= pj_icon(:home) %><span>Главная</span>
+    <% end %>
+    <%= link_to pets_path, class: class_names("pj-dash-nav__item", active: controller_name == "pets"), aria: { label: "Питомцы" }, title: "Питомцы" do %>
+      <%= pj_icon(:paw) %><span>Питомцы</span>
+    <% end %>
+    <%= link_to workspace_journal_path, class: class_names("pj-dash-nav__item", active: controller_name == "pet_events" || empty_workspace_section == "journal"), aria: { label: "Журнал" }, title: "Журнал" do %>
+      <%= pj_icon(:journal) %><span>Журнал</span>
+    <% end %>
+    <%= link_to workspace_reminders_path, class: class_names("pj-dash-nav__item", active: controller_name == "reminders" || empty_workspace_section == "reminders"), aria: { label: "Напоминания" }, title: "Напоминания" do %>
+      <%= pj_icon(:alarm) %><span>Напоминания</span>
+      <% if workspace_reminders_badge.present? %>
+        <strong class="pj-dash-nav__badge" aria-label="Активных напоминаний: <%= workspace_reminders_badge %>"><%= workspace_reminders_badge %></strong>
+      <% end %>
+    <% end %>
+    <%= link_to workspace_documents_path, class: class_names("pj-dash-nav__item", active: controller_name == "pet_documents" || empty_workspace_section == "documents"), aria: { label: "Документы" }, title: "Документы" do %>
+      <%= pj_icon(:file) %><span>Документы</span>
+    <% end %>
+    <%= link_to pet_tags_path, class: class_names("pj-dash-nav__item", active: controller_name == "pet_tags"), aria: { label: "PetTag" }, title: "PetTag" do %>
+      <%= pj_icon(:tag) %><span>PetTag</span>
+    <% end %>
+    <%= link_to workspace_public_access_path,
+                class: class_names("pj-dash-nav__item", active: controller_name == "pet_profile_shares" || empty_workspace_section == "public_access"),
+                aria: { label: "Публичный доступ" },
+                title: "Публичный доступ" do %>
+      <%= pj_icon(:share) %><span>Публичный доступ</span>
+    <% end %>
+    <%= link_to settings_path,
+                class: class_names("pj-dash-nav__item", active: %w[settings notification_channels].include?(controller_name)),
+                aria: { label: "Настройки" },
+                title: "Настройки" do %>
+      <%= pj_icon(:settings) %><span>Настройки</span>
+    <% end %>
+  </nav>
+
+  <div class="pj-dash-sidebar__footer">
+    <details class="pj-dash-profile-menu" data-dashboard-profile-menu>
+      <summary class="pj-dash-account" title="Меню профиля">
+        <span class="pj-dash-account__avatar">
+          <% if current_user.avatar.attached? %>
+            <%= image_tag current_user.avatar, alt: "" %>
+          <% else %>
+            <%= avatar_letter %>
+          <% end %>
+        </span>
+        <span class="pj-dash-account__copy">
+          <strong><%= display_name %></strong>
+          <small><%= current_user.email %></small>
+        </span>
+        <%= pj_icon(:chevron) %>
+      </summary>
+
+      <div class="pj-dash-profile-popover">
+        <div class="pj-dash-profile-popover__identity">
+          <strong><%= display_name %></strong>
+          <small><%= current_user.email %></small>
+        </div>
+
+        <%= link_to edit_user_registration_path, class: "pj-dash-profile-popover__item" do %>
+          <%= pj_icon(:user) %>
+          <span>Профиль</span>
+        <% end %>
+
+        <div class="pj-dash-profile-popover__separator" aria-hidden="true"></div>
+
+        <%= button_to destroy_user_session_path,
+                      method: :delete,
+                      class: "pj-dash-profile-popover__item pj-dash-profile-popover__logout",
+                      form_class: "pj-dash-profile-popover__form" do %>
+          <%= pj_icon(:logout) %>
+          <span>Выйти</span>
+        <% end %>
+      </div>
+    </details>
+  </div>
+</aside>

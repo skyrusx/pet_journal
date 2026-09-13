@@ -1,10 +1,7 @@
 <% content_for :title, "PetTag — PetJournal" %>
 
 <div class="pj-pettag-page <%= @pets.empty? ? "pj-section-empty-page pj-section-empty-page--pettag" : "pj-pettag-overview-page" %>">
-  <header class="pj-workspace-topbar">
-    <h1>PetTag</h1>
-    <%= render "shared/workspace_notification_link" %>
-  </header>
+  <%= render "shared/topbar", title: "PetTag" %>
 
   <% if @pets.any? %>
     <div class="pj-pettag-content pj-pettag-overview-content">
@@ -72,7 +69,7 @@
       </div>
 
       <section class="pj-section-empty-card" aria-labelledby="pj-pettag-empty-title">
-        <%= image_tag "petjournal/new_design/empty-pettag.svg", alt: "", class: "pj-section-empty-card__illustration" %>
+        <%= image_tag "petjournal/illustrations/empty-pettag.svg", alt: "", class: "pj-section-empty-card__illustration" %>
         <h2 id="pj-pettag-empty-title">Сначала добавьте питомца</h2>
         <p>PetTag создаётся отдельно для каждого питомца и использует его профиль.</p>
         <%= link_to "Добавить питомца", new_pet_path, class: "pj-section-empty-card__button" %>

@@ -1,5 +1,5 @@
 class InAppNotificationsController < ApplicationController
-  layout "workspace_new_design"
+  layout "workspace"
 
   PAGE_SIZE = 25
   MOBILE_PAGE_SIZE = 10

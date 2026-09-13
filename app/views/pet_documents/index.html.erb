@@ -3,10 +3,7 @@
 <% has_document_filters = @selected_type.present? || @selected_status != "all" || @selected_scope != "all" || @query.present? %>
 
 <div class="pj-documents-page pj-documents-index">
-  <header class="pj-workspace-topbar">
-    <h1>Документы</h1>
-    <%= render "shared/workspace_notification_link" %>
-  </header>
+  <%= render "shared/topbar", title: "Документы" %>
 
   <div class="pj-documents-content">
     <div class="pj-documents-heading">

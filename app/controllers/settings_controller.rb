@@ -1,5 +1,5 @@
 class SettingsController < ApplicationController
-  layout "workspace_new_design"
+  layout "workspace"
 
   before_action :authenticate_user!
 

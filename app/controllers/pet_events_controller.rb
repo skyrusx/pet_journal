@@ -7,7 +7,7 @@ class PetEventsController < ApplicationController
   before_action :set_journal_pets
   before_action :set_pet_event, only: %i[show edit update destroy]
 
-  layout "workspace_new_design"
+  layout "workspace"
 
   def index
     @event_type_filters = PetEvent::EVENT_TYPE_LABELS

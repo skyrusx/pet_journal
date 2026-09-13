@@ -1,11 +1,11 @@
 <% content_for :title, "Новый публичный доступ — PetJournal" %>
 
 <div class="pj-public-access-page pj-public-access-form-page">
-  <header class="pj-workspace-topbar pj-workspace-topbar--form">
-    <%= link_to pet_profile_shares_path(@pet), class: "pj-workspace-back" do %>
-      <%= pj_icon(:chevron) %><span>Назад к доступам</span>
-    <% end %>
-  </header>
+  <%= render "shared/topbar",
+             back_path: pet_profile_shares_path(@pet),
+             back_label: "Назад к доступам",
+             class_name: "pj-workspace-topbar--form",
+             notifications: false %>
 
   <div class="pj-public-access-content">
     <div class="pj-mobile-detail-nav pj-mobile-form-nav pj-public-access-mobile-form-nav">

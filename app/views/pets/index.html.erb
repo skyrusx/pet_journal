@@ -1,12 +1,7 @@
 <% content_for :title, "Питомцы — PetJournal" %>
 
 <div class="pj-pets-page pj-pets-page--index">
-  <header class="pj-workspace-topbar">
-    <h1>Питомцы</h1>
-    <div class="pj-workspace-topbar__actions">
-      <%= render "shared/workspace_notification_link" %>
-    </div>
-  </header>
+  <%= render "shared/topbar", title: "Питомцы" %>
 
   <div class="pj-pets-content">
     <div class="pj-mobile-list-heading">
@@ -85,7 +80,7 @@
       <% end %>
     <% else %>
       <section class="pj-pets-empty pj-pets-empty--reference" aria-labelledby="pj-pets-empty-title">
-        <%= image_tag "petjournal/new_design/dashboard-empty-pets.svg",
+        <%= image_tag "petjournal/illustrations/dashboard-empty-pets.svg",
                       alt: "Собака и кошка рядом со знаком добавления",
                       class: "pj-pets-empty__artwork" %>
         <h2 id="pj-pets-empty-title">У вас пока нет питомцев</h2>

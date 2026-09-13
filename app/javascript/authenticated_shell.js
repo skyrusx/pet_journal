@@ -1,4 +1,4 @@
-function dashboardSidebarPreference() {
+function sidebarPreference() {
   try {
     return window.localStorage.getItem("petjournal.dashboard.sidebarCollapsed");
   } catch (_error) {
@@ -6,21 +6,21 @@ function dashboardSidebarPreference() {
   }
 }
 
-function saveDashboardSidebarPreference(collapsed) {
+function saveSidebarPreference(collapsed) {
   try {
     window.localStorage.setItem("petjournal.dashboard.sidebarCollapsed", String(collapsed));
   } catch (_error) {
-    // The sidebar still works when storage is unavailable.
+    // The shell still works when storage is unavailable.
   }
 }
 
-function closeDashboardProfileMenus(except = null) {
+function closeProfileMenus(except = null) {
   document.querySelectorAll("[data-dashboard-profile-menu][open]").forEach((menu) => {
     if (menu !== except) menu.removeAttribute("open");
   });
 }
 
-function closeDashboardMobileSheets() {
+function closeMobileSheets() {
   document.querySelectorAll("[data-dashboard-sheet].is-open").forEach((sheet) => {
     sheet.classList.remove("is-open");
     sheet.setAttribute("aria-hidden", "true");
@@ -35,12 +35,12 @@ function closeDashboardMobileSheets() {
   document.body.classList.remove("pj-dashboard-sheet-open");
 }
 
-function openDashboardMobileSheet(name, button) {
+function openMobileSheet(name, button) {
   const sheet = document.querySelector(`[data-dashboard-sheet="${name}"]`);
   if (!sheet) return;
 
   const alreadyOpen = sheet.classList.contains("is-open");
-  closeDashboardMobileSheets();
+  closeMobileSheets();
   if (alreadyOpen) return;
 
   sheet.classList.add("is-open");
@@ -56,85 +56,43 @@ function openDashboardMobileSheet(name, button) {
   }, 40);
 }
 
-function initDashboardMobileSheets() {
+function initMobileSheets() {
   document.querySelectorAll("[data-dashboard-sheet-toggle]").forEach((button) => {
     if (button.dataset.dashboardSheetBound === "true") return;
     button.dataset.dashboardSheetBound = "true";
 
     button.addEventListener("click", () => {
-      openDashboardMobileSheet(button.dataset.dashboardSheetToggle, button);
+      openMobileSheet(button.dataset.dashboardSheetToggle, button);
     });
   });
 
   document.querySelectorAll("[data-dashboard-sheet-close]").forEach((button) => {
     if (button.dataset.dashboardSheetCloseBound === "true") return;
     button.dataset.dashboardSheetCloseBound = "true";
-    button.addEventListener("click", closeDashboardMobileSheets);
+    button.addEventListener("click", closeMobileSheets);
   });
 
   document.querySelectorAll("[data-dashboard-sheet-backdrop]").forEach((backdrop) => {
     if (backdrop.dataset.dashboardSheetBackdropBound === "true") return;
     backdrop.dataset.dashboardSheetBackdropBound = "true";
-    backdrop.addEventListener("click", closeDashboardMobileSheets);
+    backdrop.addEventListener("click", closeMobileSheets);
   });
 
   document.querySelectorAll("[data-dashboard-sheet] a").forEach((link) => {
     if (link.dataset.dashboardSheetLinkBound === "true") return;
     link.dataset.dashboardSheetLinkBound = "true";
-    link.addEventListener("click", closeDashboardMobileSheets);
+    link.addEventListener("click", closeMobileSheets);
   });
 }
 
-function initDashboardJournalPetPicker() {
-  const addSheet = document.querySelector('[data-dashboard-sheet="add"]');
-  const sourcePetSheet = document.querySelector('[data-dashboard-sheet="public-access-pet"]');
-
-  if (!addSheet || !sourcePetSheet || document.querySelector('[data-dashboard-sheet="journal-pet"]')) return;
-
-  const journalLink = [...addSheet.querySelectorAll("a.pj-mobile-sheet__action")]
-    .find((link) => /\/pets\/\d+\/events\/new(?:$|[?#])/.test(link.getAttribute("href") || ""));
-
-  if (!journalLink) return;
-
-  const journalPetSheet = sourcePetSheet.cloneNode(true);
-  journalPetSheet.dataset.dashboardSheet = "journal-pet";
-  journalPetSheet.setAttribute("aria-labelledby", "pj-mobile-journal-pet-title");
-
-  const heading = journalPetSheet.querySelector("h2");
-  if (heading) {
-    heading.id = "pj-mobile-journal-pet-title";
-    heading.textContent = "Для какого питомца?";
-  }
-
-  const kicker = journalPetSheet.querySelector(".pj-mobile-sheet__head small");
-  if (kicker) kicker.textContent = "Запись в журнал";
-
-  journalPetSheet.querySelectorAll('a[href*="/profile_shares/new"]').forEach((link) => {
-    link.setAttribute("href", link.getAttribute("href").replace("/profile_shares/new", "/events/new"));
-  });
-
-  const trigger = document.createElement("button");
-  trigger.type = "button";
-  trigger.className = journalLink.className;
-  trigger.innerHTML = journalLink.innerHTML;
-  trigger.setAttribute("aria-expanded", "false");
-  trigger.dataset.dashboardSheetToggle = "journal-pet";
-
-  const description = trigger.querySelector("small");
-  if (description) description.textContent = "Сначала выберите питомца";
-
-  journalLink.replaceWith(trigger);
-  sourcePetSheet.insertAdjacentElement("beforebegin", journalPetSheet);
-}
-
-function initDashboardSidebar() {
+function initSidebar() {
   document.querySelectorAll("[data-dashboard-root]").forEach((root) => {
     const button = root.querySelector("[data-dashboard-sidebar-toggle]");
     if (!button || button.dataset.dashboardSidebarBound === "true") return;
 
     button.dataset.dashboardSidebarBound = "true";
 
-    const storedPreference = dashboardSidebarPreference();
+    const storedPreference = sidebarPreference();
     const defaultCollapsed = window.matchMedia("(min-width: 821px) and (max-width: 1100px)").matches;
     let collapsed = storedPreference === null ? defaultCollapsed : storedPreference === "true";
 
@@ -146,15 +104,15 @@ function initDashboardSidebar() {
     };
 
     button.addEventListener("click", () => {
-      closeDashboardProfileMenus();
+      closeProfileMenus();
       collapsed = !collapsed;
-      saveDashboardSidebarPreference(collapsed);
+      saveSidebarPreference(collapsed);
       render();
     });
 
     root.querySelectorAll("[data-dashboard-profile-menu]").forEach((menu) => {
       menu.addEventListener("toggle", () => {
-        if (menu.open) closeDashboardProfileMenus(menu);
+        if (menu.open) closeProfileMenus(menu);
       });
     });
 
@@ -162,15 +120,14 @@ function initDashboardSidebar() {
   });
 }
 
-function initDashboardUi() {
-  initDashboardSidebar();
-  initDashboardJournalPetPicker();
-  initDashboardMobileSheets();
+function initAuthenticatedShell() {
+  initSidebar();
+  initMobileSheets();
 }
 
 document.addEventListener("click", (event) => {
   if (event.target.closest?.("[data-dashboard-sheet-close]")) {
-    closeDashboardMobileSheets();
+    closeMobileSheets();
   }
 
   document.querySelectorAll("[data-dashboard-profile-menu][open]").forEach((menu) => {
@@ -187,10 +144,10 @@ document.addEventListener("keydown", (event) => {
     openMenu.querySelector("summary")?.focus();
   }
 
-  closeDashboardMobileSheets();
+  closeMobileSheets();
 });
 
-document.addEventListener("DOMContentLoaded", initDashboardUi);
-document.addEventListener("turbo:load", initDashboardUi);
-document.addEventListener("turbo:render", initDashboardUi);
-document.addEventListener("turbo:before-cache", closeDashboardMobileSheets);
+document.addEventListener("DOMContentLoaded", initAuthenticatedShell);
+document.addEventListener("turbo:load", initAuthenticatedShell);
+document.addEventListener("turbo:render", initAuthenticatedShell);
+document.addEventListener("turbo:before-cache", closeMobileSheets);

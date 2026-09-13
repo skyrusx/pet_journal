@@ -1,5 +1,5 @@
 class NotificationChannelsController < ApplicationController
-  layout "workspace_new_design"
+  layout "workspace"
 
   DELIVERY_PAGE_SIZE = 25
   DELIVERY_MOBILE_PAGE_SIZE = 10

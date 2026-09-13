@@ -3,10 +3,7 @@
 <% has_reminder_filters = @selected_status != "active" || @selected_type.present? || @query.present? %>
 
 <div class="pj-reminders-page pj-reminders-index">
-  <header class="pj-workspace-topbar">
-    <h1>Напоминания</h1>
-    <%= render "shared/workspace_notification_link" %>
-  </header>
+  <%= render "shared/topbar", title: "Напоминания" %>
 
   <div class="pj-reminders-content">
     <div class="pj-reminders-heading">

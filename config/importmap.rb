@@ -1,8 +1,9 @@
 # Pin npm packages by running ./bin/importmap
 
 pin "application"
+pin "authenticated"
+pin "authenticated_shell"
 pin "pwa"
-pin "dashboard_sidebar"
 pin "pet_photo_preview"
 pin "journal_event_wizard"
 pin "document_file_preview"
