@@ -1,0 +1,49 @@
+<% notifications_badge = mobile_notifications_badge %>
+
+<div class="pj-mobile-chrome admin-mobile-chrome">
+  <header class="pj-mobile-chrome__header admin-mobile-chrome__header">
+    <span class="admin-mobile-chrome__spacer" aria-hidden="true"></span>
+
+    <%= link_to root_path, class: "pj-mobile-chrome__brand", aria: { label: "PetJournal — главная" } do %>
+      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal" %>
+    <% end %>
+
+    <%= link_to notifications_path,
+                class: "pj-mobile-chrome__bell",
+                aria: { label: "Уведомления" },
+                title: "Уведомления" do %>
+      <%= pj_icon(:bell) %>
+      <% if notifications_badge.present? %>
+        <span class="pj-mobile-chrome__badge" aria-hidden="true"><%= notifications_badge %></span>
+      <% end %>
+    <% end %>
+  </header>
+
+  <nav class="pj-mobile-tabs admin-mobile-tabs" aria-label="Навигация управления">
+    <%= link_to admin_root_path,
+                class: class_names("pj-mobile-tabs__item", "is-active": controller_path == "admin/dashboard"),
+                aria: { current: controller_path == "admin/dashboard" ? "page" : nil } do %>
+      <%= pj_icon(:home) %>
+      <span>Обзор</span>
+    <% end %>
+
+    <%= link_to admin_users_path,
+                class: class_names("pj-mobile-tabs__item", "is-active": controller_path == "admin/users"),
+                aria: { current: controller_path == "admin/users" ? "page" : nil } do %>
+      <%= pj_icon(:user) %>
+      <span>Пользователи</span>
+    <% end %>
+
+    <%= link_to admin_pets_path,
+                class: class_names("pj-mobile-tabs__item", "is-active": controller_path == "admin/pets"),
+                aria: { current: controller_path == "admin/pets" ? "page" : nil } do %>
+      <%= pj_icon(:paw) %>
+      <span>Питомцы</span>
+    <% end %>
+
+    <%= link_to root_path, class: "pj-mobile-tabs__item admin-mobile-tabs__return" do %>
+      <%= pj_icon(:chevron) %>
+      <span>PetJournal</span>
+    <% end %>
+  </nav>
+</div>
