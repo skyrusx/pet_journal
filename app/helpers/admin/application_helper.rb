@@ -45,18 +45,22 @@ module Admin::ApplicationHelper
   end
 
   def admin_last_seen_label(user)
-    return "Нет данных" if user.last_seen_at.blank?
+    admin_activity_time_label(user.last_seen_at)
+  end
 
-    time = user.last_seen_at.in_time_zone(current_user.notifications_time_zone_name)
+  def admin_activity_time_label(time)
+    return "Нет данных" if time.blank?
+
+    zoned_time = time.in_time_zone(current_user.notifications_time_zone_name)
     today = Time.current.in_time_zone(current_user.notifications_time_zone_name).to_date
 
-    case time.to_date
+    case zoned_time.to_date
     when today
-      "Сегодня, #{time.strftime('%H:%M')}"
+      "Сегодня, #{zoned_time.strftime('%H:%M')}"
     when today - 1.day
-      "Вчера, #{time.strftime('%H:%M')}"
+      "Вчера, #{zoned_time.strftime('%H:%M')}"
     else
-      time.strftime("%d.%m.%Y %H:%M")
+      zoned_time.strftime("%d.%m.%Y %H:%M")
     end
   end
 
