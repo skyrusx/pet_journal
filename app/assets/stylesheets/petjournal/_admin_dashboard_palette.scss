@@ -1,0 +1,165 @@
+/* Admin content must use the current dashboard palette.
+   The dark sidebar is the only intentional color difference. */
+
+.admin-body,
+.admin-content-shell,
+.admin-main {
+  background: #fbfaf6;
+  color: #26332a;
+}
+
+.admin-topbar {
+  border-bottom-color: #e6e1d7;
+  background: rgba(255, 254, 250, .96);
+}
+
+.admin-topbar-title strong,
+.admin-page-heading h1,
+.admin-profile-heading h1,
+.admin-panel-header h2,
+.admin-stat-card strong,
+.admin-user-cell strong,
+.admin-definition-list dd,
+.admin-pet-row strong,
+.admin-page-count strong,
+.admin-empty-state strong {
+  color: #313b33;
+}
+
+.admin-page-kicker,
+.admin-page-heading > div > p:last-child,
+.admin-profile-copy > p,
+.admin-panel-header p,
+.admin-stat-card > span,
+.admin-stat-card small,
+.admin-user-cell small,
+.admin-definition-list dt,
+.admin-pet-row small,
+.admin-page-count,
+.admin-pagination,
+.admin-empty-state {
+  color: #848b85;
+}
+
+.admin-topbar-back,
+.admin-secondary-link,
+.admin-table-action a,
+.admin-pagination a,
+.admin-breadcrumbs a {
+  color: #5d7a68;
+}
+
+.admin-topbar-back:hover,
+.admin-secondary-link:hover,
+.admin-table-action a:hover,
+.admin-pagination a:hover,
+.admin-breadcrumbs a:hover {
+  color: #174f34;
+}
+
+.admin-stat-card,
+.admin-panel,
+.admin-panel-header,
+.admin-table,
+.admin-search-form,
+.admin-pagination,
+.admin-empty-state {
+  background: #fffefa;
+  border-color: #e3dfd4;
+}
+
+.admin-stat-card,
+.admin-panel {
+  box-shadow: 0 5px 18px rgba(49, 57, 50, .035);
+}
+
+.admin-table {
+  color: #48534c;
+}
+
+.admin-table th,
+.admin-table td,
+.admin-definition-list > div,
+.admin-pet-row {
+  border-bottom-color: #ece7df;
+}
+
+.admin-table th {
+  color: #7c817d;
+  background: #fbfaf6;
+}
+
+.admin-table tbody tr:hover {
+  background: #f2f3e9;
+}
+
+.admin-avatar,
+.admin-profile-avatar,
+.admin-pet-initial,
+.admin-role-badge {
+  background: #edf2df;
+  color: #174f34;
+}
+
+.admin-role-badge--admin {
+  background: #c7f43a;
+  color: #174f34;
+}
+
+.admin-search-field input[type="search"] {
+  border-color: #dedacd;
+  background: #fffefa;
+  color: #48534c;
+}
+
+.admin-search-field input[type="search"]:focus {
+  border-color: #7f9d86;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(83, 122, 94, .1);
+}
+
+.admin-primary-button {
+  border-color: #195a3c;
+  background: #195a3c;
+  color: #fff;
+}
+
+.admin-primary-button:hover,
+.admin-primary-button:focus-visible {
+  border-color: #174f34;
+  background: #174f34;
+  color: #fff;
+}
+
+.admin-secondary-button {
+  border-color: #e2ded4;
+  background: #fffefa;
+  color: #5d7a68;
+}
+
+.admin-secondary-button:hover,
+.admin-secondary-button:focus-visible {
+  background: #f2f3e9;
+  color: #174f34;
+}
+
+.admin-flash--notice {
+  background: #edf2df;
+  color: #42634d;
+}
+
+.admin-flash--alert {
+  background: #fbf1ee;
+  color: #87564f;
+}
+
+@media (min-width: 981px) {
+  .admin-sidebar {
+    background: #07392f;
+  }
+
+  .admin-sidebar .admin-avatar {
+    background: #c7f43a;
+    color: #174f34;
+  }
+}
