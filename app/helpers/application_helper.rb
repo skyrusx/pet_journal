@@ -117,10 +117,6 @@ module ApplicationHelper
       items.insert(3, { label: "Доступ", path: pet_profile_shares_path(pet), icon: :share, active: controller_name == "pet_profile_shares" })
     end
 
-    if current_user&.admin?
-      items << { label: "Управление", path: admin_root_path, icon: :settings, active: false }
-    end
-
     items
   end
 
