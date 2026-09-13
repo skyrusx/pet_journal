@@ -20,6 +20,12 @@ module Admin::ApplicationHelper
             path: admin_users_path,
             icon: :user,
             active: controller_path == "admin/users"
+          },
+          {
+            label: "Питомцы",
+            path: admin_pets_path,
+            icon: :paw,
+            active: controller_path == "admin/pets"
           }
         ]
       }
@@ -52,5 +58,21 @@ module Admin::ApplicationHelper
     else
       time.strftime("%d.%m.%Y %H:%M")
     end
+  end
+
+  def admin_pet_initial(pet)
+    pet.name.to_s.first.to_s.upcase.presence || "P"
+  end
+
+  def admin_pet_species_label(pet)
+    pet.species.presence || "Не указан"
+  end
+
+  def admin_pet_tag_label(pet)
+    return "Нет" unless pet.pet_tag
+    return "Потерян" if pet.pet_tag.status_lost?
+    return "Найден" if pet.pet_tag.status_found?
+
+    pet.pet_tag.enabled? ? "Активен" : "Выключен"
   end
 end
