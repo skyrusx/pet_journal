@@ -1,0 +1,106 @@
+/* Shared catalog pattern for /admin/users and /admin/pets. */
+.admin-catalog-filter-form,
+.admin-pets-filter-form {
+  border-bottom: 1px solid #e8e3d9;
+  background: #fffefa;
+}
+
+.admin-catalog-search-row,
+.admin-pets-search-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 16px 16px 10px;
+}
+
+.admin-catalog-search-row input[type="search"],
+.admin-pets-search-row input[type="search"] {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 13px;
+  border: 1px solid #ddd9d0;
+  border-radius: 8px;
+  outline: none;
+  background: #fffefa;
+  color: #3f4e45;
+  font: inherit;
+  font-size: 14px;
+}
+
+.admin-catalog-search-row input[type="search"]:focus,
+.admin-pets-search-row input[type="search"]:focus {
+  border-color: #84929a;
+  box-shadow: 0 0 0 3px rgba(90, 110, 122, .1);
+}
+
+.admin-catalog-filter-row,
+.admin-pets-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 0 16px 16px;
+}
+
+.admin-filter-select {
+  min-height: 40px;
+  padding: 0 34px 0 11px;
+  border: 1px solid #ddd9d0;
+  border-radius: 8px;
+  background: #fffefa;
+  color: #52605a;
+  font-size: 12px;
+}
+
+.admin-catalog-count,
+.admin-pets-count {
+  margin-left: auto;
+  color: #858f88;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.admin-catalog-count strong,
+.admin-pets-count strong {
+  color: #39453d;
+  font-size: 13px;
+}
+
+.admin-catalog-filter-form .admin-primary-button,
+.admin-pets-filter-form .admin-primary-button {
+  border-color: #526b7a;
+  background: #526b7a;
+  color: #fff;
+}
+
+.admin-catalog-filter-form .admin-primary-button:hover,
+.admin-pets-filter-form .admin-primary-button:hover {
+  border-color: #435a68;
+  background: #435a68;
+}
+
+@media (max-width: 620px) {
+  .admin-catalog-search-row,
+  .admin-pets-search-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-catalog-filter-row,
+  .admin-pets-filter-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .admin-filter-select,
+  .admin-catalog-filter-row .admin-secondary-button,
+  .admin-pets-filter-row .admin-secondary-button {
+    width: 100%;
+  }
+
+  .admin-catalog-count,
+  .admin-pets-count {
+    grid-column: 1 / -1;
+    margin-left: 0;
+  }
+}
