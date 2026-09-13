@@ -26,7 +26,7 @@ class PagesController < ApplicationController
     @profile_share_views_count = PetProfileShareView.joins(pet_profile_share: :pet).where(pets: { user_id: current_user.id }).count
     @active_profile_shares_count = PetProfileShare.active.joins(:pet).where(pets: { user_id: current_user.id }).count
 
-    render layout: "dashboard"
+    render layout: "workspace"
   end
 
   def new_design
