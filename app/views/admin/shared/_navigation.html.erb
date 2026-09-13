@@ -1,12 +1,12 @@
-<nav class="pj-dash-nav admin-navigation" aria-label="Навигация управления">
+<nav class="pj-dash-nav" aria-label="Навигация управления">
   <% admin_navigation_sections.each_with_index do |section, section_index| %>
     <% if section_index.positive? %>
-      <div class="pj-dash-nav__separator admin-nav-separator" aria-hidden="true"></div>
+      <div class="pj-dash-nav__separator" aria-hidden="true"></div>
     <% end %>
 
     <% section[:items].each do |item| %>
       <%= link_to item[:path],
-                  class: class_names("pj-dash-nav__item", "admin-nav-link", active: item[:active]),
+                  class: class_names("pj-dash-nav__item", active: item[:active]),
                   aria: { current: item[:active] ? "page" : nil },
                   title: item[:label] do %>
         <%= pj_icon(item[:icon]) %>
