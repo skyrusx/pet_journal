@@ -42,19 +42,13 @@
       <div class="pj-pet-gallery-editor__grid" data-pet-gallery-sort-list>
         <% photos.each do |photo| %>
           <article class="pj-pet-gallery-card" data-pet-gallery-card data-photo-id="<%= photo.id %>">
-            <div class="pj-pet-gallery-card__image-wrap">
+            <div class="pj-pet-gallery-card__image-wrap"
+                 data-pet-gallery-sort-handle
+                 aria-label="Перетащить фотографию для изменения порядка">
               <%= image_tag photo.image.variant(resize_to_fill: [520, 520]),
                             alt: "Фото #{pet.name}",
                             loading: "lazy",
                             class: "pj-pet-gallery-card__image" %>
-
-              <button type="button"
-                      class="pj-pet-gallery-card__drag"
-                      data-pet-gallery-sort-handle
-                      aria-label="Перетащить фотографию"
-                      title="Изменить порядок">
-                <span></span><span></span><span></span><span></span><span></span><span></span>
-              </button>
             </div>
 
             <div class="pj-pet-gallery-card__actions">
