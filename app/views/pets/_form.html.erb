@@ -7,7 +7,7 @@
   <% end %>
 
   <% gallery_photos = @pet.persisted? ? @pet.pet_photos.with_attached_image.ordered.to_a : [] %>
-  <% primary_photo = gallery_photos.detect(&:is_primary?) || gallery_photos.first %>
+  <% primary_photo = gallery_photos.detect(&:is_primary?) %>
 
   <div class="pj-pet-form__grid">
     <div class="pj-pet-form__photo-column">
@@ -15,9 +15,30 @@
         <label class="pj-pet-form__label">Фото</label>
         <div class="pj-pet-photo-upload pj-pet-photo-upload--static">
           <% if primary_photo&.image&.attached? %>
-            <%= image_tag primary_photo.image.variant(resize_to_fill: [700, 700]),
-                          alt: @pet.name.presence || "Фото питомца",
-                          class: "pj-pet-photo-upload__preview" %>
+            <button type="button"
+                    class="pj-pet-main-photo__zoom"
+                    data-pet-lightbox-open
+                    data-src="<%= url_for(primary_photo.image.variant(resize_to_limit: [2000, 2000])) %>"
+                    data-alt="Фото <%= @pet.name %>"
+                    aria-label="Увеличить фото питомца"
+                    title="Увеличить фото">
+              <%= pet_avatar_tag(@pet,
+                                 class_name: "pj-pet-main-photo__preview",
+                                 alt: @pet.name.presence || "Фото питомца",
+                                 loading: "eager") %>
+            </button>
+
+            <button type="button"
+                    class="pj-pet-main-photo__delete"
+                    data-pet-main-photo-delete
+                    data-url="<%= pet_pet_photo_path(@pet, primary_photo) %>"
+                    data-confirm="Удалить фото профиля? Остальные фотографии останутся в галерее."
+                    aria-label="Удалить фото профиля"
+                    title="Удалить фото профиля">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
+              </svg>
+            </button>
 
             <button type="button"
                     class="pj-pet-main-photo__edit"
@@ -44,7 +65,7 @@
             <span class="pj-pet-photo-upload__empty">
               <span class="pj-pet-photo-upload__icon">☁</span>
               <strong>Фото пока нет</strong>
-              <small>Добавьте его в галерее ниже</small>
+              <small>Выберите фотографию из галереи</small>
             </span>
           <% end %>
         </div>
@@ -142,6 +163,19 @@
   </div>
 
   <%= render "pets/photo_gallery_editor", pet: @pet if @pet.persisted? %>
+
+  <% if primary_photo&.image&.attached? %>
+    <div class="pj-pet-lightbox" data-pet-lightbox hidden aria-hidden="true">
+      <div class="pj-pet-lightbox__backdrop" data-pet-lightbox-close></div>
+      <section class="pj-pet-lightbox__dialog" role="dialog" aria-modal="true" aria-label="Фото питомца">
+        <button type="button" class="pj-pet-lightbox__close" data-pet-lightbox-close aria-label="Закрыть">×</button>
+        <div class="pj-pet-lightbox__stage" data-pet-lightbox-stage>
+          <img alt="" data-pet-lightbox-image draggable="false">
+        </div>
+        <div class="pj-pet-lightbox__counter" data-pet-lightbox-counter hidden></div>
+      </section>
+    </div>
+  <% end %>
 
   <details class="pj-pet-form__extra" open>
     <summary>Дополнительные данные</summary>
