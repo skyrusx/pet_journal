@@ -39,6 +39,6 @@ module PetGalleryHelper
     left = -(photo.avatar_crop_x.to_f / photo.avatar_crop_width.to_f) * 100.0
     top = -(photo.avatar_crop_y.to_f / photo.avatar_crop_height.to_f) * 100.0
 
-    "width: #{width.round(5)}%; left: #{left.round(5)}%; top: #{top.round(5)}%;"
+    "width: #{width.round(5)}%; height: auto !important; object-fit: initial !important; left: #{left.round(5)}%; top: #{top.round(5)}%;"
   end
 end
