@@ -182,6 +182,7 @@ function initCropModal(root) {
   if (!modal || !bindOnce(modal, "modal")) return;
 
   const stage = modal.querySelector("[data-pet-crop-stage]");
+  const guide = modal.querySelector("[data-pet-crop-guide]") || modal.querySelector(".pj-pet-crop-stage__guide");
   const image = modal.querySelector("[data-pet-crop-image]");
   const zoomInput = modal.querySelector("[data-pet-crop-zoom]");
   const saveButton = modal.querySelector("[data-pet-crop-save]");
@@ -195,14 +196,27 @@ function initCropModal(root) {
   let offsetX = 0;
   let offsetY = 0;
 
-  const viewport = () => stage.getBoundingClientRect();
+  const viewport = () => {
+    const stageRect = stage.getBoundingClientRect();
+    const guideRect = guide?.getBoundingClientRect() || stageRect;
+
+    return {
+      left: guideRect.left - stageRect.left,
+      top: guideRect.top - stageRect.top,
+      width: guideRect.width,
+      height: guideRect.height
+    };
+  };
 
   const clampOffsets = () => {
     const rect = viewport();
     const renderedWidth = naturalWidth * scale;
     const renderedHeight = naturalHeight * scale;
-    offsetX = Math.min(0, Math.max(rect.width - renderedWidth, offsetX));
-    offsetY = Math.min(0, Math.max(rect.height - renderedHeight, offsetY));
+    const minX = rect.left + rect.width - renderedWidth;
+    const minY = rect.top + rect.height - renderedHeight;
+
+    offsetX = Math.min(rect.left, Math.max(minX, offsetX));
+    offsetY = Math.min(rect.top, Math.max(minY, offsetY));
   };
 
   const render = () => {
@@ -214,8 +228,8 @@ function initCropModal(root) {
 
   const centerImage = () => {
     const rect = viewport();
-    offsetX = (rect.width - naturalWidth * scale) / 2;
-    offsetY = (rect.height - naturalHeight * scale) / 2;
+    offsetX = rect.left + (rect.width - naturalWidth * scale) / 2;
+    offsetY = rect.top + (rect.height - naturalHeight * scale) / 2;
     render();
   };
 
@@ -228,12 +242,14 @@ function initCropModal(root) {
     const cropY = Number(activeTrigger?.dataset.cropY || 0);
 
     if (cropWidth > 0 && cropHeight > 0) {
-      scale = rect.width / (naturalWidth * cropWidth);
+      const horizontalScale = rect.width / (naturalWidth * cropWidth);
+      const verticalScale = rect.height / (naturalHeight * cropHeight);
+      scale = Math.max(horizontalScale, verticalScale);
       const zoom = Math.min(4, Math.max(1, scale / minScale));
       scale = minScale * zoom;
       zoomInput.value = String(zoom);
-      offsetX = -(naturalWidth * cropX * scale);
-      offsetY = -(naturalHeight * cropY * scale);
+      offsetX = rect.left - naturalWidth * cropX * scale;
+      offsetY = rect.top - naturalHeight * cropY * scale;
       render();
     } else {
       scale = minScale;
@@ -277,11 +293,13 @@ function initCropModal(root) {
     if (!naturalWidth || !naturalHeight) return;
 
     const rect = viewport();
-    const sourceCenterX = (rect.width / 2 - offsetX) / scale;
-    const sourceCenterY = (rect.height / 2 - offsetY) / scale;
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const sourceCenterX = (centerX - offsetX) / scale;
+    const sourceCenterY = (centerY - offsetY) / scale;
     scale = minScale * Number(zoomInput.value);
-    offsetX = rect.width / 2 - sourceCenterX * scale;
-    offsetY = rect.height / 2 - sourceCenterY * scale;
+    offsetX = centerX - sourceCenterX * scale;
+    offsetY = centerY - sourceCenterY * scale;
     render();
   });
 
@@ -318,11 +336,15 @@ function initCropModal(root) {
     if (!activeTrigger || !naturalWidth || !naturalHeight) return;
 
     const rect = viewport();
+    const cropX = Math.max(0, (rect.left - offsetX) / (naturalWidth * scale));
+    const cropY = Math.max(0, (rect.top - offsetY) / (naturalHeight * scale));
+    const cropWidth = Math.min(1 - cropX, rect.width / (naturalWidth * scale));
+    const cropHeight = Math.min(1 - cropY, rect.height / (naturalHeight * scale));
     const crop = {
-      avatar_crop_x: Math.max(0, -offsetX / (naturalWidth * scale)),
-      avatar_crop_y: Math.max(0, -offsetY / (naturalHeight * scale)),
-      avatar_crop_width: Math.min(1, rect.width / (naturalWidth * scale)),
-      avatar_crop_height: Math.min(1, rect.height / (naturalHeight * scale))
+      avatar_crop_x: Number(cropX.toFixed(8)),
+      avatar_crop_y: Number(cropY.toFixed(8)),
+      avatar_crop_width: Number(cropWidth.toFixed(8)),
+      avatar_crop_height: Number(cropHeight.toFixed(8))
     };
 
     saveButton.disabled = true;
