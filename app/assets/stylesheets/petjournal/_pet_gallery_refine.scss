@@ -1,0 +1,108 @@
+.pj-pet-photo-upload--static {
+  cursor: default;
+}
+
+.pj-pet-photo-upload--static .pj-pet-photo-upload__empty {
+  pointer-events: none;
+}
+
+.pj-pet-gallery-editor__heading-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pj-pet-gallery-editor__add {
+  position: relative;
+  overflow: hidden;
+  min-height: 34px;
+  padding-inline: 12px;
+  cursor: pointer;
+}
+
+.pj-pet-gallery-editor__add svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.pj-pet-gallery-editor__add.is-disabled {
+  opacity: .5;
+  pointer-events: none;
+}
+
+.pj-pet-gallery-editor__file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pj-pet-gallery-card__action--icon {
+  width: 31px;
+  height: 31px;
+  flex: 0 0 31px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.pj-pet-gallery-card__action--icon svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pj-pet-gallery-card__action--icon.is-primary {
+  margin-left: auto;
+}
+
+.pj-pet-gallery-editor__empty {
+  min-height: 132px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 22px;
+  border: 1px dashed #d9ddd2;
+  border-radius: 12px;
+  color: #6c776f;
+  text-align: center;
+  background: #fbfcf8;
+}
+
+.pj-pet-gallery-editor__empty strong {
+  color: #34483d;
+  font-size: 12px;
+}
+
+.pj-pet-gallery-editor__empty span {
+  max-width: 420px;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .pj-pet-gallery-editor__heading {
+    flex-direction: column;
+  }
+
+  .pj-pet-gallery-editor__heading-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .pj-pet-gallery-editor__add {
+    min-height: 38px;
+  }
+}
