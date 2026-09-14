@@ -27,7 +27,7 @@ class PetsController < ApplicationController
   end
 
   def show
-    @pet_photos = @pet.pet_photos.with_attached_image.ordered.to_a
+    @pet_photos = @pet.pet_photos.where(is_primary: false).with_attached_image.ordered.to_a
     @recent_events = @pet.pet_events.with_attached_files.order(event_date: :desc, created_at: :desc).limit(5)
     @events_count = @pet.pet_events.count
     @latest_events_by_type = latest_events_by_type(@pet)
