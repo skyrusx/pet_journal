@@ -8,17 +8,12 @@
 
   <% gallery_photos = @pet.persisted? ? @pet.pet_photos.with_attached_image.ordered.to_a : [] %>
   <% primary_photo = gallery_photos.detect(&:is_primary?) || gallery_photos.first %>
-  <% gallery_full = gallery_photos.size >= PetPhoto::MAX_PHOTOS_PER_PET %>
 
   <div class="pj-pet-form__grid">
     <div class="pj-pet-form__photo-column">
-      <label class="pj-pet-form__label">Фотографии питомца</label>
-      <div class="pj-pet-gallery-upload"
-           data-pet-gallery-upload
-           data-existing-count="<%= gallery_photos.size %>"
-           data-max-count="<%= PetPhoto::MAX_PHOTOS_PER_PET %>"
-           data-max-bytes="<%= PetPhoto::MAX_FILE_SIZE %>">
-        <label class="pj-pet-photo-upload <%= "is-disabled" if gallery_full %>">
+      <% if @pet.persisted? %>
+        <label class="pj-pet-form__label">Главное фото</label>
+        <div class="pj-pet-photo-upload pj-pet-photo-upload--static">
           <% if primary_photo&.image&.attached? %>
             <%= image_tag primary_photo.image.variant(resize_to_fill: [700, 700]),
                           alt: @pet.name.presence || "Фото питомца",
@@ -27,34 +22,43 @@
             <%= image_tag @pet.photo,
                           alt: @pet.name.presence || "Фото питомца",
                           class: "pj-pet-photo-upload__preview" %>
-          <% end %>
-
-          <span class="pj-pet-photo-upload__empty" <%= "hidden" if primary_photo&.image&.attached? || @pet.photo.attached? %>>
-            <span class="pj-pet-photo-upload__icon">☁</span>
-            <strong>Добавить фотографии</strong>
-            <small>JPEG, PNG, WebP до 5 МБ</small>
-          </span>
-
-          <span class="pj-pet-photo-upload__change" <%= "hidden" unless primary_photo&.image&.attached? || @pet.photo.attached? %> aria-hidden="true">＋</span>
-          <%= file_field_tag "pet[photos][]",
-                             multiple: true,
-                             accept: "image/png,image/jpeg,image/webp",
-                             class: "pj-pet-photo-upload__input",
-                             disabled: gallery_full,
-                             data: { pet_gallery_file_input: true } %>
-        </label>
-
-        <div class="pj-pet-gallery-staged" data-pet-gallery-staged></div>
-        <p class="pj-pet-gallery-upload__message" data-pet-gallery-upload-message>
-          <% if gallery_full %>
-            Достигнут лимит: <%= PetPhoto::MAX_PHOTOS_PER_PET %> фотографий. Удалите одну, чтобы добавить новую.
-          <% elsif gallery_photos.any? %>
-            Можно добавить ещё <%= PetPhoto::MAX_PHOTOS_PER_PET - gallery_photos.size %>.
           <% else %>
-            Первая фотография автоматически станет главной.
+            <span class="pj-pet-photo-upload__empty">
+              <span class="pj-pet-photo-upload__icon">☁</span>
+              <strong>Фото пока нет</strong>
+              <small>Добавьте его в галерее ниже</small>
+            </span>
           <% end %>
-        </p>
-      </div>
+        </div>
+        <p class="pj-pet-gallery-upload__message">Новые фотографии добавляются в галерее ниже.</p>
+      <% else %>
+        <label class="pj-pet-form__label">Фото питомца</label>
+        <div class="pj-pet-gallery-upload"
+             data-pet-gallery-upload
+             data-existing-count="0"
+             data-max-count="<%= PetPhoto::MAX_PHOTOS_PER_PET %>"
+             data-max-bytes="<%= PetPhoto::MAX_FILE_SIZE %>">
+          <label class="pj-pet-photo-upload">
+            <span class="pj-pet-photo-upload__empty">
+              <span class="pj-pet-photo-upload__icon">☁</span>
+              <strong>Добавить фотографии</strong>
+              <small>JPEG, PNG, WebP до 5 МБ</small>
+            </span>
+
+            <span class="pj-pet-photo-upload__change" hidden aria-hidden="true">＋</span>
+            <%= file_field_tag "pet[photos][]",
+                               multiple: true,
+                               accept: "image/png,image/jpeg,image/webp",
+                               class: "pj-pet-photo-upload__input",
+                               data: { pet_gallery_file_input: true } %>
+          </label>
+
+          <div class="pj-pet-gallery-staged" data-pet-gallery-staged></div>
+          <p class="pj-pet-gallery-upload__message" data-pet-gallery-upload-message>
+            Можно выбрать несколько фотографий. Первая автоматически станет главной.
+          </p>
+        </div>
+      <% end %>
     </div>
 
     <div class="pj-pet-form__fields">
