@@ -79,13 +79,7 @@
     <div class="pj-pet-profile-layout">
       <section class="pj-pet-profile-main">
         <div class="pj-pet-profile-hero">
-          <span class="pj-pet-profile-avatar">
-            <% if @pet.photo.attached? %>
-              <%= image_tag @pet.photo, alt: @pet.name %>
-            <% else %>
-              <span><%= @pet.name.to_s.first.to_s.upcase.presence || "P" %></span>
-            <% end %>
-          </span>
+          <%= pet_avatar_tag(@pet, class_name: "pj-pet-profile-avatar", alt: @pet.name, loading: nil) %>
 
           <div class="pj-pet-profile-identity">
             <div class="pj-pet-profile-name-row">
@@ -118,6 +112,8 @@
             <div class="pj-pet-extra-details__notes"><span>Особые приметы и заметки</span><p><%= simple_format(@pet.notes) %></p></div>
           <% end %>
         </details>
+
+        <%= render "pets/photo_gallery_view", pet: @pet, photos: @pet_photos %>
       </section>
 
       <aside class="pj-pet-profile-side">

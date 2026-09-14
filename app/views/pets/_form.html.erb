@@ -6,37 +6,54 @@
     </div>
   <% end %>
 
+  <% gallery_photos = @pet.persisted? ? @pet.pet_photos.with_attached_image.ordered.to_a : [] %>
+  <% primary_photo = gallery_photos.detect(&:is_primary?) || gallery_photos.first %>
+  <% gallery_full = gallery_photos.size >= PetPhoto::MAX_PHOTOS_PER_PET %>
+
   <div class="pj-pet-form__grid">
     <div class="pj-pet-form__photo-column">
-      <label class="pj-pet-form__label">Фото питомца</label>
-      <div class="pj-pet-photo-control" data-pet-photo-control data-has-existing-photo="<%= @pet.photo.attached? %>">
-        <label class="pj-pet-photo-upload">
-          <% if @pet.photo.attached? %>
-            <%= image_tag @pet.photo, alt: @pet.name.presence || "Фото питомца", class: "pj-pet-photo-upload__preview" %>
+      <label class="pj-pet-form__label">Фотографии питомца</label>
+      <div class="pj-pet-gallery-upload"
+           data-pet-gallery-upload
+           data-existing-count="<%= gallery_photos.size %>"
+           data-max-count="<%= PetPhoto::MAX_PHOTOS_PER_PET %>"
+           data-max-bytes="<%= PetPhoto::MAX_FILE_SIZE %>">
+        <label class="pj-pet-photo-upload <%= "is-disabled" if gallery_full %>">
+          <% if primary_photo&.image&.attached? %>
+            <%= image_tag primary_photo.image.variant(resize_to_fill: [700, 700]),
+                          alt: @pet.name.presence || "Фото питомца",
+                          class: "pj-pet-photo-upload__preview" %>
+          <% elsif @pet.photo.attached? %>
+            <%= image_tag @pet.photo,
+                          alt: @pet.name.presence || "Фото питомца",
+                          class: "pj-pet-photo-upload__preview" %>
           <% end %>
 
-          <span class="pj-pet-photo-upload__empty" <%= "hidden" if @pet.photo.attached? %>>
+          <span class="pj-pet-photo-upload__empty" <%= "hidden" if primary_photo&.image&.attached? || @pet.photo.attached? %>>
             <span class="pj-pet-photo-upload__icon">☁</span>
-            <strong>Загрузить фото</strong>
-            <small>PNG, JPG до 5 МБ</small>
+            <strong>Добавить фотографии</strong>
+            <small>JPEG, PNG, WebP до 5 МБ</small>
           </span>
 
-          <span class="pj-pet-photo-upload__change" <%= "hidden" unless @pet.photo.attached? %> aria-hidden="true">↻</span>
-          <%= f.file_field :photo, accept: "image/png,image/jpeg,image/webp", class: "pj-pet-photo-upload__input" %>
+          <span class="pj-pet-photo-upload__change" <%= "hidden" unless primary_photo&.image&.attached? || @pet.photo.attached? %> aria-hidden="true">＋</span>
+          <%= file_field_tag "pet[photos][]",
+                             multiple: true,
+                             accept: "image/png,image/jpeg,image/webp",
+                             class: "pj-pet-photo-upload__input",
+                             disabled: gallery_full,
+                             data: { pet_gallery_file_input: true } %>
         </label>
 
-        <button type="button"
-                class="pj-pet-photo-remove"
-                data-pet-photo-remove
-                <%= "hidden" unless @pet.photo.attached? %>
-                aria-label="Удалить фото"
-                title="Удалить фото">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>
-          </svg>
-        </button>
-
-        <%= hidden_field_tag "pet[remove_photo]", "0", data: { pet_photo_remove_flag: true } %>
+        <div class="pj-pet-gallery-staged" data-pet-gallery-staged></div>
+        <p class="pj-pet-gallery-upload__message" data-pet-gallery-upload-message>
+          <% if gallery_full %>
+            Достигнут лимит: <%= PetPhoto::MAX_PHOTOS_PER_PET %> фотографий. Удалите одну, чтобы добавить новую.
+          <% elsif gallery_photos.any? %>
+            Можно добавить ещё <%= PetPhoto::MAX_PHOTOS_PER_PET - gallery_photos.size %>.
+          <% else %>
+            Первая фотография автоматически станет главной.
+          <% end %>
+        </p>
       </div>
     </div>
 
@@ -102,6 +119,8 @@
       </div>
     </div>
   </div>
+
+  <%= render "pets/photo_gallery_editor", pet: @pet if @pet.persisted? %>
 
   <details class="pj-pet-form__extra" open>
     <summary>Дополнительные данные</summary>
