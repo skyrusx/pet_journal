@@ -1,0 +1,33 @@
+<div class="pj-pet-crop-modal" data-pet-crop-modal hidden aria-hidden="true">
+  <div class="pj-pet-crop-modal__backdrop" data-pet-crop-close></div>
+
+  <section class="pj-pet-crop-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="pet-crop-title">
+    <header class="pj-pet-crop-modal__header">
+      <div>
+        <span>Главное фото</span>
+        <h2 id="pet-crop-title">Выберите область аватара</h2>
+      </div>
+      <button type="button" class="pj-pet-crop-modal__close" data-pet-crop-close aria-label="Закрыть">×</button>
+    </header>
+
+    <p class="pj-pet-crop-modal__hint">Перемещайте фотографию и меняйте масштаб. Исходное фото останется без изменений.</p>
+
+    <div class="pj-pet-crop-stage" data-pet-crop-stage>
+      <img alt="Предпросмотр аватара" data-pet-crop-image draggable="false">
+      <span class="pj-pet-crop-stage__guide" aria-hidden="true"></span>
+    </div>
+
+    <label class="pj-pet-crop-zoom">
+      <span aria-hidden="true">−</span>
+      <input type="range" min="1" max="4" step="0.01" value="1" data-pet-crop-zoom aria-label="Масштаб фотографии">
+      <span aria-hidden="true">+</span>
+    </label>
+
+    <p class="pj-pet-crop-modal__error" data-pet-crop-error aria-live="polite"></p>
+
+    <footer class="pj-pet-crop-modal__actions">
+      <button type="button" class="pj-pet-secondary-button" data-pet-crop-close>Отмена</button>
+      <button type="button" class="pj-pets-primary-button" data-pet-crop-save>Сохранить</button>
+    </footer>
+  </section>
+</div>

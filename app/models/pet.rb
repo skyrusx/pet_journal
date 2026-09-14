@@ -20,6 +20,8 @@ class Pet < ApplicationRecord
   }
 
   def primary_photo
+    return pet_photos.detect(&:is_primary?) || pet_photos.first if pet_photos.loaded?
+
     pet_photos.find_by(is_primary: true) || pet_photos.first
   end
 

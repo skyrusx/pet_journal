@@ -14,9 +14,16 @@ class PetPhotosController < ApplicationController
 
   def destroy
     PetPhotoManager.new(@pet).remove!(@photo)
-    redirect_to edit_pet_path(@pet), notice: "Фотография удалена."
+
+    respond_to do |format|
+      format.html { redirect_to edit_pet_path(@pet), notice: "Фотография удалена." }
+      format.json { render json: { ok: true } }
+    end
   rescue ActiveRecord::RecordInvalid, PetPhotoManager::Error => e
-    redirect_to edit_pet_path(@pet), alert: error_message(e)
+    respond_to do |format|
+      format.html { redirect_to edit_pet_path(@pet), alert: error_message(e) }
+      format.json { render json: { error: error_message(e) }, status: :unprocessable_entity }
+    end
   end
 
   def primary
