@@ -48,7 +48,11 @@
                             class: "pj-pet-gallery-card__image" %>
 
               <% if photo.is_primary? %>
-                <span class="pj-pet-gallery-card__primary">★ Главное</span>
+                <span class="pj-pet-gallery-card__primary" aria-label="Главное фото" title="Главное фото">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m12 3.8 2.5 5.05 5.58.81-4.04 3.94.95 5.56L12 16.54l-4.99 2.62.95-5.56-4.04-3.94 5.58-.81L12 3.8Z"/>
+                  </svg>
+                </span>
               <% end %>
 
               <button type="button"
@@ -81,7 +85,7 @@
                 </button>
               <% else %>
                 <button type="button"
-                        class="pj-pet-gallery-card__action"
+                        class="pj-pet-gallery-card__action pj-pet-gallery-card__action--icon pj-pet-gallery-card__action--star"
                         data-pet-crop-trigger
                         data-mode="primary"
                         data-url="<%= primary_pet_pet_photo_path(pet, photo) %>"
@@ -89,8 +93,12 @@
                         data-crop-x="<%= photo.avatar_crop_x %>"
                         data-crop-y="<%= photo.avatar_crop_y %>"
                         data-crop-width="<%= photo.avatar_crop_width %>"
-                        data-crop-height="<%= photo.avatar_crop_height %>">
-                  Сделать главной
+                        data-crop-height="<%= photo.avatar_crop_height %>"
+                        aria-label="Сделать главной фотографией"
+                        title="Сделать главной">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m12 3.8 2.5 5.05 5.58.81-4.04 3.94.95 5.56L12 16.54l-4.99 2.62.95-5.56-4.04-3.94 5.58-.81L12 3.8Z"/>
+                  </svg>
                 </button>
               <% end %>
 
