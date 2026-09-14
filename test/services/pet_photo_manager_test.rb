@@ -35,13 +35,18 @@ class PetPhotoManagerTest < ActiveSupport::TestCase
     assert_equal third.image.blob_id, legacy.blob_id
   end
 
-  test "removing primary promotes the next ordered photo" do
-    first, second = @manager.add!([image_upload("one.jpg"), image_upload("two.jpg")])
+  test "removing profile photo keeps gallery intact and leaves no profile photo" do
+    first, second, third = @manager.add!(
+      [image_upload("one.jpg"), image_upload("two.jpg"), image_upload("three.jpg")]
+    )
 
     @manager.remove!(first)
 
-    assert second.reload.is_primary?
-    assert_equal 0, second.position
+    assert_nil @pet.reload.primary_photo
+    assert_equal 0, @pet.pet_photos.where(is_primary: true).count
+    assert_equal [second.id, third.id], @pet.pet_photos.where(is_primary: false).ordered.pluck(:id)
+    assert_equal [0, 1], @pet.pet_photos.where(is_primary: false).ordered.pluck(:position)
+    assert_nil ActiveStorage::Attachment.find_by(record_type: "Pet", record_id: @pet.id, name: "photo")
   end
 
   test "reorders gallery photos without including profile photo" do
@@ -55,6 +60,18 @@ class PetPhotoManagerTest < ActiveSupport::TestCase
     assert_equal 0, first.position
     assert_equal [third.id, second.id], @pet.pet_photos.where(is_primary: false).ordered.pluck(:id)
     assert_equal [1, 2], @pet.pet_photos.where(is_primary: false).ordered.pluck(:position)
+  end
+
+  test "reorders gallery from zero when profile photo was removed" do
+    first, second, third = @manager.add!(
+      [image_upload("one.jpg"), image_upload("two.jpg"), image_upload("three.jpg")]
+    )
+    @manager.remove!(first)
+
+    @manager.reorder!([third.id, second.id])
+
+    assert_equal [third.id, second.id], @pet.pet_photos.ordered.pluck(:id)
+    assert_equal [0, 1], @pet.pet_photos.ordered.pluck(:position)
   end
 
   test "rejects reorder with an incomplete gallery" do
