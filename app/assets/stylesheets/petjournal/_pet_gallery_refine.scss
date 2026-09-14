@@ -154,6 +154,16 @@
   stroke-width: 1.7;
 }
 
+.pj-pet-gallery-card__image-wrap[data-pet-gallery-sort-handle] {
+  cursor: move;
+  touch-action: none;
+  user-select: none;
+}
+
+.pj-pet-gallery-card__image-wrap[data-pet-gallery-sort-handle]:active {
+  cursor: grabbing;
+}
+
 .pj-pet-gallery-card.is-dragging {
   position: fixed;
   z-index: 1400;
@@ -167,7 +177,7 @@
   will-change: left, top;
 }
 
-.pj-pet-gallery-card.is-dragging .pj-pet-gallery-card__drag {
+.pj-pet-gallery-card.is-dragging .pj-pet-gallery-card__image-wrap {
   cursor: grabbing;
 }
 
