@@ -14,11 +14,18 @@ document.addEventListener("keydown", (event) => {
   const modal = visibleLightbox();
   if (!modal) return;
 
+  let handled = false;
+
   if (event.key === "ArrowLeft") {
-    if (clickControl(modal, "[data-pet-lightbox-prev]")) event.preventDefault();
+    handled = clickControl(modal, "[data-pet-lightbox-prev]");
   } else if (event.key === "ArrowRight") {
-    if (clickControl(modal, "[data-pet-lightbox-next]")) event.preventDefault();
+    handled = clickControl(modal, "[data-pet-lightbox-next]");
   } else if (event.key === "Escape") {
-    if (clickControl(modal, "[data-pet-lightbox-close]")) event.preventDefault();
+    handled = clickControl(modal, "[data-pet-lightbox-close]");
   }
-});
+
+  if (!handled) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+}, true);
