@@ -7,9 +7,16 @@ class PetPhotosController < ApplicationController
 
   def create
     PetPhotoManager.new(@pet).add!(photo_uploads)
-    redirect_to edit_pet_path(@pet), notice: "Фотографии добавлены."
+
+    respond_to do |format|
+      format.html { redirect_to edit_pet_path(@pet), notice: "Фотографии добавлены." }
+      format.json { render json: { ok: true }, status: :created }
+    end
   rescue ActiveRecord::RecordInvalid, PetPhotoManager::Error => e
-    redirect_to edit_pet_path(@pet), alert: error_message(e)
+    respond_to do |format|
+      format.html { redirect_to edit_pet_path(@pet), alert: error_message(e) }
+      format.json { render json: { error: error_message(e) }, status: :unprocessable_entity }
+    end
   end
 
   def destroy
