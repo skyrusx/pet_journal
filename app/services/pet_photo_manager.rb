@@ -41,11 +41,16 @@ class PetPhotoManager
     ensure_owned!(photo)
 
     PetPhoto.transaction do
-      @pet.pet_photos.where(is_primary: true).where.not(id: photo.id).update_all(
-        is_primary: false,
-        updated_at: Time.current
-      )
-      photo.update!(normalized_crop(crop_attributes).merge(is_primary: true))
+      current_primary = @pet.pet_photos.find_by(is_primary: true)
+      current_position = current_primary&.position || 0
+      selected_position = photo.position
+
+      if current_primary && current_primary.id != photo.id
+        current_primary.update!(is_primary: false, position: selected_position)
+      end
+
+      photo.update!(normalized_crop(crop_attributes).merge(is_primary: true, position: current_position))
+      normalize_profile_and_gallery_positions!
       sync_legacy_attachment!
     end
 
@@ -60,15 +65,17 @@ class PetPhotoManager
 
   def reorder!(photo_ids)
     ids = Array(photo_ids).map(&:to_i)
-    current_ids = @pet.pet_photos.ordered.pluck(:id)
+    current_ids = @pet.pet_photos.where(is_primary: false).ordered.pluck(:id)
 
     unless ids.length == current_ids.length && ids.uniq.length == ids.length && ids.sort == current_ids.sort
       raise Error, "Состав галереи изменился. Обновите страницу и повторите сортировку."
     end
 
     PetPhoto.transaction do
-      ids.each_with_index do |id, position|
-        @pet.pet_photos.where(id: id).update_all(position: position, updated_at: Time.current)
+      @pet.pet_photos.where(is_primary: true).update_all(position: 0, updated_at: Time.current)
+
+      ids.each_with_index do |id, index|
+        @pet.pet_photos.where(id: id).update_all(position: index + 1, updated_at: Time.current)
       end
     end
   end
@@ -109,11 +116,34 @@ class PetPhotoManager
     end
   end
 
-  def compact_positions!
-    @pet.pet_photos.ordered.each_with_index do |photo, position|
+  def normalize_profile_and_gallery_positions!
+    primary = @pet.pet_photos.find_by(is_primary: true)
+    primary&.update_columns(position: 0, updated_at: Time.current) unless primary&.position == 0
+
+    @pet.pet_photos.where(is_primary: false).ordered.each_with_index do |photo, index|
+      position = index + 1
       next if photo.position == position
 
       photo.update_columns(position: position, updated_at: Time.current)
+    end
+  end
+
+  def compact_positions!
+    primary = @pet.pet_photos.find_by(is_primary: true)
+    if primary
+      primary.update_columns(position: 0, updated_at: Time.current) unless primary.position == 0
+      @pet.pet_photos.where(is_primary: false).ordered.each_with_index do |photo, index|
+        position = index + 1
+        next if photo.position == position
+
+        photo.update_columns(position: position, updated_at: Time.current)
+      end
+    else
+      @pet.pet_photos.ordered.each_with_index do |photo, position|
+        next if photo.position == position
+
+        photo.update_columns(position: position, updated_at: Time.current)
+      end
     end
   end
 
