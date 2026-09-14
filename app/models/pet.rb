@@ -4,8 +4,11 @@ class Pet < ApplicationRecord
   has_many :reminders, dependent: :destroy
   has_many :pet_documents, dependent: :destroy
   has_many :pet_profile_shares, dependent: :destroy
+  has_many :pet_photos, -> { ordered }, dependent: :destroy, inverse_of: :pet
   has_one :pet_tag, dependent: :destroy
 
+  # Kept as a compatibility attachment while existing screens are migrated to
+  # PetPhoto. PetPhotoManager keeps it pointed at the selected primary image.
   has_one_attached :photo
 
   validates :name, presence: true
@@ -15,6 +18,10 @@ class Pet < ApplicationRecord
          .where("EXTRACT(MONTH FROM birth_date) = ?", date.month)
          .where("EXTRACT(DAY FROM birth_date) = ?", date.day)
   }
+
+  def primary_photo
+    pet_photos.find_by(is_primary: true) || pet_photos.first
+  end
 
   def birthday_on?(date)
     birth_date.present? && birth_date.month == date.month && birth_date.day == date.day
