@@ -17,7 +17,11 @@ function initPetProfilePhotoZoom(root = document) {
 
   const avatar = page.querySelector(".pj-pet-profile-avatar");
   const trigger = page.querySelector("[data-pet-profile-lightbox-trigger]");
-  if (!avatar || !trigger || avatar.dataset.petProfileZoomBound === "true") return;
+  const modal = page.querySelector("[data-pet-profile-lightbox]");
+  const image = modal?.querySelector("[data-pet-profile-lightbox-image]");
+  const closeButtons = modal ? [...modal.querySelectorAll("[data-pet-profile-lightbox-close]")] : [];
+
+  if (!avatar || !trigger || !modal || !image || avatar.dataset.petProfileZoomBound === "true") return;
 
   avatar.dataset.petProfileZoomBound = "true";
   avatar.classList.add("pj-pet-profile-avatar--zoomable");
@@ -30,7 +34,22 @@ function initPetProfilePhotoZoom(root = document) {
     avatar.appendChild(magnifierOverlay());
   }
 
-  const open = () => trigger.click();
+  const open = () => {
+    image.src = trigger.dataset.src;
+    image.alt = trigger.dataset.alt || "Фото питомца";
+    modal.hidden = false;
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("pj-modal-open");
+    window.setTimeout(() => closeButtons[0]?.focus(), 0);
+  };
+
+  const close = () => {
+    modal.hidden = true;
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("pj-modal-open");
+    image.removeAttribute("src");
+    avatar.focus();
+  };
 
   avatar.addEventListener("click", open);
   avatar.addEventListener("keydown", (event) => {
@@ -38,6 +57,11 @@ function initPetProfilePhotoZoom(root = document) {
 
     event.preventDefault();
     open();
+  });
+
+  closeButtons.forEach((button) => button.addEventListener("click", close));
+  modal.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") close();
   });
 }
 
