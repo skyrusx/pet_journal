@@ -12,7 +12,7 @@
   <div class="pj-pet-form__grid">
     <div class="pj-pet-form__photo-column">
       <% if @pet.persisted? %>
-        <label class="pj-pet-form__label">Главное фото</label>
+        <label class="pj-pet-form__label">Фото</label>
         <div class="pj-pet-photo-upload pj-pet-photo-upload--static">
           <% if primary_photo&.image&.attached? %>
             <%= image_tag primary_photo.image.variant(resize_to_fill: [700, 700]),
