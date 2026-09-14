@@ -72,27 +72,27 @@ class PetPhotoManager
     end
 
     PetPhoto.transaction do
-      @pet.pet_photos.where(is_primary: true).update_all(position: 0, updated_at: Time.current)
+      primary = @pet.pet_photos.find_by(is_primary: true)
+      primary&.update_columns(position: 0, updated_at: Time.current)
+      first_gallery_position = primary ? 1 : 0
 
       ids.each_with_index do |id, index|
-        @pet.pet_photos.where(id: id).update_all(position: index + 1, updated_at: Time.current)
+        @pet.pet_photos.where(id: id).update_all(
+          position: first_gallery_position + index,
+          updated_at: Time.current
+        )
       end
     end
   end
 
   def remove!(photo)
     ensure_owned!(photo)
+    removed_profile_photo = photo.is_primary?
 
     PetPhoto.transaction do
-      if photo.is_primary?
-        replacement = @pet.pet_photos.ordered.where.not(id: photo.id).first
-        photo.update_column(:is_primary, false)
-        replacement&.update!(is_primary: true)
-        sync_legacy_attachment!
-      end
-
       photo.destroy!
       compact_positions!
+      sync_legacy_attachment! if removed_profile_photo
     end
   end
 
