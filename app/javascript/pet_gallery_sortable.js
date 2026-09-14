@@ -25,14 +25,9 @@ async function persistOrder(url, photoIds) {
   throw new Error(payload.error || "Не удалось сохранить порядок фотографий.");
 }
 
-function nextSiblingIgnoring(node, ignored) {
-  let sibling = node.nextElementSibling;
-  while (sibling === ignored) sibling = sibling.nextElementSibling;
-  return sibling;
-}
-
-function animateLayout(list, draggedCard, mutate) {
-  const cards = [...list.querySelectorAll("[data-pet-gallery-card]")].filter((item) => item !== draggedCard);
+function animateLayout(list, draggedCard, placeholder, mutate) {
+  const cards = [...list.querySelectorAll("[data-pet-gallery-card]")]
+    .filter((item) => item !== draggedCard && item !== placeholder);
   const before = new Map(cards.map((item) => [item, item.getBoundingClientRect()]));
 
   mutate();
@@ -55,14 +50,17 @@ function animateLayout(list, draggedCard, mutate) {
         { transform: "translate3d(0, 0, 0)" }
       ],
       {
-        duration: 190,
-        easing: "cubic-bezier(.2,.8,.2,1)"
+        duration: 340,
+        easing: "cubic-bezier(.22, 1, .36, 1)"
       }
     );
   });
 }
 
 function nearestCard(list, draggedCard, clientX, clientY) {
+  const directTarget = document.elementFromPoint(clientX, clientY)?.closest?.("[data-pet-gallery-card]");
+  if (directTarget && directTarget !== draggedCard && directTarget.parentElement === list) return directTarget;
+
   const cards = [...list.querySelectorAll("[data-pet-gallery-card]")].filter((item) => item !== draggedCard);
   let best = null;
   let bestDistance = Number.POSITIVE_INFINITY;
@@ -87,7 +85,7 @@ function installSmoothGallerySorting() {
   document.documentElement.dataset.petGallerySmoothSorting = "true";
 
   document.addEventListener("pointerdown", (event) => {
-    const handle = event.target.closest?.("[data-pet-gallery-drag]");
+    const handle = event.target.closest?.("[data-pet-gallery-sort-handle]");
     if (!handle) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
 
@@ -143,27 +141,25 @@ function installSmoothGallerySorting() {
       const rect = target.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const rowTolerance = Math.max(14, rect.height * 0.34);
-      const sameRow = Math.abs(clientY - centerY) <= rowTolerance;
-      const placeBefore = clientY < centerY || (sameRow && clientX < centerX);
+      const sameRow = clientY >= rect.top && clientY <= rect.bottom;
+      const placeBefore = sameRow ? clientX < centerX : clientY < centerY;
 
-      if (placeBefore && nextSiblingIgnoring(placeholder, card) === target) return;
-      if (!placeBefore && nextSiblingIgnoring(target, card) === placeholder) return;
+      const orderedCards = [...list.querySelectorAll("[data-pet-gallery-card]")].filter((item) => item !== card);
+      const targetIndex = orderedCards.indexOf(target);
+      if (targetIndex < 0) return;
 
-      animateLayout(list, card, () => {
-        if (placeBefore) {
-          list.insertBefore(placeholder, target);
-          return;
-        }
+      const insertionIndex = targetIndex + (placeBefore ? 0 : 1);
+      const layoutNodes = [...list.children].filter((node) => node !== card);
+      const currentIndex = layoutNodes.indexOf(placeholder);
+      if (currentIndex === insertionIndex) return;
 
-        const reference = nextSiblingIgnoring(target, card);
-        list.insertBefore(placeholder, reference);
-      });
+      const reference = orderedCards[insertionIndex] || null;
+      animateLayout(list, card, placeholder, () => list.insertBefore(placeholder, reference));
     };
 
     const autoScroll = (clientY) => {
       const edge = 72;
-      const maxSpeed = 12;
+      const maxSpeed = 10;
 
       if (clientY < edge) {
         window.scrollBy(0, -Math.ceil(maxSpeed * (1 - clientY / edge)));
@@ -209,12 +205,12 @@ function installSmoothGallerySorting() {
         const deltaY = floatingRect.top - destinationRect.top;
         card.animate(
           [
-            { transform: `translate3d(${deltaX}px, ${deltaY}px, 0) scale(1.02)` },
+            { transform: `translate3d(${deltaX}px, ${deltaY}px, 0) scale(1.015)` },
             { transform: "translate3d(0, 0, 0) scale(1)" }
           ],
           {
-            duration: 210,
-            easing: "cubic-bezier(.2,.8,.2,1)"
+            duration: 320,
+            easing: "cubic-bezier(.22, 1, .36, 1)"
           }
         );
       }
