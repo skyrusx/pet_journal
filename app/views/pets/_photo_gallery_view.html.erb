@@ -11,14 +11,13 @@
     <div class="pj-pet-gallery-view__grid">
       <% photos.each_with_index do |photo, index| %>
         <button type="button"
-                class="pj-pet-gallery-view__item <%= "is-primary" if photo.is_primary? %>"
+                class="pj-pet-gallery-view__item"
                 data-pet-lightbox-open
                 data-index="<%= index %>"
-                data-src="<%= url_for(photo.image.variant(resize_to_limit: [2000, 2000])) %>"
+                data-src="<%= url_for(photo.image.variant(resize_to_limit: [1800, 1800])) %>"
                 data-alt="Фото <%= pet.name %>, <%= index + 1 %> из <%= photos.size %>"
                 aria-label="Открыть фотографию <%= index + 1 %> из <%= photos.size %>">
           <%= image_tag photo.image.variant(resize_to_fill: [620, 620]), alt: "", loading: "lazy" %>
-          <% if photo.is_primary? %><span>★ Главное</span><% end %>
         </button>
       <% end %>
     </div>
@@ -26,13 +25,21 @@
 
   <div class="pj-pet-lightbox" data-pet-lightbox hidden aria-hidden="true">
     <div class="pj-pet-lightbox__backdrop" data-pet-lightbox-close></div>
-    <section class="pj-pet-lightbox__dialog" role="dialog" aria-modal="true" aria-label="Галерея питомца">
+    <section class="pj-pet-lightbox__dialog"
+             role="dialog"
+             aria-modal="true"
+             aria-label="Галерея питомца"
+             tabindex="-1">
       <button type="button" class="pj-pet-lightbox__close" data-pet-lightbox-close aria-label="Закрыть">×</button>
-      <button type="button" class="pj-pet-lightbox__nav is-prev" data-pet-lightbox-prev aria-label="Предыдущая фотография">‹</button>
+      <% if photos.many? %>
+        <button type="button" class="pj-pet-lightbox__nav is-prev" data-pet-lightbox-prev aria-label="Предыдущая фотография">‹</button>
+      <% end %>
       <div class="pj-pet-lightbox__stage" data-pet-lightbox-stage>
         <img alt="" data-pet-lightbox-image draggable="false">
       </div>
-      <button type="button" class="pj-pet-lightbox__nav is-next" data-pet-lightbox-next aria-label="Следующая фотография">›</button>
+      <% if photos.many? %>
+        <button type="button" class="pj-pet-lightbox__nav is-next" data-pet-lightbox-next aria-label="Следующая фотография">›</button>
+      <% end %>
       <div class="pj-pet-lightbox__counter" data-pet-lightbox-counter></div>
     </section>
   </div>
