@@ -17,17 +17,22 @@ class PetPhotoManagerTest < ActiveSupport::TestCase
     assert_equal [0, 1], @pet.pet_photos.ordered.pluck(:position)
   end
 
-  test "changing primary keeps one primary photo and updates legacy attachment" do
-    first, second = @manager.add!([image_upload("one.jpg"), image_upload("two.jpg")])
+  test "changing primary swaps profile photo into selected gallery slot" do
+    first, second, third = @manager.add!(
+      [image_upload("one.jpg"), image_upload("two.jpg"), image_upload("three.jpg")]
+    )
 
-    @manager.make_primary!(second, valid_crop)
+    @manager.make_primary!(third, valid_crop)
 
     assert_not first.reload.is_primary?
-    assert second.reload.is_primary?
+    assert third.reload.is_primary?
+    assert_equal 0, third.position
+    assert_equal 2, first.position
+    assert_equal [second.id, first.id], @pet.pet_photos.where(is_primary: false).ordered.pluck(:id)
     assert_equal 1, @pet.pet_photos.where(is_primary: true).count
 
     legacy = ActiveStorage::Attachment.find_by(record_type: "Pet", record_id: @pet.id, name: "photo")
-    assert_equal second.image.blob_id, legacy.blob_id
+    assert_equal third.image.blob_id, legacy.blob_id
   end
 
   test "removing primary promotes the next ordered photo" do
@@ -39,20 +44,25 @@ class PetPhotoManagerTest < ActiveSupport::TestCase
     assert_equal 0, second.position
   end
 
-  test "reorders all photos" do
+  test "reorders gallery photos without including profile photo" do
     first, second, third = @manager.add!(
       [image_upload("one.jpg"), image_upload("two.jpg"), image_upload("three.jpg")]
     )
 
-    @manager.reorder!([third.id, first.id, second.id])
+    @manager.reorder!([third.id, second.id])
 
-    assert_equal [third.id, first.id, second.id], @pet.pet_photos.ordered.pluck(:id)
+    assert first.reload.is_primary?
+    assert_equal 0, first.position
+    assert_equal [third.id, second.id], @pet.pet_photos.where(is_primary: false).ordered.pluck(:id)
+    assert_equal [1, 2], @pet.pet_photos.where(is_primary: false).ordered.pluck(:position)
   end
 
-  test "rejects reorder with a partial gallery" do
-    first, = @manager.add!([image_upload("one.jpg"), image_upload("two.jpg")])
+  test "rejects reorder with an incomplete gallery" do
+    _first, second, = @manager.add!(
+      [image_upload("one.jpg"), image_upload("two.jpg"), image_upload("three.jpg")]
+    )
 
-    error = assert_raises(PetPhotoManager::Error) { @manager.reorder!([first.id]) }
+    error = assert_raises(PetPhotoManager::Error) { @manager.reorder!([second.id]) }
 
     assert_match(/Состав галереи изменился/, error.message)
   end
