@@ -70,9 +70,25 @@
   display: none !important;
 }
 
+.pj-pet-lightbox__dialog--single {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.pj-pet-lightbox__dialog--single .pj-pet-lightbox__stage {
+  grid-column: 1;
+  grid-row: 1;
+}
+
 @media (hover: none) {
   .pj-photo-zoom-overlay {
     display: none !important;
+  }
+}
+
+@media (max-width: 820px) {
+  .pj-pet-lightbox__dialog--single {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
