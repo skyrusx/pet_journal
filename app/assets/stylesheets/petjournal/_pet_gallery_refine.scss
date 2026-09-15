@@ -156,8 +156,14 @@
 
 .pj-pet-gallery-card__image-wrap[data-pet-gallery-sort-handle] {
   cursor: move;
-  touch-action: none;
+  touch-action: pan-y pinch-zoom;
   user-select: none;
+}
+
+.pj-pet-gallery-card__image-wrap[data-pet-gallery-sort-handle] .pj-pet-gallery-card__image {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .pj-pet-gallery-card__image-wrap[data-pet-gallery-sort-handle]:active {
