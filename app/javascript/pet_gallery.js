@@ -95,69 +95,11 @@ function initUploadPreview(root) {
   });
 }
 
-function initSorting(root) {
+function initDeletion(root) {
   root.querySelectorAll("[data-pet-gallery-editor]").forEach((editor) => {
-    if (!bindOnce(editor, "sorting")) return;
+    if (!bindOnce(editor, "deletion")) return;
 
-    const list = editor.querySelector("[data-pet-gallery-sort-list]");
     const status = editor.querySelector("[data-pet-gallery-status]");
-    if (!list) return;
-
-    editor.querySelectorAll("[data-pet-gallery-drag]").forEach((handle) => {
-      handle.addEventListener("pointerdown", (event) => {
-        if (event.button !== 0 && event.pointerType === "mouse") return;
-
-        const card = handle.closest("[data-pet-gallery-card]");
-        if (!card) return;
-
-        event.preventDefault();
-        handle.setPointerCapture?.(event.pointerId);
-        card.classList.add("is-sorting");
-        const initialOrder = [...list.querySelectorAll("[data-pet-gallery-card]")].map((item) => item.dataset.photoId).join(",");
-
-        const move = (moveEvent) => {
-          const target = document.elementFromPoint(moveEvent.clientX, moveEvent.clientY)?.closest("[data-pet-gallery-card]");
-          if (!target || target === card || target.parentElement !== list) return;
-
-          const rect = target.getBoundingClientRect();
-          const sameRow = moveEvent.clientY >= rect.top && moveEvent.clientY <= rect.bottom;
-          const before = moveEvent.clientY < rect.top + rect.height / 2 ||
-            (sameRow && Math.abs(moveEvent.clientY - (rect.top + rect.height / 2)) < rect.height * 0.35 && moveEvent.clientX < rect.left + rect.width / 2);
-          list.insertBefore(card, before ? target : target.nextSibling);
-        };
-
-        const finish = async () => {
-          handle.removeEventListener("pointermove", move);
-          handle.removeEventListener("pointerup", finish);
-          handle.removeEventListener("pointercancel", cancel);
-          card.classList.remove("is-sorting");
-
-          const ids = [...list.querySelectorAll("[data-pet-gallery-card]")].map((item) => Number(item.dataset.photoId));
-          if (ids.join(",") === initialOrder) return;
-
-          if (status) status.textContent = "Сохраняем порядок…";
-          try {
-            await jsonRequest(editor.dataset.reorderUrl, "PATCH", { photo_ids: ids });
-            if (status) status.textContent = "Порядок сохранён.";
-          } catch (error) {
-            if (status) status.textContent = error.message;
-            window.setTimeout(refreshPage, 900);
-          }
-        };
-
-        const cancel = () => {
-          handle.removeEventListener("pointermove", move);
-          handle.removeEventListener("pointerup", finish);
-          handle.removeEventListener("pointercancel", cancel);
-          card.classList.remove("is-sorting");
-          refreshPage();
-        };
-
-        handle.addEventListener("pointermove", move);
-        handle.addEventListener("pointerup", finish, { once: true });
-        handle.addEventListener("pointercancel", cancel, { once: true });
-      });
-    });
 
     editor.querySelectorAll("[data-pet-gallery-delete]").forEach((button) => {
       button.addEventListener("click", async () => {
@@ -378,7 +320,7 @@ function initLightbox(root) {
     const trigger = triggers[index];
     image.src = trigger.dataset.src;
     image.alt = trigger.dataset.alt || "Фото питомца";
-    counter.textContent = `${index + 1} / ${triggers.length}`;
+    if (counter) counter.textContent = `${index + 1} / ${triggers.length}`;
   };
 
   const open = (nextIndex, trigger) => {
@@ -436,7 +378,7 @@ function initLightbox(root) {
 
 function initPetGallery(root = document) {
   initUploadPreview(root);
-  initSorting(root);
+  initDeletion(root);
   initCropModal(root);
   initLightbox(root);
 }
