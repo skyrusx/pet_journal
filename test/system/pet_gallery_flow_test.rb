@@ -26,6 +26,7 @@ class PetGalleryFlowTest < ApplicationSystemTestCase
     find("[data-pet-crop-save]").click
 
     assert_selector ".pj-pet-main-photo__preview", visible: true
+    assert_selector ".pj-pet-main-photo__preview img[data-pet-avatar-crop='true']", count: 1
     assert_selector "[data-pet-gallery-card]", count: 2
 
     visit pet_path(@pet)
