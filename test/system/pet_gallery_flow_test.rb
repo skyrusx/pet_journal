@@ -39,16 +39,21 @@ class PetGalleryFlowTest < ApplicationSystemTestCase
     page.send_keys(:arrow_right)
     assert_text "2 / 2"
 
-    find("[data-pet-lightbox]:not([hidden]) .pj-pet-lightbox__backdrop", visible: true).click
+    click_blank_lightbox_area("[data-pet-lightbox]:not([hidden]) [data-pet-lightbox-stage]")
     assert_no_selector "[data-pet-lightbox]:not([hidden])", visible: true
 
     find(".pj-pet-profile-avatar").click
     assert_selector "[data-pet-profile-lightbox]:not([hidden])", visible: true
-    find("[data-pet-profile-lightbox] .pj-pet-lightbox__backdrop", visible: true).click
+    click_blank_lightbox_area("[data-pet-profile-lightbox]:not([hidden]) .pj-pet-lightbox__stage")
     assert_no_selector "[data-pet-profile-lightbox]:not([hidden])", visible: true
   end
 
   private
+
+  def click_blank_lightbox_area(selector)
+    stage = find(selector, visible: true)
+    page.execute_script("arguments[0].click()", stage.native)
+  end
 
   def image_upload(filename)
     {
