@@ -1,6 +1,7 @@
 require "test_helper"
 require "base64"
 require "tempfile"
+require "rack/test"
 
 class PetPhotosControllerTest < ActionDispatch::IntegrationTest
   PNG_1X1 = Base64.decode64(
@@ -146,10 +147,11 @@ class PetPhotosControllerTest < ActionDispatch::IntegrationTest
     tempfile.rewind
     @tempfiles << tempfile
 
-    ActionDispatch::Http::UploadedFile.new(
-      tempfile: tempfile,
-      filename: filename,
-      type: "image/png"
+    Rack::Test::UploadedFile.new(
+      tempfile.path,
+      "image/png",
+      true,
+      original_filename: filename
     )
   end
 
