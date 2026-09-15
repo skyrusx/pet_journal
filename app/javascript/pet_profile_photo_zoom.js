@@ -60,6 +60,14 @@ function initPetProfilePhotoZoom(root = document) {
   });
 
   closeButtons.forEach((button) => button.addEventListener("click", close));
+
+  modal.addEventListener("click", (event) => {
+    if (event.target.closest("[data-pet-profile-lightbox-close]")) return;
+    if (event.target.closest("[data-pet-profile-lightbox-image]")) return;
+
+    close();
+  });
+
   modal.addEventListener("keydown", (event) => {
     if (event.key === "Escape") close();
   });
