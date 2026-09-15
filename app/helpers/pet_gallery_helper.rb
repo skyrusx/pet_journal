@@ -5,14 +5,15 @@ module PetGalleryHelper
     if gallery_photo&.image&.attached?
       classes = class_names(class_name, "pj-pet-avatar-frame", "has-custom-crop": gallery_photo.avatar_crop?)
       image = gallery_photo.image.variant(resize_to_limit: [900, 900])
+      crop_data = pet_avatar_crop_data(gallery_photo)
 
       content_tag(:span, class: classes) do
         image_tag(
           image,
           alt: alt,
           loading: loading,
-          class: class_names("pj-pet-avatar-frame__image", "is-cover": !gallery_photo.avatar_crop?),
-          style: pet_avatar_crop_style(gallery_photo)
+          class: "pj-pet-avatar-frame__image is-cover",
+          data: crop_data
         )
       end
     elsif pet.photo.attached?
@@ -32,13 +33,15 @@ module PetGalleryHelper
 
   private
 
-  def pet_avatar_crop_style(photo)
-    return if !photo.avatar_crop? || photo.avatar_crop_width.to_f.zero? || photo.avatar_crop_height.to_f.zero?
+  def pet_avatar_crop_data(photo)
+    return {} unless photo.avatar_crop?
 
-    width = 100.0 / photo.avatar_crop_width.to_f
-    left = -(photo.avatar_crop_x.to_f / photo.avatar_crop_width.to_f) * 100.0
-    top = -(photo.avatar_crop_y.to_f / photo.avatar_crop_height.to_f) * 100.0
-
-    "width: #{width.round(5)}%; height: auto !important; object-fit: initial !important; left: #{left.round(5)}%; top: #{top.round(5)}%;"
+    {
+      pet_avatar_crop: true,
+      crop_x: photo.avatar_crop_x,
+      crop_y: photo.avatar_crop_y,
+      crop_width: photo.avatar_crop_width,
+      crop_height: photo.avatar_crop_height
+    }
   end
 end
