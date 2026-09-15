@@ -86,6 +86,12 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest, defaults: { format: :json }
 
   resources :pets, only: %i[index show new create edit update destroy] do
+    resources :pet_photos, path: :photos, only: %i[create destroy] do
+      patch :primary, on: :member
+      patch :crop, on: :member
+      patch :reorder, on: :collection
+    end
+
     resource :pet_tag, path: :tag, only: %i[show create edit update] do
       patch :rotate_token
       patch :mark_lost

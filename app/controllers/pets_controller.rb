@@ -15,7 +15,7 @@ class PetsController < ApplicationController
     @has_more_pets = @matching_pets_count > @pets_limit
     @pets = current_user.pets
                         .with_attached_photo
-                        .includes(:pet_tag, :reminders)
+                        .includes(:pet_tag, :reminders, pet_photos: { image_attachment: :blob })
                         .order(created_at: :desc)
                         .limit(@pets_limit)
                         .to_a
@@ -27,6 +27,7 @@ class PetsController < ApplicationController
   end
 
   def show
+    @pet_photos = @pet.pet_photos.where(is_primary: false).with_attached_image.ordered.to_a
     @recent_events = @pet.pet_events.with_attached_files.order(event_date: :desc, created_at: :desc).limit(5)
     @events_count = @pet.pet_events.count
     @latest_events_by_type = latest_events_by_type(@pet)
@@ -60,22 +61,29 @@ class PetsController < ApplicationController
   def create
     @pet = current_user.pets.new(pet_params)
 
-    if @pet.save
-      redirect_to @pet, notice: "Питомец добавлен."
-    else
-      render :new, status: :unprocessable_entity
+    Pet.transaction do
+      @pet.save!
+      PetPhotoManager.new(@pet).add!(photo_uploads)
     end
+
+    redirect_to @pet, notice: "Питомец добавлен."
+  rescue ActiveRecord::RecordInvalid, PetPhotoManager::Error => e
+    add_photo_error(e)
+    render :new, status: :unprocessable_entity
   end
 
   def edit; end
 
   def update
-    if @pet.update(pet_params)
-      @pet.photo.purge if remove_photo_requested? && @pet.photo.attached?
-      redirect_to @pet, notice: "Данные питомца обновлены."
-    else
-      render :edit, status: :unprocessable_entity
+    Pet.transaction do
+      @pet.update!(pet_params)
+      PetPhotoManager.new(@pet).add!(photo_uploads)
     end
+
+    redirect_to @pet, notice: "Данные питомца обновлены."
+  rescue ActiveRecord::RecordInvalid, PetPhotoManager::Error => e
+    add_photo_error(e)
+    render :edit, status: :unprocessable_entity
   end
 
   def destroy
@@ -93,11 +101,18 @@ class PetsController < ApplicationController
 
   def pet_params
     params.require(:pet).permit(:name, :species, :breed, :sex, :birth_date, :weight, :color, :chip_number,
-                                :passport_number, :neutered, :notes, :photo)
+                                :passport_number, :neutered, :notes)
   end
 
-  def remove_photo_requested?
-    ActiveModel::Type::Boolean.new.cast(params.dig(:pet, :remove_photo))
+  def photo_uploads
+    Array(params.dig(:pet, :photos)).reject(&:blank?)
+  end
+
+  def add_photo_error(error)
+    return unless @pet.errors.empty?
+
+    message = error.respond_to?(:record) ? error.record.errors.full_messages.to_sentence : error.message
+    @pet.errors.add(:base, message)
   end
 
   def latest_events_by_pet_id(pets)
