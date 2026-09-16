@@ -35,13 +35,7 @@
 
           <article class="pj-pet-list-card">
             <%= link_to pet_path(pet), class: "pj-pet-list-card__main", aria: { label: "Открыть профиль #{pet.name}" } do %>
-              <span class="pj-pet-list-card__photo">
-                <% if pet.photo.attached? %>
-                  <%= image_tag pet.photo, alt: pet.name, loading: "lazy" %>
-                <% else %>
-                  <span class="pj-pet-list-card__placeholder"><%= pet.name.to_s.first.to_s.upcase.presence || "P" %></span>
-                <% end %>
-              </span>
+              <%= pet_avatar_tag(pet, class_name: "pj-pet-list-card__photo", alt: pet.name) %>
 
               <span class="pj-pet-list-card__body">
                 <strong class="pj-pet-list-card__name"><%= pet.name %></strong>
