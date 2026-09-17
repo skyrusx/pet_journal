@@ -105,6 +105,7 @@ class OauthController < ApplicationController
     session.delete(:oauth_pending)
     Oauth::ProfileImporter.new(user, @profile).call
     sign_in(:user, user)
+    flash[:yandex_metrika_goal] = "registration_completed"
     redirect_to after_sign_in_path_for(user), notice: "Аккаунт создан через #{Oauth::Configuration.provider_name(@profile.provider)}."
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique => e
     Rails.logger.warn("OAuth registration failed: #{e.class}: #{e.message}")
