@@ -1,6 +1,7 @@
 class PagesController < ApplicationController
   def index
     unless user_signed_in?
+      allow_search_engine_indexing
       render :new_design, layout: "new_design"
       return
     end
