@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <title><%= content_for(:title) || "PetJournal" %></title>
+    <%= render "shared/seo_meta" %>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <link rel="canonical" href="<%= canonical_url %>">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 

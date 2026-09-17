@@ -9,7 +9,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select ".pj-nd-hero h1", text: /Вся забота.*о питомце.*в одном месте/m
     assert_select 'meta[name="description"]', count: 1
     assert_select 'meta[name="robots"][content*="noindex"]', count: 0
-    assert_select 'link[rel="canonical"][href=?]', root_url
+    assert_select 'link[rel="canonical"][href=?]', "https://#{ENV.fetch("APP_HOST", "pet-journal.ru")}/"
   end
 
   test "old new design preview should redirect to main page" do
