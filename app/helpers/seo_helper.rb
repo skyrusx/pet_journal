@@ -1,8 +1,8 @@
 module SeoHelper
-  DEFAULT_TITLE = "PetJournal — всё важное о питомце рядом".freeze
-  DEFAULT_DESCRIPTION = "PetJournal — сервис для владельцев питомцев: журнал здоровья, документы, напоминания и PetTag в одном месте.".freeze
-  DEFAULT_OG_TITLE = "PetJournal — всё важное о питомце рядом".freeze
-  DEFAULT_OG_DESCRIPTION = "Журнал здоровья, напоминания, документы и PetTag — чтобы важная информация о питомце всегда была под рукой.".freeze
+  DEFAULT_TITLE = "PetJournal — онлайн-дневник питомца".freeze
+  DEFAULT_DESCRIPTION = "PetJournal — онлайн-сервис для владельцев питомцев. Он помогает сохранять историю здоровья и событий, помнить о важных делах и быстро находить нужную информацию.".freeze
+  DEFAULT_OG_TITLE = "PetJournal — дневник вашего питомца".freeze
+  DEFAULT_OG_DESCRIPTION = "Сохраняйте историю питомца и важные события, чтобы нужная информация не терялась и была доступна в нужный момент.".freeze
   DEFAULT_IMAGE = "petjournal/hero-composite.png".freeze
 
   def set_seo_meta(title: nil, description: nil, image: nil, url: nil, og_title: nil, og_description: nil)
