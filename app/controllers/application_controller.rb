@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   after_action :set_search_engine_indexing_header
 
-  helper_method :canonical_url
+  helper_method :canonical_url, :canonical_origin
 
   protected
 
@@ -28,8 +28,12 @@ class ApplicationController < ActionController::Base
     ENV.fetch("APP_HOST", "pet-journal.ru")
   end
 
+  def canonical_origin
+    "https://#{canonical_host}"
+  end
+
   def canonical_url
-    "https://#{canonical_host}#{request.path}"
+    "#{canonical_origin}#{request.path}"
   end
 
   def redirect_to_canonical_host
