@@ -1,3 +1,4 @@
+<% metrika_goal = flash.delete(:yandex_metrika_goal) %>
 <% if Rails.env.production? %>
   <% counter_id = 112732525 %>
   <% webvisor_enabled = local_assigns.fetch(:webvisor, false) %>
@@ -53,6 +54,10 @@
 
       window.PetJournalMetrika.turboTrackingBound = true;
     }
+
+    <% if metrika_goal.present? %>
+      ym(<%= counter_id %>, "reachGoal", <%= raw json_escape(metrika_goal.to_json) %>);
+    <% end %>
   </script>
   <noscript>
     <div>
