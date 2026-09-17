@@ -66,6 +66,7 @@ class PetsController < ApplicationController
       PetPhotoManager.new(@pet).add!(photo_uploads)
     end
 
+    flash[:yandex_metrika_goal] = "pet_created"
     redirect_to @pet, notice: "Питомец добавлен."
   rescue ActiveRecord::RecordInvalid, PetPhotoManager::Error => e
     add_photo_error(e)

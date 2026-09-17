@@ -21,7 +21,7 @@
     <%= javascript_include_tag "public_pettag_location", defer: true %>
   </head>
 
-  <body class="<%= class_names("app-body", "public-body", {
+  <body class="<%= class_names("app-body", "public-body", "ym-hide-content", {
     "public-profile-layout-body" => controller_name == "public_pet_profile_shares",
     "public-pettag-layout-body" => public_pet_tag_layout,
     "pj-new-design-body" => public_pet_tag_layout
@@ -65,5 +65,7 @@
         <% end %>
       </div>
     <% end %>
+
+    <%= render "shared/yandex_metrika" %>
   </body>
 </html>
