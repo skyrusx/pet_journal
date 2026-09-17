@@ -9,14 +9,50 @@
       m[i].l=1*new Date();
       for (var j=0;j<document.scripts.length;j++) { if (document.scripts[j].src===r) { return; } }
       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+    })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=<%= counter_id %>", "ym");
 
-    ym(<%= counter_id %>, "init", {
-      clickmap: true,
-      trackLinks: true,
-      accurateTrackBounce: true,
-      webvisor: <%= webvisor_enabled %>
-    });
+    window.PetJournalMetrika = window.PetJournalMetrika || {};
+
+    if (!window.PetJournalMetrika.initialized) {
+      ym(<%= counter_id %>, "init", {
+        ssr: true,
+        defer: true,
+        webvisor: <%= webvisor_enabled %>,
+        clickmap: true,
+        ecommerce: "dataLayer",
+        referrer: document.referrer,
+        url: location.href,
+        accurateTrackBounce: true,
+        trackLinks: true
+      });
+
+      window.PetJournalMetrika.initialized = true;
+      window.PetJournalMetrika.lastUrl = null;
+    }
+
+    if (!window.PetJournalMetrika.turboTrackingBound) {
+      var trackPetJournalPageview = function() {
+        var currentUrl = window.location.href;
+        if (window.PetJournalMetrika.lastUrl === currentUrl) { return; }
+
+        ym(<%= counter_id %>, "hit", currentUrl, {
+          title: document.title,
+          referer: window.PetJournalMetrika.lastUrl || document.referrer
+        });
+
+        window.PetJournalMetrika.lastUrl = currentUrl;
+      };
+
+      document.addEventListener("turbo:load", trackPetJournalPageview);
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", trackPetJournalPageview, { once: true });
+      } else {
+        trackPetJournalPageview();
+      }
+
+      window.PetJournalMetrika.turboTrackingBound = true;
+    }
   </script>
   <noscript>
     <div>
