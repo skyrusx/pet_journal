@@ -22,6 +22,7 @@
 }
 
 .pj-new-design {
+  --pj-public-hero-height: 541px;
   min-height: 100vh;
   background: #fdfcf8;
 }
@@ -161,7 +162,8 @@
 
 .pj-nd-hero__panel {
   position: relative;
-  min-height: 520px;
+  height: var(--pj-public-hero-height);
+  min-height: var(--pj-public-hero-height);
   overflow: hidden;
   display: grid;
   grid-template-columns: minmax(0, 43%) minmax(0, 57%);
@@ -463,6 +465,10 @@
 
 /* Mobile navigation and the final hero mobile composition are separate redesign stages. */
 @media (max-width: 900px) {
+  .pj-nd-hero__panel {
+    height: auto;
+  }
+
   .pj-nd-navbar__inner {
     min-height: 76px;
     grid-template-columns: 1fr auto;
