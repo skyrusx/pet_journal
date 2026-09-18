@@ -32,9 +32,13 @@
 }
 
 .pj-nd-navbar {
-  position: relative;
-  z-index: 10;
-  background: rgba(253, 252, 248, 0.98);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(253, 252, 248, 0.96);
+  border-bottom: 1px solid rgba(72, 88, 62, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .pj-nd-navbar__inner {
