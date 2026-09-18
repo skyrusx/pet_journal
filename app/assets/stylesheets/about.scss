@@ -34,13 +34,12 @@
 .pj-about-intro::before {
   content: "";
   position: absolute;
-  top: 50%;
-  right: clamp(22px, 6vw, 96px);
-  width: min(43vw, 560px);
-  aspect-ratio: 1 / 1;
-  background: image-url("petjournal/auth-paw-trail.png") center / contain no-repeat;
-  opacity: 0.16;
-  transform: translateY(-50%) rotate(-7deg);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(56vw, 760px);
+  background: image-url("petjournal/hero-composite.png") center / cover no-repeat;
+  opacity: 0.82;
   pointer-events: none;
 }
 
@@ -48,7 +47,14 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(253, 252, 248, 0.96) 0%, rgba(253, 252, 248, 0.72) 48%, rgba(253, 252, 248, 0.18) 78%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(253, 252, 248, 0.99) 0%,
+    rgba(253, 252, 248, 0.96) 36%,
+    rgba(253, 252, 248, 0.64) 54%,
+    rgba(253, 252, 248, 0.18) 72%,
+    rgba(253, 252, 248, 0.02) 100%
+  );
   pointer-events: none;
 }
 
@@ -848,13 +854,18 @@
   }
 
   .pj-about-intro::before {
-    right: -62px;
-    width: 360px;
-    opacity: 0.12;
+    width: 100%;
+    opacity: 0.38;
+    background-position: 68% center;
   }
 
   .pj-about-intro::after {
-    background: linear-gradient(180deg, rgba(253, 252, 248, 0.9) 0%, rgba(253, 252, 248, 0.65) 72%, rgba(253, 252, 248, 0.35) 100%);
+    background: linear-gradient(
+      180deg,
+      rgba(253, 252, 248, 0.9) 0%,
+      rgba(253, 252, 248, 0.72) 58%,
+      rgba(253, 252, 248, 0.5) 100%
+    );
   }
 
   .pj-about-feature {
