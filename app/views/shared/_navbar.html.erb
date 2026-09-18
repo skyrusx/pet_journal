@@ -1,0 +1,62 @@
+<% auth_variant = local_assigns.fetch(:variant, :public).to_sym == :auth %>
+<% navbar_class = auth_variant ? "pj-auth-v2-navbar" : "pj-nd-navbar" %>
+<% shell_class = auth_variant ? "pj-auth-v2-shell" : "pj-nd-shell" %>
+<% brand_path = local_assigns.fetch(:brand_path, root_path) %>
+<% features_path = local_assigns.fetch(:features_path, about_path) %>
+<% acquaintance_path = local_assigns.fetch(:acquaintance_path, root_path(anchor: "how-it-works")) %>
+
+<% if auth_variant %>
+  <% registration_page = devise_controller? && controller_name == "registrations" && action_name == "new" %>
+  <% auth_action_label = local_assigns.fetch(:auth_action_label, registration_page ? "Войти" : "Создать журнал") %>
+  <% auth_action_path = local_assigns.fetch(:auth_action_path, registration_page ? new_user_session_path : new_user_registration_path) %>
+<% end %>
+
+<header class="<%= navbar_class %>">
+  <div class="<%= shell_class %> <%= navbar_class %>__inner">
+    <%= link_to brand_path, class: "#{navbar_class}__brand", aria: { label: "PetJournal — главная" } do %>
+      <%= image_tag "petjournal/logo-horizontal.png", alt: "PetJournal", class: "#{navbar_class}__logo" %>
+    <% end %>
+
+    <nav class="<%= navbar_class %>__nav" aria-label="Основная навигация">
+      <%= link_to "Возможности", features_path %>
+      <%= link_to "Знакомство", acquaintance_path %>
+    </nav>
+
+    <div class="<%= navbar_class %>__actions">
+      <% if auth_variant %>
+        <%= link_to auth_action_label, auth_action_path, class: "#{navbar_class}__cta" %>
+      <% else %>
+        <%= link_to "Войти", new_user_session_path, class: "#{navbar_class}__login" %>
+        <%= link_to "Создать журнал", new_user_registration_path, class: "#{navbar_class}__cta" %>
+      <% end %>
+    </div>
+
+    <details class="<%= navbar_class %>__mobile">
+      <summary aria-label="Открыть меню">
+        <span class="<%= navbar_class %>__burger" aria-hidden="true"><span></span></span>
+      </summary>
+
+      <div class="<%= navbar_class %>__mobile-panel">
+        <div class="<%= navbar_class %>__mobile-card">
+          <nav class="<%= navbar_class %>__mobile-nav" aria-label="Мобильная навигация">
+            <%= link_to "Возможности", features_path %>
+            <%= link_to "Знакомство", acquaintance_path %>
+
+            <% if auth_variant %>
+              <%= link_to auth_action_label, auth_action_path, class: "#{navbar_class}__mobile-cta" %>
+            <% end %>
+          </nav>
+
+          <% unless auth_variant %>
+            <div class="<%= navbar_class %>__mobile-separator" aria-hidden="true"></div>
+
+            <div class="<%= navbar_class %>__mobile-actions">
+              <%= link_to "Войти", new_user_session_path, class: "#{navbar_class}__mobile-login" %>
+              <%= link_to "Создать журнал", new_user_registration_path, class: "#{navbar_class}__mobile-cta" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </details>
+  </div>
+</header>

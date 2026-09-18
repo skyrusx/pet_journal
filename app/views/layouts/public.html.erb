@@ -28,10 +28,7 @@
   }) %>">
     <% if public_pet_tag_layout %>
       <div class="pj-new-design pj-public-pettag-site">
-        <%= render "pages/new_design_navbar",
-                   brand_path: root_path,
-                   features_path: about_path,
-                   how_it_works_path: root_path(anchor: "how-it-works") %>
+        <%= render "shared/navbar" %>
 
         <%= yield %>
 
