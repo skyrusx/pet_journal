@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root "pages#index"
   get "sitemap.xml" => "seo#sitemap", as: :sitemap, defaults: { format: :xml }
+  get "about" => "pages#about", as: :about
   get "new-design" => "pages#new_design", as: :new_design
   get "privacy" => "legal#privacy", as: :privacy
   get "personal-data-consent" => "legal#personal_data_consent", as: :personal_data_consent

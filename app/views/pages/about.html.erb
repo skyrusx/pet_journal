@@ -1,0 +1,283 @@
+<% set_seo_meta(
+     title: "Возможности PetJournal — всё важное о питомце в одном месте",
+     description: "Журнал питомца, напоминания, документы, галерея и PetTag — основные возможности PetJournal для заботы о питомце.",
+     og_title: "Возможности PetJournal",
+     og_description: "Журнал питомца, напоминания, документы, галерея и PetTag — основные возможности PetJournal для заботы о питомце."
+   ) %>
+
+<% content_for :head do %>
+  <%= stylesheet_link_tag "about" %>
+<% end %>
+
+<div class="pj-new-design pj-about">
+  <%= render "new_design_navbar",
+             brand_path: root_path,
+             features_path: about_path,
+             how_it_works_path: root_path(anchor: "how-it-works") %>
+
+  <main class="pj-new-design__canvas pj-about__canvas" aria-label="Возможности PetJournal">
+    <section class="pj-about-intro" aria-labelledby="about-title">
+      <div class="pj-nd-shell">
+        <div class="pj-about-intro__content">
+          <span class="pj-about-eyebrow">Возможности</span>
+          <h1 id="about-title">Возможности PetJournal</h1>
+          <p>PetJournal помогает сохранять историю питомца, помнить о важных делах и держать нужную информацию рядом.</p>
+
+          <nav class="pj-about-jump-nav" aria-label="Возможности PetJournal">
+            <a href="#journal">Журнал</a>
+            <a href="#reminders">Напоминания</a>
+            <a href="#documents">Документы</a>
+            <a href="#gallery">Галерея</a>
+            <a href="#pet-tag">PetTag</a>
+          </nav>
+        </div>
+      </div>
+    </section>
+
+    <section class="pj-about-feature" id="journal" aria-labelledby="journal-title">
+      <div class="pj-nd-shell pj-about-feature__grid">
+        <div class="pj-about-feature__visual" aria-hidden="true">
+          <div class="pj-about-window pj-about-window--journal">
+            <div class="pj-about-window__chrome">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="pj-about-window__body">
+              <div class="pj-about-ui-heading">
+                <div>
+                  <small>История питомца</small>
+                  <strong>Журнал</strong>
+                </div>
+                <span class="pj-about-ui-button">+ Добавить запись</span>
+              </div>
+
+              <div class="pj-about-ui-filters">
+                <span>Все типы</span>
+                <span>Все время</span>
+                <span>Все записи</span>
+              </div>
+
+              <div class="pj-about-journal-table">
+                <div class="pj-about-journal-table__head">
+                  <span>Дата</span><span>Событие</span><span>Детали</span><span>Состояние</span>
+                </div>
+                <div class="pj-about-journal-row">
+                  <span>18 сен</span>
+                  <span><i class="is-vaccine">+</i><b>Вакцинация</b><small>Тор · уход</small></span>
+                  <span>Ежегодная вакцинация</span>
+                  <span><em>В норме</em></span>
+                </div>
+                <div class="pj-about-journal-row">
+                  <span>12 сен</span>
+                  <span><i class="is-weight">↗</i><b>Вес</b><small>Тор · наблюдение</small></span>
+                  <span>8,4 кг</span>
+                  <span><em>Записано</em></span>
+                </div>
+                <div class="pj-about-journal-row">
+                  <span>04 сен</span>
+                  <span><i class="is-note">✦</i><b>Заметка</b><small>Тор · событие</small></span>
+                  <span>Новый корм подошёл</span>
+                  <span><em>Записано</em></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pj-about-feature__copy">
+          <span class="pj-about-feature__number">01</span>
+          <h2 id="journal-title">Журнал питомца</h2>
+          <p>Журнал — основа PetJournal. В нём остаётся история жизни питомца: события, заметки, прививки, лечение, вес и важные моменты, к которым хочется вернуться позже.</p>
+          <p class="pj-about-feature__note">Всё складывается в одну хронологию вместо заметок, переписок и бумажек в разных местах.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="pj-about-feature pj-about-feature--tinted" id="reminders" aria-labelledby="reminders-title">
+      <div class="pj-nd-shell pj-about-feature__grid pj-about-feature__grid--reverse">
+        <div class="pj-about-feature__copy">
+          <span class="pj-about-feature__number">02</span>
+          <h2 id="reminders-title">Напоминания</h2>
+          <p>Важные дела по уходу за питомцем не должны зависеть от памяти. PetJournal помогает вовремя вспомнить об обработке, препарате, визите, прививке или любом другом событии.</p>
+          <p class="pj-about-feature__note">Создали один раз — дальше нужная дата остаётся перед глазами.</p>
+        </div>
+
+        <div class="pj-about-feature__visual" aria-hidden="true">
+          <div class="pj-about-window pj-about-window--reminders">
+            <div class="pj-about-window__chrome">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="pj-about-window__body">
+              <div class="pj-about-ui-heading">
+                <div>
+                  <small>Важные дела — вовремя</small>
+                  <strong>Напоминания</strong>
+                </div>
+                <span class="pj-about-ui-button">+ Создать</span>
+              </div>
+
+              <div class="pj-about-reminder-summary">
+                <span><b>3</b> активно</span>
+                <span><b>0</b> просрочено</span>
+                <span><b>12</b> выполнено</span>
+              </div>
+
+              <div class="pj-about-reminder-list">
+                <div class="pj-about-reminder-card is-today">
+                  <span class="pj-about-reminder-card__icon">●</span>
+                  <span><small>Сегодня · 19:00</small><b>Обработка от клещей</b><em>Тор · уход</em></span>
+                  <strong>Сегодня</strong>
+                </div>
+                <div class="pj-about-reminder-card">
+                  <span class="pj-about-reminder-card__icon">✚</span>
+                  <span><small>24 сентября · 11:00</small><b>Вакцинация</b><em>Тор · здоровье</em></span>
+                  <strong>Через 6 дней</strong>
+                </div>
+                <div class="pj-about-reminder-card">
+                  <span class="pj-about-reminder-card__icon">✦</span>
+                  <span><small>3 октября · 10:30</small><b>Визит к грумеру</b><em>Тор · уход</em></span>
+                  <strong>Запланировано</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pj-about-feature" id="documents" aria-labelledby="documents-title">
+      <div class="pj-nd-shell pj-about-feature__grid">
+        <div class="pj-about-feature__visual" aria-hidden="true">
+          <div class="pj-about-window pj-about-window--documents">
+            <div class="pj-about-window__chrome">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="pj-about-window__body">
+              <div class="pj-about-ui-heading">
+                <div>
+                  <small>Всё нужное рядом</small>
+                  <strong>Документы</strong>
+                </div>
+                <span class="pj-about-ui-button">+ Добавить</span>
+              </div>
+
+              <div class="pj-about-documents-list">
+                <div class="pj-about-document-row">
+                  <span class="pj-about-document-icon">PDF</span>
+                  <span><b>Ветеринарный паспорт</b><small>Основной документ · Тор</small></span>
+                  <em>Актуален</em>
+                </div>
+                <div class="pj-about-document-row">
+                  <span class="pj-about-document-icon">PDF</span>
+                  <span><b>Результаты анализов</b><small>Анализы · 04.09.2026</small></span>
+                  <em>Сохранён</em>
+                </div>
+                <div class="pj-about-document-row">
+                  <span class="pj-about-document-icon is-image">JPG</span>
+                  <span><b>Справка из клиники</b><small>Справка · 17.08.2026</small></span>
+                  <em>Сохранён</em>
+                </div>
+              </div>
+
+              <div class="pj-about-document-hint">
+                <%= image_tag "petjournal/new_design/empty-documents.svg", alt: "" %>
+                <span>Файлы остаются внутри профиля питомца и всегда связаны с его историей.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pj-about-feature__copy">
+          <span class="pj-about-feature__number">03</span>
+          <h2 id="documents-title">Документы</h2>
+          <p>Важные файлы питомца хранятся рядом с его историей. Паспорт, анализы, справки, назначения и другие документы не приходится искать по телефону, облакам и старым перепискам.</p>
+          <p class="pj-about-feature__note">Нужный документ находится там же, где и всё остальное о питомце.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="pj-about-feature pj-about-feature--gallery" id="gallery" aria-labelledby="gallery-title">
+      <div class="pj-nd-shell pj-about-feature__grid pj-about-feature__grid--reverse">
+        <div class="pj-about-feature__copy">
+          <span class="pj-about-feature__number">04</span>
+          <h2 id="gallery-title">Галерея питомца</h2>
+          <p>У профиля может быть не одна фотография. Сохраняйте любимые кадры, выбирайте главное фото и собирайте небольшую визуальную историю питомца прямо внутри PetJournal.</p>
+          <p class="pj-about-feature__note">Фото — это не украшение профиля, а ещё одна часть его истории.</p>
+        </div>
+
+        <div class="pj-about-feature__visual" aria-hidden="true">
+          <div class="pj-about-gallery-card">
+            <div class="pj-about-gallery-card__heading">
+              <div><small>Галерея</small><strong>Фотографии Тора</strong></div>
+              <span>5 фото</span>
+            </div>
+            <div class="pj-about-gallery-grid">
+              <div class="pj-about-gallery-photo is-primary">
+                <%= image_tag "petjournal/new_design/hero-pets-phone.jpg", alt: "" %>
+                <span>Главное фото</span>
+              </div>
+              <div class="pj-about-gallery-photo">
+                <%= image_tag "petjournal/hero-composite.png", alt: "" %>
+              </div>
+              <div class="pj-about-gallery-photo">
+                <%= image_tag "petjournal/new_design/hero-pets-phone.jpg", alt: "" %>
+              </div>
+              <div class="pj-about-gallery-photo">
+                <%= image_tag "petjournal/hero-composite.png", alt: "" %>
+              </div>
+              <div class="pj-about-gallery-photo is-more">
+                <%= image_tag "petjournal/new_design/hero-pets-phone.jpg", alt: "" %>
+                <span>+1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pj-about-feature pj-about-feature--tinted" id="pet-tag" aria-labelledby="pet-tag-title">
+      <div class="pj-nd-shell pj-about-feature__grid">
+        <div class="pj-about-feature__visual" aria-hidden="true">
+          <div class="pj-about-pettag">
+            <div class="pj-about-pettag__profile">
+              <div class="pj-about-pettag__pet">
+                <span class="pj-about-pettag__avatar">Т</span>
+                <span><b>Тор</b><small>PetTag ID · PJ-2048</small></span>
+                <em>В безопасности</em>
+              </div>
+
+              <div class="pj-about-pettag__main">
+                <div class="pj-about-pettag__qr">
+                  <%= image_tag "petjournal/auth-pettag.png", alt: "" %>
+                </div>
+                <div>
+                  <small>QR-код PetTag</small>
+                  <strong>Публичный профиль питомца</strong>
+                  <p>По QR открывается только та информация, которую владелец разрешил показать.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="pj-about-pettag__flow">
+              <span><i>1</i><b>QR на жетоне</b></span>
+              <span class="pj-about-pettag__arrow">→</span>
+              <span><i>2</i><b>Профиль питомца</b></span>
+              <span class="pj-about-pettag__arrow">→</span>
+              <span><i>3</i><b>Связь с владельцем</b></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pj-about-feature__copy">
+          <span class="pj-about-feature__number">05</span>
+          <h2 id="pet-tag-title">PetTag</h2>
+          <p>PetTag — цифровой профиль питомца по QR-коду. Если питомец потеряется, нашедший сможет открыть разрешённую владельцем информацию и быстро связаться с ним.</p>
+          <p class="pj-about-feature__note">QR можно разместить на обычном жетоне — покупать специальное устройство не нужно.</p>
+        </div>
+      </div>
+    </section>
+
+    <%= render "new_design_cta" %>
+  </main>
+
+  <%= render "new_design_footer" %>
+</div>
