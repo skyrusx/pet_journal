@@ -72,6 +72,14 @@
   white-space: nowrap;
 }
 
+.pj-nd-navbar--about .pj-nd-navbar__nav {
+  gap: clamp(14px, 1.55vw, 24px);
+}
+
+.pj-nd-navbar--about .pj-nd-navbar__nav a {
+  font-size: 13px;
+}
+
 .pj-nd-navbar__nav a,
 .pj-nd-navbar__login {
   color: #222a24;

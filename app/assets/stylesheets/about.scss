@@ -19,29 +19,48 @@
 }
 
 .pj-about-intro {
-  padding: clamp(70px, 9vw, 118px) 0 clamp(62px, 8vw, 100px);
+  position: relative;
+  min-height: clamp(500px, 66vh, 660px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: clamp(72px, 9vw, 116px) 0;
   background:
-    radial-gradient(circle at 82% 20%, rgba(219, 229, 180, 0.34), transparent 28%),
-    linear-gradient(180deg, #fdfcf8 0%, #fbfaf5 100%);
+    radial-gradient(circle at 22% 18%, rgba(236, 226, 201, 0.42), transparent 30%),
+    radial-gradient(circle at 82% 32%, rgba(218, 229, 180, 0.42), transparent 32%),
+    linear-gradient(135deg, #fdfcf8 0%, #f8f6ee 54%, #f0f3e6 100%);
+}
+
+.pj-about-intro::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: clamp(22px, 6vw, 96px);
+  width: min(43vw, 560px);
+  aspect-ratio: 1 / 1;
+  background: image-url("petjournal/auth-paw-trail.png") center / contain no-repeat;
+  opacity: 0.16;
+  transform: translateY(-50%) rotate(-7deg);
+  pointer-events: none;
+}
+
+.pj-about-intro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(253, 252, 248, 0.96) 0%, rgba(253, 252, 248, 0.72) 48%, rgba(253, 252, 248, 0.18) 78%, transparent 100%);
+  pointer-events: none;
+}
+
+.pj-about-intro .pj-nd-shell {
+  position: relative;
+  z-index: 1;
 }
 
 .pj-about-intro__content {
-  max-width: 920px;
-  margin-inline: auto;
-  text-align: center;
-}
-
-.pj-about-eyebrow {
-  display: inline-flex;
-  margin-bottom: 20px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: #edf1d7;
-  color: #4f7042;
-  font-size: 12px;
-  font-weight: 750;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  max-width: 760px;
+  margin: 0;
+  text-align: left;
 }
 
 .pj-about-intro h1,
@@ -59,45 +78,13 @@
 }
 
 .pj-about-intro__content > p {
-  max-width: 720px;
-  margin: 24px auto 0;
+  max-width: 650px;
+  margin: 24px 0 0;
   color: #515a53;
   font-size: clamp(16px, 1.6vw, 20px);
   line-height: 1.65;
 }
 
-.pj-about-jump-nav {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 38px;
-}
-
-.pj-about-jump-nav a {
-  display: inline-flex;
-  min-height: 42px;
-  align-items: center;
-  padding: 0 17px;
-  border: 1px solid #e3e6d7;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
-  color: #34533d;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
-  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
-}
-
-.pj-about-jump-nav a:hover,
-.pj-about-jump-nav a:focus-visible {
-  border-color: #cad79b;
-  background: #f2f5e5;
-  color: #174f31;
-  transform: translateY(-1px);
-}
-
-.pj-about-jump-nav a:focus-visible,
 .pj-about-feature a:focus-visible {
   outline: 3px solid rgba(151, 168, 58, 0.35);
   outline-offset: 3px;
@@ -112,16 +99,34 @@
   border-top: 1px solid rgba(80, 99, 75, 0.07);
 }
 
-.pj-about-feature--tinted {
+.pj-about-feature--journal {
   background:
-    radial-gradient(circle at 15% 82%, rgba(225, 232, 198, 0.28), transparent 25%),
-    linear-gradient(180deg, #fbfaf5 0%, #f7f7ee 100%);
+    radial-gradient(circle at 86% 22%, rgba(232, 222, 199, 0.24), transparent 30%),
+    linear-gradient(135deg, #fffefa 0%, #f9f6ee 100%);
+}
+
+.pj-about-feature--reminders {
+  background:
+    radial-gradient(circle at 16% 76%, rgba(208, 222, 167, 0.35), transparent 31%),
+    linear-gradient(135deg, #eef3df 0%, #f6f7ed 62%, #edf2e2 100%);
+}
+
+.pj-about-feature--documents {
+  background:
+    radial-gradient(circle at 82% 24%, rgba(231, 205, 166, 0.26), transparent 30%),
+    linear-gradient(135deg, #fbf6ed 0%, #f5ede1 100%);
 }
 
 .pj-about-feature--gallery {
   background:
-    radial-gradient(circle at 78% 42%, rgba(232, 219, 194, 0.28), transparent 30%),
-    #fdfcf8;
+    radial-gradient(circle at 76% 42%, rgba(222, 207, 184, 0.34), transparent 34%),
+    linear-gradient(135deg, #f3eee5 0%, #faf7f1 55%, #efe9dd 100%);
+}
+
+.pj-about-feature--pettag {
+  background:
+    radial-gradient(circle at 18% 24%, rgba(183, 207, 160, 0.34), transparent 31%),
+    linear-gradient(135deg, #eaf2e7 0%, #f4f7ef 58%, #e8f0e5 100%);
 }
 
 .pj-about-feature__grid {
@@ -842,16 +847,14 @@
     font-size: 15px;
   }
 
-  .pj-about-jump-nav {
-    justify-content: flex-start;
-    gap: 8px;
-    margin-top: 28px;
+  .pj-about-intro::before {
+    right: -62px;
+    width: 360px;
+    opacity: 0.12;
   }
 
-  .pj-about-jump-nav a {
-    min-height: 38px;
-    padding-inline: 13px;
-    font-size: 12px;
+  .pj-about-intro::after {
+    background: linear-gradient(180deg, rgba(253, 252, 248, 0.9) 0%, rgba(253, 252, 248, 0.65) 72%, rgba(253, 252, 248, 0.35) 100%);
   }
 
   .pj-about-feature {

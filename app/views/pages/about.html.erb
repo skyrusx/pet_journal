@@ -10,28 +10,27 @@
 <% end %>
 
 <div class="pj-new-design pj-about">
-  <%= render "shared/navbar" %>
+  <%= render "shared/navbar",
+             variant: :about,
+             nav_items: [
+               ["Журнал", about_path(anchor: "journal")],
+               ["Напоминания", about_path(anchor: "reminders")],
+               ["Документы", about_path(anchor: "documents")],
+               ["Галерея", about_path(anchor: "gallery")],
+               ["PetTag", about_path(anchor: "pet-tag")]
+             ] %>
 
   <main class="pj-new-design__canvas pj-about__canvas" aria-label="Возможности PetJournal">
     <section class="pj-about-intro" aria-labelledby="about-title">
       <div class="pj-nd-shell">
         <div class="pj-about-intro__content">
-          <span class="pj-about-eyebrow">Возможности</span>
           <h1 id="about-title">Возможности PetJournal</h1>
           <p>PetJournal помогает сохранять историю питомца, помнить о важных делах и держать нужную информацию рядом.</p>
-
-          <nav class="pj-about-jump-nav" aria-label="Возможности PetJournal">
-            <a href="#journal">Журнал</a>
-            <a href="#reminders">Напоминания</a>
-            <a href="#documents">Документы</a>
-            <a href="#gallery">Галерея</a>
-            <a href="#pet-tag">PetTag</a>
-          </nav>
         </div>
       </div>
     </section>
 
-    <section class="pj-about-feature" id="journal" aria-labelledby="journal-title">
+    <section class="pj-about-feature pj-about-feature--journal" id="journal" aria-labelledby="journal-title">
       <div class="pj-nd-shell pj-about-feature__grid">
         <div class="pj-about-feature__visual" aria-hidden="true">
           <div class="pj-about-window pj-about-window--journal">
@@ -89,7 +88,7 @@
       </div>
     </section>
 
-    <section class="pj-about-feature pj-about-feature--tinted" id="reminders" aria-labelledby="reminders-title">
+    <section class="pj-about-feature pj-about-feature--reminders" id="reminders" aria-labelledby="reminders-title">
       <div class="pj-nd-shell pj-about-feature__grid pj-about-feature__grid--reverse">
         <div class="pj-about-feature__copy">
           <span class="pj-about-feature__number">02</span>
@@ -141,7 +140,7 @@
       </div>
     </section>
 
-    <section class="pj-about-feature" id="documents" aria-labelledby="documents-title">
+    <section class="pj-about-feature pj-about-feature--documents" id="documents" aria-labelledby="documents-title">
       <div class="pj-nd-shell pj-about-feature__grid">
         <div class="pj-about-feature__visual" aria-hidden="true">
           <div class="pj-about-window pj-about-window--documents">
@@ -231,7 +230,7 @@
       </div>
     </section>
 
-    <section class="pj-about-feature pj-about-feature--tinted" id="pet-tag" aria-labelledby="pet-tag-title">
+    <section class="pj-about-feature pj-about-feature--pettag" id="pet-tag" aria-labelledby="pet-tag-title">
       <div class="pj-nd-shell pj-about-feature__grid">
         <div class="pj-about-feature__visual" aria-hidden="true">
           <div class="pj-about-pettag">
