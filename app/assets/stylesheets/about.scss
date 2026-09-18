@@ -24,49 +24,40 @@
   overflow: hidden;
   display: flex;
   align-items: center;
-  padding: clamp(72px, 9vw, 116px) 0;
+  padding: clamp(64px, 8vw, 104px) 0;
   background:
-    radial-gradient(circle at 22% 18%, rgba(236, 226, 201, 0.42), transparent 30%),
-    radial-gradient(circle at 82% 32%, rgba(218, 229, 180, 0.42), transparent 32%),
-    linear-gradient(135deg, #fdfcf8 0%, #f8f6ee 54%, #f0f3e6 100%);
-}
-
-.pj-about-intro::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: min(56vw, 760px);
-  background: image-url("petjournal/hero-composite.png") center / cover no-repeat;
-  opacity: 0.82;
-  pointer-events: none;
-}
-
-.pj-about-intro::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(253, 252, 248, 0.99) 0%,
-    rgba(253, 252, 248, 0.96) 36%,
-    rgba(253, 252, 248, 0.64) 54%,
-    rgba(253, 252, 248, 0.18) 72%,
-    rgba(253, 252, 248, 0.02) 100%
-  );
-  pointer-events: none;
+    radial-gradient(circle at 20% 18%, rgba(236, 226, 201, 0.38), transparent 31%),
+    radial-gradient(circle at 80% 35%, rgba(218, 229, 180, 0.32), transparent 34%),
+    linear-gradient(135deg, #fdfcf8 0%, #faf8f1 55%, #f3f5e9 100%);
 }
 
 .pj-about-intro .pj-nd-shell {
   position: relative;
   z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(360px, 0.82fr) minmax(0, 1.18fr);
+  align-items: center;
+  gap: clamp(24px, 3vw, 54px);
 }
 
 .pj-about-intro__content {
-  max-width: 760px;
+  max-width: 520px;
   margin: 0;
   text-align: left;
+}
+
+.pj-about-intro__visual {
+  min-width: 0;
+  width: min(100%, 700px);
+  justify-self: end;
+  pointer-events: none;
+}
+
+.pj-about-intro__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .pj-about-intro h1,
@@ -812,7 +803,23 @@
 
 @media (max-width: 900px) {
   .pj-about-intro {
-    padding-top: 58px;
+    min-height: auto;
+    display: block;
+    padding: 56px 0 0;
+  }
+
+  .pj-about-intro .pj-nd-shell {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .pj-about-intro__content {
+    max-width: 660px;
+  }
+
+  .pj-about-intro__visual {
+    width: min(100%, 680px);
+    justify-self: center;
   }
 
   .pj-about-feature {
@@ -842,7 +849,7 @@
 
 @media (max-width: 640px) {
   .pj-about-intro {
-    padding: 42px 0 58px;
+    padding: 42px 0 0;
   }
 
   .pj-about-intro h1 {
@@ -853,19 +860,9 @@
     font-size: 15px;
   }
 
-  .pj-about-intro::before {
-    width: 100%;
-    opacity: 0.38;
-    background-position: 68% center;
-  }
-
-  .pj-about-intro::after {
-    background: linear-gradient(
-      180deg,
-      rgba(253, 252, 248, 0.9) 0%,
-      rgba(253, 252, 248, 0.72) 58%,
-      rgba(253, 252, 248, 0.5) 100%
-    );
+  .pj-about-intro__visual {
+    width: calc(100% + 8px);
+    margin-inline: -4px;
   }
 
   .pj-about-feature {
