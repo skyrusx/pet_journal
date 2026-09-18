@@ -109,17 +109,15 @@
 }
 
 .pj-about-feature {
-  min-height: calc(100svh - 88px);
+  min-height: clamp(620px, 76svh, 740px);
   display: flex;
   align-items: center;
-  padding: clamp(72px, 9vh, 110px) 0;
+  padding: clamp(64px, 7vh, 88px) 0;
   scroll-margin-top: 88px;
   border-top: 1px solid rgba(80, 99, 75, 0.07);
 }
 
 .pj-about-feature--journal {
-  align-items: flex-start;
-  padding-top: 58px;
   background:
     radial-gradient(circle at 86% 22%, rgba(232, 222, 199, 0.24), transparent 30%),
     linear-gradient(135deg, #fffefa 0%, #f9f6ee 100%);
