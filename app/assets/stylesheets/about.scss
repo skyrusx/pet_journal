@@ -118,6 +118,8 @@
 }
 
 .pj-about-feature--journal {
+  align-items: flex-start;
+  padding-top: 58px;
   background:
     radial-gradient(circle at 86% 22%, rgba(232, 222, 199, 0.24), transparent 30%),
     linear-gradient(135deg, #fffefa 0%, #f9f6ee 100%);
