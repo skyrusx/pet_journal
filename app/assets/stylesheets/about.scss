@@ -25,7 +25,8 @@
 
 .pj-about-intro .pj-nd-shell {
   position: relative;
-  min-height: 520px;
+  height: var(--pj-public-hero-height);
+  min-height: var(--pj-public-hero-height);
   overflow: hidden;
   display: grid;
   grid-template-columns: minmax(0, 42%) minmax(0, 58%);
@@ -51,7 +52,8 @@
 .pj-about-intro__visual {
   position: relative;
   min-width: 0;
-  min-height: 520px;
+  min-height: 0;
+  height: 100%;
   overflow: hidden;
   pointer-events: none;
 }
@@ -826,6 +828,7 @@
   }
 
   .pj-about-intro .pj-nd-shell {
+    height: auto;
     min-height: 0;
     grid-template-columns: 1fr;
   }
