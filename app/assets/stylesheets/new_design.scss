@@ -22,6 +22,7 @@
 }
 
 .pj-new-design {
+  --pj-public-hero-height: 541px;
   min-height: 100vh;
   background: #fdfcf8;
 }
@@ -32,9 +33,13 @@
 }
 
 .pj-nd-navbar {
-  position: relative;
-  z-index: 10;
-  background: rgba(253, 252, 248, 0.98);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(253, 252, 248, 0.96);
+  border-bottom: 1px solid rgba(72, 88, 62, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .pj-nd-navbar__inner {
@@ -66,6 +71,14 @@
   justify-content: center;
   gap: clamp(26px, 2.6vw, 44px);
   white-space: nowrap;
+}
+
+.pj-nd-navbar--about .pj-nd-navbar__nav {
+  gap: clamp(14px, 1.55vw, 24px);
+}
+
+.pj-nd-navbar--about .pj-nd-navbar__nav a {
+  font-size: 14px;
 }
 
 .pj-nd-navbar__nav a,
@@ -149,7 +162,8 @@
 
 .pj-nd-hero__panel {
   position: relative;
-  min-height: 520px;
+  height: var(--pj-public-hero-height);
+  min-height: var(--pj-public-hero-height);
   overflow: hidden;
   display: grid;
   grid-template-columns: minmax(0, 43%) minmax(0, 57%);
@@ -451,6 +465,10 @@
 
 /* Mobile navigation and the final hero mobile composition are separate redesign stages. */
 @media (max-width: 900px) {
+  .pj-nd-hero__panel {
+    height: auto;
+  }
+
   .pj-nd-navbar__inner {
     min-height: 76px;
     grid-template-columns: 1fr auto;

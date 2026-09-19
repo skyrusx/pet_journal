@@ -30,6 +30,11 @@ class PagesController < ApplicationController
     render layout: "dashboard_new_design"
   end
 
+  def about
+    allow_search_engine_indexing
+    render layout: "new_design"
+  end
+
   def new_design
     redirect_to root_path, status: :moved_permanently
   end
