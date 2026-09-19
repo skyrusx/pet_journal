@@ -577,21 +577,22 @@
 
 .pj-about-gallery-grid {
   display: grid;
-  grid-template-columns: 1.55fr 1fr 1fr;
-  grid-template-rows: repeat(2, minmax(140px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(2, 128px);
   gap: 10px;
 }
 
 .pj-about-gallery-photo {
   position: relative;
-  min-height: 140px;
+  min-height: 0;
   overflow: hidden;
   border-radius: 17px;
   background: #e8eadf;
 }
 
 .pj-about-gallery-photo.is-primary {
-  grid-row: 1 / 3;
+  grid-column: span 2;
+  grid-row: span 2;
 }
 
 .pj-about-gallery-photo img {
@@ -1000,12 +1001,13 @@
   }
 
   .pj-about-gallery-grid {
-    grid-template-columns: 1.35fr 1fr;
-    grid-template-rows: repeat(2, 118px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: 170px 108px;
   }
 
   .pj-about-gallery-photo.is-primary {
-    grid-row: 1 / 3;
+    grid-column: 1 / -1;
+    grid-row: auto;
   }
 
   .pj-about-gallery-photo:nth-child(4),
